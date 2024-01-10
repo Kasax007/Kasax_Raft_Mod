@@ -2,5 +2,7 @@
   "item.raft.ancient_energy": "Ancient Energy",
   "item.raft.ancient_broken_ring": "Ancient Broken Ring",
 
+  "block.raft.driftwood_portal_frame": "Driftwood Portal Frame",
+
   "itemgroup.raft": "Raft"
 }

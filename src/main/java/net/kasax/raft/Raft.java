@@ -2,6 +2,7 @@ package net.kasax.raft;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.kasax.raft.block.ModBlocks;
 import net.kasax.raft.item.ModItemGroups;
 import net.kasax.raft.item.ModItems;
 import org.slf4j.Logger;
@@ -20,7 +21,9 @@ public class Raft implements ModInitializer {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 		ModItemGroups.registerItemGroups();
+
 		ModItems.registerModItems();
+		ModBlocks.registerModBlocks();
 		LOGGER.info("Raft mod initialized!");
 	}
 }

@@ -2,6 +2,7 @@ package net.kasax.raft.item;
 
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.kasax.raft.Raft;
+import net.kasax.raft.block.ModBlocks;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
@@ -16,6 +17,8 @@ public class ModItemGroups {
                     .icon(() -> new ItemStack(ModItems.ANCIENT_ENERGY)).entries((displayContext, entries) -> {
                         entries.add(ModItems.ANCIENT_BROKEN_RING);
                         entries.add(ModItems.ANCIENT_ENERGY);
+
+                        entries.add(ModBlocks.DRIFTWOOD_PORTAL_FRAME);
 
                     }).build());
 
