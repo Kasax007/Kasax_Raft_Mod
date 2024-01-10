@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"id": "raft",
+	"version": "${version}",
+	"name": "Raft",
+	"description": "This is a mod which adds a Raft dimension to Minecraft, inspired by the popular game Raft!",
+	"authors": [
+		"Kasax"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "MIT",
+	"icon": "assets/raft/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.kasax.raft.Raft"
+		],
+		"client": [
+			"net.kasax.raft.RaftClient"
+		],
+		"fabric-datagen": [
+			"net.kasax.raft.RaftDataGenerator"
+		]
+	},
+	"mixins": [
+		"raft.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.15.3",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
