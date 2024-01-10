@@ -2,6 +2,8 @@ package net.kasax.raft;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.kasax.raft.item.ModItemGroups;
+import net.kasax.raft.item.ModItems;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +19,8 @@ public class Raft implements ModInitializer {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
-
+		ModItemGroups.registerItemGroups();
+		ModItems.registerModItems();
 		LOGGER.info("Raft mod initialized!");
 	}
 }
