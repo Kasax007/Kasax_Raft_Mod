@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "raft:driftwood_portal_frame",
+    "raft:driftwood_leaves",
+    "raft:driftwood_log",
+    "raft:driftwood_wood",
+    "raft:driftwood_planks",
+    "raft:stripped_driftwood_log",
+    "raft:stripped_driftwood_wood"
+  ]
+}

@@ -3,6 +3,12 @@
   "item.raft.ancient_broken_ring": "Ancient Broken Ring",
 
   "block.raft.driftwood_portal_frame": "Driftwood Portal Frame",
+  "block.raft.driftwood_log": "Driftwood Log",
+  "block.raft.driftwood_wood": "Driftwood Wood",
+  "block.raft.stripped_driftwood_log": "Stripped Driftwood Log",
+  "block.raft.stripped_driftwood_wood": "Stripped Driftwood Wood",
+  "block.raft.driftwood_planks": "Driftwood Planks",
+  "block.raft.driftwood_leaves": "Driftwood Leaves",
 
   "itemgroup.raft": "Raft"
 }

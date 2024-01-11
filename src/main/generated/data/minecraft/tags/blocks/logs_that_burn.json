@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "raft:driftwood_log",
+    "raft:driftwood_wood",
+    "raft:stripped_driftwood_wood",
+    "raft:stripped_driftwood_log"
+  ]
+}

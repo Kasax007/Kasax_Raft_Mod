@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "raft:block/stripped_driftwood_log",
+    "side": "raft:block/stripped_driftwood_log"
+  }
+}

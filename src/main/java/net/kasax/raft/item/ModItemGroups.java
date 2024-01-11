@@ -20,6 +20,13 @@ public class ModItemGroups {
 
                         entries.add(ModBlocks.DRIFTWOOD_PORTAL_FRAME);
 
+                        entries.add(ModBlocks.STRIPPED_DRIFTWOOD_LOG);
+                        entries.add(ModBlocks.STRIPPED_DRIFTWOOD_WOOD);
+                        entries.add(ModBlocks.DRIFTWOOD_LEAVES);
+                        entries.add(ModBlocks.DRIFTWOOD_LOG);
+                        entries.add(ModBlocks.DRIFTWOOD_WOOD);
+                        entries.add(ModBlocks.DRIFTWOOD_PLANKS);
+
                     }).build());
 
 

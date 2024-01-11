@@ -4,8 +4,10 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.kasax.raft.block.ModBlocks;
 import net.kasax.raft.util.ModTags;
+import net.minecraft.block.Block;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.ItemTags;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -30,5 +32,11 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL)
                 .add(ModBlocks.DRIFTWOOD_PORTAL_FRAME);
+
+        getOrCreateTagBuilder(BlockTags.LOGS_THAT_BURN)
+                .add(ModBlocks.DRIFTWOOD_LOG)
+                .add(ModBlocks.DRIFTWOOD_WOOD)
+                .add(ModBlocks.STRIPPED_DRIFTWOOD_WOOD)
+                .add(ModBlocks.STRIPPED_DRIFTWOOD_LOG);
     }
 }
