@@ -9,6 +9,15 @@
   "block.raft.stripped_driftwood_wood": "Stripped Driftwood Wood",
   "block.raft.driftwood_planks": "Driftwood Planks",
   "block.raft.driftwood_leaves": "Driftwood Leaves",
+  "block.raft.driftwood_sapling": "Driftwood Sapling",
+
+  "block.raft.titanium_ore": "Titanium Ore",
+  "block.raft.deepslate_titanium_ore": "Deepslate Titanium Ore",
+  "block.raft.raw_titanium_block": "Raw Titanium Block",
+  "block.raft.titanium_block": "Titanium Block",
+  "item.raft.raw_titanium": "Raw Titanium",
+  "item.raft.titanium_ingot": "Titanium Ingot",
+  "item.raft.titanium_nugget": "Titanium Nugget",
 
   "itemgroup.raft": "Raft"
 }

@@ -25,13 +25,29 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(ModBlocks.DRIFTWOOD_WOOD)
                 .add(ModBlocks.DRIFTWOOD_PLANKS)
                 .add(ModBlocks.STRIPPED_DRIFTWOOD_LOG)
-                .add(ModBlocks.STRIPPED_DRIFTWOOD_WOOD);
+                .add(ModBlocks.STRIPPED_DRIFTWOOD_WOOD)
+                .add(ModBlocks.TITANIUM_BLOCK)
+                .add(ModBlocks.RAW_TITANIUM_BLOCK)
+                .add(ModBlocks.TITANIUM_ORE)
+                .add(ModBlocks.DEEPSLATE_TITANIUM_ORE);
 
         getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
                 .add(ModBlocks.DRIFTWOOD_PORTAL_FRAME);
 
+        getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
+                .add(ModBlocks.RAW_TITANIUM_BLOCK)
+                .add(ModBlocks.TITANIUM_ORE)
+                .add(ModBlocks.TITANIUM_BLOCK)
+                .add(ModBlocks.DEEPSLATE_TITANIUM_ORE);
+
         getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL)
                 .add(ModBlocks.DRIFTWOOD_PORTAL_FRAME);
+
+        getOrCreateTagBuilder(BlockTags.NEEDS_DIAMOND_TOOL)
+                .add(ModBlocks.RAW_TITANIUM_BLOCK)
+                .add(ModBlocks.TITANIUM_ORE)
+                .add(ModBlocks.DEEPSLATE_TITANIUM_ORE)
+                .add(ModBlocks.TITANIUM_BLOCK);
 
         getOrCreateTagBuilder(BlockTags.LOGS_THAT_BURN)
                 .add(ModBlocks.DRIFTWOOD_LOG)

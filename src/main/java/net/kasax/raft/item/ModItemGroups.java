@@ -23,9 +23,17 @@ public class ModItemGroups {
                         entries.add(ModBlocks.STRIPPED_DRIFTWOOD_LOG);
                         entries.add(ModBlocks.STRIPPED_DRIFTWOOD_WOOD);
                         entries.add(ModBlocks.DRIFTWOOD_LEAVES);
+                        entries.add(ModBlocks.DRIFTWOOD_SAPLING);
                         entries.add(ModBlocks.DRIFTWOOD_LOG);
                         entries.add(ModBlocks.DRIFTWOOD_WOOD);
                         entries.add(ModBlocks.DRIFTWOOD_PLANKS);
+                        entries.add(ModBlocks.TITANIUM_ORE);
+                        entries.add(ModBlocks.DEEPSLATE_TITANIUM_ORE);
+                        entries.add(ModBlocks.RAW_TITANIUM_BLOCK);
+                        entries.add(ModBlocks.TITANIUM_BLOCK);
+                        entries.add(ModItems.RAW_TITANIUM);
+                        entries.add(ModItems.TITANIUM_INGOT);
+                        entries.add(ModItems.TITANIUM_NUGGET);
 
                     }).build());
 

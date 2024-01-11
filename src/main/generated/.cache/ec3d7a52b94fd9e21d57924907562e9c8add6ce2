@@ -1,8 +1,13 @@
-// 1.20.1	2024-01-11T01:57:54.7042741	Raft/Block Loot Tables
+// 1.20.1	2024-01-11T18:11:35.8253049	Raft/Block Loot Tables
 c59117d83332e712ccde5f4c040105044ef63c78 data\raft\loot_tables\blocks\driftwood_portal_frame.json
-4d69d52eb9a14f4d51439d5dd62c0697a5581009 data\raft\loot_tables\blocks\driftwood_leaves.json
+1ae0b13a0cb3b91d8610a79cef40619a599f85c1 data\raft\loot_tables\blocks\deepslate_titanium_ore.json
+c85c470e1e7688e9a6bdea24e2f164746026dd86 data\raft\loot_tables\blocks\driftwood_sapling.json
 437f97537f7a720c94bdba338bcb152ac51f3b42 data\raft\loot_tables\blocks\driftwood_planks.json
 083a168f546a109c0eaf9ca0cf5f3fb47e68c4fd data\raft\loot_tables\blocks\driftwood_wood.json
-3d1e1fb0d3ef9792387113bbe343da45a8e77ed5 data\raft\loot_tables\blocks\driftwood_log.json
 ef6f73833cfa87d9c89271dbeb9df70dda44d1cb data\raft\loot_tables\blocks\stripped_driftwood_wood.json
+34513fd7fa69de38ce3b9b190ff9ece7600cdbbb data\raft\loot_tables\blocks\titanium_block.json
 a9403c32ba4d0d5b8fb2a0a511afed45b1529562 data\raft\loot_tables\blocks\stripped_driftwood_log.json
+56b2196feeb8982afef38c2f6997c15d321e363f data\raft\loot_tables\blocks\driftwood_leaves.json
+3d1e1fb0d3ef9792387113bbe343da45a8e77ed5 data\raft\loot_tables\blocks\driftwood_log.json
+186e2264d1ca8d2cf0b118a4b294ab802db4d0f9 data\raft\loot_tables\blocks\raw_titanium_block.json
+be3d79513486d6af5d7be5ca1468cdfbecdfb3e6 data\raft\loot_tables\blocks\titanium_ore.json

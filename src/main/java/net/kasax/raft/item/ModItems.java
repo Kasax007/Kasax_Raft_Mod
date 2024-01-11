@@ -14,6 +14,10 @@ public class ModItems {
     public static final Item ANCIENT_ENERGY = registerItem("ancient_energy", new Item(new FabricItemSettings()));
     public static final Item ANCIENT_BROKEN_RING= registerItem("ancient_broken_ring", new Item(new FabricItemSettings()));
 
+    public static final Item RAW_TITANIUM= registerItem("raw_titanium", new Item(new FabricItemSettings()));
+    public static final Item TITANIUM_INGOT= registerItem("titanium_ingot", new Item(new FabricItemSettings()));
+    public static final Item TITANIUM_NUGGET= registerItem("titanium_nugget", new Item(new FabricItemSettings()));
+
     //Item layout
     private static Item registerItem(String name, Item item) {
         return Registry.register(Registries.ITEM, new Identifier(Raft.MOD_ID, name), item);

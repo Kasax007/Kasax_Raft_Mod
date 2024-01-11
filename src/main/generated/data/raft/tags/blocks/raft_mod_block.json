@@ -7,6 +7,10 @@
     "raft:driftwood_wood",
     "raft:driftwood_planks",
     "raft:stripped_driftwood_log",
-    "raft:stripped_driftwood_wood"
+    "raft:stripped_driftwood_wood",
+    "raft:titanium_block",
+    "raft:raw_titanium_block",
+    "raft:titanium_ore",
+    "raft:deepslate_titanium_ore"
   ]
 }

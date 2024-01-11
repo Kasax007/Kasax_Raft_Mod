@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "MISC2",
+  "ingredients": [
+    {
+      "item": "raft:titanium_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "item": "raft:titanium_ingot"
+  }
+}
