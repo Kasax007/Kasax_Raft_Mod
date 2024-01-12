@@ -10,6 +10,8 @@ import net.kasax.raft.item.ModItemGroups;
 import net.kasax.raft.item.ModItems;
 import net.kasax.raft.util.ModLootTableModifiers;
 import net.kasax.raft.world.gen.ModWorldGeneration;
+import net.kyrptonaught.customportalapi.api.CustomPortalBuilder;
+import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +44,13 @@ public class Raft implements ModInitializer {
 
 		ModLootTableModifiers.modifyLootTables();
 		ModWorldGeneration.generateModWorldGen();
+
+		CustomPortalBuilder.beginPortal()
+						.frameBlock(ModBlocks.DRIFTWOOD_PORTAL_FRAME)
+				.lightWithItem(ModItems.ENERGY_STAFF)
+						.destDimID(new Identifier(Raft.MOD_ID, "raftdim"))
+								.tintColor(0x2C3B8A)
+										.registerPortal();			// TODO Add custom sound
 
 		LOGGER.info("Raft mod initialized!");
 	}

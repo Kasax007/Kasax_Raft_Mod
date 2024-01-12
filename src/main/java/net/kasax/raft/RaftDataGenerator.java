@@ -3,6 +3,7 @@ package net.kasax.raft;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.kasax.raft.datagen.*;
+import net.kasax.raft.world.dimension.ModDimensions;
 import net.kasax.raft.world.gen.ModConfiguredFeatures;
 import net.kasax.raft.world.gen.ModPlacedFeatures;
 import net.minecraft.registry.RegistryBuilder;
@@ -26,5 +27,6 @@ public class RaftDataGenerator implements DataGeneratorEntrypoint {
 	public void buildRegistry(RegistryBuilder registryBuilder) {
 		registryBuilder.addRegistry(RegistryKeys.CONFIGURED_FEATURE, ModConfiguredFeatures::bootstrap);
 		registryBuilder.addRegistry(RegistryKeys.PLACED_FEATURE, ModPlacedFeatures::bootstrap);
+		registryBuilder.addRegistry(RegistryKeys.DIMENSION_TYPE, ModDimensions::bootstrapType);
 	}
 }
