@@ -1,6 +1,7 @@
 {
   "item.raft.ancient_energy": "Ancient Energy",
   "item.raft.ancient_broken_ring": "Ancient Broken Ring",
+  "item.raft.ancient_crystal": "Ancient Crystal",
 
   "block.raft.driftwood_portal_frame": "Driftwood Portal Frame",
   "block.raft.driftwood_log": "Driftwood Log",
@@ -18,6 +19,10 @@
   "item.raft.raw_titanium": "Raw Titanium",
   "item.raft.titanium_ingot": "Titanium Ingot",
   "item.raft.titanium_nugget": "Titanium Nugget",
+  "item.raft.energy_staff": "Energy Staff",
+
+  "tooltip.raft.energy_staff.tooltip": "Used to light the Raft Portal!",
+  "tooltip.raft.driftwood_portal_frame.tooltip": "Used to build the Raft Portal!",
 
   "itemgroup.raft": "Raft"
 }

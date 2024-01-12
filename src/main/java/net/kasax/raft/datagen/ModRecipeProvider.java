@@ -8,6 +8,7 @@ import net.kasax.raft.util.ModTags;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.ItemConvertible;
+import net.minecraft.item.Items;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.registry.tag.TagKey;
@@ -59,6 +60,19 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .input('S', ModItems.RAW_TITANIUM)
                 .criterion(hasItem(ModItems.RAW_TITANIUM), conditionsFromItem(ModItems.RAW_TITANIUM))
                 .offerTo(exporter, new Identifier(getRecipeName(ModBlocks.RAW_TITANIUM_BLOCK.asItem())));
+
+
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModItems.ENERGY_STAFF, 1)
+                .pattern(" S ")
+                .pattern(" R ")
+                .pattern(" D ")
+                .input('S', ModItems.ANCIENT_ENERGY)
+                .input('R', ModItems.ANCIENT_CRYSTAL)
+                .input('D', Items.STICK)
+                .criterion(hasItem(ModItems.ANCIENT_ENERGY), conditionsFromItem(ModItems.ANCIENT_ENERGY))
+                .criterion(hasItem(ModItems.ANCIENT_CRYSTAL), conditionsFromItem(ModItems.ANCIENT_CRYSTAL))
+                .criterion(hasItem(Items.STICK), conditionsFromItem(Items.STICK))
+                .offerTo(exporter, new Identifier(getRecipeName(ModItems.ENERGY_STAFF)));
 
         offerShapelessRecipe(exporter, ModItems.TITANIUM_NUGGET, ModItems.TITANIUM_INGOT, "MISC1", 9);
         offerShapelessRecipe(exporter, ModItems.TITANIUM_INGOT, ModBlocks.TITANIUM_BLOCK.asItem(), "MISC2", 9);

@@ -17,6 +17,9 @@ public class ModItemGroups {
                     .icon(() -> new ItemStack(ModItems.ANCIENT_ENERGY)).entries((displayContext, entries) -> {
                         entries.add(ModItems.ANCIENT_BROKEN_RING);
                         entries.add(ModItems.ANCIENT_ENERGY);
+                        entries.add(ModItems.ANCIENT_CRYSTAL);
+
+                        entries.add(ModItems.ENERGY_STAFF);
 
                         entries.add(ModBlocks.DRIFTWOOD_PORTAL_FRAME);
 
