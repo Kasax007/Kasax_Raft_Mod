@@ -50,6 +50,9 @@ public class Raft implements ModInitializer {
 				.lightWithItem(ModItems.ENERGY_STAFF)
 						.destDimID(new Identifier(Raft.MOD_ID, "raftdim"))
 								.tintColor(0x2C3B8A)
+				.setPortalSearchYRange(200, 220)
+				.setReturnPortalSearchYRange(200, 220)
+				.onlyLightInOverworld()
 										.registerPortal();			// TODO Add custom sound
 
 		LOGGER.info("Raft mod initialized!");

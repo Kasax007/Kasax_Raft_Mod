@@ -22,7 +22,7 @@ public class ModPlacedFeatures {
         var configuredFeatureRegistryEntryLookup = context.getRegistryLookup(RegistryKeys.CONFIGURED_FEATURE);
 
         register(context, TITANIUM_ORE_PLACED_KEY, configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.TITANIUM_ORE_KEY),
-                ModOrePlacement.modifiersWithCount(8, //veins per chunk
+                ModOrePlacement.modifiersWithCount(3, //veins per chunk
                         HeightRangePlacementModifier.trapezoid(YOffset.fixed(-80), YOffset.fixed(20))));
 
     }
