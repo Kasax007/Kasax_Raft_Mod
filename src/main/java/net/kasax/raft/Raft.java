@@ -48,15 +48,14 @@ public class Raft implements ModInitializer {
 		ModLootTableModifiers.modifyLootTables();
 		ModWorldGeneration.generateModWorldGen();
 
-		CustomPortalBuilder.beginPortal()
-						.frameBlock(ModBlocks.DRIFTWOOD_PORTAL_FRAME)
+		CustomPortalBuilder.beginPortal().frameBlock(ModBlocks.DRIFTWOOD_PORTAL_FRAME)
 				.lightWithItem(ModItems.ENERGY_STAFF)
 						.destDimID(new Identifier(Raft.MOD_ID, "raftdim"))
 								.tintColor(0x2C3B8A)
 				.setPortalSearchYRange(200, 220)
 				.setReturnPortalSearchYRange(200, 220)
 				.onlyLightInOverworld()
-										.registerPortal();			// TODO Add custom sound
+				.registerPortal();			// TODO Add custom sound
 
 		LOGGER.info("Raft mod initialized!");
 	}

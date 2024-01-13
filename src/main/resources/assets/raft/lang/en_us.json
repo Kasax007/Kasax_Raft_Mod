@@ -24,5 +24,7 @@
   "tooltip.raft.energy_staff.tooltip": "Used to light the Raft Portal!",
   "tooltip.raft.driftwood_portal_frame.tooltip": "Used to build the Raft Portal!",
 
+  "chat.raft.energy_staff.invalid_target": "This staff can only be used on a Driftwood Portal Frame Portal!",
+
   "itemgroup.raft": "Raft"
 }
