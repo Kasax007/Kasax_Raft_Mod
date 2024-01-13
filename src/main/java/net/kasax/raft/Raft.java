@@ -2,6 +2,8 @@ package net.kasax.raft;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.kasax.raft.block.ModBlocks;
@@ -12,6 +14,7 @@ import net.kasax.raft.util.ModLootTableModifiers;
 import net.kasax.raft.world.gen.ModWorldGeneration;
 import net.kyrptonaught.customportalapi.api.CustomPortalBuilder;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

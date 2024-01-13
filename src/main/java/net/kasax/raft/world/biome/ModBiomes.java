@@ -4,6 +4,7 @@ import net.kasax.raft.Raft;
 import net.minecraft.registry.Registerable;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEffects;
@@ -11,7 +12,9 @@ import net.minecraft.world.biome.GenerationSettings;
 import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.DefaultBiomeFeatures;
-import net.minecraft.world.gen.structure.ShipwreckStructure;
+import net.minecraft.world.gen.feature.PlacedFeature;
+import net.minecraft.world.gen.structure.Structure;
+import net.minecraft.world.gen.structure.StructureKeys;
 
 public class ModBiomes {
     public static final RegistryKey<Biome> RAFT_OCEAN_BIOME = RegistryKey.of(RegistryKeys.BIOME,
@@ -51,6 +54,7 @@ public class ModBiomes {
         DefaultBiomeFeatures.addKelp(biomeBuilder);
         DefaultBiomeFeatures.addSeagrassOnStone(biomeBuilder);
         //biomeBuilder.feature(GenerationStep.Feature.SURFACE_STRUCTURES, (RegistryEntry<PlacedFeature>) StructureKeys.SHIPWRECK);
+        //biomeBuilder.addFeature(1, (RegistryEntry<PlacedFeature>) StructureKeys.SHIPWRECK);
 
 
         return new Biome.Builder()
