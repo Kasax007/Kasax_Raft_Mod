@@ -5,8 +5,10 @@ import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.kasax.raft.Raft;
 import net.kasax.raft.item.custom.EnergyStaffItem;
+import net.kasax.raft.sound.ModSounds;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
+import net.minecraft.item.MusicDiscItem;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
@@ -19,6 +21,12 @@ public class ModItems {
     public static final Item RAW_TITANIUM = registerItem("raw_titanium", new Item(new FabricItemSettings()));
     public static final Item TITANIUM_INGOT = registerItem("titanium_ingot", new Item(new FabricItemSettings()));
     public static final Item TITANIUM_NUGGET = registerItem("titanium_nugget", new Item(new FabricItemSettings()));
+
+
+    public static final Item SOME_GAME_MUSIC_MUSIC_DISC = registerItem("some_game_music_music_disc",
+            new MusicDiscItem(7, ModSounds.Some_Game_Music_Seth, new FabricItemSettings().maxCount(1), 105));
+    public static final Item LOFI_BEAT_MUSIC_DISC = registerItem("lofi_beat_music_disc",
+            new MusicDiscItem(7, ModSounds.Lofi_Beat_Seth, new FabricItemSettings().maxCount(1), 120));
 
     public static final Item ENERGY_STAFF = registerItem("energy_staff", new EnergyStaffItem(new FabricItemSettings().maxCount(1).maxDamage(64)));
 

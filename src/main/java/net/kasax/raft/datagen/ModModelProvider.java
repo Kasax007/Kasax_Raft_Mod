@@ -40,5 +40,8 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.TITANIUM_INGOT, Models.GENERATED);
         itemModelGenerator.register(ModItems.TITANIUM_NUGGET, Models.GENERATED);
 
+        itemModelGenerator.register(ModItems.LOFI_BEAT_MUSIC_DISC, Models.GENERATED);
+        itemModelGenerator.register(ModItems.SOME_GAME_MUSIC_MUSIC_DISC, Models.GENERATED);
+
     }
 }

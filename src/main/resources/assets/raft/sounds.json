@@ -1,0 +1,25 @@
+{
+  "lofi_beat_seth": {
+    "subtitle": "sounds.raft.lofi_beat_seth",
+    "sounds": [
+      {
+      "name": "raft:lofi_beat_seth",
+      "stream": true
+      }
+    ]
+  },
+  "some_game_music_seth": {
+    "sounds": [
+      {
+      "name": "raft:some_game_music_seth",
+      "stream": true
+      }
+    ]
+  },
+  "portal_teleport_sound": {
+    "subtitle": "sounds.raft.portal_teleport_sound",
+    "sounds": [
+      "raft:portal_teleport_sound"
+    ]
+  }
+}

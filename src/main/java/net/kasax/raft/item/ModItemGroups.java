@@ -38,6 +38,9 @@ public class ModItemGroups {
                         entries.add(ModItems.TITANIUM_INGOT);
                         entries.add(ModItems.TITANIUM_NUGGET);
 
+                        entries.add(ModItems.SOME_GAME_MUSIC_MUSIC_DISC);
+                        entries.add(ModItems.LOFI_BEAT_MUSIC_DISC);
+
                     }).build());
 
 

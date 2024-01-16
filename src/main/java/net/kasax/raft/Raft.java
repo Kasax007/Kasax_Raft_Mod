@@ -10,13 +10,18 @@ import net.kasax.raft.block.ModBlocks;
 import net.kasax.raft.datagen.ModWorldGenerator;
 import net.kasax.raft.item.ModItemGroups;
 import net.kasax.raft.item.ModItems;
+import net.kasax.raft.sound.ModSounds;
 import net.kasax.raft.util.ModLootTableModifiers;
 import net.kasax.raft.world.gen.ModWorldGeneration;
 import net.kyrptonaught.customportalapi.api.CustomPortalBuilder;
+import net.kyrptonaught.customportalapi.event.CPASoundEventData;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.Function;
 
 public class Raft implements ModInitializer {
 	// This logger is used to write text to the console and the log file.
@@ -47,6 +52,7 @@ public class Raft implements ModInitializer {
 
 		ModLootTableModifiers.modifyLootTables();
 		ModWorldGeneration.generateModWorldGen();
+		ModSounds.registerSounds();
 
 		CustomPortalBuilder.beginPortal().frameBlock(ModBlocks.DRIFTWOOD_PORTAL_FRAME)
 				.lightWithItem(ModItems.ENERGY_STAFF)
@@ -55,7 +61,8 @@ public class Raft implements ModInitializer {
 				.setPortalSearchYRange(200, 220)
 				.setReturnPortalSearchYRange(200, 220)
 				.onlyLightInOverworld()
-				.registerPortal();			// TODO Add custom sound
+				//.registerInPortalAmbienceSound(ModSounds.Portal_Teleport_Sound)
+				.registerPortal();
 
 		LOGGER.info("Raft mod initialized!");
 	}

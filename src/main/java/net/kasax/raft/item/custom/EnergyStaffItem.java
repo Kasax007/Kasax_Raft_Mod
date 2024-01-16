@@ -42,7 +42,7 @@ public class EnergyStaffItem extends Item {
                         ITEM_LODESTONE_COMPASS_LOCK, SoundCategory.NEUTRAL, 20F,
                         1F / (world.getRandom().nextFloat() * 0.4F + 0.8F));
             }
-            return ActionResult.SUCCESS;
+            return ActionResult.PASS;
         } else {
             // Display a message in the chat for other blocks
             if (!world.isClient() && user != null) {
