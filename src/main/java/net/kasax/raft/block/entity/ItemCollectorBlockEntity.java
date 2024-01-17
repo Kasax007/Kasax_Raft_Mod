@@ -1,8 +1,11 @@
 package net.kasax.raft.block.entity;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.kasax.raft.Raft;
+import net.kasax.raft.block.custom.ItemCatcher;
 import net.kasax.raft.item.ModItems;
 import net.kasax.raft.screen.ItemCollectorScreenHandler;
+import net.kasax.raft.world.biome.ModBiomes;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -20,7 +23,10 @@ import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Properties;
 
 public class ItemCollectorBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory {
     private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(2, ItemStack.EMPTY);
@@ -30,7 +36,7 @@ public class ItemCollectorBlockEntity extends BlockEntity implements ExtendedScr
 
     protected final PropertyDelegate propertyDelegate;
     private int progress = 0;
-    private int maxProgress = 72;
+    private int maxProgress = 576;
 
     public ItemCollectorBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.ITEM_COLLECTOR_BLOCK_ENTITY, pos, state);
@@ -100,25 +106,39 @@ public class ItemCollectorBlockEntity extends BlockEntity implements ExtendedScr
         if(world.isClient()) {
             return;
         }
+        boolean isWaterlogged = state.get(ItemCatcher.WATERLOGGED);
 
-        if(isOutputSlotEmptyOrReceivable()) {
-            if(this.hasRecipe()) {
-                this.increaseCraftProgress();
-                markDirty(world, pos, state);
+        String biomeString = world.getBiome(pos).toString();
+        String targetBiomeString = ModBiomes.RAFT_OCEAN_BIOME.toString();
 
-                if(hasCraftingFinished()) {
-                    this.craftItemKeepInput();
+        String biomeKey = getBiomeKeyFromBiomeString(biomeString);
+        String targetBiomeKey = getBiomeKeyFromBiomeString(targetBiomeString);
+
+        //Raft.LOGGER.info("Biome biome is " + biomeKey + " Should match " + targetBiomeKey + " Waterlogged " + isWaterlogged + " If statement " + biomeKey.equals(targetBiomeKey));
+        if (isWaterlogged && biomeKey.equals(targetBiomeKey)) {
+            if (isOutputSlotEmptyOrReceivable()) {
+                if (this.hasRecipe()) {
+                    this.increaseCraftProgress();
+                    markDirty(world, pos, state);
+
+                    if (hasCraftingFinished()) {
+                        this.craftItemKeepInput();
+                        this.resetProgress();
+                    }
+                } else {
                     this.resetProgress();
                 }
             } else {
                 this.resetProgress();
+                markDirty(world, pos, state);
             }
-        } else {
-            this.resetProgress();
-            markDirty(world, pos, state);
         }
+    }
 
-
+    private String getBiomeKeyFromBiomeString(String biomeString) {
+        int start = biomeString.indexOf('[');
+        int end = biomeString.indexOf(']');
+        return biomeString.substring(start + 1, end);
     }
 
     private void resetProgress() {
