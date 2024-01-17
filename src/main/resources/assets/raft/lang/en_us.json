@@ -11,6 +11,7 @@
   "block.raft.driftwood_planks": "Driftwood Planks",
   "block.raft.driftwood_leaves": "Driftwood Leaves",
   "block.raft.driftwood_sapling": "Driftwood Sapling",
+  "block.raft.item_catcher": "Item Catcher",
 
   "block.raft.titanium_ore": "Titanium Ore",
   "block.raft.deepslate_titanium_ore": "Deepslate Titanium Ore",
@@ -33,6 +34,8 @@
 
   "sounds.raft.lofi_beat_seth": "Lofi Beat - Seth Makes Music",
   "sounds.raft.some_game_music_seth": "Some Game Music - Seth Makes Music",
+
+  "raft.item_collector_display_name": "Item Collector",
 
   "itemgroup.raft": "Raft"
 }

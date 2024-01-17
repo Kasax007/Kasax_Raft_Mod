@@ -7,9 +7,11 @@ import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.kasax.raft.block.ModBlocks;
+import net.kasax.raft.block.entity.ModBlockEntities;
 import net.kasax.raft.datagen.ModWorldGenerator;
 import net.kasax.raft.item.ModItemGroups;
 import net.kasax.raft.item.ModItems;
+import net.kasax.raft.screen.ModScreenHandlers;
 import net.kasax.raft.sound.ModSounds;
 import net.kasax.raft.util.ModLootTableModifiers;
 import net.kasax.raft.world.gen.ModWorldGeneration;
@@ -53,6 +55,9 @@ public class Raft implements ModInitializer {
 		ModLootTableModifiers.modifyLootTables();
 		ModWorldGeneration.generateModWorldGen();
 		ModSounds.registerSounds();
+
+		ModBlockEntities.registerBlockEntities();
+		ModScreenHandlers.registerScreenHandlers();
 
 		CustomPortalBuilder.beginPortal().frameBlock(ModBlocks.DRIFTWOOD_PORTAL_FRAME)
 				.lightWithItem(ModItems.ENERGY_STAFF)

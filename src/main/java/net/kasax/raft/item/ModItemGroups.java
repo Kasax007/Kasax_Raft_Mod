@@ -41,6 +41,8 @@ public class ModItemGroups {
                         entries.add(ModItems.SOME_GAME_MUSIC_MUSIC_DISC);
                         entries.add(ModItems.LOFI_BEAT_MUSIC_DISC);
 
+                        entries.add(ModBlocks.ITEM_CATCHER);
+
                     }).build());
 
 

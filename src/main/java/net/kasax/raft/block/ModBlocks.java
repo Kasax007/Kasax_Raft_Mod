@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.kasax.raft.Raft;
 import net.kasax.raft.block.custom.DriftwoodPortalFrameBlock;
+import net.kasax.raft.block.custom.ItemCatcher;
 import net.kasax.raft.world.tree.DriftwoodSaplingBlock;
 import net.kasax.raft.world.tree.DriftwoodSaplingGenerator;
 import net.minecraft.block.*;
@@ -47,6 +48,9 @@ public class ModBlocks {
 
     public static final Block TITANIUM_BLOCK = registerBlock("titanium_block",
             new LeavesBlock(FabricBlockSettings.copyOf(Blocks.NETHERITE_BLOCK).strength(4f)));
+
+    public static final Block ITEM_CATCHER = registerBlock("item_catcher",
+            new ItemCatcher(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS).nonOpaque()));
 
     private static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block);
