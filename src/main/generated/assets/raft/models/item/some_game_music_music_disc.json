@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "raft:item/some_game_music_music_disc"
+  }
+}

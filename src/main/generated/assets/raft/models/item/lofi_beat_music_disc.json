@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "raft:item/lofi_beat_music_disc"
+  }
+}
