@@ -23,6 +23,9 @@ public class ModItems {
     public static final Item TITANIUM_NUGGET = registerItem("titanium_nugget", new Item(new FabricItemSettings()));
 
 
+    public static final Item NET = registerItem("net", new Item(new FabricItemSettings().maxCount(1).maxDamage(32)));
+
+
     public static final Item SOME_GAME_MUSIC_MUSIC_DISC = registerItem("some_game_music_music_disc",
             new MusicDiscItem(7, ModSounds.Some_Game_Music_Seth, new FabricItemSettings().maxCount(1), 105));
     public static final Item LOFI_BEAT_MUSIC_DISC = registerItem("lofi_beat_music_disc",

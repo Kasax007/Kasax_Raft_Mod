@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "has_net=1": { "model": "raft:block/item_catcher" },
+    "has_net=0": { "model": "raft:block/item_catcher_base" }
+  }
+}

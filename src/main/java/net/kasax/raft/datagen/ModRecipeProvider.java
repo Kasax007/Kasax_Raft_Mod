@@ -61,6 +61,22 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .criterion(hasItem(ModItems.RAW_TITANIUM), conditionsFromItem(ModItems.RAW_TITANIUM))
                 .offerTo(exporter, new Identifier(getRecipeName(ModBlocks.RAW_TITANIUM_BLOCK.asItem())));
 
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModBlocks.ITEM_CATCHER.asItem(), 1)
+                .pattern("SSS")
+                .pattern("S S")
+                .pattern("SSS")
+                .input('S', ModBlocks.DRIFTWOOD_LOG.asItem())
+                .criterion(hasItem(ModBlocks.DRIFTWOOD_LOG.asItem()), conditionsFromItem(ModBlocks.DRIFTWOOD_LOG.asItem()))
+                .offerTo(exporter, new Identifier(getRecipeName(ModBlocks.ITEM_CATCHER.asItem())));
+
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModItems.NET, 1)
+                .pattern("S S")
+                .pattern("SSS")
+                .pattern("S S")
+                .input('S', Items.STRING)
+                .criterion(hasItem(Items.STRING), conditionsFromItem(Items.STRING))
+                .offerTo(exporter, new Identifier(getRecipeName(ModItems.NET)));
+
 
         ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModItems.ENERGY_STAFF, 1)
                 .pattern(" S ")

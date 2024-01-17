@@ -7,6 +7,7 @@ import net.kasax.raft.item.ModItems;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ItemModelGenerator;
 import net.minecraft.data.client.Models;
+import net.minecraft.util.Identifier;
 
 public class ModModelProvider extends FabricModelProvider {
     public ModModelProvider(FabricDataOutput output) {
@@ -28,8 +29,6 @@ public class ModModelProvider extends FabricModelProvider {
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.RAW_TITANIUM_BLOCK);
         blockStateModelGenerator.registerTintableCross(ModBlocks.DRIFTWOOD_SAPLING, BlockStateModelGenerator.TintType.NOT_TINTED);
 
-        blockStateModelGenerator.registerSimpleState(ModBlocks.ITEM_CATCHER);
-
     }
 
     @Override
@@ -44,6 +43,8 @@ public class ModModelProvider extends FabricModelProvider {
 
         itemModelGenerator.register(ModItems.LOFI_BEAT_MUSIC_DISC, Models.GENERATED);
         itemModelGenerator.register(ModItems.SOME_GAME_MUSIC_MUSIC_DISC, Models.GENERATED);
+
+        itemModelGenerator.register(ModItems.NET, Models.GENERATED);
 
     }
 }

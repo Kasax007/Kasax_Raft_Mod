@@ -14,6 +14,7 @@ import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
@@ -25,14 +26,16 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
+
 public class ItemCatcher extends BlockWithEntity implements BlockEntityProvider, Waterloggable {
 
 
     public ItemCatcher(Settings settings) {
         super(settings);
-        setDefaultState(getDefaultState()
+        setDefaultState(getStateManager().getDefaultState()
                 .with(Properties.HORIZONTAL_FACING, Direction.NORTH)
-                .with(WATERLOGGED, false));
+                .with(WATERLOGGED, false)
+                .with(ItemCollectorBlockEntity.HAS_NET, 0));
     }
 
     @Override
@@ -81,7 +84,7 @@ public class ItemCatcher extends BlockWithEntity implements BlockEntityProvider,
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(Properties.HORIZONTAL_FACING, WATERLOGGED);
+        builder.add(Properties.HORIZONTAL_FACING, WATERLOGGED, ItemCollectorBlockEntity.HAS_NET);
     }
 
     @Override

@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"1": "driftwood_wood",
-		"particle": "top_mesh"
+		"1": "raft:block/driftwood_log",
+		"particle": "raft:block/driftwood_log"
 	},
 	"elements": [
 		{
