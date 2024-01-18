@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.kasax.raft.block.ModBlocks;
 import net.kasax.raft.block.custom.ItemCatcher;
 import net.kasax.raft.item.ModItems;
+import net.kasax.raft.recipe.ItemCatchingRecipe;
 import net.kasax.raft.screen.ItemCollectorScreenHandler;
 import net.kasax.raft.world.biome.ModBiomes;
 import net.minecraft.block.BlockState;
@@ -11,6 +12,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -18,6 +20,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.recipe.Recipe;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -28,6 +31,8 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public class ItemCollectorBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory {
     public static final Property<Integer> HAS_NET = IntProperty.of("has_net", 0, 1);
@@ -179,7 +184,9 @@ public class ItemCollectorBlockEntity extends BlockEntity implements ExtendedScr
     }
 
     private void craftItemKeepInput() {
+        Optional<ItemCatchingRecipe> recipe = getCurrentRecipe();
         ItemStack inputStack = getStack(INPUT_SLOT);
+        ItemStack result = recipe.get().getOutput(getWorld().getRegistryManager());
 
         if (!inputStack.isEmpty()) {
             // Damage the item in the input slot by 1
@@ -192,8 +199,6 @@ public class ItemCollectorBlockEntity extends BlockEntity implements ExtendedScr
                 setStack(INPUT_SLOT, inputStack);
             }
         }
-
-        ItemStack result = new ItemStack(ModBlocks.DRIFTWOOD_LOG.asItem());
 
         // Add the result to the output slot
         setStack(OUTPUT_SLOT, new ItemStack(result.getItem(), getStack(OUTPUT_SLOT).getCount() + result.getCount()));
@@ -209,10 +214,24 @@ public class ItemCollectorBlockEntity extends BlockEntity implements ExtendedScr
     }
 
     private boolean hasRecipe() {
-        ItemStack result = new ItemStack(ModBlocks.DRIFTWOOD_LOG.asItem());
-        boolean hasInput = getStack(INPUT_SLOT).getItem() == ModItems.NET;
+        Optional<ItemCatchingRecipe> recipe = getCurrentRecipe();
 
-        return hasInput && canInsertAmountIntoOutputSlot(result) && canInsertItemIntoOutputSlot(result.getItem());
+        if(recipe.isEmpty()) {
+            return false;
+        }
+
+        ItemStack result = recipe.get().getOutput(getWorld().getRegistryManager());
+
+        return recipe.isPresent() && canInsertAmountIntoOutputSlot(result) && canInsertItemIntoOutputSlot(result.getItem());
+    }
+
+    private Optional<ItemCatchingRecipe> getCurrentRecipe() {
+        SimpleInventory inv = new SimpleInventory(this.size());
+        for(int i = 0; i < this.size(); i++) {
+            inv.setStack(i, this.getStack(i));
+        }
+
+        return getWorld().getRecipeManager().getFirstMatch(ItemCatchingRecipe.Type.INSTANCE, inv, getWorld());
     }
 
     private boolean canInsertItemIntoOutputSlot(Item item) {

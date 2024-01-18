@@ -1,0 +1,11 @@
+{
+  "type": "raft:item_catching",
+  "ingredients": [
+    {
+      "item": "raft:net"
+    }
+  ],
+  "output": {
+    "item": "raft:driftwood_log"
+  }
+}

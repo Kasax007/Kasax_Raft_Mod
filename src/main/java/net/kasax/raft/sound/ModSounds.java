@@ -4,6 +4,8 @@ import net.kasax.raft.Raft;
 import net.minecraft.client.sound.Sound;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.sound.BiomeMoodSound;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 
@@ -17,6 +19,8 @@ public class ModSounds {
         Identifier id = new Identifier(Raft.MOD_ID, name);
         return Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));
     }
+
+
     public static void registerSounds() {
         Raft.LOGGER.info("Registering Sounds for " + Raft.MOD_ID);
     }

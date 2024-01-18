@@ -1,20 +1,18 @@
 package net.kasax.raft.world.biome;
 
 import net.kasax.raft.Raft;
+import net.minecraft.client.sound.MusicType;
 import net.minecraft.registry.Registerable;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.sound.MusicSound;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEffects;
 import net.minecraft.world.biome.GenerationSettings;
 import net.minecraft.world.biome.SpawnSettings;
-import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.DefaultBiomeFeatures;
-import net.minecraft.world.gen.feature.PlacedFeature;
-import net.minecraft.world.gen.structure.Structure;
-import net.minecraft.world.gen.structure.StructureKeys;
 
 public class ModBiomes {
     public static final RegistryKey<Biome> RAFT_OCEAN_BIOME = RegistryKey.of(RegistryKeys.BIOME,
@@ -33,6 +31,11 @@ public class ModBiomes {
 
     public static Biome raftOceanBiome(Registerable<Biome> context) {
         SpawnSettings.Builder spawnBuilder = new SpawnSettings.Builder();
+
+        MusicSound musicSound1;
+        MusicSound musicSound2;
+        musicSound1 = MusicType.createIngameMusic(SoundEvents.MUSIC_OVERWORLD_LUSH_CAVES);
+        musicSound2 = MusicType.createIngameMusic(SoundEvents.MUSIC_OVERWORLD_CHERRY_GROVE);
 
         DefaultBiomeFeatures.addFarmAnimals(spawnBuilder);
         DefaultBiomeFeatures.addBatsAndMonsters(spawnBuilder);
@@ -68,6 +71,8 @@ public class ModBiomes {
                         .waterFogColor(0x1833aa)
                         .skyColor(0x6cbaea)
                         .fogColor(0x22a1e6)
+                        .music(musicSound1)
+                        .music(musicSound2)
                         .build())
                 .build();
     }

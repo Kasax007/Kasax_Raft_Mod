@@ -11,6 +11,7 @@ import net.kasax.raft.block.entity.ModBlockEntities;
 import net.kasax.raft.datagen.ModWorldGenerator;
 import net.kasax.raft.item.ModItemGroups;
 import net.kasax.raft.item.ModItems;
+import net.kasax.raft.recipe.ModRecipes;
 import net.kasax.raft.screen.ModScreenHandlers;
 import net.kasax.raft.sound.ModSounds;
 import net.kasax.raft.util.ModLootTableModifiers;
@@ -55,6 +56,8 @@ public class Raft implements ModInitializer {
 		ModLootTableModifiers.modifyLootTables();
 		ModWorldGeneration.generateModWorldGen();
 		ModSounds.registerSounds();
+
+		ModRecipes.registerRecipes();
 
 		ModBlockEntities.registerBlockEntities();
 		ModScreenHandlers.registerScreenHandlers();
