@@ -12,6 +12,7 @@
     "raft:raw_titanium_block",
     "raft:titanium_ore",
     "raft:deepslate_titanium_ore",
+    "raft:titanium_grates",
     "raft:item_catcher"
   ]
 }

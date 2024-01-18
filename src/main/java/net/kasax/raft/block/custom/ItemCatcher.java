@@ -33,7 +33,7 @@ public class ItemCatcher extends BlockWithEntity implements BlockEntityProvider,
     public ItemCatcher(Settings settings) {
         super(settings);
         setDefaultState(getStateManager().getDefaultState()
-                .with(Properties.HORIZONTAL_FACING, Direction.NORTH)
+                //.with(Properties.HORIZONTAL_FACING, Direction.NORTH)
                 .with(WATERLOGGED, false)
                 .with(ItemCollectorBlockEntity.HAS_NET, 0));
     }

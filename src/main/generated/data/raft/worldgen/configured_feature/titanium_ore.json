@@ -6,12 +6,7 @@
     "targets": [
       {
         "state": {
-          "Name": "raft:titanium_ore",
-          "Properties": {
-            "distance": "7",
-            "persistent": "false",
-            "waterlogged": "false"
-          }
+          "Name": "raft:titanium_ore"
         },
         "target": {
           "predicate_type": "minecraft:tag_match",
@@ -20,12 +15,7 @@
       },
       {
         "state": {
-          "Name": "raft:deepslate_titanium_ore",
-          "Properties": {
-            "distance": "7",
-            "persistent": "false",
-            "waterlogged": "false"
-          }
+          "Name": "raft:deepslate_titanium_ore"
         },
         "target": {
           "predicate_type": "minecraft:tag_match",

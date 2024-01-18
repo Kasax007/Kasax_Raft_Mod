@@ -1,4 +1,4 @@
-// 1.20.1	2024-01-17T19:31:24.1081115	Raft/Recipes
+// 1.20.1	2024-01-18T01:26:43.048357	Raft/Recipes
 8fc82dbf207d1348039af4f94fcf92352d6a9ce8 data\raft\recipes\titanium_ingot_from_smelting_raw_titanium.json
 fc4b77970cf093c9f91228ea932cadee158973d2 data\raft\advancements\recipes\misc\titanium_ingot.json
 78a6956e585374bf40c125849349488f1128436e data\raft\advancements\recipes\misc\item_catcher.json
@@ -20,13 +20,15 @@ f6f077bfbd4a2f9f05ae0d0f9d7da06b55b8ec8e data\raft\recipes\titanium_ingot_from_b
 05625b9f28da9394337ab91fadffa99fd54a31f6 data\raft\advancements\recipes\misc\titanium_ingot_from_titanium_block.json
 33798beb147cd6e938dec1eeee7d1289b0fd9feb data\raft\advancements\recipes\misc\titanium_block.json
 c55ac6f2c45841bc838d6f94b9abe0f6a261c591 data\raft\recipes\raw_titanium_block.json
-9d9f1795f543e06399215fb93bab903319d33b0e data\raft\advancements\recipes\misc\energy_staff.json
 85c7418bf94de878c78dbc91e472d38378f7e650 data\raft\recipes\titanium_block.json
+9d9f1795f543e06399215fb93bab903319d33b0e data\raft\advancements\recipes\misc\energy_staff.json
+f70db0f30c5572277fabd019e2ec112c2bf88ae3 data\raft\recipes\titanium_grates.json
 1a9c26240c6d47ca9a2c17b3fc47d441f4fb2469 data\raft\recipes\titanium_ingot_from_titanium_block.json
 d1762b6fd156a3b8e5ca8faace7574a874a3bf62 data\raft\advancements\recipes\building_blocks\driftwood_planks.json
 20e51513d197c52a3536e722cf586cd1bbe00aa0 data\raft\recipes\item_catcher.json
 7955a11d0e7153f50742632f2b3be9228ba48bf5 data\raft\recipes\stripped_driftwood_wood.json
 af142ce39d4a4d9bb6f73a020a2b9e8132b3e918 data\raft\advancements\recipes\misc\driftwood_portal_frame.json
+ecb790177e02ba65019352f74f8de67d3fd31179 data\raft\advancements\recipes\misc\titanium_grates.json
 3ab8bf1eb060ac973d250d37e9cc8492ae6a3391 data\raft\recipes\net.json
 fac9c35171a20ab8150067b690aa7cf3f3f1e600 data\raft\recipes\titanium_nugget_from_titanium_ingot.json
 4dc355a69975a8f9b668d3f2fddf173eb5450943 data\raft\advancements\recipes\misc\ancient_energy_from_blasting_ancient_broken_ring.json

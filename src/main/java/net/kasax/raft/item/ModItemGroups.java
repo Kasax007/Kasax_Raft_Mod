@@ -37,6 +37,7 @@ public class ModItemGroups {
                         entries.add(ModItems.RAW_TITANIUM);
                         entries.add(ModItems.TITANIUM_INGOT);
                         entries.add(ModItems.TITANIUM_NUGGET);
+                        entries.add(ModBlocks.TITANIUM_GRATES);
 
                         entries.add(ModItems.SOME_GAME_MUSIC_MUSIC_DISC);
                         entries.add(ModItems.LOFI_BEAT_MUSIC_DISC);

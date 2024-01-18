@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.kasax.raft.Raft;
 import net.kasax.raft.block.custom.DriftwoodPortalFrameBlock;
 import net.kasax.raft.block.custom.ItemCatcher;
+import net.kasax.raft.block.custom.TitaniumGrates;
 import net.kasax.raft.world.tree.DriftwoodSaplingBlock;
 import net.kasax.raft.world.tree.DriftwoodSaplingGenerator;
 import net.minecraft.block.*;
@@ -39,18 +40,21 @@ public class ModBlocks {
 
 
     public static final Block TITANIUM_ORE = registerBlock("titanium_ore",
-            new LeavesBlock(FabricBlockSettings.copyOf(Blocks.DIAMOND_ORE).strength(4f)));
+            new Block(FabricBlockSettings.copyOf(Blocks.DIAMOND_ORE).strength(4f)));
     public static final Block DEEPSLATE_TITANIUM_ORE = registerBlock("deepslate_titanium_ore",
-            new LeavesBlock(FabricBlockSettings.copyOf(Blocks.DEEPSLATE_DIAMOND_ORE).strength(4f)));
+            new Block(FabricBlockSettings.copyOf(Blocks.DEEPSLATE_DIAMOND_ORE).strength(4f)));
 
     public static final Block RAW_TITANIUM_BLOCK = registerBlock("raw_titanium_block",
-            new LeavesBlock(FabricBlockSettings.copyOf(Blocks.DIAMOND_BLOCK).strength(4f)));
+            new Block(FabricBlockSettings.copyOf(Blocks.DIAMOND_BLOCK).strength(4f)));
 
     public static final Block TITANIUM_BLOCK = registerBlock("titanium_block",
-            new LeavesBlock(FabricBlockSettings.copyOf(Blocks.NETHERITE_BLOCK).strength(4f)));
+            new Block(FabricBlockSettings.copyOf(Blocks.NETHERITE_BLOCK).strength(4f)));
 
     public static final Block ITEM_CATCHER = registerBlock("item_catcher",
             new ItemCatcher(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS).nonOpaque()));
+
+    public static final Block TITANIUM_GRATES = registerBlock("titanium_grates",
+            new TitaniumGrates(FabricBlockSettings.copyOf(Blocks.COPPER_BLOCK).nonOpaque().strength(4f)));
 
     private static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block);

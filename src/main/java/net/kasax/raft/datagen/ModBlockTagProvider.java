@@ -30,6 +30,7 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(ModBlocks.RAW_TITANIUM_BLOCK)
                 .add(ModBlocks.TITANIUM_ORE)
                 .add(ModBlocks.DEEPSLATE_TITANIUM_ORE)
+                .add(ModBlocks.TITANIUM_GRATES)
                 .add(ModBlocks.ITEM_CATCHER);
 
         getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
@@ -39,7 +40,8 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(ModBlocks.RAW_TITANIUM_BLOCK)
                 .add(ModBlocks.TITANIUM_ORE)
                 .add(ModBlocks.TITANIUM_BLOCK)
-                .add(ModBlocks.DEEPSLATE_TITANIUM_ORE);
+                .add(ModBlocks.DEEPSLATE_TITANIUM_ORE)
+                .add(ModBlocks.TITANIUM_GRATES);
 
         getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL)
                 .add(ModBlocks.DRIFTWOOD_PORTAL_FRAME);
@@ -48,7 +50,8 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(ModBlocks.RAW_TITANIUM_BLOCK)
                 .add(ModBlocks.TITANIUM_ORE)
                 .add(ModBlocks.DEEPSLATE_TITANIUM_ORE)
-                .add(ModBlocks.TITANIUM_BLOCK);
+                .add(ModBlocks.TITANIUM_BLOCK)
+                .add(ModBlocks.TITANIUM_GRATES);
 
         getOrCreateTagBuilder(BlockTags.LOGS_THAT_BURN)
                 .add(ModBlocks.DRIFTWOOD_LOG)

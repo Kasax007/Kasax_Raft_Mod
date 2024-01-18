@@ -19,8 +19,8 @@ import java.util.List;
 public class ModLootTableModifiers {
     private static final Identifier FISHING_TREASURE_ID =
             new Identifier("minecraft", "gameplay/fishing/treasure");
-    private static final Identifier SUSPICIOUS_SAND_ID =
-            new Identifier("minecraft", "archaeology/desert_pyramid");
+    private static final Identifier SHIPWRECK_TREASURE_ID =
+            new Identifier("minecraft", "chests/shipwreck_treasure");
 
     public static void modifyLootTables() {
         //LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
@@ -32,20 +32,20 @@ public class ModLootTableModifiers {
         //        tableBuilder.pool(poolBuilder.build());
         //    }
         //});
-        LootTableEvents.REPLACE.register((resourceManager, lootManager, id, original, source) -> {
-            if(SUSPICIOUS_SAND_ID.equals(id)) {
-                List<LootPoolEntry> entries = new ArrayList<>(Arrays.asList(original.pools[0].entries));
-                entries.add(ItemEntry.builder(ModItems.ANCIENT_CRYSTAL).build());
-
-                LootPool.Builder pool = LootPool.builder().with(entries);
-                return LootTable.builder().pool(pool).build();
+        LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
+            if(SHIPWRECK_TREASURE_ID.equals(id)) {
+                LootPool.Builder poolBuilder = LootPool.builder()
+                .rolls(ConstantLootNumberProvider.create(1)) //adds extra item
+                .conditionally(RandomChanceLootCondition.builder(0.5f)) //drop chance 25%
+                .with(ItemEntry.builder(ModItems.ANCIENT_BROKEN_RING))
+                .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0f, 5.0f)).build()); //amount
+                tableBuilder.pool(poolBuilder.build());
             }
-            return null;
         });
         LootTableEvents.REPLACE.register((resourceManager, lootManager, id, original, source) -> {
             if(FISHING_TREASURE_ID.equals(id)) {
                 List<LootPoolEntry> entries = new ArrayList<>(Arrays.asList(original.pools[0].entries));
-                entries.add(ItemEntry.builder(ModItems.ANCIENT_BROKEN_RING).build());
+                entries.add(ItemEntry.builder(ModItems.ANCIENT_CRYSTAL).build());
 
                 LootPool.Builder pool = LootPool.builder().with(entries);
                 return LootTable.builder().pool(pool).build();

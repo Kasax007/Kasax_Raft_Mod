@@ -61,6 +61,14 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .criterion(hasItem(ModItems.RAW_TITANIUM), conditionsFromItem(ModItems.RAW_TITANIUM))
                 .offerTo(exporter, new Identifier(getRecipeName(ModBlocks.RAW_TITANIUM_BLOCK.asItem())));
 
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModBlocks.TITANIUM_GRATES.asItem(), 1)
+                .pattern("S S")
+                .pattern(" S ")
+                .pattern("S S")
+                .input('S', ModItems.TITANIUM_INGOT)
+                .criterion(hasItem(ModItems.TITANIUM_INGOT), conditionsFromItem(ModItems.TITANIUM_INGOT))
+                .offerTo(exporter, new Identifier(getRecipeName(ModBlocks.TITANIUM_GRATES.asItem())));
+
         ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModBlocks.ITEM_CATCHER.asItem(), 1)
                 .pattern("SSS")
                 .pattern("S S")

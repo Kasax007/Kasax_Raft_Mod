@@ -17,15 +17,16 @@
   "block.raft.deepslate_titanium_ore": "Deepslate Titanium Ore",
   "block.raft.raw_titanium_block": "Raw Titanium Block",
   "block.raft.titanium_block": "Titanium Block",
+  "block.raft.titanium_grates": "Titanium Grates",
   "item.raft.raw_titanium": "Raw Titanium",
   "item.raft.titanium_ingot": "Titanium Ingot",
   "item.raft.titanium_nugget": "Titanium Nugget",
   "item.raft.energy_staff": "Energy Staff",
 
   "item.raft.some_game_music_music_disc": "Some Game Music Disc",
-  "item.raft.some_game_music_music_disc.desc": "Some Game Music - Seth Makes Music (CC0)",
+  "item.raft.some_game_music_music_disc.desc": "Some Game Music - Seth Makes Sounds (CC0)",
   "item.raft.lofi_beat_music_disc": "Lofi Beat Music Disc",
-  "item.raft.lofi_beat_music_disc.desc": "Lofi Beat - Seth Makes Music (CC0)",
+  "item.raft.lofi_beat_music_disc.desc": "Lofi Beat - Seth Makes Sounds (CC0)",
 
   "item.raft.net": "Item Catcher Net",
 
@@ -34,8 +35,8 @@
 
   "chat.raft.energy_staff.invalid_target": "This staff can only be used on a Driftwood Portal Frame Portal!",
 
-  "sounds.raft.lofi_beat_seth": "Lofi Beat - Seth Makes Music",
-  "sounds.raft.some_game_music_seth": "Some Game Music - Seth Makes Music",
+  "sounds.raft.lofi_beat_seth": "Lofi Beat - Seth Makes Sounds",
+  "sounds.raft.some_game_music_seth": "Some Game Music - Seth Makes Sounds",
 
   "raft.item_collector_display_name": "Item Collector",
 

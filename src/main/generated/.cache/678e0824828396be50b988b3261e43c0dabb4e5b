@@ -1,7 +1,7 @@
-// 1.20.1	2024-01-17T19:31:24.1051384	Raft/Tags for minecraft:block
-2b2a254ef5b33b7e2f9d80ec86d6fea2be576eab data\raft\tags\blocks\raft_mod_block.json
+// 1.20.1	2024-01-18T01:26:43.0448856	Raft/Tags for minecraft:block
+52e18fd829bff7d9182892d3ff25549f5fb4d45a data\raft\tags\blocks\raft_mod_block.json
 8f26a7e1c7d40fbb76186a724f08f24f920a5cc2 data\minecraft\tags\blocks\logs_that_burn.json
 fdb66c929a3fbf1fad8bbc0df37e994f4c71d4c5 data\minecraft\tags\blocks\needs_iron_tool.json
 fdb66c929a3fbf1fad8bbc0df37e994f4c71d4c5 data\minecraft\tags\blocks\mineable\axe.json
-684423e3d0f75f400f905e182f072e74cfb2d366 data\minecraft\tags\blocks\mineable\pickaxe.json
-9f5f8a5c7d5757ff71315d80b68eba197677ab41 data\minecraft\tags\blocks\needs_diamond_tool.json
+71fcfbf51399cb394be54423d4c568f4dd65fa5f data\minecraft\tags\blocks\mineable\pickaxe.json
+587992de15c7fcb7dbbdcd62649749f4565ab7e4 data\minecraft\tags\blocks\needs_diamond_tool.json

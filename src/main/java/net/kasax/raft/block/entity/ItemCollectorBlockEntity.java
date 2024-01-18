@@ -15,6 +15,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -66,6 +69,10 @@ public class ItemCollectorBlockEntity extends BlockEntity implements ExtendedScr
         updateBlockState();
     }
 
+    public ItemStack getRenderStack() {
+        return this.getStack(OUTPUT_SLOT);
+    }
+
     public void updateBlockState() {
         int hasNet = this.hasNetInInputSlot();
         if (world != null && pos != null) {
@@ -110,6 +117,7 @@ public class ItemCollectorBlockEntity extends BlockEntity implements ExtendedScr
     }
     @Override
     public void markDirty() {
+        //world.updateListeners(pos, getCachedState(), getCachedState(), 3);
         super.markDirty();
         updateBlockState();
     }
@@ -219,4 +227,15 @@ public class ItemCollectorBlockEntity extends BlockEntity implements ExtendedScr
         return this.getStack(OUTPUT_SLOT).isEmpty() || this.getStack(OUTPUT_SLOT).getCount() < this.getStack(OUTPUT_SLOT).getMaxCount();
     }
 
-    }
+    //Sync for client renderer of item
+    //@Nullable
+    //@Override
+    //public Packet<ClientPlayPacketListener> toUpdatePacket() {
+    //    return BlockEntityUpdateS2CPacket.create(this);
+    //}
+
+    //@Override
+    //public NbtCompound toInitialChunkDataNbt() {
+    //    return createNbt();
+    //}
+}
