@@ -17,7 +17,7 @@ public class ItemCatcherDisplay extends BasicDisplay {
     }
 
     public ItemCatcherDisplay(ItemCatchingRecipe recipe) {
-        super(recipe.getIngredients(), recipe.getOutput(HOW GO I GET IT AS LIST HERE));
+        super(getInputList(recipe), List.of(EntryIngredients.of(recipe.getOutput(null))));
     }
 
     private static List<EntryIngredient> getInputList(ItemCatchingRecipe recipe) {
