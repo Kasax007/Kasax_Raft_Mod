@@ -13,6 +13,15 @@
   "block.raft.driftwood_sapling": "Driftwood Sapling",
   "block.raft.item_catcher": "Item Catcher",
 
+  "block.raft.driftwood_stairs": "Driftwood Stairs",
+  "block.raft.driftwood_slab": "Driftwood Slab",
+  "block.raft.driftwood_button": "Driftwood Button",
+  "block.raft.driftwood_pressure_plate": "Driftwood Pressure Plate",
+  "block.raft.driftwood_fence": "Driftwood Fence",
+  "block.raft.driftwood_fence_gate": "Driftwood Fence Gate",
+  "block.raft.driftwood_door": "Driftwood Door",
+  "block.raft.driftwood_trapdoor": "Driftwood Trapdoor",
+
   "block.raft.titanium_ore": "Titanium Ore",
   "block.raft.deepslate_titanium_ore": "Deepslate Titanium Ore",
   "block.raft.raw_titanium_block": "Raw Titanium Block",

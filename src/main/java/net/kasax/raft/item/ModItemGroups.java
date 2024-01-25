@@ -30,6 +30,16 @@ public class ModItemGroups {
                         entries.add(ModBlocks.DRIFTWOOD_LOG);
                         entries.add(ModBlocks.DRIFTWOOD_WOOD);
                         entries.add(ModBlocks.DRIFTWOOD_PLANKS);
+
+                        entries.add(ModBlocks.DRIFTWOOD_STAIRS);
+                        entries.add(ModBlocks.DRIFTWOOD_SLAB);
+                        entries.add(ModBlocks.DRIFTWOOD_DOOR);
+                        entries.add(ModBlocks.DRIFTWOOD_TRAPDOOR);
+                        entries.add(ModBlocks.DRIFTWOOD_FENCE);
+                        entries.add(ModBlocks.DRIFTWOOD_FENCE_GATE);
+                        entries.add(ModBlocks.DRIFTWOOD_BUTTON);
+                        entries.add(ModBlocks.DRIFTWOOD_PRESSURE_PLATE);
+
                         entries.add(ModBlocks.TITANIUM_ORE);
                         entries.add(ModBlocks.DEEPSLATE_TITANIUM_ORE);
                         entries.add(ModBlocks.RAW_TITANIUM_BLOCK);

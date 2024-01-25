@@ -9,6 +9,7 @@ import net.minecraft.data.server.recipe.RecipeJsonProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.registry.tag.TagKey;
@@ -17,6 +18,8 @@ import net.minecraft.world.gen.feature.MiscConfiguredFeatures;
 
 import java.util.List;
 import java.util.function.Consumer;
+
+import static net.minecraft.recipe.book.RecipeCategory.MISC;
 
 public class ModRecipeProvider extends FabricRecipeProvider {
     private static final List<ItemConvertible> ENEREGY_SMELTERS = List.of(ModItems.ANCIENT_BROKEN_RING);
@@ -27,7 +30,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
 
     @Override
     public void generate(Consumer<RecipeJsonProvider> exporter) {
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModBlocks.DRIFTWOOD_PORTAL_FRAME.asItem(), 1)
+        ShapedRecipeJsonBuilder.create(MISC, ModBlocks.DRIFTWOOD_PORTAL_FRAME.asItem(), 1)
                 .pattern(" S ")
                 .pattern("SRS")
                 .pattern(" S ")
@@ -37,7 +40,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .criterion(hasItem(ModBlocks.DRIFTWOOD_LOG.asItem()), conditionsFromItem(ModBlocks.DRIFTWOOD_LOG.asItem()))
                 .offerTo(exporter, new Identifier(getRecipeName(ModBlocks.DRIFTWOOD_PORTAL_FRAME.asItem())));
 
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModItems.TITANIUM_INGOT, 1)
+        ShapedRecipeJsonBuilder.create(MISC, ModItems.TITANIUM_INGOT, 1)
                 .pattern("SSS")
                 .pattern("SSS")
                 .pattern("SSS")
@@ -45,7 +48,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .criterion(hasItem(ModItems.TITANIUM_NUGGET), conditionsFromItem(ModItems.TITANIUM_NUGGET))
                 .offerTo(exporter, new Identifier(getRecipeName(ModItems.TITANIUM_INGOT)));
 
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModBlocks.TITANIUM_BLOCK.asItem(), 1)
+        ShapedRecipeJsonBuilder.create(MISC, ModBlocks.TITANIUM_BLOCK.asItem(), 1)
                 .pattern("SSS")
                 .pattern("SSS")
                 .pattern("SSS")
@@ -53,7 +56,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .criterion(hasItem(ModItems.TITANIUM_INGOT), conditionsFromItem(ModItems.TITANIUM_INGOT))
                 .offerTo(exporter, new Identifier(getRecipeName(ModBlocks.TITANIUM_BLOCK.asItem())));
 
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModBlocks.RAW_TITANIUM_BLOCK.asItem(), 1)
+        ShapedRecipeJsonBuilder.create(MISC, ModBlocks.RAW_TITANIUM_BLOCK.asItem(), 1)
                 .pattern("SSS")
                 .pattern("SSS")
                 .pattern("SSS")
@@ -61,7 +64,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .criterion(hasItem(ModItems.RAW_TITANIUM), conditionsFromItem(ModItems.RAW_TITANIUM))
                 .offerTo(exporter, new Identifier(getRecipeName(ModBlocks.RAW_TITANIUM_BLOCK.asItem())));
 
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModBlocks.TITANIUM_GRATES.asItem(), 1)
+        ShapedRecipeJsonBuilder.create(MISC, ModBlocks.TITANIUM_GRATES.asItem(), 1)
                 .pattern("S S")
                 .pattern(" S ")
                 .pattern("S S")
@@ -69,7 +72,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .criterion(hasItem(ModItems.TITANIUM_INGOT), conditionsFromItem(ModItems.TITANIUM_INGOT))
                 .offerTo(exporter, new Identifier(getRecipeName(ModBlocks.TITANIUM_GRATES.asItem())));
 
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModBlocks.ITEM_CATCHER.asItem(), 1)
+        ShapedRecipeJsonBuilder.create(MISC, ModBlocks.ITEM_CATCHER.asItem(), 1)
                 .pattern("SSS")
                 .pattern("S S")
                 .pattern("SSS")
@@ -77,7 +80,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .criterion(hasItem(ModBlocks.DRIFTWOOD_LOG.asItem()), conditionsFromItem(ModBlocks.DRIFTWOOD_LOG.asItem()))
                 .offerTo(exporter, new Identifier(getRecipeName(ModBlocks.ITEM_CATCHER.asItem())));
 
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModItems.NET, 1)
+        ShapedRecipeJsonBuilder.create(MISC, ModItems.NET, 1)
                 .pattern("S S")
                 .pattern("SSS")
                 .pattern("S S")
@@ -86,7 +89,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .offerTo(exporter, new Identifier(getRecipeName(ModItems.NET)));
 
 
-        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModItems.ENERGY_STAFF, 1)
+        ShapedRecipeJsonBuilder.create(MISC, ModItems.ENERGY_STAFF, 1)
                 .pattern(" S ")
                 .pattern(" R ")
                 .pattern(" D ")
@@ -98,6 +101,30 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .criterion(hasItem(Items.STICK), conditionsFromItem(Items.STICK))
                 .offerTo(exporter, new Identifier(getRecipeName(ModItems.ENERGY_STAFF)));
 
+
+        createDoorRecipe(ModBlocks.DRIFTWOOD_DOOR.asItem(), Ingredient.ofItems(ModBlocks.DRIFTWOOD_PLANKS.asItem())).criterion(hasItem(ModBlocks.DRIFTWOOD_PLANKS.asItem()), conditionsFromItem(ModBlocks.DRIFTWOOD_PLANKS.asItem()))
+                .offerTo(exporter, new Identifier(getRecipeName(ModBlocks.DRIFTWOOD_DOOR.asItem())));
+        createSlabRecipe(MISC, ModBlocks.DRIFTWOOD_SLAB.asItem(), Ingredient.ofItems(ModBlocks.DRIFTWOOD_PLANKS.asItem())).criterion(hasItem(ModBlocks.DRIFTWOOD_PLANKS.asItem()), conditionsFromItem(ModBlocks.DRIFTWOOD_PLANKS.asItem()))
+                .offerTo(exporter, new Identifier(getRecipeName(ModBlocks.DRIFTWOOD_SLAB.asItem())));
+        createStairsRecipe(ModBlocks.DRIFTWOOD_STAIRS.asItem(), Ingredient.ofItems(ModBlocks.DRIFTWOOD_PLANKS.asItem())).criterion(hasItem(ModBlocks.DRIFTWOOD_PLANKS.asItem()), conditionsFromItem(ModBlocks.DRIFTWOOD_PLANKS.asItem()))
+                .offerTo(exporter, new Identifier(getRecipeName(ModBlocks.DRIFTWOOD_STAIRS.asItem())));
+        createPressurePlateRecipe(MISC, ModBlocks.DRIFTWOOD_PRESSURE_PLATE.asItem(), Ingredient.ofItems(ModBlocks.DRIFTWOOD_PLANKS.asItem())).criterion(hasItem(ModBlocks.DRIFTWOOD_PLANKS.asItem()), conditionsFromItem(ModBlocks.DRIFTWOOD_PLANKS.asItem()))
+                .offerTo(exporter, new Identifier(getRecipeName(ModBlocks.DRIFTWOOD_PRESSURE_PLATE.asItem())));
+        createFenceRecipe(ModBlocks.DRIFTWOOD_FENCE.asItem(), Ingredient.ofItems(ModBlocks.DRIFTWOOD_PLANKS.asItem())).criterion(hasItem(ModBlocks.DRIFTWOOD_PLANKS.asItem()), conditionsFromItem(ModBlocks.DRIFTWOOD_PLANKS.asItem()))
+                .offerTo(exporter, new Identifier(getRecipeName(ModBlocks.DRIFTWOOD_FENCE.asItem())));
+        createFenceGateRecipe(ModBlocks.DRIFTWOOD_FENCE_GATE.asItem(), Ingredient.ofItems(ModBlocks.DRIFTWOOD_PLANKS.asItem())).criterion(hasItem(ModBlocks.DRIFTWOOD_PLANKS.asItem()), conditionsFromItem(ModBlocks.DRIFTWOOD_PLANKS.asItem()))
+                .offerTo(exporter, new Identifier(getRecipeName(ModBlocks.DRIFTWOOD_FENCE_GATE.asItem())));
+
+        ShapedRecipeJsonBuilder.create(MISC, ModBlocks.DRIFTWOOD_TRAPDOOR, 2)
+                .pattern("   ")
+                .pattern("SSS")
+                .pattern("SSS")
+                .input('S', ModBlocks.DRIFTWOOD_PLANKS.asItem())
+                .criterion(hasItem(ModBlocks.DRIFTWOOD_PLANKS.asItem()), conditionsFromItem(ModBlocks.DRIFTWOOD_PLANKS.asItem()))
+                .offerTo(exporter, new Identifier(getRecipeName(ModBlocks.DRIFTWOOD_TRAPDOOR.asItem())));
+
+        offerShapelessRecipe(exporter,ModBlocks.DRIFTWOOD_BUTTON.asItem(), ModBlocks.DRIFTWOOD_PLANKS.asItem(), "MISC4", 1);
+
         offerShapelessRecipe(exporter, ModItems.TITANIUM_NUGGET, ModItems.TITANIUM_INGOT, "MISC1", 9);
         offerShapelessRecipe(exporter, ModItems.TITANIUM_INGOT, ModBlocks.TITANIUM_BLOCK.asItem(), "MISC2", 9);
         offerShapelessRecipe(exporter, ModItems.RAW_TITANIUM, ModBlocks.RAW_TITANIUM_BLOCK.asItem(), "MISC3", 9);
@@ -106,16 +133,18 @@ public class ModRecipeProvider extends FabricRecipeProvider {
         offerBarkBlockRecipe(exporter, ModBlocks.STRIPPED_DRIFTWOOD_WOOD, ModBlocks.STRIPPED_DRIFTWOOD_LOG);
         offerPlanksRecipe(exporter, ModBlocks.DRIFTWOOD_PLANKS, ModTags.Items.DRIFTWOOD_LOGS, 4);
 
-        offerSmelting(exporter, ENEREGY_SMELTERS, RecipeCategory.MISC, ModItems.ANCIENT_ENERGY,
+        offerSmelting(exporter, ENEREGY_SMELTERS, MISC, ModItems.ANCIENT_ENERGY,
                 0.7f, 200, "misc");
 
-        offerBlasting(exporter, ENEREGY_SMELTERS, RecipeCategory.MISC, ModItems.ANCIENT_ENERGY,
+        offerBlasting(exporter, ENEREGY_SMELTERS, MISC, ModItems.ANCIENT_ENERGY,
                 0.7f, 100, "misc");
 
-        offerSmelting(exporter, TITANIUM_SMELTERS, RecipeCategory.MISC, ModItems.TITANIUM_INGOT,
+        offerSmelting(exporter, TITANIUM_SMELTERS, MISC, ModItems.TITANIUM_INGOT,
                 0.7f, 200, "misc");
 
-        offerBlasting(exporter, TITANIUM_SMELTERS, RecipeCategory.MISC, ModItems.TITANIUM_INGOT,
+        offerBlasting(exporter, TITANIUM_SMELTERS, MISC, ModItems.TITANIUM_INGOT,
                 0.7f, 100, "misc");
+
+
     }
 }

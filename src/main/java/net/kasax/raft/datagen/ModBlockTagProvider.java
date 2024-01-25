@@ -58,5 +58,10 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(ModBlocks.DRIFTWOOD_WOOD)
                 .add(ModBlocks.STRIPPED_DRIFTWOOD_WOOD)
                 .add(ModBlocks.STRIPPED_DRIFTWOOD_LOG);
+
+        getOrCreateTagBuilder(BlockTags.FENCES)
+                .add(ModBlocks.DRIFTWOOD_FENCE);
+        getOrCreateTagBuilder(BlockTags.FENCE_GATES)
+                .add(ModBlocks.DRIFTWOOD_FENCE_GATE);
     }
 }

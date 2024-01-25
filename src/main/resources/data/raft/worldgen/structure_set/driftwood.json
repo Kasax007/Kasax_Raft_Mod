@@ -4,6 +4,8 @@
   "structures": [
     {
       "structure": "raft:driftwood",
+      "weight": 1,
+      "structure": "raft:driftwoodtwo",
       "weight": 1
     }
   ],

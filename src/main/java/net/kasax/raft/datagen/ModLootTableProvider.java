@@ -1,5 +1,6 @@
 package net.kasax.raft.datagen;
 
+import dev.architectury.platform.Mod;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.kasax.raft.block.ModBlocks;
@@ -35,6 +36,14 @@ public class ModLootTableProvider extends FabricBlockLootTableProvider {
         addDrop(ModBlocks.DRIFTWOOD_SAPLING);
         addDrop(ModBlocks.ITEM_CATCHER);
         addDrop(ModBlocks.TITANIUM_GRATES);
+        addDrop(ModBlocks.DRIFTWOOD_STAIRS);
+        addDrop(ModBlocks.DRIFTWOOD_SLAB, slabDrops(ModBlocks.DRIFTWOOD_SLAB));
+        addDrop(ModBlocks.DRIFTWOOD_FENCE);
+        addDrop(ModBlocks.DRIFTWOOD_FENCE_GATE);
+        addDrop(ModBlocks.DRIFTWOOD_BUTTON);
+        addDrop(ModBlocks.DRIFTWOOD_DOOR, doorDrops(ModBlocks.DRIFTWOOD_DOOR));
+        addDrop(ModBlocks.DRIFTWOOD_PRESSURE_PLATE);
+        addDrop(ModBlocks.DRIFTWOOD_TRAPDOOR);
 
         addDrop(ModBlocks.TITANIUM_ORE, copperLikeOreDrops(ModBlocks.TITANIUM_ORE, ModItems.RAW_TITANIUM));
         addDrop(ModBlocks.DEEPSLATE_TITANIUM_ORE, copperLikeOreDrops(ModBlocks.DEEPSLATE_TITANIUM_ORE, ModItems.RAW_TITANIUM));

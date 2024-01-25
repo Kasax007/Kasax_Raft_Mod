@@ -247,14 +247,14 @@ public class ItemCollectorBlockEntity extends BlockEntity implements ExtendedScr
     }
 
     //Sync for client renderer of item
-    //@Nullable
-    //@Override
-    //public Packet<ClientPlayPacketListener> toUpdatePacket() {
-    //    return BlockEntityUpdateS2CPacket.create(this);
-    //}
+    @Nullable
+    @Override
+    public Packet<ClientPlayPacketListener> toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
+    }
 
-    //@Override
-    //public NbtCompound toInitialChunkDataNbt() {
-    //    return createNbt();
-    //}
+    @Override
+    public NbtCompound toInitialChunkDataNbt() {
+        return createNbt();
+    }
 }

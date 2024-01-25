@@ -32,6 +32,29 @@ public class ModBlocks {
 
     public static final Block DRIFTWOOD_PLANKS = registerBlock("driftwood_planks",
             new Block(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS).strength(4f)));
+
+    public static final Block DRIFTWOOD_STAIRS = registerBlock("driftwood_stairs",
+            new StairsBlock(ModBlocks.DRIFTWOOD_PLANKS.getDefaultState(), FabricBlockSettings.copyOf(Blocks.OAK_WOOD)));
+
+    public static final Block DRIFTWOOD_SLAB = registerBlock("driftwood_slab",
+            new SlabBlock(FabricBlockSettings.copyOf(Blocks.OAK_WOOD)));
+
+    public static final Block DRIFTWOOD_BUTTON = registerBlock("driftwood_button",
+            new ButtonBlock(FabricBlockSettings.copyOf(Blocks.OAK_WOOD).collidable(false), BlockSetType.OAK, 10, true));
+    public static final Block DRIFTWOOD_PRESSURE_PLATE = registerBlock("driftwood_pressure_plate",
+            new PressurePlateBlock(PressurePlateBlock.ActivationRule.EVERYTHING, FabricBlockSettings.copyOf(Blocks.OAK_WOOD), BlockSetType.OAK));
+
+    public static final Block DRIFTWOOD_FENCE = registerBlock("driftwood_fence",
+            new FenceBlock(FabricBlockSettings.copyOf(Blocks.OAK_WOOD)));
+
+    public static final Block DRIFTWOOD_FENCE_GATE = registerBlock("driftwood_fence_gate",
+            new FenceGateBlock(FabricBlockSettings.copyOf(Blocks.OAK_WOOD), WoodType.OAK));
+
+    public static final Block DRIFTWOOD_DOOR = registerBlock("driftwood_door",
+            new DoorBlock(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS).nonOpaque(), BlockSetType.OAK));
+
+    public static final Block DRIFTWOOD_TRAPDOOR = registerBlock("driftwood_trapdoor",
+            new TrapdoorBlock(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS).nonOpaque(), BlockSetType.OAK));
     public static final Block DRIFTWOOD_LEAVES = registerBlock("driftwood_leaves",
             new LeavesBlock(FabricBlockSettings.copyOf(Blocks.OAK_LEAVES).strength(4f).nonOpaque()));
 

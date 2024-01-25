@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "raft:block/driftwood_slab"
+    },
+    "type=double": {
+      "model": "raft:block/driftwood_planks"
+    },
+    "type=top": {
+      "model": "raft:block/driftwood_slab_top"
+    }
+  }
+}

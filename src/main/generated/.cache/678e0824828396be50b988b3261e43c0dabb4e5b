@@ -1,7 +1,9 @@
-// 1.20.1	2024-01-18T01:26:43.0448856	Raft/Tags for minecraft:block
+// 1.20.1	2024-01-25T15:37:08.419958	Raft/Tags for minecraft:block
 52e18fd829bff7d9182892d3ff25549f5fb4d45a data\raft\tags\blocks\raft_mod_block.json
 8f26a7e1c7d40fbb76186a724f08f24f920a5cc2 data\minecraft\tags\blocks\logs_that_burn.json
+1381c210864081cf39981503ccf1d8c7113c1838 data\minecraft\tags\blocks\fence_gates.json
 fdb66c929a3fbf1fad8bbc0df37e994f4c71d4c5 data\minecraft\tags\blocks\needs_iron_tool.json
+fe090804115119620bdce431ed7fc3c3d7e7f891 data\minecraft\tags\blocks\fences.json
 fdb66c929a3fbf1fad8bbc0df37e994f4c71d4c5 data\minecraft\tags\blocks\mineable\axe.json
 71fcfbf51399cb394be54423d4c568f4dd65fa5f data\minecraft\tags\blocks\mineable\pickaxe.json
 587992de15c7fcb7dbbdcd62649749f4565ab7e4 data\minecraft\tags\blocks\needs_diamond_tool.json
