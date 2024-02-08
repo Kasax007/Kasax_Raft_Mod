@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "minecraft:copper_ingot"
+    },
+    "C": {
+      "item": "minecraft:slime_ball"
+    },
+    "S": {
+      "item": "raft:plastic"
+    }
+  },
+  "pattern": [
+    "BCB",
+    "SSS",
+    "   "
+  ],
+  "result": {
+    "item": "raft:circuit_board"
+  },
+  "show_notification": true
+}

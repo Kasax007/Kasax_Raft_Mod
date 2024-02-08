@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "MISC4",
+  "ingredients": [
+    {
+      "item": "raft:driftwood_planks"
+    }
+  ],
+  "result": {
+    "item": "raft:driftwood_button"
+  }
+}

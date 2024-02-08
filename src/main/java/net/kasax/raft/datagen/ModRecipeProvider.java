@@ -123,6 +123,18 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .criterion(hasItem(ModBlocks.DRIFTWOOD_PLANKS.asItem()), conditionsFromItem(ModBlocks.DRIFTWOOD_PLANKS.asItem()))
                 .offerTo(exporter, new Identifier(getRecipeName(ModBlocks.DRIFTWOOD_TRAPDOOR.asItem())));
 
+        ShapedRecipeJsonBuilder.create(MISC, ModItems.CIRCUIT_BOARD, 1)
+                .pattern("BCB")
+                .pattern("SSS")
+                .pattern("   ")
+                .input('S', ModItems.PLASTIC)
+                .input('B', Items.COPPER_INGOT)
+                .input('C', Items.SLIME_BALL)
+                .criterion(hasItem(ModItems.PLASTIC), conditionsFromItem(ModItems.PLASTIC))
+                .criterion(hasItem(Items.COPPER_INGOT), conditionsFromItem(Items.COPPER_INGOT))
+                .criterion(hasItem(Items.SLIME_BALL), conditionsFromItem(Items.SLIME_BALL))
+                .offerTo(exporter, new Identifier(getRecipeName(ModItems.CIRCUIT_BOARD)));
+
         offerShapelessRecipe(exporter,ModBlocks.DRIFTWOOD_BUTTON.asItem(), ModBlocks.DRIFTWOOD_PLANKS.asItem(), "MISC4", 1);
 
         offerShapelessRecipe(exporter, ModItems.TITANIUM_NUGGET, ModItems.TITANIUM_INGOT, "MISC1", 9);

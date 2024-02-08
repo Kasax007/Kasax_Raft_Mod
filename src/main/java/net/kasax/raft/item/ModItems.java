@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.kasax.raft.Raft;
 import net.kasax.raft.item.custom.EnergyStaffItem;
+import net.kasax.raft.item.custom.RaftTeleporter;
 import net.kasax.raft.sound.ModSounds;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
@@ -21,6 +22,9 @@ public class ModItems {
     public static final Item RAW_TITANIUM = registerItem("raw_titanium", new Item(new FabricItemSettings()));
     public static final Item TITANIUM_INGOT = registerItem("titanium_ingot", new Item(new FabricItemSettings()));
     public static final Item TITANIUM_NUGGET = registerItem("titanium_nugget", new Item(new FabricItemSettings()));
+    public static final Item PLASTIC = registerItem("plastic", new Item(new FabricItemSettings()));
+    public static final Item CIRCUIT_BOARD = registerItem("circuit_board", new Item(new FabricItemSettings()));
+    public static final Item TRASH_CUBE = registerItem("trash_cube", new Item(new FabricItemSettings()));
 
 
     public static final Item NET = registerItem("net", new Item(new FabricItemSettings().maxCount(1).maxDamage(32)));
@@ -32,6 +36,8 @@ public class ModItems {
             new MusicDiscItem(7, ModSounds.Lofi_Beat_Seth, new FabricItemSettings().maxCount(1), 120));
 
     public static final Item ENERGY_STAFF = registerItem("energy_staff", new EnergyStaffItem(new FabricItemSettings().maxCount(1).maxDamage(64)));
+
+    public static final Item RAFT_TELEPORTER = registerItem("raft_teleporter", new RaftTeleporter(new FabricItemSettings().maxCount(1).maxDamage(64)));
 
     //Item layout
     private static Item registerItem(String name, Item item) {

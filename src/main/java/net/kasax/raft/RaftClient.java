@@ -23,7 +23,7 @@ public class RaftClient implements ClientModInitializer {
 
         HandledScreens.register(ModScreenHandlers.ITEM_COLLECTOR_SCREEN_HANDLER, ItemCollectorScreen::new);
 
-        BlockEntityRendererFactories.register(ModBlockEntities.ITEM_COLLECTOR_BLOCK_ENTITY, ItemCatcherBlockEntityRenderer::new);
+        //BlockEntityRendererFactories.register(ModBlockEntities.ITEM_COLLECTOR_BLOCK_ENTITY, ItemCatcherBlockEntityRenderer::new);
 
     }
 }

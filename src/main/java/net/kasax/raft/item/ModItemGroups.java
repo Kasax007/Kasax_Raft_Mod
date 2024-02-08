@@ -18,8 +18,12 @@ public class ModItemGroups {
                         entries.add(ModItems.ANCIENT_BROKEN_RING);
                         entries.add(ModItems.ANCIENT_ENERGY);
                         entries.add(ModItems.ANCIENT_CRYSTAL);
+                        entries.add(ModItems.PLASTIC);
+                        entries.add(ModItems.CIRCUIT_BOARD);
+                        entries.add(ModItems.TRASH_CUBE);
 
                         entries.add(ModItems.ENERGY_STAFF);
+                        entries.add(ModItems.RAFT_TELEPORTER);
 
                         entries.add(ModBlocks.DRIFTWOOD_PORTAL_FRAME);
 

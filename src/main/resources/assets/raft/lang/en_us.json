@@ -31,6 +31,13 @@
   "item.raft.titanium_ingot": "Titanium Ingot",
   "item.raft.titanium_nugget": "Titanium Nugget",
   "item.raft.energy_staff": "Energy Staff",
+  "item.raft.raft_teleporter": "Raft Dimension Teleporter",
+  "item.raft.plastic": "Plastic",
+  "item.raft.circuit_board": "Circuit Board",
+  "item.raft.trash_cube": "Trash Cube",
+  "item.raft.teleporter1": "Please stand still, checking for a safe spot",
+  "item.raft.teleporter2": "Still checking...",
+  "item.raft.teleporter3": "Unable to find a safe spot, please try again in another spot",
 
   "item.raft.some_game_music_music_disc": "Some Game Music Disc",
   "item.raft.some_game_music_music_disc.desc": "Some Game Music - Seth Makes Sounds (CC0)",
@@ -40,6 +47,7 @@
   "item.raft.net": "Item Catcher Net",
 
   "tooltip.raft.energy_staff.tooltip": "Used to light the Raft Portal!",
+  "tooltip.raft.raft_teleporter.tooltip": "Use to teleport directly to the Raft Dimension!",
   "tooltip.raft.driftwood_portal_frame.tooltip": "Used to build the Raft Portal!",
 
   "chat.raft.energy_staff.invalid_target": "This staff can only be used on a Driftwood Portal Frame Portal!",
