@@ -21,6 +21,8 @@ import net.minecraft.world.chunk.Chunk;
 
 import java.util.Random;
 
+import static net.minecraft.sound.SoundEvents.ITEM_LODESTONE_COMPASS_LOCK;
+
 public class TeleporterUtil
 {
     public static TypedActionResult<ItemStack> movePlayer(RegistryKey<World> dimKey, World world, PlayerEntity player, Hand hand)
@@ -110,7 +112,10 @@ public class TeleporterUtil
                                 FabricDimensions.teleport(serverPlayer, destWorld, teleportTarget);
 
                                 serverPlayer.fallDistance = 0.0F;
-                                world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.NEUTRAL, 0.5F, 0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F));
+                                world.playSound((PlayerEntity) null, player.getX(), player.getY(), player.getZ(),
+                                        ITEM_LODESTONE_COMPASS_LOCK, SoundCategory.NEUTRAL, 0.5F,
+                                        1F / (world.getRandom().nextFloat() * 0.4F + 0.8F));
+                                //world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.NEUTRAL, 0.5F, 0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F));
 
                                 return TypedActionResult.success(stack);
                             }
