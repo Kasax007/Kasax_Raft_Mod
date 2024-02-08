@@ -3,10 +3,12 @@ package net.kasax.raft.item.custom;
 import net.kasax.raft.block.ModBlocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -38,9 +40,10 @@ public class EnergyStaffItem extends Item {
             if (!world.isClient() && hand == Hand.MAIN_HAND) {
                 assert user != null;
                 user.getItemCooldownManager().set(this, 20);
-                world.playSound((PlayerEntity) null, user.getX(), user.getY(), user.getZ(),
+                world.playSound(null, user.getX(), user.getY(), user.getZ(),
                         ITEM_LODESTONE_COMPASS_LOCK, SoundCategory.NEUTRAL, 20F,
                         1F / (world.getRandom().nextFloat() * 0.4F + 0.8F));
+                damageItem((ServerPlayerEntity) user, 1);
             }
             return ActionResult.PASS;
         } else {
@@ -57,5 +60,19 @@ public class EnergyStaffItem extends Item {
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         tooltip.add(Text.translatable("tooltip.raft.energy_staff.tooltip").formatted(Formatting.AQUA));
         super.appendTooltip(stack, world, tooltip, context);
+    }
+
+    // Custom method to handle item damage
+    private void damageItem(ServerPlayerEntity player, int amount) {
+        ItemStack stack = player.getMainHandStack();
+        if (!player.isCreative()) {
+            if (stack.isDamageable()) {
+                stack.damage(amount, player, (entity) -> entity.sendToolBreakStatus(player.getActiveHand()));
+                if (stack.isEmpty()) {
+                    player.sendToolBreakStatus(player.getActiveHand());
+                    player.setStackInHand(player.getActiveHand(), ItemStack.EMPTY);
+                }
+            }
+        }
     }
 }

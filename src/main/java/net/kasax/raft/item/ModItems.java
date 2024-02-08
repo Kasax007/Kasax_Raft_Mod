@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.kasax.raft.Raft;
 import net.kasax.raft.item.custom.EnergyStaffItem;
+import net.kasax.raft.item.custom.MetalDetector;
 import net.kasax.raft.item.custom.RaftTeleporter;
 import net.kasax.raft.sound.ModSounds;
 import net.minecraft.item.Item;
@@ -38,6 +39,7 @@ public class ModItems {
     public static final Item ENERGY_STAFF = registerItem("energy_staff", new EnergyStaffItem(new FabricItemSettings().maxCount(1).maxDamage(64)));
 
     public static final Item RAFT_TELEPORTER = registerItem("raft_teleporter", new RaftTeleporter(new FabricItemSettings().maxCount(1).maxDamage(64)));
+    public static final Item METAL_DETECTOR = registerItem("metal_detector", new MetalDetector(new FabricItemSettings().maxCount(1).maxDamage(128)));
 
     //Item layout
     private static Item registerItem(String name, Item item) {

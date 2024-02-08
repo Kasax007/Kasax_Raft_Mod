@@ -24,6 +24,7 @@ public class ModItemGroups {
 
                         entries.add(ModItems.ENERGY_STAFF);
                         entries.add(ModItems.RAFT_TELEPORTER);
+                        entries.add(ModItems.METAL_DETECTOR);
 
                         entries.add(ModBlocks.DRIFTWOOD_PORTAL_FRAME);
 

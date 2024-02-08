@@ -27,8 +27,11 @@ public class RaftTeleporter extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand)
     {
         ItemStack stack = player.getStackInHand(hand);
+        if (!player.isCreative()) {
+            stack.damage(1, world.random, null);
+        }
         TeleporterUtil.movePlayer(dimKey, world, player, hand);
-
+        player.getItemCooldownManager().set(this, 20);
         return TypedActionResult.success(stack);
     }
     @Override
