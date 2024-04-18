@@ -135,6 +135,26 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .criterion(hasItem(Items.SLIME_BALL), conditionsFromItem(Items.SLIME_BALL))
                 .offerTo(exporter, new Identifier(getRecipeName(ModItems.CIRCUIT_BOARD)));
 
+        ShapedRecipeJsonBuilder.create(MISC, ModItems.RAFT_TELEPORTER, 1)
+                .pattern(" S ")
+                .pattern("BSB")
+                .pattern("SSS")
+                .input('S', ModItems.TITANIUM_INGOT)
+                .input('B', ModItems.ANCIENT_ENERGY)
+                .criterion(hasItem(ModItems.TITANIUM_INGOT), conditionsFromItem(ModItems.TITANIUM_INGOT))
+                .criterion(hasItem(ModItems.ANCIENT_ENERGY), conditionsFromItem(ModItems.ANCIENT_ENERGY))
+                .offerTo(exporter, new Identifier(getRecipeName(ModItems.RAFT_TELEPORTER)));
+
+        ShapedRecipeJsonBuilder.create(MISC, ModItems.METAL_DETECTOR, 1)
+                .pattern("SBS")
+                .pattern(" S ")
+                .pattern("SSS")
+                .input('S', ModItems.TITANIUM_INGOT)
+                .input('B', ModItems.CIRCUIT_BOARD)
+                .criterion(hasItem(ModItems.TITANIUM_INGOT), conditionsFromItem(ModItems.TITANIUM_INGOT))
+                .criterion(hasItem(ModItems.CIRCUIT_BOARD), conditionsFromItem(ModItems.CIRCUIT_BOARD))
+                .offerTo(exporter, new Identifier(getRecipeName(ModItems.METAL_DETECTOR)));
+
         offerShapelessRecipe(exporter,ModBlocks.DRIFTWOOD_BUTTON.asItem(), ModBlocks.DRIFTWOOD_PLANKS.asItem(), "MISC4", 1);
 
         offerShapelessRecipe(exporter, ModItems.TITANIUM_NUGGET, ModItems.TITANIUM_INGOT, "MISC1", 9);

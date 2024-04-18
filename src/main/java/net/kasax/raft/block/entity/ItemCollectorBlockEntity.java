@@ -82,9 +82,14 @@ public class ItemCollectorBlockEntity extends BlockEntity implements ExtendedScr
         int hasNet = this.hasNetInInputSlot();
         if (world != null && pos != null) {
             BlockState currentState = world.getBlockState(pos);
-            BlockState newState = currentState.with(HAS_NET, hasNet);
-            if (currentState != newState) {
-                world.setBlockState(pos, newState);
+            try {
+                BlockState newState = currentState.with(HAS_NET, hasNet);
+                if (currentState != newState) {
+                    world.setBlockState(pos, newState);
+                }
+            }
+            catch (Exception e) {
+                System.out.println(e.getLocalizedMessage());
             }
         }
     }

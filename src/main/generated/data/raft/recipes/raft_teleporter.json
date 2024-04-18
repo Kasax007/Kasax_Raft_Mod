@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "raft:ancient_energy"
+    },
+    "S": {
+      "item": "raft:titanium_ingot"
+    }
+  },
+  "pattern": [
+    " S ",
+    "BSB",
+    "SSS"
+  ],
+  "result": {
+    "item": "raft:raft_teleporter"
+  },
+  "show_notification": true
+}
