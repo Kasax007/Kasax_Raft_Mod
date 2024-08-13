@@ -23,7 +23,7 @@ public class RaftReiClientPlugin implements REIClientPlugin {
     @Override
     public void registerDisplays(DisplayRegistry registry) {
         registry.registerRecipeFiller(ItemCatchingRecipe.class, ItemCatchingRecipe.Type.INSTANCE,
-                ItemCatcherDisplay::new);
+                itemCatchingRecipeRecipeEntry -> new ItemCatcherDisplay((ItemCatchingRecipe) itemCatchingRecipeRecipeEntry.value()));
     }
 
     @Override

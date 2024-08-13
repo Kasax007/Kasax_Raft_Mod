@@ -77,8 +77,7 @@ public class ItemCatcher extends BlockWithEntity implements BlockEntityProvider,
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, ModBlockEntities.ITEM_COLLECTOR_BLOCK_ENTITY,
-                (world1, pos, state1, blockEntity) -> blockEntity.tick(world1, pos, state1));
+        return validateTicker(type, ModBlockEntities.ITEM_COLLECTOR_BLOCK_ENTITY, (world1, pos, state1, blockEntity) -> blockEntity.tick(world1, pos, state1));
     }
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 

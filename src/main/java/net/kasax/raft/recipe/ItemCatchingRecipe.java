@@ -2,6 +2,9 @@ package net.kasax.raft.recipe;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
@@ -10,19 +13,18 @@ import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.world.World;
 
 import java.util.List;
 
 public class ItemCatchingRecipe implements Recipe<SimpleInventory> {
-    private final Identifier id;
     private final ItemStack output;
-    private final DefaultedList<Ingredient> recipeItems;
+    private final List<Ingredient> recipeItems;
 
-    public ItemCatchingRecipe(Identifier id, ItemStack output, DefaultedList<Ingredient> recipeItems) {
-        this.output = output;
-        this.id = id;
-        this.recipeItems = recipeItems;
+    public ItemCatchingRecipe(List<Ingredient> ingredients, ItemStack itemStack) {
+        this.output = itemStack;
+        this.recipeItems = ingredients;
     }
 
     @Override
@@ -45,8 +47,8 @@ public class ItemCatchingRecipe implements Recipe<SimpleInventory> {
     }
 
     @Override
-    public ItemStack getOutput(DynamicRegistryManager registryManager) {
-        return output.copy();
+    public ItemStack getResult(DynamicRegistryManager registryManager) {
+        return output;
     }
 
     @Override
@@ -54,11 +56,6 @@ public class ItemCatchingRecipe implements Recipe<SimpleInventory> {
         DefaultedList<Ingredient> list = DefaultedList.ofSize(this.recipeItems.size());
         list.addAll(recipeItems);
         return list;
-    }
-
-    @Override
-    public Identifier getId() {
-        return id;
     }
 
     @Override
@@ -77,43 +74,46 @@ public class ItemCatchingRecipe implements Recipe<SimpleInventory> {
     }
 
     public static class Serializer implements RecipeSerializer<ItemCatchingRecipe> {
-
         public static final Serializer INSTANCE = new Serializer();
         public static final String ID = "item_catching";
 
-        @Override
-        public ItemCatchingRecipe read(Identifier id, JsonObject json) {
-            ItemStack output = ShapedRecipe.outputFromJson(JsonHelper.getObject(json, "output"));
+        public static final Codec<ItemCatchingRecipe> CODEC = RecordCodecBuilder.create(in -> in.group(
+                validateAmount(Ingredient.DISALLOW_EMPTY_CODEC, 9).fieldOf("ingredients").forGetter(ItemCatchingRecipe::getIngredients),
+                RecipeCodecs.CRAFTING_RESULT.fieldOf("output").forGetter(r -> r.output)
+        ).apply(in, ItemCatchingRecipe::new));
 
-            JsonArray ingredients = JsonHelper.getArray(json, "ingredients");
-            DefaultedList<Ingredient> inputs = DefaultedList.ofSize(1, Ingredient.EMPTY);
-
-            for (int i = 0; i < inputs.size(); i++) {
-                inputs.set(i, Ingredient.fromJson(ingredients.get(i)));
-            }
-
-            return new ItemCatchingRecipe(id, output, inputs);
+        private static Codec<List<Ingredient>> validateAmount(Codec<Ingredient> delegate, int max) {
+            return Codecs.validate(Codecs.validate(
+                    delegate.listOf(), list -> list.size() > max ? DataResult.error(() -> "Recipe has too many ingredients!") : DataResult.success(list)
+            ), list -> list.isEmpty() ? DataResult.error(() -> "Recipe has no ingredients!") : DataResult.success(list));
         }
 
         @Override
-        public ItemCatchingRecipe read(Identifier id, PacketByteBuf buf) {
+        public Codec<ItemCatchingRecipe> codec() {
+            return CODEC;
+        }
+
+        @Override
+        public ItemCatchingRecipe read(PacketByteBuf buf) {
             DefaultedList<Ingredient> inputs = DefaultedList.ofSize(buf.readInt(), Ingredient.EMPTY);
 
-            for (int i = 0; i < inputs.size(); i++) {
+            for(int i = 0; i < inputs.size(); i++) {
                 inputs.set(i, Ingredient.fromPacket(buf));
             }
 
             ItemStack output = buf.readItemStack();
-            return new ItemCatchingRecipe(id, output, inputs);
+            return new ItemCatchingRecipe(inputs, output);
         }
 
         @Override
         public void write(PacketByteBuf buf, ItemCatchingRecipe recipe) {
             buf.writeInt(recipe.getIngredients().size());
-            for (Ingredient ing : recipe.getIngredients()) {
-                ing.write(buf);
+
+            for (Ingredient ingredient : recipe.getIngredients()) {
+                ingredient.write(buf);
             }
-            buf.writeItemStack(recipe.getOutput(null));
+
+            buf.writeItemStack(recipe.getResult(null));
         }
     }
 }

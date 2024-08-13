@@ -1,7 +1,6 @@
 package net.kasax.raft.block.entity;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.kasax.raft.block.ModBlocks;
 import net.kasax.raft.block.custom.ItemCatcher;
 import net.kasax.raft.item.ModItems;
 import net.kasax.raft.recipe.ItemCatchingRecipe;
@@ -21,6 +20,7 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -189,9 +189,9 @@ public class ItemCollectorBlockEntity extends BlockEntity implements ExtendedScr
     }
 
     private void craftItemKeepInput() {
-        Optional<ItemCatchingRecipe> recipe = getCurrentRecipe();
+        Optional<RecipeEntry<ItemCatchingRecipe>> recipe = getCurrentRecipe();
         ItemStack inputStack = getStack(INPUT_SLOT);
-        ItemStack result = recipe.get().getOutput(getWorld().getRegistryManager());
+        ItemStack result = recipe.get().value().getResult(null).getItem().getDefaultStack();
 
         if (!inputStack.isEmpty()) {
             // Damage the item in the input slot by 1
@@ -219,18 +219,13 @@ public class ItemCollectorBlockEntity extends BlockEntity implements ExtendedScr
     }
 
     private boolean hasRecipe() {
-        Optional<ItemCatchingRecipe> recipe = getCurrentRecipe();
+        Optional<RecipeEntry<ItemCatchingRecipe>> recipe = getCurrentRecipe();
 
-        if(recipe.isEmpty()) {
-            return false;
-        }
-
-        ItemStack result = recipe.get().getOutput(getWorld().getRegistryManager());
-
-        return recipe.isPresent() && canInsertAmountIntoOutputSlot(result) && canInsertItemIntoOutputSlot(result.getItem());
+        return recipe.isPresent() && canInsertAmountIntoOutputSlot(recipe.get().value().getResult(null))
+                && canInsertItemIntoOutputSlot(recipe.get().value().getResult(null).getItem());
     }
 
-    private Optional<ItemCatchingRecipe> getCurrentRecipe() {
+    private Optional<RecipeEntry<ItemCatchingRecipe>> getCurrentRecipe() {
         SimpleInventory inv = new SimpleInventory(this.size());
         for(int i = 0; i < this.size(); i++) {
             inv.setStack(i, this.getStack(i));

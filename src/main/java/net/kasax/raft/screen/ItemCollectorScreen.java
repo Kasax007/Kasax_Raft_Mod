@@ -45,7 +45,7 @@ public class ItemCollectorScreen extends HandledScreen<ItemCollectorScreenHandle
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        renderBackground(context); //expected more arguments according to tutorial
+        renderBackground(context, mouseX, mouseY, delta); //expected more arguments according to tutorial
         super.render(context, mouseX, mouseY, delta);
         drawMouseoverTooltip(context, mouseX, mouseY);
     }

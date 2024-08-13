@@ -6,6 +6,9 @@ import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.kasax.raft.recipe.ItemCatchingRecipe;
+import net.minecraft.inventory.SimpleInventory;
+import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeEntry;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,7 +20,7 @@ public class ItemCatcherDisplay extends BasicDisplay {
     }
 
     public ItemCatcherDisplay(ItemCatchingRecipe recipe) {
-        super(getInputList(recipe), List.of(EntryIngredients.of(recipe.getOutput(null))));
+        super(getInputList(recipe), List.of(EntryIngredient.of(EntryStacks.of(recipe.getResult(null)))));
     }
 
     private static List<EntryIngredient> getInputList(ItemCatchingRecipe recipe) {

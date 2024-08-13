@@ -5,7 +5,9 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.kasax.raft.block.ModBlocks;
 import net.kasax.raft.item.ModItems;
 import net.kasax.raft.util.ModTags;
+import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
@@ -29,7 +31,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
     }
 
     @Override
-    public void generate(Consumer<RecipeJsonProvider> exporter) {
+    public void generate(RecipeExporter exporter) {
         ShapedRecipeJsonBuilder.create(MISC, ModBlocks.DRIFTWOOD_PORTAL_FRAME.asItem(), 1)
                 .pattern(" S ")
                 .pattern("SRS")
