@@ -1,4 +1,4 @@
-// 1.20.1	2024-04-18T22:18:08.0843878	Raft/Recipes
+// 1.20.1	2024-08-13T17:06:28.578693	Raft/Recipes
 8fc82dbf207d1348039af4f94fcf92352d6a9ce8 data\raft\recipes\titanium_ingot_from_smelting_raw_titanium.json
 9147726d848fa794449c7cc2430b39b1ff57d90a data\raft\advancements\recipes\misc\driftwood_slab.json
 fc4b77970cf093c9f91228ea932cadee158973d2 data\raft\advancements\recipes\misc\titanium_ingot.json
@@ -34,8 +34,8 @@ f58878643b7f62d6452246db08eb56fd96ed9348 data\raft\recipes\driftwood_wood.json
 48db0d33c01ba9d5d0d26c0e34f8885778e046ac data\raft\advancements\recipes\misc\titanium_nugget_from_titanium_ingot.json
 fa985fc8c70df96602a99f84631dfb50e4872e55 data\raft\advancements\recipes\building_blocks\stripped_driftwood_wood.json
 fb6cd387d514ea62d3b156a4aac8a2cc624e03f0 data\raft\recipes\driftwood_door.json
-9b190c5c19a4163d77fce4628173535708820810 data\raft\advancements\recipes\misc\ancient_energy_from_smelting_ancient_broken_ring.json
 5e87825228fc542554e2e9c222d9977e45cb89a6 data\raft\advancements\recipes\misc\raw_titanium_from_raw_titanium_block.json
+9b190c5c19a4163d77fce4628173535708820810 data\raft\advancements\recipes\misc\ancient_energy_from_smelting_ancient_broken_ring.json
 a9116d75c89aa5ea90362c1264993facdc49a28d data\raft\recipes\driftwood_button_from_driftwood_planks.json
 43a17173daeb9812527f2e533d843b44353fe35b data\raft\recipes\ancient_energy_from_blasting_ancient_broken_ring.json
 b22cfa2511118adf9989e2ea07681c72814a0ff2 data\raft\recipes\driftwood_slab.json

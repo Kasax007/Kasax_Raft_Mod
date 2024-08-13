@@ -7,6 +7,7 @@ import net.kasax.raft.item.ModItems;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ItemModelGenerator;
 import net.minecraft.data.client.Models;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.util.Identifier;
 
 public class ModModelProvider extends FabricModelProvider {
@@ -58,6 +59,11 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.SOME_GAME_MUSIC_MUSIC_DISC, Models.GENERATED);
 
         itemModelGenerator.register(ModItems.NET, Models.GENERATED);
+
+        itemModelGenerator.registerArmor(((ArmorItem) ModItems.TITANIUM_HELMET));
+        itemModelGenerator.registerArmor(((ArmorItem) ModItems.TITANIUM_CHESTPLATE));
+        itemModelGenerator.registerArmor(((ArmorItem) ModItems.TITANIUM_LEGGINGS));
+        itemModelGenerator.registerArmor(((ArmorItem) ModItems.TITANIUM_BOOTS));
 
     }
 }

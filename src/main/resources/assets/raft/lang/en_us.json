@@ -30,6 +30,12 @@
   "item.raft.raw_titanium": "Raw Titanium",
   "item.raft.titanium_ingot": "Titanium Ingot",
   "item.raft.titanium_nugget": "Titanium Nugget",
+
+  "item.raft.titanium_helmet": "Titanium Helmet",
+  "item.raft.titanium_chestplate": "Titanium Chestplate",
+  "item.raft.titanium_leggings": "Titanium Leggings",
+  "item.raft.titanium_boots": "Titanium Boots",
+
   "item.raft.energy_staff": "Energy Staff",
   "item.raft.raft_teleporter": "Raft Dimension Teleporter",
   "item.raft.metal_detector": "Metal Detector",

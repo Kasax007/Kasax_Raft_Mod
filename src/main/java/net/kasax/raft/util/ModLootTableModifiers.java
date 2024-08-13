@@ -37,7 +37,7 @@ public class ModLootTableModifiers {
                 LootPool.Builder poolBuilder = LootPool.builder()
                 .rolls(ConstantLootNumberProvider.create(1)) //adds extra item
                 .conditionally(RandomChanceLootCondition.builder(0.5f)) //drop chance 25%
-                .with(ItemEntry.builder(ModItems.ANCIENT_BROKEN_RING))
+                .with(ItemEntry.builder(ModItems.ANCIENT_CRYSTAL))
                 .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0f, 5.0f)).build()); //amount
                 tableBuilder.pool(poolBuilder.build());
             }
@@ -45,7 +45,7 @@ public class ModLootTableModifiers {
         LootTableEvents.REPLACE.register((resourceManager, lootManager, id, original, source) -> {
             if(FISHING_TREASURE_ID.equals(id)) {
                 List<LootPoolEntry> entries = new ArrayList<>(Arrays.asList(original.pools[0].entries));
-                entries.add(ItemEntry.builder(ModItems.ANCIENT_CRYSTAL).build());
+                entries.add(ItemEntry.builder(ModItems.ANCIENT_BROKEN_RING).build());
 
                 LootPool.Builder pool = LootPool.builder().with(entries);
                 return LootTable.builder().pool(pool).build();

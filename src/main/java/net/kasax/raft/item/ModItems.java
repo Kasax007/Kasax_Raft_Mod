@@ -6,8 +6,10 @@ import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.kasax.raft.Raft;
 import net.kasax.raft.item.custom.EnergyStaffItem;
 import net.kasax.raft.item.custom.MetalDetector;
+import net.kasax.raft.item.custom.ModArmorItem;
 import net.kasax.raft.item.custom.RaftTeleporter;
 import net.kasax.raft.sound.ModSounds;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.MusicDiscItem;
@@ -26,6 +28,19 @@ public class ModItems {
     public static final Item PLASTIC = registerItem("plastic", new Item(new FabricItemSettings()));
     public static final Item CIRCUIT_BOARD = registerItem("circuit_board", new Item(new FabricItemSettings()));
     public static final Item TRASH_CUBE = registerItem("trash_cube", new Item(new FabricItemSettings()));
+
+
+    public static final Item TITANIUM_HELMET = registerItem("titanium_helmet",
+            new ModArmorItem(ModArmorMaterials.TITANIUM, ArmorItem.Type.HELMET, new FabricItemSettings()));
+
+    public static final Item TITANIUM_CHESTPLATE = registerItem("titanium_chestplate",
+            new ArmorItem(ModArmorMaterials.TITANIUM, ArmorItem.Type.CHESTPLATE, new FabricItemSettings()));
+
+    public static final Item TITANIUM_LEGGINGS = registerItem("titanium_leggings",
+            new ArmorItem(ModArmorMaterials.TITANIUM, ArmorItem.Type.LEGGINGS, new FabricItemSettings()));
+
+    public static final Item TITANIUM_BOOTS = registerItem("titanium_boots",
+            new ArmorItem(ModArmorMaterials.TITANIUM, ArmorItem.Type.BOOTS, new FabricItemSettings()));
 
 
     public static final Item NET = registerItem("net", new Item(new FabricItemSettings().maxCount(1).maxDamage(32)));
