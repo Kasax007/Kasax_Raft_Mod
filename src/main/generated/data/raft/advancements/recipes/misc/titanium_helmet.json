@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:titanium_block"
+        "recipe": "minecraft:titanium_helmet"
       },
       "trigger": "minecraft:recipe_unlocked"
     },
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:titanium_block"
+      "minecraft:titanium_helmet"
     ]
   },
   "sends_telemetry_event": false

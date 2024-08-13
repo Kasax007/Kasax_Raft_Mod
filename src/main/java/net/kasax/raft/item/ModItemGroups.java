@@ -21,6 +21,7 @@ public class ModItemGroups {
                         entries.add(ModItems.PLASTIC);
                         entries.add(ModItems.CIRCUIT_BOARD);
                         entries.add(ModItems.TRASH_CUBE);
+                        entries.add(ModItems.OCEAN_BALL);
 
                         entries.add(ModItems.ENERGY_STAFF);
                         entries.add(ModItems.RAFT_TELEPORTER);

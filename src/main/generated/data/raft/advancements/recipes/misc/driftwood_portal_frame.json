@@ -34,9 +34,9 @@
   },
   "requirements": [
     [
+      "has_the_recipe",
       "has_ancient_broken_ring",
-      "has_driftwood_log",
-      "has_the_recipe"
+      "has_driftwood_log"
     ]
   ],
   "rewards": {

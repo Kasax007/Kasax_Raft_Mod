@@ -34,9 +34,9 @@
   },
   "requirements": [
     [
+      "has_the_recipe",
       "has_titanium_ingot",
-      "has_circuit_board",
-      "has_the_recipe"
+      "has_circuit_board"
     ]
   ],
   "rewards": {

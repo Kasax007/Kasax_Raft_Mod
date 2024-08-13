@@ -34,9 +34,9 @@
   },
   "requirements": [
     [
+      "has_the_recipe",
       "has_titanium_ingot",
-      "has_ancient_energy",
-      "has_the_recipe"
+      "has_ancient_energy"
     ]
   ],
   "rewards": {

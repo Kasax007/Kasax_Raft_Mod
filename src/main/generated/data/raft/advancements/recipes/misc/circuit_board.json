@@ -46,10 +46,10 @@
   },
   "requirements": [
     [
+      "has_the_recipe",
       "has_plastic",
       "has_copper_ingot",
-      "has_slime_ball",
-      "has_the_recipe"
+      "has_slime_ball"
     ]
   ],
   "rewards": {

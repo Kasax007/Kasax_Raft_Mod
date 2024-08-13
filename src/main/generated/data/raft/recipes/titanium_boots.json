@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "S": {
+      "item": "raft:titanium_ingot"
+    }
+  },
+  "pattern": [
+    "   ",
+    "S S",
+    "S S"
+  ],
+  "result": {
+    "item": "raft:titanium_boots"
+  },
+  "show_notification": true
+}

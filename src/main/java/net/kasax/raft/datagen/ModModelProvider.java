@@ -50,6 +50,7 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.PLASTIC, Models.GENERATED);
         itemModelGenerator.register(ModItems.CIRCUIT_BOARD, Models.GENERATED);
         itemModelGenerator.register(ModItems.TRASH_CUBE, Models.GENERATED);
+        itemModelGenerator.register(ModItems.OCEAN_BALL, Models.GENERATED);
 
         itemModelGenerator.register(ModItems.RAW_TITANIUM, Models.GENERATED);
         itemModelGenerator.register(ModItems.TITANIUM_INGOT, Models.GENERATED);

@@ -26,6 +26,7 @@ import static net.minecraft.recipe.book.RecipeCategory.MISC;
 public class ModRecipeProvider extends FabricRecipeProvider {
     private static final List<ItemConvertible> ENEREGY_SMELTERS = List.of(ModItems.ANCIENT_BROKEN_RING);
     private static final List<ItemConvertible> TITANIUM_SMELTERS = List.of(ModItems.RAW_TITANIUM);
+    private static final List<ItemConvertible> BALL_SMELTERS = List.of(ModItems.OCEAN_BALL);
     public ModRecipeProvider(FabricDataOutput output) {
         super(output);
     }
@@ -103,6 +104,37 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .criterion(hasItem(Items.STICK), conditionsFromItem(Items.STICK))
                 .offerTo(exporter, new Identifier(getRecipeName(ModItems.ENERGY_STAFF)));
 
+        ShapedRecipeJsonBuilder.create(MISC, ModItems.TITANIUM_HELMET, 1)
+                .pattern("SSS")
+                .pattern("S S")
+                .pattern("   ")
+                .input('S', ModItems.TITANIUM_INGOT)
+                .criterion(hasItem(ModItems.TITANIUM_INGOT), conditionsFromItem(ModItems.TITANIUM_INGOT))
+                .offerTo(exporter, new Identifier(getRecipeName(ModItems.TITANIUM_HELMET)));
+
+        ShapedRecipeJsonBuilder.create(MISC, ModItems.TITANIUM_CHESTPLATE, 1)
+                .pattern("S S")
+                .pattern("SSS")
+                .pattern("SSS")
+                .input('S', ModItems.TITANIUM_INGOT)
+                .criterion(hasItem(ModItems.TITANIUM_INGOT), conditionsFromItem(ModItems.TITANIUM_INGOT))
+                .offerTo(exporter, new Identifier(getRecipeName(ModItems.TITANIUM_CHESTPLATE)));
+
+        ShapedRecipeJsonBuilder.create(MISC, ModItems.TITANIUM_LEGGINGS, 1)
+                .pattern("SSS")
+                .pattern("S S")
+                .pattern("S S")
+                .input('S', ModItems.TITANIUM_INGOT)
+                .criterion(hasItem(ModItems.TITANIUM_INGOT), conditionsFromItem(ModItems.TITANIUM_INGOT))
+                .offerTo(exporter, new Identifier(getRecipeName(ModItems.TITANIUM_LEGGINGS)));
+
+        ShapedRecipeJsonBuilder.create(MISC, ModItems.TITANIUM_BOOTS, 1)
+                .pattern("   ")
+                .pattern("S S")
+                .pattern("S S")
+                .input('S', ModItems.TITANIUM_INGOT)
+                .criterion(hasItem(ModItems.TITANIUM_INGOT), conditionsFromItem(ModItems.TITANIUM_INGOT))
+                .offerTo(exporter, new Identifier(getRecipeName(ModItems.TITANIUM_BOOTS)));
 
         createDoorRecipe(ModBlocks.DRIFTWOOD_DOOR.asItem(), Ingredient.ofItems(ModBlocks.DRIFTWOOD_PLANKS.asItem())).criterion(hasItem(ModBlocks.DRIFTWOOD_PLANKS.asItem()), conditionsFromItem(ModBlocks.DRIFTWOOD_PLANKS.asItem()))
                 .offerTo(exporter, new Identifier(getRecipeName(ModBlocks.DRIFTWOOD_DOOR.asItem())));
@@ -179,6 +211,8 @@ public class ModRecipeProvider extends FabricRecipeProvider {
         offerBlasting(exporter, TITANIUM_SMELTERS, MISC, ModItems.TITANIUM_INGOT,
                 0.7f, 100, "misc");
 
+        offerSmelting(exporter, BALL_SMELTERS, MISC, ModItems.TRASH_CUBE,
+                0.7f, 200, "misc");
 
     }
 }
