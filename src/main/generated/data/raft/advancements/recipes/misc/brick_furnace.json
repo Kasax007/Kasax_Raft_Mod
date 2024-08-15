@@ -1,0 +1,61 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_ancient_energy": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "raft:ancient_energy"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_brick": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:brick"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_furnace": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:furnace"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "raft:brick_furnace"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_furnace",
+      "has_brick",
+      "has_ancient_energy"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "raft:brick_furnace"
+    ]
+  },
+  "sends_telemetry_event": false
+}

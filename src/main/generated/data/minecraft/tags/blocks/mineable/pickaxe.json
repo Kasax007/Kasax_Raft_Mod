@@ -5,6 +5,8 @@
     "raft:titanium_ore",
     "raft:titanium_block",
     "raft:deepslate_titanium_ore",
-    "raft:titanium_grates"
+    "raft:titanium_grates",
+    "raft:brick_furnace",
+    "raft:titanium_furnace"
   ]
 }

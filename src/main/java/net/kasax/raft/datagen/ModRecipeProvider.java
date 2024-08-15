@@ -3,7 +3,9 @@ package net.kasax.raft.datagen;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.kasax.raft.block.ModBlocks;
+import net.kasax.raft.config.FurnaceData;
 import net.kasax.raft.item.ModItems;
+import net.kasax.raft.util.FurnaceBlocks;
 import net.kasax.raft.util.ModTags;
 import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
@@ -213,6 +215,40 @@ public class ModRecipeProvider extends FabricRecipeProvider {
 
         offerSmelting(exporter, BALL_SMELTERS, MISC, ModItems.TRASH_CUBE,
                 0.7f, 200, "misc");
+
+        // Generate Furnace Recipes
+        FurnaceData.furnaceData.forEach(data -> {
+            String furnaceName = data.getName();
+
+            if ("brick_furnace".equals(furnaceName)) {
+                // Recipe for Brick Furnace
+                ShapedRecipeJsonBuilder.create(MISC, FurnaceBlocks.getFurnaceByName(furnaceName).asItem(), 1)
+                        .pattern("BBB")
+                        .pattern("BFB")
+                        .pattern("BAB")
+                        .input('B', Items.BRICK)
+                        .input('F', Items.FURNACE)
+                        .input('A', ModItems.ANCIENT_ENERGY)
+                        .criterion(hasItem(Items.FURNACE), conditionsFromItem(Items.FURNACE))
+                        .criterion(hasItem(Items.BRICK), conditionsFromItem(Items.BRICK))
+                        .criterion(hasItem(ModItems.ANCIENT_ENERGY), conditionsFromItem(ModItems.ANCIENT_ENERGY))
+                        .offerTo(exporter, new Identifier("raft", furnaceName));
+            }
+
+            if ("titanium_furnace".equals(furnaceName)) {
+                // Recipe for Titanium Furnace
+                ShapedRecipeJsonBuilder.create(MISC, FurnaceBlocks.getFurnaceByName(furnaceName).asItem(), 1)
+                        .pattern("TTT")
+                        .pattern("TBT")
+                        .pattern("TTT")
+                        .input('T', ModBlocks.TITANIUM_BLOCK.asItem())
+                        .input('B', FurnaceBlocks.getFurnaceByName("brick_furnace").asItem())
+                        .criterion(hasItem(ModBlocks.TITANIUM_BLOCK.asItem()), conditionsFromItem(ModBlocks.TITANIUM_BLOCK.asItem()))
+                        .criterion(hasItem(FurnaceBlocks.getFurnaceByName("brick_furnace").asItem()), conditionsFromItem(FurnaceBlocks.getFurnaceByName("brick_furnace").asItem()))
+                        .offerTo(exporter, new Identifier("raft", furnaceName));
+            }
+        });
+
 
     }
 }

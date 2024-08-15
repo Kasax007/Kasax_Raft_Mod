@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.kasax.raft.block.ModBlocks;
 import net.kasax.raft.item.ModItems;
+import net.kasax.raft.util.FurnaceBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.data.server.loottable.BlockLootTableGenerator;
 import net.minecraft.enchantment.Enchantments;
@@ -49,6 +50,11 @@ public class ModLootTableProvider extends FabricBlockLootTableProvider {
         addDrop(ModBlocks.DEEPSLATE_TITANIUM_ORE, copperLikeOreDrops(ModBlocks.DEEPSLATE_TITANIUM_ORE, ModItems.RAW_TITANIUM));
 
         addDrop(ModBlocks.DRIFTWOOD_LEAVES, leavesDrops(ModBlocks.DRIFTWOOD_LEAVES, ModBlocks.DRIFTWOOD_SAPLING, 0.0025f));
+
+        // Register models for all custom furnaces
+        FurnaceBlocks.getFurnaces().forEach(furnace ->
+                addDrop(furnace)
+        );
     }
     public LootTable.Builder copperLikeOreDrops(Block drop, Item item) {
         return BlockLootTableGenerator.dropsWithSilkTouch(drop, (LootPoolEntry.Builder)this.applyExplosionDecay(drop,

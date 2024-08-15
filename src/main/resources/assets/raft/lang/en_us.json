@@ -66,5 +66,13 @@
 
   "raft.item_collector_display_name": "Item Collector",
 
+  "block.raft.brick_furnace": "Brick Furnace",
+  "block.raft.titanium_furnace": "Titanium Furnace",
+
+  "raft.text.dupelabel": " Dupe chance: %d",
+  "raft.text.speedlabel": " Speed increase: %dx",
+  "raft.text.fuellabel": " Fuel usage: %dx",
+  "raft.text.tooltiplabel": "Furnace stats:",
+
   "itemgroup.raft": "Raft"
 }

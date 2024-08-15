@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "front": "raft:block/titanium_furnace_front_on",
+    "side": "raft:block/titanium_furnace_side",
+    "top": "raft:block/titanium_furnace_top"
+  }
+}

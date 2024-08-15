@@ -3,6 +3,8 @@ package net.kasax.raft.item;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.kasax.raft.Raft;
 import net.kasax.raft.block.ModBlocks;
+import net.kasax.raft.util.FurnaceBlocks;
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
@@ -67,6 +69,10 @@ public class ModItemGroups {
                         entries.add(ModBlocks.ITEM_CATCHER);
                         entries.add(ModItems.NET);
 
+                        // Add custom furnaces to the group
+                        for (Block furnace : FurnaceBlocks.getFurnaces()) {
+                            entries.add(new ItemStack(furnace));
+                        }
                     }).build());
 
 

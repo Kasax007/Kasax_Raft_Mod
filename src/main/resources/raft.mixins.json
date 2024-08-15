@@ -8,7 +8,9 @@
 	"client": [
 		"ItemRendererAccessor",
 		"ItemRendererMixin",
-		"ModelLoaderMixin"
+		"ModelLoaderMixin",
+		"FurnaceXPMixin",
+		"AbstractFurnaceEntityMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

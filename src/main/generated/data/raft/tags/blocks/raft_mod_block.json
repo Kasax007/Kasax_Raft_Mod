@@ -13,6 +13,8 @@
     "raft:titanium_ore",
     "raft:deepslate_titanium_ore",
     "raft:titanium_grates",
-    "raft:item_catcher"
+    "raft:item_catcher",
+    "raft:brick_furnace",
+    "raft:titanium_furnace"
   ]
 }

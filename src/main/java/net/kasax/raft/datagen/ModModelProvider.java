@@ -4,9 +4,11 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.kasax.raft.block.ModBlocks;
 import net.kasax.raft.item.ModItems;
+import net.kasax.raft.util.FurnaceBlocks;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ItemModelGenerator;
 import net.minecraft.data.client.Models;
+import net.minecraft.data.client.TexturedModel;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.util.Identifier;
 
@@ -40,6 +42,11 @@ public class ModModelProvider extends FabricModelProvider {
 
         blockStateModelGenerator.registerDoor(ModBlocks.DRIFTWOOD_DOOR);
         blockStateModelGenerator.registerTrapdoor(ModBlocks.DRIFTWOOD_TRAPDOOR);
+
+        // Register models for all custom furnaces
+        FurnaceBlocks.getFurnaces().forEach(furnace ->
+                blockStateModelGenerator.registerCooker(furnace, TexturedModel.ORIENTABLE)
+        );
     }
 
     @Override

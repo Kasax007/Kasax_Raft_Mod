@@ -8,12 +8,15 @@ import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.kasax.raft.block.ModBlocks;
 import net.kasax.raft.block.entity.ModBlockEntities;
+import net.kasax.raft.config.FurnaceConfig;
 import net.kasax.raft.datagen.ModWorldGenerator;
 import net.kasax.raft.item.ModItemGroups;
 import net.kasax.raft.item.ModItems;
 import net.kasax.raft.recipe.ModRecipes;
 import net.kasax.raft.screen.ModScreenHandlers;
 import net.kasax.raft.sound.ModSounds;
+import net.kasax.raft.util.FurnaceBlocks;
+import net.kasax.raft.util.FurnaceEntities;
 import net.kasax.raft.util.ModLootTableModifiers;
 import net.kasax.raft.world.gen.ModWorldGeneration;
 import net.kyrptonaught.customportalapi.api.CustomPortalBuilder;
@@ -32,7 +35,6 @@ public class Raft implements ModInitializer {
 	// That way, it's clear which mod wrote info, warnings, and errors.
     public static final String MOD_ID = "raft";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-
 	@Override
 	public void onInitialize() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
@@ -71,6 +73,9 @@ public class Raft implements ModInitializer {
 				.onlyLightInOverworld()
 				//.registerInPortalAmbienceSound(ModSounds.Portal_Teleport_Sound)
 				.registerPortal();
+
+		FurnaceBlocks.init();
+		FurnaceEntities.init();
 
 		LOGGER.info("Raft mod initialized!");
 	}
