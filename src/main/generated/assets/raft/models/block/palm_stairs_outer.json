@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "raft:block/palm_planks",
+    "side": "raft:block/palm_planks",
+    "top": "raft:block/palm_planks"
+  }
+}

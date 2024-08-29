@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "raft:block/palm_slab"
+    },
+    "type=double": {
+      "model": "raft:block/palm_planks"
+    },
+    "type=top": {
+      "model": "raft:block/palm_slab_top"
+    }
+  }
+}

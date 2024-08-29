@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "raft:driftwood_planks"
+    "raft:driftwood_planks",
+    "raft:palm_planks"
   ]
 }

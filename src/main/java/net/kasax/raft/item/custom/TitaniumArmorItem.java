@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class TitaniumArmorItem extends ArmorItem {
+public class TitaniumArmorItem extends ModArmorItem {
     public TitaniumArmorItem(ArmorMaterial material, Type type, Settings settings) {
         super(material, type, settings);
     }

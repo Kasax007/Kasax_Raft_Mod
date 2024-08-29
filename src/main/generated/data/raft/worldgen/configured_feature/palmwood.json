@@ -1,0 +1,72 @@
+{
+  "type": "minecraft:tree",
+  "config": {
+    "decorators": [],
+    "dirt_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "minecraft:sand"
+      }
+    },
+    "foliage_placer": {
+      "type": "raft:star_foliage_placer",
+      "initialRadius": 1,
+      "maxLength": 4,
+      "offset": 1,
+      "radius": 1
+    },
+    "foliage_provider": {
+      "type": "your_mod_id:randomized_block_state_provider",
+      "primary": {
+        "type": "minecraft:simple_state_provider",
+        "state": {
+          "Name": "raft:palm_leaves",
+          "Properties": {
+            "distance": "1",
+            "has_coconut": "false",
+            "persistent": "false",
+            "waterlogged": "true"
+          }
+        }
+      },
+      "secondary": {
+        "type": "minecraft:simple_state_provider",
+        "state": {
+          "Name": "raft:palm_coconut_leaves",
+          "Properties": {
+            "distance": "1",
+            "has_coconut": "true",
+            "persistent": "false",
+            "waterlogged": "true"
+          }
+        }
+      },
+      "secondary_chance": 0.05
+    },
+    "force_dirt": false,
+    "ignore_vines": false,
+    "minimum_size": {
+      "type": "minecraft:two_layers_feature_size",
+      "limit": 1,
+      "lower_size": 0,
+      "upper_size": 2
+    },
+    "trunk_placer": {
+      "type": "minecraft:bending_trunk_placer",
+      "base_height": 8,
+      "bend_length": 1,
+      "height_rand_a": 3,
+      "height_rand_b": 3,
+      "min_height_for_leaves": 9
+    },
+    "trunk_provider": {
+      "type": "minecraft:simple_state_provider",
+      "state": {
+        "Name": "raft:palm_log",
+        "Properties": {
+          "axis": "y"
+        }
+      }
+    }
+  }
+}

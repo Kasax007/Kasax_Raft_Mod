@@ -23,17 +23,32 @@ public class ModItemTagProvider extends FabricTagProvider.ItemTagProvider {
         getOrCreateTagBuilder(ItemTags.PLANKS)
                 .add(ModBlocks.DRIFTWOOD_PLANKS.asItem());
 
+        getOrCreateTagBuilder(ItemTags.PLANKS)
+                .add(ModBlocks.PALM_PLANKS.asItem());
+
         getOrCreateTagBuilder(ItemTags.LOGS_THAT_BURN)
                 .add(ModBlocks.DRIFTWOOD_LOG.asItem())
                 .add(ModBlocks.DRIFTWOOD_WOOD.asItem())
                 .add(ModBlocks.STRIPPED_DRIFTWOOD_WOOD.asItem())
                 .add(ModBlocks.STRIPPED_DRIFTWOOD_LOG.asItem());
 
+        getOrCreateTagBuilder(ItemTags.LOGS_THAT_BURN)
+                .add(ModBlocks.PALM_LOG.asItem())
+                .add(ModBlocks.PALM_WOOD.asItem())
+                .add(ModBlocks.STRIPPED_PALM_WOOD.asItem())
+                .add(ModBlocks.STRIPPED_PALM_LOG.asItem());
+
         getOrCreateTagBuilder(ModTags.Items.DRIFTWOOD_LOGS)
                 .add(ModBlocks.DRIFTWOOD_LOG.asItem())
                 .add(ModBlocks.STRIPPED_DRIFTWOOD_LOG.asItem())
                 .add(ModBlocks.DRIFTWOOD_WOOD.asItem())
                 .add(ModBlocks.STRIPPED_DRIFTWOOD_WOOD.asItem());
+
+        getOrCreateTagBuilder(ModTags.Items.PALM_LOGS)
+                .add(ModBlocks.PALM_LOG.asItem())
+                .add(ModBlocks.STRIPPED_PALM_LOG.asItem())
+                .add(ModBlocks.PALM_WOOD.asItem())
+                .add(ModBlocks.STRIPPED_PALM_WOOD.asItem());
 
         getOrCreateTagBuilder(ItemTags.MUSIC_DISCS)
                 .add(ModItems.LOFI_BEAT_MUSIC_DISC)

@@ -23,7 +23,7 @@ public class ModItemGroups {
                         entries.add(ModItems.PLASTIC);
                         entries.add(ModItems.CIRCUIT_BOARD);
                         entries.add(ModItems.TRASH_CUBE);
-                        entries.add(ModItems.OCEAN_BALL);
+                        entries.add(ModItems.UNREFINED_OCEAN_GARBAGE);
 
                         entries.add(ModItems.ENERGY_STAFF);
                         entries.add(ModItems.RAFT_TELEPORTER);
@@ -47,6 +47,26 @@ public class ModItemGroups {
                         entries.add(ModBlocks.DRIFTWOOD_FENCE_GATE);
                         entries.add(ModBlocks.DRIFTWOOD_BUTTON);
                         entries.add(ModBlocks.DRIFTWOOD_PRESSURE_PLATE);
+
+                        entries.add(ModBlocks.STRIPPED_PALM_LOG);
+                        entries.add(ModBlocks.STRIPPED_PALM_WOOD);
+                        entries.add(ModBlocks.PALM_LEAVES);
+                        entries.add(ModBlocks.PALM_COCONUT_LEAVES);
+                        entries.add(ModItems.COCONUT);
+                        entries.add(ModItems.PINA_COLADA);
+                        entries.add(ModBlocks.PALM_SAPLING);
+                        entries.add(ModBlocks.PALM_LOG);
+                        entries.add(ModBlocks.PALM_WOOD);
+                        entries.add(ModBlocks.PALM_PLANKS);
+
+                        entries.add(ModBlocks.PALM_STAIRS);
+                        entries.add(ModBlocks.PALM_SLAB);
+                        entries.add(ModBlocks.PALM_DOOR);
+                        entries.add(ModBlocks.PALM_TRAPDOOR);
+                        entries.add(ModBlocks.PALM_FENCE);
+                        entries.add(ModBlocks.PALM_FENCE_GATE);
+                        entries.add(ModBlocks.PALM_BUTTON);
+                        entries.add(ModBlocks.PALM_PRESSURE_PLATE);
 
                         entries.add(ModBlocks.TITANIUM_ORE);
                         entries.add(ModBlocks.DEEPSLATE_TITANIUM_ORE);

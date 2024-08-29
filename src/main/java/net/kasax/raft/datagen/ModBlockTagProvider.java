@@ -25,6 +25,22 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(ModBlocks.DRIFTWOOD_LOG)
                 .add(ModBlocks.DRIFTWOOD_WOOD)
                 .add(ModBlocks.DRIFTWOOD_PLANKS)
+                .add(ModBlocks.DRIFTWOOD_STAIRS)
+                .add(ModBlocks.DRIFTWOOD_SLAB)
+                .add(ModBlocks.DRIFTWOOD_BUTTON)
+                .add(ModBlocks.DRIFTWOOD_PRESSURE_PLATE)
+                .add(ModBlocks.DRIFTWOOD_FENCE)
+                .add(ModBlocks.DRIFTWOOD_FENCE_GATE)
+                .add(ModBlocks.DRIFTWOOD_DOOR)
+                .add(ModBlocks.DRIFTWOOD_TRAPDOOR)
+                .add(ModBlocks.PALM_STAIRS)
+                .add(ModBlocks.PALM_SLAB)
+                .add(ModBlocks.PALM_BUTTON)
+                .add(ModBlocks.PALM_PRESSURE_PLATE)
+                .add(ModBlocks.PALM_FENCE)
+                .add(ModBlocks.PALM_FENCE_GATE)
+                .add(ModBlocks.PALM_DOOR)
+                .add(ModBlocks.PALM_TRAPDOOR)
                 .add(ModBlocks.STRIPPED_DRIFTWOOD_LOG)
                 .add(ModBlocks.STRIPPED_DRIFTWOOD_WOOD)
                 .add(ModBlocks.TITANIUM_BLOCK)
@@ -75,9 +91,19 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(ModBlocks.STRIPPED_DRIFTWOOD_WOOD)
                 .add(ModBlocks.STRIPPED_DRIFTWOOD_LOG);
 
+        getOrCreateTagBuilder(BlockTags.LOGS_THAT_BURN)
+                .add(ModBlocks.PALM_LOG)
+                .add(ModBlocks.PALM_WOOD)
+                .add(ModBlocks.STRIPPED_PALM_WOOD)
+                .add(ModBlocks.STRIPPED_PALM_LOG);
+
         getOrCreateTagBuilder(BlockTags.FENCES)
                 .add(ModBlocks.DRIFTWOOD_FENCE);
         getOrCreateTagBuilder(BlockTags.FENCE_GATES)
                 .add(ModBlocks.DRIFTWOOD_FENCE_GATE);
+        getOrCreateTagBuilder(BlockTags.FENCES)
+                .add(ModBlocks.PALM_FENCE);
+        getOrCreateTagBuilder(BlockTags.FENCE_GATES)
+                .add(ModBlocks.PALM_FENCE_GATE);
     }
 }

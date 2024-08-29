@@ -10,7 +10,6 @@ import net.minecraft.data.client.ItemModelGenerator;
 import net.minecraft.data.client.Models;
 import net.minecraft.data.client.TexturedModel;
 import net.minecraft.item.ArmorItem;
-import net.minecraft.util.Identifier;
 
 public class ModModelProvider extends FabricModelProvider {
     public ModModelProvider(FabricDataOutput output) {
@@ -26,12 +25,20 @@ public class ModModelProvider extends FabricModelProvider {
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.DRIFTWOOD_LEAVES);
         BlockStateModelGenerator.BlockTexturePool driftwoodPool = blockStateModelGenerator.registerCubeAllModelTexturePool(ModBlocks.DRIFTWOOD_PLANKS);
 
+
+        blockStateModelGenerator.registerLog(ModBlocks.PALM_LOG).log(ModBlocks.PALM_LOG).wood(ModBlocks.PALM_WOOD);
+        blockStateModelGenerator.registerLog(ModBlocks.STRIPPED_PALM_LOG).log(ModBlocks.STRIPPED_PALM_LOG).wood(ModBlocks.STRIPPED_PALM_WOOD);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.PALM_LEAVES);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.PALM_COCONUT_LEAVES);
+        BlockStateModelGenerator.BlockTexturePool palmwoodPool = blockStateModelGenerator.registerCubeAllModelTexturePool(ModBlocks.PALM_PLANKS);
+
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.TITANIUM_BLOCK);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.TITANIUM_ORE);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.DEEPSLATE_TITANIUM_ORE);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.RAW_TITANIUM_BLOCK);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.TITANIUM_GRATES);
         blockStateModelGenerator.registerTintableCross(ModBlocks.DRIFTWOOD_SAPLING, BlockStateModelGenerator.TintType.NOT_TINTED);
+        blockStateModelGenerator.registerTintableCross(ModBlocks.PALM_SAPLING, BlockStateModelGenerator.TintType.NOT_TINTED);
 
         driftwoodPool.stairs(ModBlocks.DRIFTWOOD_STAIRS);
         driftwoodPool.slab(ModBlocks.DRIFTWOOD_SLAB);
@@ -42,6 +49,16 @@ public class ModModelProvider extends FabricModelProvider {
 
         blockStateModelGenerator.registerDoor(ModBlocks.DRIFTWOOD_DOOR);
         blockStateModelGenerator.registerTrapdoor(ModBlocks.DRIFTWOOD_TRAPDOOR);
+
+        palmwoodPool.stairs(ModBlocks.PALM_STAIRS);
+        palmwoodPool.slab(ModBlocks.PALM_SLAB);
+        palmwoodPool.button(ModBlocks.PALM_BUTTON);
+        palmwoodPool.pressurePlate(ModBlocks.PALM_PRESSURE_PLATE);
+        palmwoodPool.fence(ModBlocks.PALM_FENCE);
+        palmwoodPool.fenceGate(ModBlocks.PALM_FENCE_GATE);
+
+        blockStateModelGenerator.registerDoor(ModBlocks.PALM_DOOR);
+        blockStateModelGenerator.registerTrapdoor(ModBlocks.PALM_TRAPDOOR);
 
         // Register models for all custom furnaces
         FurnaceBlocks.getFurnaces().forEach(furnace ->
@@ -57,7 +74,9 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.PLASTIC, Models.GENERATED);
         itemModelGenerator.register(ModItems.CIRCUIT_BOARD, Models.GENERATED);
         itemModelGenerator.register(ModItems.TRASH_CUBE, Models.GENERATED);
-        itemModelGenerator.register(ModItems.OCEAN_BALL, Models.GENERATED);
+        itemModelGenerator.register(ModItems.UNREFINED_OCEAN_GARBAGE, Models.GENERATED);
+        itemModelGenerator.register(ModItems.COCONUT, Models.GENERATED);
+        itemModelGenerator.register(ModItems.PINA_COLADA, Models.GENERATED);
 
         itemModelGenerator.register(ModItems.RAW_TITANIUM, Models.GENERATED);
         itemModelGenerator.register(ModItems.TITANIUM_INGOT, Models.GENERATED);

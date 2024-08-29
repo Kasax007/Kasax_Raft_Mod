@@ -1,6 +1,8 @@
-// 1.20.2	2024-08-15T20:10:53.0620038	Raft/World Gen
+// 1.20.2	2024-08-29T01:28:11.6152839	Raft/World Gen
 2cd5eb913515e7a4f446322a2574b5220a3ce073 data\raft\worldgen\configured_feature\titanium_ore.json
 2c5da76e67ddaf03fd11f90776c36758ff580a6b data\raft\worldgen\configured_feature\driftwood.json
+249fc8fa71e00b8ad868e288fccf4ae7020c0d1b data\raft\worldgen\configured_feature\palmwood.json
+3067b0d0ab0f1da743d02d46374e7a3e34f745c6 data\raft\worldgen\placed_feature\palm_placed.json
 05a8a6fe453e4e75bcbca8a4805e583d1c06bfeb data\raft\worldgen\biome\raft_ocean_biome.json
 10bd418b4ec21386cae8b5d2f9953efde7676325 data\raft\worldgen\placed_feature\titanium_ore_placed.json
 96ed3e708f207d7c9006546bcf35f2cf4fbe4603 data\raft\dimension_type\raftdim_type.json

@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "raft:driftwood_fence_gate"
+    "raft:driftwood_fence_gate",
+    "raft:palm_fence_gate"
   ]
 }

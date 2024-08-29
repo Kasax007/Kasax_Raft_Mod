@@ -43,6 +43,26 @@ public class ModLootTableModifiers {
             }
         });
         LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
+            if(SHIPWRECK_TREASURE_ID.equals(id)) {
+                LootPool.Builder poolBuilder = LootPool.builder()
+                        .rolls(ConstantLootNumberProvider.create(1)) //adds extra item
+                        .conditionally(RandomChanceLootCondition.builder(0.1f)) //drop chance 25%
+                        .with(ItemEntry.builder(ModItems.LOFI_BEAT_MUSIC_DISC))
+                        .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0f, 5.0f)).build()); //amount
+                tableBuilder.pool(poolBuilder.build());
+            }
+        });
+        LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
+            if(SHIPWRECK_TREASURE_ID.equals(id)) {
+                LootPool.Builder poolBuilder = LootPool.builder()
+                        .rolls(ConstantLootNumberProvider.create(1)) //adds extra item
+                        .conditionally(RandomChanceLootCondition.builder(0.1f)) //drop chance 25%
+                        .with(ItemEntry.builder(ModItems.SOME_GAME_MUSIC_MUSIC_DISC))
+                        .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0f, 5.0f)).build()); //amount
+                tableBuilder.pool(poolBuilder.build());
+            }
+        });
+        LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
             if(FISHING_TREASURE_ID.equals(id)) {
                 LootPool.Builder poolBuilder = LootPool.builder()
                         .rolls(ConstantLootNumberProvider.create(1)) //adds extra item

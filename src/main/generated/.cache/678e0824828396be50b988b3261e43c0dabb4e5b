@@ -1,9 +1,9 @@
-// 1.20.2	2024-08-15T20:10:53.0555554	Raft/Tags for minecraft:block
-6594042667159c0f4d2bd72c7592d5ed8deedf37 data\raft\tags\blocks\raft_mod_block.json
-8f26a7e1c7d40fbb76186a724f08f24f920a5cc2 data\minecraft\tags\blocks\logs_that_burn.json
-1381c210864081cf39981503ccf1d8c7113c1838 data\minecraft\tags\blocks\fence_gates.json
+// 1.20.2	2024-08-29T01:28:11.6093326	Raft/Tags for minecraft:block
+45482b5807c022bff31cebdf065501ce5b1031f3 data\raft\tags\blocks\raft_mod_block.json
+d7a834ee818603f7ac9f0f835710111ada853e9e data\minecraft\tags\blocks\logs_that_burn.json
+d35b8dd1b71d1f4e10668a823f773ecbdb14d475 data\minecraft\tags\blocks\fence_gates.json
 3774670d28684f66797c2324e94a11a11f2cea49 data\minecraft\tags\blocks\needs_iron_tool.json
-fe090804115119620bdce431ed7fc3c3d7e7f891 data\minecraft\tags\blocks\fences.json
+9281d4c6c4996b77d862de70f118e1f0a1b8020b data\minecraft\tags\blocks\fences.json
 fdb66c929a3fbf1fad8bbc0df37e994f4c71d4c5 data\minecraft\tags\blocks\mineable\axe.json
 4cf2c8bfdf9409129acca3e7979ad879e062a799 data\minecraft\tags\blocks\mineable\pickaxe.json
 587992de15c7fcb7dbbdcd62649749f4565ab7e4 data\minecraft\tags\blocks\needs_diamond_tool.json

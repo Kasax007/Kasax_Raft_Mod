@@ -21,6 +21,8 @@ public class ModTags {
 
         public static final TagKey<Item> DRIFTWOOD_LOGS =
                 createTag("driftwood_logs");
+        public static final TagKey<Item> PALM_LOGS =
+                createTag("driftwood_logs");
         private static TagKey<Item> createTag(String name) {
             return TagKey.of(RegistryKeys.ITEM, new Identifier(Raft.MOD_ID, name));
         }

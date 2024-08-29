@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "raft:block/palm_pressure_plate"
+    },
+    "powered=true": {
+      "model": "raft:block/palm_pressure_plate_down"
+    }
+  }
+}

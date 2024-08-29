@@ -19,11 +19,17 @@ import net.kasax.raft.util.FurnaceBlocks;
 import net.kasax.raft.util.FurnaceEntities;
 import net.kasax.raft.util.ModLootTableModifiers;
 import net.kasax.raft.world.gen.ModWorldGeneration;
+import net.kasax.raft.world.gen.RandomizedBlockStateProvider;
+import net.kasax.raft.world.tree.StarFoliagePlacer;
 import net.kyrptonaught.customportalapi.api.CustomPortalBuilder;
 import net.kyrptonaught.customportalapi.event.CPASoundEventData;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.gen.foliage.FoliagePlacerType;
+import net.minecraft.world.gen.stateprovider.BlockStateProviderType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +41,15 @@ public class Raft implements ModInitializer {
 	// That way, it's clear which mod wrote info, warnings, and errors.
     public static final String MOD_ID = "raft";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
+	public static final FoliagePlacerType<StarFoliagePlacer> STAR_FOLIAGE_PLACER =
+			Registry.register(Registries.FOLIAGE_PLACER_TYPE, new Identifier(Raft.MOD_ID, "star_foliage_placer"),
+					new FoliagePlacerType<>(StarFoliagePlacer.CODEC));
+
+	public static final BlockStateProviderType<RandomizedBlockStateProvider> RANDOMIZED_BLOCK_STATE_PROVIDER =
+			Registry.register(Registries.BLOCK_STATE_PROVIDER_TYPE,
+					new Identifier("your_mod_id", "randomized_block_state_provider"),
+					new BlockStateProviderType<>(RandomizedBlockStateProvider.CODEC));
 	@Override
 	public void onInitialize() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
@@ -54,6 +69,17 @@ public class Raft implements ModInitializer {
 		FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.STRIPPED_DRIFTWOOD_WOOD, 5, 5);
 		FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.DRIFTWOOD_PLANKS, 5, 20);
 		FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.DRIFTWOOD_LEAVES, 30, 60);
+
+		StrippableBlockRegistry.register(ModBlocks.PALM_LOG, ModBlocks.STRIPPED_PALM_LOG);
+		StrippableBlockRegistry.register(ModBlocks.PALM_WOOD, ModBlocks.STRIPPED_PALM_WOOD);
+
+		FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.PALM_LOG, 5, 5);
+		FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.PALM_WOOD, 5, 5);
+		FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.STRIPPED_PALM_LOG, 5, 5);
+		FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.STRIPPED_PALM_WOOD, 5, 5);
+		FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.PALM_PLANKS, 5, 20);
+		FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.PALM_LEAVES, 30, 60);
+		FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.PALM_COCONUT_LEAVES, 30, 60);
 
 		ModLootTableModifiers.modifyLootTables();
 		ModWorldGeneration.generateModWorldGen();

@@ -1,14 +1,11 @@
 package net.kasax.raft.item;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.kasax.raft.Raft;
 import net.kasax.raft.item.custom.*;
 import net.kasax.raft.sound.ModSounds;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroups;
 import net.minecraft.item.MusicDiscItem;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -24,8 +21,10 @@ public class ModItems {
     public static final Item TITANIUM_NUGGET = registerItem("titanium_nugget", new Item(new FabricItemSettings()));
     public static final Item PLASTIC = registerItem("plastic", new Item(new FabricItemSettings()));
     public static final Item CIRCUIT_BOARD = registerItem("circuit_board", new Item(new FabricItemSettings()));
+    public static final Item COCONUT = registerItem("coconut", new Item(new FabricItemSettings().food(ModFoodComponents.COCONUT)));
+    public static final Item PINA_COLADA = registerItem("pina_colada", new Item(new FabricItemSettings().food(ModFoodComponents.PINA_COLADA)));
     public static final Item TRASH_CUBE = registerItem("trash_cube", new TrashCubeItem(new FabricItemSettings()));
-    public static final Item OCEAN_BALL = registerItem("ocean_ball", new Item(new FabricItemSettings()));
+    public static final Item UNREFINED_OCEAN_GARBAGE = registerItem("unrefined_ocean_garbage", new Item(new FabricItemSettings()));
 
 
     public static final Item TITANIUM_HELMET = registerItem("titanium_helmet",

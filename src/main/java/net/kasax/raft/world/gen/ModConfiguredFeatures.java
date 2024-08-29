@@ -4,6 +4,7 @@ import com.mojang.datafixers.kinds.Const;
 import com.sun.source.tree.Tree;
 import net.kasax.raft.Raft;
 import net.kasax.raft.block.ModBlocks;
+import net.kasax.raft.world.tree.StarFoliagePlacer;
 import net.minecraft.block.Blocks;
 import net.minecraft.registry.Registerable;
 import net.minecraft.registry.RegistryKey;
@@ -13,10 +14,15 @@ import net.minecraft.structure.rule.RuleTest;
 import net.minecraft.structure.rule.TagMatchRuleTest;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.intprovider.ConstantIntProvider;
+import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.world.gen.feature.*;
 import net.minecraft.world.gen.feature.size.TwoLayersFeatureSize;
+import net.minecraft.world.gen.foliage.AcaciaFoliagePlacer;
 import net.minecraft.world.gen.foliage.BlobFoliagePlacer;
+import net.minecraft.world.gen.foliage.JungleFoliagePlacer;
+import net.minecraft.world.gen.foliage.RandomSpreadFoliagePlacer;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
+import net.minecraft.world.gen.trunk.BendingTrunkPlacer;
 import net.minecraft.world.gen.trunk.StraightTrunkPlacer;
 
 import java.util.List;
@@ -26,6 +32,7 @@ public class ModConfiguredFeatures {
 
 
     public static final RegistryKey<ConfiguredFeature<?, ?>> DRIFTWOOD_KEY = registerKey("driftwood");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> PALMWOOD_KEY = registerKey("palmwood");
 
     public static void bootstrap(Registerable<ConfiguredFeature<?, ?>> context) {
         RuleTest stoneReplaceables = new TagMatchRuleTest(BlockTags.STONE_ORE_REPLACEABLES);
@@ -44,6 +51,22 @@ public class ModConfiguredFeatures {
 
                 BlockStateProvider.of(ModBlocks.DRIFTWOOD_LEAVES),
                 new BlobFoliagePlacer(ConstantIntProvider.create(0), ConstantIntProvider.create(0), 0),
+                new TwoLayersFeatureSize(1, 0, 2)).dirtProvider(BlockStateProvider.of(Blocks.SAND))
+                .build());
+
+        register(context, PALMWOOD_KEY, Feature.TREE, new TreeFeatureConfig.Builder(
+                BlockStateProvider.of(ModBlocks.PALM_LOG),
+                new BendingTrunkPlacer(8, 3, 3, 9, ConstantIntProvider.create(1)),
+                //new BendingTrunkPlacer(4, 1, 1, 3, ConstantIntProvider.create(1)),
+                //new StraightTrunkPlacer(5, 1, 1),
+
+                new RandomizedBlockStateProvider(
+                        BlockStateProvider.of(ModBlocks.PALM_LEAVES),
+                        BlockStateProvider.of(ModBlocks.PALM_COCONUT_LEAVES),
+                        0.05f // 5% chance to select PALM_COCONUT_LEAVES
+                ),
+                new StarFoliagePlacer(ConstantIntProvider.create(1), ConstantIntProvider.create(1), (int) 1.25, 4),
+                //new AcaciaFoliagePlacer(ConstantIntProvider.create(2), ConstantIntProvider.create(1)),
                 new TwoLayersFeatureSize(1, 0, 2)).dirtProvider(BlockStateProvider.of(Blocks.SAND))
                 .build());
     }

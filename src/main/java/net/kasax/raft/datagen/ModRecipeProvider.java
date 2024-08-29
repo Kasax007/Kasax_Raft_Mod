@@ -8,27 +8,20 @@ import net.kasax.raft.item.ModItems;
 import net.kasax.raft.util.FurnaceBlocks;
 import net.kasax.raft.util.ModTags;
 import net.minecraft.data.server.recipe.RecipeExporter;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
-import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.book.RecipeCategory;
-import net.minecraft.registry.tag.ItemTags;
-import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
-import net.minecraft.world.gen.feature.MiscConfiguredFeatures;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 import static net.minecraft.recipe.book.RecipeCategory.MISC;
 
 public class ModRecipeProvider extends FabricRecipeProvider {
     private static final List<ItemConvertible> ENEREGY_SMELTERS = List.of(ModItems.ANCIENT_BROKEN_RING);
     private static final List<ItemConvertible> TITANIUM_SMELTERS = List.of(ModItems.RAW_TITANIUM);
-    private static final List<ItemConvertible> BALL_SMELTERS = List.of(ModItems.OCEAN_BALL);
+    private static final List<ItemConvertible> BALL_SMELTERS = List.of(ModItems.UNREFINED_OCEAN_GARBAGE);
     public ModRecipeProvider(FabricDataOutput output) {
         super(output);
     }
@@ -200,6 +193,44 @@ public class ModRecipeProvider extends FabricRecipeProvider {
         offerBarkBlockRecipe(exporter, ModBlocks.DRIFTWOOD_WOOD, ModBlocks.DRIFTWOOD_LOG);
         offerBarkBlockRecipe(exporter, ModBlocks.STRIPPED_DRIFTWOOD_WOOD, ModBlocks.STRIPPED_DRIFTWOOD_LOG);
         offerPlanksRecipe(exporter, ModBlocks.DRIFTWOOD_PLANKS, ModTags.Items.DRIFTWOOD_LOGS, 4);
+
+
+        createDoorRecipe(ModBlocks.PALM_DOOR.asItem(), Ingredient.ofItems(ModBlocks.PALM_PLANKS.asItem())).criterion(hasItem(ModBlocks.PALM_PLANKS.asItem()), conditionsFromItem(ModBlocks.PALM_PLANKS.asItem()))
+                .offerTo(exporter, new Identifier(getRecipeName(ModBlocks.PALM_DOOR.asItem())));
+        createSlabRecipe(MISC, ModBlocks.PALM_SLAB.asItem(), Ingredient.ofItems(ModBlocks.PALM_PLANKS.asItem())).criterion(hasItem(ModBlocks.PALM_PLANKS.asItem()), conditionsFromItem(ModBlocks.PALM_PLANKS.asItem()))
+                .offerTo(exporter, new Identifier(getRecipeName(ModBlocks.PALM_SLAB.asItem())));
+        createStairsRecipe(ModBlocks.PALM_STAIRS.asItem(), Ingredient.ofItems(ModBlocks.PALM_PLANKS.asItem())).criterion(hasItem(ModBlocks.PALM_PLANKS.asItem()), conditionsFromItem(ModBlocks.PALM_PLANKS.asItem()))
+                .offerTo(exporter, new Identifier(getRecipeName(ModBlocks.PALM_STAIRS.asItem())));
+        createPressurePlateRecipe(MISC, ModBlocks.PALM_PRESSURE_PLATE.asItem(), Ingredient.ofItems(ModBlocks.PALM_PLANKS.asItem())).criterion(hasItem(ModBlocks.PALM_PLANKS.asItem()), conditionsFromItem(ModBlocks.PALM_PLANKS.asItem()))
+                .offerTo(exporter, new Identifier(getRecipeName(ModBlocks.PALM_PRESSURE_PLATE.asItem())));
+        createFenceRecipe(ModBlocks.PALM_FENCE.asItem(), Ingredient.ofItems(ModBlocks.PALM_PLANKS.asItem())).criterion(hasItem(ModBlocks.PALM_PLANKS.asItem()), conditionsFromItem(ModBlocks.PALM_PLANKS.asItem()))
+                .offerTo(exporter, new Identifier(getRecipeName(ModBlocks.PALM_FENCE.asItem())));
+        createFenceGateRecipe(ModBlocks.PALM_FENCE_GATE.asItem(), Ingredient.ofItems(ModBlocks.PALM_PLANKS.asItem())).criterion(hasItem(ModBlocks.PALM_PLANKS.asItem()), conditionsFromItem(ModBlocks.PALM_PLANKS.asItem()))
+                .offerTo(exporter, new Identifier(getRecipeName(ModBlocks.PALM_FENCE_GATE.asItem())));
+
+        ShapedRecipeJsonBuilder.create(MISC, ModBlocks.PALM_TRAPDOOR, 2)
+                .pattern("   ")
+                .pattern("SSS")
+                .pattern("SSS")
+                .input('S', ModBlocks.PALM_PLANKS.asItem())
+                .criterion(hasItem(ModBlocks.PALM_PLANKS.asItem()), conditionsFromItem(ModBlocks.PALM_PLANKS.asItem()))
+                .offerTo(exporter, new Identifier(getRecipeName(ModBlocks.PALM_TRAPDOOR.asItem())));
+        offerShapelessRecipe(exporter,ModBlocks.PALM_BUTTON.asItem(), ModBlocks.PALM_PLANKS.asItem(), "MISC4", 1);
+        offerBarkBlockRecipe(exporter, ModBlocks.PALM_WOOD, ModBlocks.PALM_LOG);
+        offerBarkBlockRecipe(exporter, ModBlocks.STRIPPED_PALM_WOOD, ModBlocks.STRIPPED_PALM_LOG);
+        offerPlanksRecipe(exporter, ModBlocks.PALM_PLANKS, ModTags.Items.PALM_LOGS, 4);
+
+        ShapedRecipeJsonBuilder.create(MISC, ModItems.PINA_COLADA, 1)
+                .pattern(" S ")
+                .pattern(" C ")
+                .pattern(" B ")
+                .input('S', Items.SUGAR)
+                .input('C', ModItems.COCONUT)
+                .input('B', Items.BOWL)
+                .criterion(hasItem(Items.SUGAR), conditionsFromItem(Items.SUGAR))
+                .criterion(hasItem(ModItems.COCONUT), conditionsFromItem(ModItems.COCONUT))
+                .criterion(hasItem(Items.BOWL), conditionsFromItem(Items.BOWL))
+                .offerTo(exporter, new Identifier(getRecipeName(ModItems.PINA_COLADA)));
 
         offerSmelting(exporter, ENEREGY_SMELTERS, MISC, ModItems.ANCIENT_ENERGY,
                 0.7f, 200, "misc");
