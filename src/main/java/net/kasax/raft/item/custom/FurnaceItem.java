@@ -3,9 +3,11 @@ package net.kasax.raft.item.custom;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.kasax.raft.block.custom.FurnaceBlock;
-import net.minecraft.client.item.TooltipContext;
+
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
@@ -27,19 +29,19 @@ public class FurnaceItem extends BlockItem {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void appendTooltip(ItemStack stack, World world, List<Text> list, TooltipContext context) {
+    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType options) {
         // add top label section
-        list.add(Text.literal(""));
-        list.add(Text.translatable("raft.text.tooltiplabel").formatted(Formatting.GRAY));
+        tooltip.add(Text.literal(""));
+        tooltip.add(Text.translatable("raft.text.tooltiplabel").formatted(Formatting.GRAY));
 
         // add stats
-        list.add(Text.translatable("raft.text.speedlabel", block.getSpeedModifier()).formatted(Formatting.DARK_GREEN));
-        list.add(Text.translatable("raft.text.fuellabel", block.getFuelModifier()).formatted(Formatting.DARK_GREEN));
+        tooltip.add(Text.translatable("raft.text.speedlabel", block.getSpeedModifier()).formatted(Formatting.DARK_GREEN));
+        tooltip.add(Text.translatable("raft.text.fuellabel", block.getFuelModifier()).formatted(Formatting.DARK_GREEN));
 
         if (block.getDuplicationChance() > 0) {
-            list.add(Text.translatable("raft.text.dupelabel", block.getDuplicationChance()).formatted(Formatting.DARK_GREEN).append(Text.literal("%").formatted(Formatting.DARK_GREEN)));
+            tooltip.add(Text.translatable("raft.text.dupelabel", block.getDuplicationChance()).formatted(Formatting.DARK_GREEN).append(Text.literal("%").formatted(Formatting.DARK_GREEN)));
         }
 
-        super.appendTooltip(stack, world, list, context);
+        super.appendTooltip(stack, context, tooltip, options);
     }
 }

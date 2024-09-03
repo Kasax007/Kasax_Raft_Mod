@@ -1,10 +1,10 @@
 package net.kasax.raft.item.custom;
 
-import dev.architectury.platform.Mod;
+
 import net.kasax.raft.block.ModBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUsageContext;
@@ -39,8 +39,7 @@ public class MetalDetector extends Item {
             }
         }
 
-        context.getStack().damage(1, context.getPlayer(),
-                playerEntity -> playerEntity.sendToolBreakStatus(playerEntity.getActiveHand()));
+        context.getStack().damage(1, context.getPlayer(), context.getPlayer().getPreferredEquipmentSlot(this.getDefaultStack()));
         PlayerEntity player = context.getPlayer();
         player.getItemCooldownManager().set(this, 20);
         return ActionResult.SUCCESS;

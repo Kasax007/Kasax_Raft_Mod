@@ -2,14 +2,10 @@ package net.kasax.raft;
 
 import net.fabricmc.api.ModInitializer;
 
-import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.kasax.raft.block.ModBlocks;
 import net.kasax.raft.block.entity.ModBlockEntities;
-import net.kasax.raft.config.FurnaceConfig;
-import net.kasax.raft.datagen.ModWorldGenerator;
 import net.kasax.raft.item.ModItemGroups;
 import net.kasax.raft.item.ModItems;
 import net.kasax.raft.recipe.ModRecipes;
@@ -22,18 +18,13 @@ import net.kasax.raft.world.gen.ModWorldGeneration;
 import net.kasax.raft.world.gen.RandomizedBlockStateProvider;
 import net.kasax.raft.world.tree.StarFoliagePlacer;
 import net.kyrptonaught.customportalapi.api.CustomPortalBuilder;
-import net.kyrptonaught.customportalapi.event.CPASoundEventData;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.foliage.FoliagePlacerType;
 import net.minecraft.world.gen.stateprovider.BlockStateProviderType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.function.Function;
 
 public class Raft implements ModInitializer {
 	// This logger is used to write text to the console and the log file.

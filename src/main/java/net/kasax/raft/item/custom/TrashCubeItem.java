@@ -1,7 +1,7 @@
 package net.kasax.raft.item.custom;
 
 import net.kasax.raft.item.ModItems;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
@@ -10,6 +10,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -18,7 +21,6 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -32,9 +34,9 @@ public class TrashCubeItem extends Item {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+    public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
         tooltip.add(Text.translatable("tooltip.raft.trash_cube.tooltip").formatted(Formatting.AQUA));
-        super.appendTooltip(stack, world, tooltip, context);
+        super.appendTooltip(stack, context, tooltip, options);
     }
 
     @Override
@@ -129,13 +131,13 @@ public class TrashCubeItem extends Item {
         ItemStack fishingRod = new ItemStack(Items.FISHING_ROD);
 
         // Map to hold enchantments and their levels
-        Map<Enchantment, Integer> enchantments = new HashMap<>();
+        Map<RegistryKey<Enchantment>, Integer> enchantments = new HashMap<>();
 
         // Generate random levels for each enchantment
-        int lureLevel = getRandomEnchantmentLevel(Enchantments.LURE);
-        int luckLevel = getRandomEnchantmentLevel(Enchantments.LUCK_OF_THE_SEA);
-        int unbreakingLevel = getRandomEnchantmentLevel(Enchantments.UNBREAKING);
-        int mendingLevel = getRandomEnchantmentLevel(Enchantments.MENDING);
+        int lureLevel = getRandomEnchantmentLevel((RegistryEntry<Enchantment>) Enchantments.LURE);
+        int luckLevel = getRandomEnchantmentLevel((RegistryEntry<Enchantment>) Enchantments.LUCK_OF_THE_SEA);
+        int unbreakingLevel = getRandomEnchantmentLevel((RegistryEntry<Enchantment>) Enchantments.UNBREAKING);
+        int mendingLevel = getRandomEnchantmentLevel((RegistryEntry<Enchantment>) Enchantments.MENDING);
 
         // Add enchantments if the level is greater than 0
         if (lureLevel > 0) {
@@ -152,7 +154,7 @@ public class TrashCubeItem extends Item {
         }
 
         // Apply the generated enchantments to the fishing rod
-        EnchantmentHelper.set(enchantments, fishingRod);
+        EnchantmentHelper.set(fishingRod, (ItemEnchantmentsComponent) enchantments);
 
         // Set random durability
         int maxDurability = fishingRod.getMaxDamage();
@@ -161,8 +163,9 @@ public class TrashCubeItem extends Item {
 
         return fishingRod;
     }
-    private int getRandomEnchantmentLevel(Enchantment enchantment) {
-        int maxLevel = enchantment.getMaxLevel();
+    private int getRandomEnchantmentLevel(RegistryEntry<Enchantment> enchantment) {
+        Enchantment enchantmentInstance = enchantment.value(); // Retrieve the actual Enchantment object
+        int maxLevel = enchantmentInstance.getMaxLevel(); // Get the max level from the Enchantment
         return RANDOM.nextInt(maxLevel + 1); // Random level from 0 to maxLevel (inclusive)
     }
 }

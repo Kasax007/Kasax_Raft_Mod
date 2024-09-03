@@ -7,7 +7,6 @@ package net.kasax.raft.util;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.kasax.raft.Raft;
 import net.kasax.raft.block.custom.FurnaceBlock;
-import net.kasax.raft.config.FurnaceConfig;
 import net.kasax.raft.config.FurnaceData;
 import net.kasax.raft.item.custom.FurnaceItem;
 import net.minecraft.block.Block;

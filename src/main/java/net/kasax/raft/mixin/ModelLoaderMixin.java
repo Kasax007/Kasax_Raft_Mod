@@ -2,6 +2,7 @@ package net.kasax.raft.mixin;
 
 import net.kasax.raft.Raft;
 import net.minecraft.client.color.block.BlockColors;
+import net.minecraft.client.render.model.BlockStatesLoader;
 import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.render.model.json.JsonUnbakedModel;
 import net.minecraft.client.util.ModelIdentifier;
@@ -22,7 +23,7 @@ public abstract class ModelLoaderMixin {
     protected abstract void addModel(ModelIdentifier modelId);
 
     @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/model/ModelLoader;addModel(Lnet/minecraft/client/util/ModelIdentifier;)V", ordinal = 3, shift = At.Shift.AFTER))
-    public void addEnergyStaff(BlockColors blockColors, Profiler profiler, Map<Identifier, JsonUnbakedModel> jsonUnbakedModels, Map<Identifier, List<ModelLoader.SourceTrackedData>> blockStates, CallbackInfo ci) {
+    public void addEnergyStaff(BlockColors blockColors, Profiler profiler, Map<Identifier, JsonUnbakedModel> jsonUnbakedModels, Map<Identifier, List<BlockStatesLoader.SourceTrackedData>> blockStates, CallbackInfo ci) {
         this.addModel(new ModelIdentifier(Raft.MOD_ID, "energy_staff_3d", "inventory"));
     }
 }

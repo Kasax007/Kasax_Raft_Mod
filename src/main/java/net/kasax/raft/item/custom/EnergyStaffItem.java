@@ -2,12 +2,13 @@ package net.kasax.raft.item.custom;
 
 import net.kasax.raft.block.ModBlocks;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipContext;
+
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
@@ -57,9 +58,9 @@ public class EnergyStaffItem extends Item {
 
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+    public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
         tooltip.add(Text.translatable("tooltip.raft.energy_staff.tooltip").formatted(Formatting.AQUA));
-        super.appendTooltip(stack, world, tooltip, context);
+        super.appendTooltip(stack, context, tooltip, options);
     }
 
     // Custom method to handle item damage

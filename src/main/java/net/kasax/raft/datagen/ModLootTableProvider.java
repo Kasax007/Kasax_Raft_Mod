@@ -1,6 +1,6 @@
 package net.kasax.raft.datagen;
 
-import dev.architectury.platform.Mod;
+
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.kasax.raft.block.ModBlocks;
@@ -8,6 +8,7 @@ import net.kasax.raft.item.ModItems;
 import net.kasax.raft.util.FurnaceBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.data.server.loottable.BlockLootTableGenerator;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -19,10 +20,16 @@ import net.minecraft.loot.entry.LootPoolEntry;
 import net.minecraft.loot.function.ApplyBonusLootFunction;
 import net.minecraft.loot.function.SetCountLootFunction;
 import net.minecraft.loot.provider.number.UniformLootNumberProvider;
+import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.registry.entry.RegistryEntry;
+
+import java.util.concurrent.CompletableFuture;
 
 public class ModLootTableProvider extends FabricBlockLootTableProvider {
-    public ModLootTableProvider(FabricDataOutput dataOutput) {
-        super(dataOutput);
+
+
+    protected ModLootTableProvider(FabricDataOutput dataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup) {
+        super(dataOutput, registryLookup);
     }
 
     @Override
@@ -74,21 +81,21 @@ public class ModLootTableProvider extends FabricBlockLootTableProvider {
         );
     }
     public LootTable.Builder copperLikeOreDrops(Block drop, Item item) {
-        return BlockLootTableGenerator.dropsWithSilkTouch(drop, (LootPoolEntry.Builder)this.applyExplosionDecay(drop,
+        return this.dropsWithSilkTouch(drop, (LootPoolEntry.Builder)this.applyExplosionDecay(drop,
                 ((LeafEntry.Builder) ItemEntry.builder(item)
                         .apply(SetCountLootFunction.builder(UniformLootNumberProvider
                                 .create(2.0f, 5.0f))))
-                        .apply(ApplyBonusLootFunction.oreDrops(Enchantments.FORTUNE))));
+                        .apply(ApplyBonusLootFunction.oreDrops((RegistryEntry<Enchantment>) Enchantments.FORTUNE))));
     }
     public LootTable.Builder fruitLeaveDrops(Block drop, Item item) {
-        return BlockLootTableGenerator.dropsWithShears(drop,
+        return this.dropsWithShears(drop,
                 (LootPoolEntry.Builder) this.applyExplosionDecay(drop,
                         ((LeafEntry.Builder) ItemEntry.builder(item)
                                 .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0f, 1.0f)))
                                 .conditionally(RandomChanceLootCondition.builder(0.5f)) // 50% chance to add this pool
                                 .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0f, 1.0f)))
                                 .conditionally(RandomChanceLootCondition.builder(0.2f)) // 20% chance to add this pool
-                                .apply(ApplyBonusLootFunction.oreDrops(Enchantments.FORTUNE)
+                                .apply(ApplyBonusLootFunction.oreDrops((RegistryEntry<Enchantment>) Enchantments.FORTUNE)
                                         ))));
     }
 }

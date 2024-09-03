@@ -23,9 +23,6 @@
 		],
 		"fabric-datagen": [
 			"net.kasax.raft.RaftDataGenerator"
-		],
-		"rei_client": [
-			"net.kasax.raft.compat.RaftReiClientPlugin"
 		]
 	},
 	"mixins": [

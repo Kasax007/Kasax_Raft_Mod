@@ -1,6 +1,6 @@
 package net.kasax.raft.block;
 
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.kasax.raft.Raft;
 import net.kasax.raft.block.custom.*;
