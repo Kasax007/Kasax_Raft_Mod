@@ -10,7 +10,7 @@ import net.minecraft.util.Identifier;
 
 public class ModBlockEntities {
     public static final BlockEntityType<ItemCollectorBlockEntity> ITEM_COLLECTOR_BLOCK_ENTITY =
-            Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(Raft.MOD_ID, "item_collector_be"),
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, Identifier.of(Raft.MOD_ID, "item_collector_be"),
                     FabricBlockEntityTypeBuilder.create(ItemCollectorBlockEntity::new,
                             ModBlocks.ITEM_CATCHER).build());
 

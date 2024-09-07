@@ -1,41 +1,44 @@
 package net.kasax.raft.block.entity;
 
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.kasax.raft.block.custom.ItemCatcher;
 import net.kasax.raft.item.ModItems;
 import net.kasax.raft.recipe.ItemCatchingRecipe;
 import net.kasax.raft.screen.ItemCollectorScreenHandler;
+import net.kasax.raft.util.BlockPosPayload;
 import net.kasax.raft.world.biome.ModBiomes;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeEntry;
+import net.minecraft.recipe.RecipeManager;
+import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.recipe.input.SingleStackRecipeInput;
+import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.state.property.IntProperty;
-import net.minecraft.state.property.Property;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class ItemCollectorBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory {
-    public static final Property<Integer> HAS_NET = IntProperty.of("has_net", 0, 1);
+public class ItemCollectorBlockEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory {
+    public static final BooleanProperty HAS_NET = BooleanProperty.of("has_net");
     private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(2, ItemStack.EMPTY);
 
     private static final int INPUT_SLOT = 0;
@@ -44,6 +47,8 @@ public class ItemCollectorBlockEntity extends BlockEntity implements ExtendedScr
     protected final PropertyDelegate propertyDelegate;
     private int progress = 0;
     private int maxProgress = 576;
+
+    private final RecipeManager.MatchGetter<RecipeInput, ItemCatchingRecipe> matchGetter = RecipeManager.createCachedMatchGetter(ItemCatchingRecipe.Type.INSTANCE);
 
     public ItemCollectorBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.ITEM_COLLECTOR_BLOCK_ENTITY, pos, state);
@@ -79,25 +84,14 @@ public class ItemCollectorBlockEntity extends BlockEntity implements ExtendedScr
     }
 
     public void updateBlockState() {
-        int hasNet = this.hasNetInInputSlot();
-        if (world != null && pos != null) {
-            BlockState currentState = world.getBlockState(pos);
-            try {
-                BlockState newState = currentState.with(HAS_NET, hasNet);
-                if (currentState != newState) {
-                    world.setBlockState(pos, newState);
-                }
-            }
-            catch (Exception e) {
-                System.out.println(e.getLocalizedMessage());
+        boolean hasNet = this.hasNetInInputSlot();
+        if (this.world != null && this.pos != null) {
+            BlockState currentState = this.world.getBlockState(this.pos);
+            BlockState newState = currentState.with(HAS_NET, hasNet);
+            if (currentState != newState) {
+                this.world.setBlockState(this.pos, newState);
             }
         }
-    }
-
-    @Override
-    public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
-        buf.writeBlockPos(this.pos);
-
     }
 
     @Override
@@ -111,17 +105,16 @@ public class ItemCollectorBlockEntity extends BlockEntity implements ExtendedScr
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        Inventories.writeNbt(nbt, inventory);
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.writeNbt(nbt, registryLookup);
+        Inventories.writeNbt(nbt, inventory, registryLookup);
         nbt.putInt("item_collector.progress", progress);
-        nbt.putInt("item_collector.net", hasNetInInputSlot());
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
-        Inventories.readNbt(nbt, inventory);
+    public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.readNbt(nbt, registryLookup);
+        Inventories.readNbt(nbt, inventory, registryLookup);
         progress = nbt.getInt("item_collector.progress");
         updateBlockState();
     }
@@ -132,11 +125,8 @@ public class ItemCollectorBlockEntity extends BlockEntity implements ExtendedScr
         updateBlockState();
     }
 
-    public int hasNetInInputSlot() {
-        if (this.getStack(INPUT_SLOT).getItem() == ModItems.NET) {
-            return 1;
-        }
-        return 0;
+    public boolean hasNetInInputSlot() {
+        return this.getStack(INPUT_SLOT).isOf(ModItems.NET);
     }
 
     @Nullable
@@ -151,14 +141,9 @@ public class ItemCollectorBlockEntity extends BlockEntity implements ExtendedScr
         }
         boolean isWaterlogged = state.get(ItemCatcher.WATERLOGGED);
 
-        String biomeString = world.getBiome(pos).toString();
-        String targetBiomeString = ModBiomes.RAFT_OCEAN_BIOME.toString();
+        RegistryEntry<Biome> biomeEntry = world.getBiome(pos);
 
-        String biomeKey = getBiomeKeyFromBiomeString(biomeString);
-        String targetBiomeKey = getBiomeKeyFromBiomeString(targetBiomeString);
-
-        //Raft.LOGGER.info("Biome biome is " + biomeKey + " Should match " + targetBiomeKey + " Waterlogged " + isWaterlogged + " If statement " + biomeKey.equals(targetBiomeKey));
-        if (isWaterlogged && biomeKey.equals(targetBiomeKey)) {
+        if (isWaterlogged && biomeEntry.matchesKey(ModBiomes.RAFT_OCEAN_BIOME)) {
             if (isOutputSlotEmptyOrReceivable()) {
                 if (this.hasRecipe()) {
                     this.increaseCraftProgress();
@@ -178,35 +163,30 @@ public class ItemCollectorBlockEntity extends BlockEntity implements ExtendedScr
         }
     }
 
-    private String getBiomeKeyFromBiomeString(String biomeString) {
-        int start = biomeString.indexOf('[');
-        int end = biomeString.indexOf(']');
-        return biomeString.substring(start + 1, end);
-    }
-
     private void resetProgress() {
         this.progress = 0;
     }
 
     private void craftItemKeepInput() {
+        if (!(this.world instanceof ServerWorld serverWorld)) return;
         Optional<RecipeEntry<ItemCatchingRecipe>> recipe = getCurrentRecipe();
-        ItemStack inputStack = getStack(INPUT_SLOT);
+        ItemStack inputStack = this.getStack(INPUT_SLOT);
         ItemStack result = recipe.get().value().getResult(null).getItem().getDefaultStack();
 
         if (!inputStack.isEmpty()) {
             // Damage the item in the input slot by 1
-            inputStack.damage(1, world.random, null);
+            inputStack.damage(1, serverWorld, null, item -> {});
 
             // Check if the item is completely damaged, and if so, replace it with an empty ItemStack
             if (inputStack.getDamage() >= inputStack.getMaxDamage()) {
-                setStack(INPUT_SLOT, ItemStack.EMPTY);
+                this.setStack(INPUT_SLOT, ItemStack.EMPTY);
             } else {
-                setStack(INPUT_SLOT, inputStack);
+                this.setStack(INPUT_SLOT, inputStack);
             }
         }
 
         // Add the result to the output slot
-        setStack(OUTPUT_SLOT, new ItemStack(result.getItem(), getStack(OUTPUT_SLOT).getCount() + result.getCount()));
+        this.setStack(OUTPUT_SLOT, new ItemStack(result.getItem(), this.getStack(OUTPUT_SLOT).getCount() + result.getCount()));
     }
 
 
@@ -226,13 +206,9 @@ public class ItemCollectorBlockEntity extends BlockEntity implements ExtendedScr
     }
 
     private Optional<RecipeEntry<ItemCatchingRecipe>> getCurrentRecipe() {
-        SimpleInventory inv = new SimpleInventory(this.size());
-        for(int i = 0; i < this.size(); i++) {
-            inv.setStack(i, this.getStack(i));
-        }
-
-        return getWorld().getRecipeManager().getFirstMatch(ItemCatchingRecipe.Type.INSTANCE, inv, getWorld());
+        return this.matchGetter.getFirstMatch(new SingleStackRecipeInput(this.inventory.getFirst()), this.getWorld());
     }
+
 
     private boolean canInsertItemIntoOutputSlot(Item item) {
         return this.getStack(OUTPUT_SLOT).getItem() == item || this.getStack(OUTPUT_SLOT).isEmpty();
@@ -254,7 +230,7 @@ public class ItemCollectorBlockEntity extends BlockEntity implements ExtendedScr
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return createNbt();
+    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
+        return createNbt(registryLookup);
     }
 }

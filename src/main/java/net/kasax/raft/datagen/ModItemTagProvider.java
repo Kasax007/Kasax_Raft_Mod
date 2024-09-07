@@ -4,10 +4,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.kasax.raft.block.ModBlocks;
 import net.kasax.raft.item.ModItems;
-import net.kasax.raft.sound.ModSounds;
 import net.kasax.raft.util.ModTags;
-import net.minecraft.client.sound.AmbientSoundLoops;
-import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.ItemTags;
 
@@ -50,7 +47,7 @@ public class ModItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(ModBlocks.PALM_WOOD.asItem())
                 .add(ModBlocks.STRIPPED_PALM_WOOD.asItem());
 
-        getOrCreateTagBuilder(ItemTags.MUSIC_DISCS)
+        getOrCreateTagBuilder(ItemTags.CREEPER_DROP_MUSIC_DISCS)
                 .add(ModItems.LOFI_BEAT_MUSIC_DISC)
                 .add(ModItems.SOME_GAME_MUSIC_MUSIC_DISC);
 

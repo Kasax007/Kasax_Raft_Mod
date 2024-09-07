@@ -10,7 +10,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class ItemCollectorScreen extends HandledScreen<ItemCollectorScreenHandler> {
-    private static final Identifier TEXTURE = new Identifier(Raft.MOD_ID, "textures/gui/item_collector_gui.png");
+    private static final Identifier TEXTURE = Identifier.of(Raft.MOD_ID, "textures/gui/item_collector_gui.png");
 
     public ItemCollectorScreen(ItemCollectorScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);

@@ -1,7 +1,6 @@
 // CC0 https://github.com/kwpugh/mining_Dimensions
 
 package net.kasax.raft.util;
-import net.fabricmc.fabric.api.dimension.v1.FabricDimensions;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -18,6 +17,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.TeleportTarget;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
@@ -108,8 +108,8 @@ public class TeleporterUtil
                                 serverPlayer.stopRiding();
 
                                 Vec3d destVec = new Vec3d(x, y, z);
-                                TeleportTarget teleportTarget = new TeleportTarget(destVec, null, player.getYaw(), player.getPitch());
-                                FabricDimensions.teleport(serverPlayer, destWorld, teleportTarget);
+                                TeleportTarget teleportTarget = new TeleportTarget(destWorld, destVec, null, player.getYaw(), player.getPitch(), null);
+                                teleport(serverPlayer, destWorld, teleportTarget);
 
                                 serverPlayer.fallDistance = 0.0F;
                                 world.playSound((PlayerEntity) null, player.getX(), player.getY(), player.getZ(),
@@ -136,6 +136,14 @@ public class TeleporterUtil
         }
 
         return TypedActionResult.success(stack);
+    }
+
+    @Nullable
+    public static <E extends net.minecraft.entity.Entity>
+    E teleport(E teleported,
+               net.minecraft.server.world.ServerWorld destination,
+               net.minecraft.world.TeleportTarget target) {
+        return null;
     }
 }
 

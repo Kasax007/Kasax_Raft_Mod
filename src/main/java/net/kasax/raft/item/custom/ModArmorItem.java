@@ -8,6 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.world.World;
 import org.spongepowered.include.com.google.common.collect.ImmutableMap;
 
@@ -18,16 +19,16 @@ import java.util.Map;
 public class ModArmorItem extends ArmorItem {
 
     // Modify the map to store a list of StatusEffectInstances for each ArmorMaterial
-    private static final Map<ArmorMaterial, List<StatusEffectInstance>> MATERIAL_TO_EFFECT_MAP =
-            (new ImmutableMap.Builder<ArmorMaterial, List<StatusEffectInstance>>())
-                    .put(ModArmorMaterials.TITANIUM, Arrays.asList(
+    private static final Map<RegistryEntry<ArmorMaterial>, List<StatusEffectInstance>> MATERIAL_TO_EFFECT_MAP =
+            (new ImmutableMap.Builder<RegistryEntry<ArmorMaterial>, List<StatusEffectInstance>>())
+                    .put(ModArmorMaterials.TITANIUM.toArmorMaterial(), Arrays.asList(
                             new StatusEffectInstance(StatusEffects.WATER_BREATHING, 400, 1, false, false, true),
                             new StatusEffectInstance(StatusEffects.DOLPHINS_GRACE, 400, 1, false, false, true),
                             new StatusEffectInstance(StatusEffects.CONDUIT_POWER, 400, 1, false, false, true)
                     ))
                     .build();
 
-    public ModArmorItem(ArmorMaterial material, Type type, Settings settings) {
+    public ModArmorItem(RegistryEntry<ArmorMaterial> material, Type type, Settings settings) {
         super(material, type, settings);
     }
 
@@ -43,12 +44,12 @@ public class ModArmorItem extends ArmorItem {
     }
 
     private void evaluateArmorEffects(PlayerEntity player) {
-        for (Map.Entry<ArmorMaterial, List<StatusEffectInstance>> entry : MATERIAL_TO_EFFECT_MAP.entrySet()) {
-            ArmorMaterial mapArmorMaterial = entry.getKey();
+        for (Map.Entry<RegistryEntry<ArmorMaterial>, List<StatusEffectInstance>> entry : MATERIAL_TO_EFFECT_MAP.entrySet()) {
+            RegistryEntry<ArmorMaterial> mapArmorMaterial = entry.getKey();
             List<StatusEffectInstance> mapStatusEffects = entry.getValue();
 
-            if(hasCorrectArmorOn(mapArmorMaterial, player)) {
-                addStatusEffectsForMaterial(player, mapArmorMaterial, mapStatusEffects);
+            if(hasCorrectArmorOn(mapArmorMaterial.value(), player)) {
+                addStatusEffectsForMaterial(player, mapArmorMaterial.value(), mapStatusEffects);
             }
         }
     }
@@ -86,7 +87,7 @@ public class ModArmorItem extends ArmorItem {
         ArmorItem breastplate = ((ArmorItem)player.getInventory().getArmorStack(2).getItem());
         ArmorItem helmet = ((ArmorItem)player.getInventory().getArmorStack(3).getItem());
 
-        return helmet.getMaterial() == material && breastplate.getMaterial() == material &&
-                leggings.getMaterial() == material && boots.getMaterial() == material;
+        return helmet.getMaterial().value() == material && breastplate.getMaterial().value() == material &&
+                leggings.getMaterial().value() == material && boots.getMaterial().value() == material;
     }
 }

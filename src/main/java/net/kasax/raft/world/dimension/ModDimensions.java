@@ -16,11 +16,11 @@ import java.util.OptionalLong;
 
 public class ModDimensions {
     public static final RegistryKey<DimensionOptions> RAFTDIM_KEY = RegistryKey.of(RegistryKeys.DIMENSION,
-            new Identifier(Raft.MOD_ID, "raftdim"));
+            Identifier.of(Raft.MOD_ID, "raftdim"));
     public static final RegistryKey<World> RAFTDIM_LEVEL_KEY = RegistryKey.of(RegistryKeys.WORLD,
-            new Identifier(Raft.MOD_ID, "raftdim"));
+            Identifier.of(Raft.MOD_ID, "raftdim"));
     public static final RegistryKey<DimensionType> RAFT_DIM_TYPE = RegistryKey.of(RegistryKeys.DIMENSION_TYPE,
-            new Identifier(Raft.MOD_ID, "raftdim_type"));
+            Identifier.of(Raft.MOD_ID, "raftdim_type"));
 
     public static void bootstrapType(Registerable<DimensionType> context) {
         context.register(RAFT_DIM_TYPE, new DimensionType(

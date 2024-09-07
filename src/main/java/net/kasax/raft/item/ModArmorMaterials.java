@@ -4,10 +4,12 @@ import net.kasax.raft.Raft;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.registry.Registries;
+import net.minecraft.util.Identifier;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -46,9 +48,12 @@ public enum ModArmorMaterials {
         this.repairIngredient = repairIngredient;
     }
 
-    public ArmorMaterial toArmorMaterial() {
-        return new ArmorMaterial(protectionAmounts, enchantability, equipSound, repairIngredient, List.of(), toughness, knockbackResistence);
+    public RegistryEntry<ArmorMaterial> toArmorMaterial() {
+        var material = new ArmorMaterial(protectionAmounts, enchantability, equipSound, repairIngredient, List.of(), toughness, knockbackResistence);
+        material = Registry.register(Registries.ARMOR_MATERIAL, Raft.MOD_ID, material);
+        return RegistryEntry.of(material);
     }
+
 
     public String getName() {
         return Raft.MOD_ID + ":" + this.name;

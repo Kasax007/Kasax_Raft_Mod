@@ -1,6 +1,7 @@
 package net.kasax.raft.world.gen;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.kasax.raft.Raft;
 import net.minecraft.block.BlockState;
@@ -10,7 +11,7 @@ import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 import net.minecraft.world.gen.stateprovider.BlockStateProviderType;
 
 public class RandomizedBlockStateProvider extends BlockStateProvider {
-    public static final Codec<RandomizedBlockStateProvider> CODEC = RecordCodecBuilder.create((instance) -> {
+    public static final MapCodec<RandomizedBlockStateProvider> CODEC = RecordCodecBuilder.mapCodec((instance) -> {
         return instance.group(
                 BlockStateProvider.TYPE_CODEC.fieldOf("primary").forGetter((provider) -> provider.primary),
                 BlockStateProvider.TYPE_CODEC.fieldOf("secondary").forGetter((provider) -> provider.secondary),

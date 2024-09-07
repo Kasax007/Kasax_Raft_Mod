@@ -7,10 +7,10 @@ import net.minecraft.util.Identifier;
 
 public class ModRecipes {
     public static void registerRecipes() {
-        Registry.register(Registries.RECIPE_SERIALIZER, new Identifier(Raft.MOD_ID, ItemCatchingRecipe.Serializer.ID),
+        Registry.register(Registries.RECIPE_SERIALIZER, Identifier.of(Raft.MOD_ID, ItemCatchingRecipe.Serializer.ID),
                 ItemCatchingRecipe.Serializer.INSTANCE);
 
-        Registry.register(Registries.RECIPE_TYPE, new Identifier(Raft.MOD_ID, ItemCatchingRecipe.Type.ID),
+        Registry.register(Registries.RECIPE_TYPE, Identifier.of(Raft.MOD_ID, ItemCatchingRecipe.Type.ID),
                 ItemCatchingRecipe.Type.INSTANCE);
     }
 

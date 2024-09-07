@@ -2,6 +2,7 @@ package net.kasax.raft.item.custom;
 
 import net.kasax.raft.util.TeleporterUtil;
 import net.kasax.raft.world.dimension.ModDimensions;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -25,7 +26,7 @@ public class RaftTeleporter extends Item {
     {
         ItemStack stack = player.getStackInHand(hand);
         if (!player.isCreative()) {
-            stack.damage(1, world.random, null);
+            stack.damage(1, (LivingEntity) world.random, null);
         }
         TeleporterUtil.movePlayer(dimKey, world, player, hand);
         player.getItemCooldownManager().set(this, 20);

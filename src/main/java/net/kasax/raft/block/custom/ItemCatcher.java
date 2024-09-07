@@ -1,5 +1,6 @@
 package net.kasax.raft.block.custom;
 
+import com.mojang.serialization.MapCodec;
 import net.kasax.raft.block.entity.ItemCollectorBlockEntity;
 import net.kasax.raft.block.entity.ModBlockEntities;
 import net.minecraft.block.*;
@@ -14,14 +15,11 @@ import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.state.property.Property;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
@@ -35,7 +33,12 @@ public class ItemCatcher extends BlockWithEntity implements BlockEntityProvider,
         setDefaultState(getStateManager().getDefaultState()
                 //.with(Properties.HORIZONTAL_FACING, Direction.NORTH)
                 .with(WATERLOGGED, false)
-                .with(ItemCollectorBlockEntity.HAS_NET, 0));
+                .with(ItemCollectorBlockEntity.HAS_NET, false));
+    }
+
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return null;
     }
 
     @Override
@@ -62,7 +65,7 @@ public class ItemCatcher extends BlockWithEntity implements BlockEntityProvider,
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (!world.isClient) {
             NamedScreenHandlerFactory screenHandlerFactory = ((ItemCollectorBlockEntity) world.getBlockEntity(pos));
 

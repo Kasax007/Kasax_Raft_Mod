@@ -14,7 +14,7 @@ import net.minecraft.util.Identifier;
 
 public class ModItemGroups {
     public static final ItemGroup RAFT_GROUP = Registry.register(Registries.ITEM_GROUP,
-            new Identifier(Raft.MOD_ID, "raft"),
+            Identifier.of(Raft.MOD_ID, "raft"),
             FabricItemGroup.builder().displayName(Text.translatable("itemgroup.raft"))
                     .icon(() -> new ItemStack(ModItems.ANCIENT_ENERGY)).entries((displayContext, entries) -> {
                         entries.add(ModItems.ANCIENT_BROKEN_RING);

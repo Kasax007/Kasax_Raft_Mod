@@ -3,6 +3,7 @@ package net.kasax.raft.item.custom;
 import net.kasax.raft.block.ModBlocks;
 import net.minecraft.block.BlockState;
 
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -10,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -44,7 +46,8 @@ public class EnergyStaffItem extends Item {
                 world.playSound(null, user.getX(), user.getY(), user.getZ(),
                         ITEM_LODESTONE_COMPASS_LOCK, SoundCategory.NEUTRAL, 20F,
                         1F / (world.getRandom().nextFloat() * 0.4F + 0.8F));
-                damageItem((ServerPlayerEntity) user, 1);
+                //damageItem((ServerPlayerEntity) user, 1);
+                context.getStack().damage(1, (ServerWorld) world, (ServerPlayerEntity) user, item -> context.getPlayer().sendEquipmentBreakStatus(item, EquipmentSlot.MAINHAND));
             }
             return ActionResult.PASS;
         } else {
@@ -64,16 +67,16 @@ public class EnergyStaffItem extends Item {
     }
 
     // Custom method to handle item damage
-    private void damageItem(ServerPlayerEntity player, int amount) {
-        ItemStack stack = player.getMainHandStack();
-        if (!player.isCreative()) {
-            if (stack.isDamageable()) {
-                stack.damage(amount, player, (entity) -> entity.sendToolBreakStatus(player.getActiveHand()));
-                if (stack.isEmpty()) {
-                    player.sendToolBreakStatus(player.getActiveHand());
-                    player.setStackInHand(player.getActiveHand(), ItemStack.EMPTY);
-                }
-            }
-        }
-    }
+    //private void damageItem(ServerPlayerEntity player, int amount) {
+    //    ItemStack stack = player.getMainHandStack();
+    //    if (!player.isCreative()) {
+    //        if (stack.isDamageable()) {
+    //            stack.damage(amount, player, (entity) -> entity.sendEquipmentBreakStatus(player.getActiveHand()));
+    //            if (stack.isEmpty()) {
+    //                player.sendEquipmentBreakStatus(player.getActiveHand());
+    //                player.setStackInHand(player.getActiveHand(), ItemStack.EMPTY);
+    //            }
+    //        }
+    //    }
+    //}
 }

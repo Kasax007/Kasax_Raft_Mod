@@ -1,6 +1,6 @@
 package net.kasax.raft.util;
 
-import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
+import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.kasax.raft.item.ModItems;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTable;
@@ -18,13 +18,13 @@ import java.util.List;
 
 public class ModLootTableModifiers {
     private static final Identifier FISHING_TREASURE_ID =
-            new Identifier("minecraft", "gameplay/fishing/treasure");
+            Identifier.of("minecraft", "gameplay/fishing/treasure");
     private static final Identifier SHIPWRECK_TREASURE_ID =
-            new Identifier("minecraft", "chests/shipwreck_treasure");
+            Identifier.of("minecraft", "chests/shipwreck_treasure");
 
     public static void modifyLootTables() {
-        //LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
-        //    if(FISHING_TREASURE_ID.equals(id)) {
+        //LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
+        //    if(FISHING_TREASURE_ID.equals(key)) {
         //               .rolls(ConstantLootNumberProvider.create(1)) //adds extra item
         //                .conditionally(RandomChanceLootCondition.builder(0.25f)) //drop chance 25%
         //                .with(ItemEntry.builder(ModItems.ANCIENT_BROKEN_RING))
@@ -32,8 +32,8 @@ public class ModLootTableModifiers {
         //        tableBuilder.pool(poolBuilder.build());
         //    }
         //});
-        LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
-            if(SHIPWRECK_TREASURE_ID.equals(id)) {
+        LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
+            if(SHIPWRECK_TREASURE_ID.equals(key)) {
                 LootPool.Builder poolBuilder = LootPool.builder()
                 .rolls(ConstantLootNumberProvider.create(1)) //adds extra item
                 .conditionally(RandomChanceLootCondition.builder(0.5f)) //drop chance 25%
@@ -42,8 +42,8 @@ public class ModLootTableModifiers {
                 tableBuilder.pool(poolBuilder.build());
             }
         });
-        LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
-            if(SHIPWRECK_TREASURE_ID.equals(id)) {
+        LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
+            if(SHIPWRECK_TREASURE_ID.equals(key)) {
                 LootPool.Builder poolBuilder = LootPool.builder()
                         .rolls(ConstantLootNumberProvider.create(1)) //adds extra item
                         .conditionally(RandomChanceLootCondition.builder(0.1f)) //drop chance 25%
@@ -52,8 +52,8 @@ public class ModLootTableModifiers {
                 tableBuilder.pool(poolBuilder.build());
             }
         });
-        LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
-            if(SHIPWRECK_TREASURE_ID.equals(id)) {
+        LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
+            if(SHIPWRECK_TREASURE_ID.equals(key)) {
                 LootPool.Builder poolBuilder = LootPool.builder()
                         .rolls(ConstantLootNumberProvider.create(1)) //adds extra item
                         .conditionally(RandomChanceLootCondition.builder(0.1f)) //drop chance 25%
@@ -62,8 +62,8 @@ public class ModLootTableModifiers {
                 tableBuilder.pool(poolBuilder.build());
             }
         });
-        LootTableEvents.MODIFY.register((resourceManager, lootManager, id, tableBuilder, source) -> {
-            if(FISHING_TREASURE_ID.equals(id)) {
+        LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
+            if(FISHING_TREASURE_ID.equals(key)) {
                 LootPool.Builder poolBuilder = LootPool.builder()
                         .rolls(ConstantLootNumberProvider.create(1)) //adds extra item
                         .conditionally(RandomChanceLootCondition.builder(0.05f)) //drop chance 25%
@@ -72,8 +72,8 @@ public class ModLootTableModifiers {
                 tableBuilder.pool(poolBuilder.build());
             }
         });
-        //LootTableEvents.REPLACE.register((resourceManager, lootManager, id, original, source) -> {
-        //    if(FISHING_TREASURE_ID.equals(id)) {
+        //LootTableEvents.REPLACE.register((resourceManager, lootManager, key, original, source) -> {
+        //    if(FISHING_TREASURE_ID.equals(key)) {
         //        List<LootPoolEntry> entries = new ArrayList<>(Arrays.asList(original.pools[0].entries));
         //        entries.add(ItemEntry.builder(ModItems.ANCIENT_BROKEN_RING).build());
 //

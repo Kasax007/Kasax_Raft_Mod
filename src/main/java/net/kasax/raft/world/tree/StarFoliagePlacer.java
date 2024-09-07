@@ -1,6 +1,7 @@
 package net.kasax.raft.world.tree;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.kasax.raft.Raft;
 import net.minecraft.util.math.BlockPos;
@@ -21,7 +22,7 @@ public class StarFoliagePlacer extends FoliagePlacer {
         this.maxLength = maxLength;
     }
 
-    public static final Codec<StarFoliagePlacer> CODEC = RecordCodecBuilder.create(instance ->
+    public static final MapCodec<StarFoliagePlacer> CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(
                     IntProvider.VALUE_CODEC.fieldOf("radius").forGetter(placer -> placer.radius),
                     IntProvider.VALUE_CODEC.fieldOf("offset").forGetter(placer -> placer.offset),

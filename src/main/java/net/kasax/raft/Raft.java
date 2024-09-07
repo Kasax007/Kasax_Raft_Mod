@@ -34,13 +34,18 @@ public class Raft implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
 	public static final FoliagePlacerType<StarFoliagePlacer> STAR_FOLIAGE_PLACER =
-			Registry.register(Registries.FOLIAGE_PLACER_TYPE, new Identifier(Raft.MOD_ID, "star_foliage_placer"),
+			Registry.register(Registries.FOLIAGE_PLACER_TYPE, Identifier.of(Raft.MOD_ID, "star_foliage_placer"),
 					new FoliagePlacerType<>(StarFoliagePlacer.CODEC));
 
 	public static final BlockStateProviderType<RandomizedBlockStateProvider> RANDOMIZED_BLOCK_STATE_PROVIDER =
 			Registry.register(Registries.BLOCK_STATE_PROVIDER_TYPE,
-					new Identifier("your_mod_id", "randomized_block_state_provider"),
+					Identifier.of("your_mod_id", "randomized_block_state_provider"),
 					new BlockStateProviderType<>(RandomizedBlockStateProvider.CODEC));
+
+	public static Identifier id(String path) {
+		return Identifier.of(MOD_ID, path);
+	}
+
 	@Override
 	public void onInitialize() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
@@ -83,7 +88,7 @@ public class Raft implements ModInitializer {
 
 		CustomPortalBuilder.beginPortal().frameBlock(ModBlocks.DRIFTWOOD_PORTAL_FRAME)
 				.lightWithItem(ModItems.ENERGY_STAFF)
-						.destDimID(new Identifier(Raft.MOD_ID, "raftdim"))
+						.destDimID(Identifier.of(Raft.MOD_ID, "raftdim"))
 								.tintColor(0x2C3B8A)
 				.setPortalSearchYRange(200, 220)
 				.setReturnPortalSearchYRange(200, 220)

@@ -27,7 +27,7 @@ public abstract class FurnaceXPMixin extends Slot {
         super(inventory, invSlot, xPosition, yPosition);
     }
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;onCraft(Lnet/minecraft/world/World;Lnet/minecraft/entity/player/PlayerEntity;I)V"), method = "onCrafted(Lnet/minecraft/item/ItemStack;)V")
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;onCraftByPlayer(Lnet/minecraft/world/World;Lnet/minecraft/entity/player/PlayerEntity;I)V"), method = "onCrafted(Lnet/minecraft/item/ItemStack;)V")
     private void craft(ItemStack stack, CallbackInfo ci) {
         if (!this.player.getWorld().isClient && this.inventory instanceof FurnaceEntity) {
             ((FurnaceEntity) this.inventory).dropExperienceForRecipesUsed((ServerPlayerEntity) this.player);

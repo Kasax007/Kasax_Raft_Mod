@@ -1,11 +1,11 @@
 package net.kasax.raft.world.biome;
 
 import net.kasax.raft.Raft;
-import net.minecraft.client.sound.MusicType;
 import net.minecraft.registry.Registerable;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.sound.MusicSound;
+import net.minecraft.sound.MusicType;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
@@ -16,7 +16,7 @@ import net.minecraft.world.gen.feature.DefaultBiomeFeatures;
 
 public class ModBiomes {
     public static final RegistryKey<Biome> RAFT_OCEAN_BIOME = RegistryKey.of(RegistryKeys.BIOME,
-            new Identifier(Raft.MOD_ID, "raft_ocean_biome"));
+            Identifier.of(Raft.MOD_ID, "raft_ocean_biome"));
 
     public static void bootstrap(Registerable<Biome> context) {
         context.register(RAFT_OCEAN_BIOME, raftOceanBiome(context));

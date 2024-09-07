@@ -39,7 +39,7 @@ public class FurnaceBlocks {
     }
 
     private static FurnaceBlock register(String name, FurnaceBlock block) {
-        return Registry.register(Registries.BLOCK, new Identifier(Raft.MOD_ID, name), block);
+        return Registry.register(Registries.BLOCK, Identifier.of(Raft.MOD_ID, name), block);
     }
 
     public static List<Block> getFurnaces() {
