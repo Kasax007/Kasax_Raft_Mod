@@ -1,10 +1,8 @@
 {
   "type": "raft:item_catching",
-  "ingredients": [
-    {
-      "item": "raft:net"
-    }
-  ],
+  "ingredient": {
+    "item": "raft:net"
+  },
   "output": {
     "item": "raft:ocean_ball"
   }

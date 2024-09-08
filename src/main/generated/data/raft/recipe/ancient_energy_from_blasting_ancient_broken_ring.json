@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 0.7,
+  "group": "misc",
+  "ingredient": {
+    "item": "raft:ancient_broken_ring"
+  },
+  "result": {
+    "id": "raft:ancient_energy"
+  }
+}

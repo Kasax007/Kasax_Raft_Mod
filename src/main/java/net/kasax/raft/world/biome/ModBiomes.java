@@ -24,9 +24,9 @@ public class ModBiomes {
 
     public static void globalOverworldGeneration(GenerationSettings.LookupBackedBuilder builder) {
         DefaultBiomeFeatures.addLandCarvers(builder);
-        DefaultBiomeFeatures.addAmethystGeodes(builder);
         DefaultBiomeFeatures.addDungeons(builder);
         DefaultBiomeFeatures.addMineables(builder);
+        DefaultBiomeFeatures.addAmethystGeodes(builder);
     }
 
     public static Biome raftOceanBiome(Registerable<Biome> context) {
@@ -37,9 +37,9 @@ public class ModBiomes {
         musicSound1 = MusicType.createIngameMusic(SoundEvents.MUSIC_OVERWORLD_LUSH_CAVES);
         musicSound2 = MusicType.createIngameMusic(SoundEvents.MUSIC_OVERWORLD_CHERRY_GROVE);
 
-        DefaultBiomeFeatures.addFarmAnimals(spawnBuilder);
+        //DefaultBiomeFeatures.addFarmAnimals(spawnBuilder);
         DefaultBiomeFeatures.addBatsAndMonsters(spawnBuilder);
-        DefaultBiomeFeatures.addOceanMobs(spawnBuilder, 1, 3, 1);
+        //DefaultBiomeFeatures.addOceanMobs(spawnBuilder, 1, 3, 1);
         DefaultBiomeFeatures.addWarmOceanMobs(spawnBuilder, 1, 3);
         DefaultBiomeFeatures.addCaveMobs(spawnBuilder);
 
@@ -50,12 +50,12 @@ public class ModBiomes {
 
         globalOverworldGeneration(biomeBuilder);
         DefaultBiomeFeatures.addDefaultOres(biomeBuilder);
-        DefaultBiomeFeatures.addExtraGoldOre(biomeBuilder);
-        DefaultBiomeFeatures.addEmeraldOre(biomeBuilder);
+        //DefaultBiomeFeatures.addExtraGoldOre(biomeBuilder);
+        //DefaultBiomeFeatures.addEmeraldOre(biomeBuilder);
         DefaultBiomeFeatures.addDesertVegetation(biomeBuilder);
         DefaultBiomeFeatures.addDesertFeatures(biomeBuilder);
         DefaultBiomeFeatures.addKelp(biomeBuilder);
-        DefaultBiomeFeatures.addSeagrassOnStone(biomeBuilder);
+        //DefaultBiomeFeatures.addSeagrassOnStone(biomeBuilder);
         //biomeBuilder.feature(GenerationStep.Feature.SURFACE_STRUCTURES, (RegistryEntry<PlacedFeature>) StructureKeys.SHIPWRECK);
         //biomeBuilder.addFeature(1, (RegistryEntry<PlacedFeature>) StructureKeys.SHIPWRECK);
 
@@ -64,8 +64,8 @@ public class ModBiomes {
                 .precipitation(true)
                 .downfall(0.4f)
                 .temperature(0.7f)
-                .generationSettings(biomeBuilder.build())
                 .spawnSettings(spawnBuilder.build())
+                .generationSettings(biomeBuilder.build())
                 .effects((new BiomeEffects.Builder())
                         .waterColor(0x2faee9)
                         .waterFogColor(0x1833aa)

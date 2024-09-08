@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "raft:ancient_energy"
+    },
+    "B": {
+      "item": "minecraft:brick"
+    },
+    "F": {
+      "item": "minecraft:furnace"
+    }
+  },
+  "pattern": [
+    "BBB",
+    "BFB",
+    "BAB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:brick_furnace"
+  }
+}
