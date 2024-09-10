@@ -12,8 +12,9 @@ import net.minecraft.util.Identifier;
 public class ModSounds {
 
     public static final SoundEvent Portal_Teleport_Sound = registerSoundEvent("portal_teleport_sound");
-    public static final RegistryKey<JukeboxSong> Some_Game_Music_Seth = registerJukeboxSong("some_game_music_seth");
-    public static final RegistryKey<JukeboxSong> Lofi_Beat_Seth = registerJukeboxSong("lofi_beat_seth");
+    //public static final SoundEvent Lofi_Beat_Seth_Event = registerSoundEvent("lofi_beat_seth");
+    //public static final RegistryKey<JukeboxSong> Some_Game_Music_Seth = registerJukeboxSong("some_game_music_seth");
+    //public static final RegistryKey<JukeboxSong> Lofi_Beat_Seth = registerJukeboxSong("lofi_beat_seth");
 
 
     private static SoundEvent registerSoundEvent(String name) {
@@ -21,10 +22,10 @@ public class ModSounds {
         return Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));
     }
 
-    private static RegistryKey<JukeboxSong> registerJukeboxSong(String name) {
-        Identifier id = Identifier.of(Raft.MOD_ID, name);
-        return RegistryKey.of(RegistryKeys.JUKEBOX_SONG, id);
-    }
+    //private static RegistryKey<JukeboxSong> registerJukeboxSong(String name) {
+    //    Identifier id = Identifier.of(Raft.MOD_ID, name);
+    //    return RegistryKey.of(RegistryKeys.JUKEBOX_SONG, id);
+    //}
 
 
     public static void registerSounds() {

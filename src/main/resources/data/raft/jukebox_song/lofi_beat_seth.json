@@ -1,0 +1,8 @@
+{
+  "comparator_output": 7,
+  "description": {
+    "translate": "lofi_beat_music_disc.desc"
+  },
+  "length_in_seconds": 120.0,
+  "sound_event": "raft:music_disc.lofi_beat_seth"
+}

@@ -9,11 +9,9 @@
       }
     },
     "foliage_placer": {
-      "type": "raft:star_foliage_placer",
-      "initialRadius": 1,
-      "maxLength": 4,
+      "type": "minecraft:acacia_foliage_placer",
       "offset": 1,
-      "radius": 1
+      "radius": 3
     },
     "foliage_provider": {
       "type": "your_mod_id:randomized_block_state_provider",
@@ -56,8 +54,8 @@
       "base_height": 8,
       "bend_length": 1,
       "height_rand_a": 3,
-      "height_rand_b": 3,
-      "min_height_for_leaves": 9
+      "height_rand_b": 0,
+      "min_height_for_leaves": 10
     },
     "trunk_provider": {
       "type": "minecraft:simple_state_provider",

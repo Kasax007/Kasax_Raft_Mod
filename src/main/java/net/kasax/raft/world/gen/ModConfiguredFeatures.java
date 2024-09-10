@@ -14,6 +14,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.intprovider.ConstantIntProvider;
 import net.minecraft.world.gen.feature.*;
 import net.minecraft.world.gen.feature.size.TwoLayersFeatureSize;
+import net.minecraft.world.gen.foliage.AcaciaFoliagePlacer;
 import net.minecraft.world.gen.foliage.BlobFoliagePlacer;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 import net.minecraft.world.gen.trunk.BendingTrunkPlacer;
@@ -50,7 +51,7 @@ public class ModConfiguredFeatures {
 
         register(context, PALMWOOD_KEY, Feature.TREE, new TreeFeatureConfig.Builder(
                 BlockStateProvider.of(ModBlocks.PALM_LOG),
-                new BendingTrunkPlacer(8, 3, 3, 9, ConstantIntProvider.create(1)),
+                new BendingTrunkPlacer(8, 3, 0, 10, ConstantIntProvider.create(1)),
                 //new BendingTrunkPlacer(4, 1, 1, 3, ConstantIntProvider.create(1)),
                 //new StraightTrunkPlacer(5, 1, 1),
 
@@ -59,8 +60,8 @@ public class ModConfiguredFeatures {
                         BlockStateProvider.of(ModBlocks.PALM_COCONUT_LEAVES),
                         0.05f // 5% chance to select PALM_COCONUT_LEAVES
                 ),
-                new StarFoliagePlacer(ConstantIntProvider.create(1), ConstantIntProvider.create(1), (int) 1.25, 4),
-                //new AcaciaFoliagePlacer(ConstantIntProvider.create(2), ConstantIntProvider.create(1)),
+                //new StarFoliagePlacer(ConstantIntProvider.create(1), ConstantIntProvider.create(1), (int) 1.25, 4),
+                new AcaciaFoliagePlacer(ConstantIntProvider.create(3), ConstantIntProvider.create(1)),
                 new TwoLayersFeatureSize(1, 0, 2)).dirtProvider(BlockStateProvider.of(Blocks.SAND))
                 .build());
     }

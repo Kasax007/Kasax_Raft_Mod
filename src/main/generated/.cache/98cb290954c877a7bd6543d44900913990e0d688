@@ -1,6 +1,6 @@
-// 1.20.2	2024-08-29T01:28:11.6157802	Raft/Tags for minecraft:item
-d7a834ee818603f7ac9f0f835710111ada853e9e data\minecraft\tags\items\logs_that_burn.json
-d24a3dee1314fffb3f69f3d95c64a67d3293c21b data\minecraft\tags\items\music_discs.json
-07881679eb256b92a37f8fb5c7d7f87ff53f99b4 data\minecraft\tags\items\planks.json
-5ef30ab2b6c015dd3edee48ef643ef5a20637357 data\raft\tags\items\driftwood_logs.json
-8cc44abf442691f4f3b42765557baf67af45f35b data\minecraft\tags\items\trimmable_armor.json
+// 1.21	2024-09-10T14:50:24.6890424	Raft/Tags for minecraft:item
+95e4ae8c8364ffbca6d808649a6ba0768071df43 data\minecraft\tags\item\planks.json
+78c37061029c58d78cab5bfe6884d9cf7ee2e730 data\minecraft\tags\item\trimmable_armor.json
+335bc946e0674586b9a2e6f3c0a6d7de3b0d1950 data\minecraft\tags\item\logs_that_burn.json
+06846ed389151a6d776cb08261fab4c4afa9e1fc data\minecraft\tags\item\creeper_drop_music_discs.json
+b77995825d4e5c95cc25b6ecdada06d0dd2be73b data\raft\tags\item\driftwood_logs.json

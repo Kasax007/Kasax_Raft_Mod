@@ -1,5 +1,5 @@
 {
-  "lofi_beat_seth": {
+  "music_disc.lofi_beat_seth": {
     "subtitle": "sounds.raft.lofi_beat_seth",
     "sounds": [
       {
@@ -8,7 +8,8 @@
       }
     ]
   },
-  "some_game_music_seth": {
+  "music_disc.some_game_music_seth": {
+    "subtitle": "sounds.raft.some_game_music_seth",
     "sounds": [
       {
       "name": "raft:some_game_music_seth",

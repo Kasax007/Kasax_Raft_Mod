@@ -47,9 +47,9 @@ public class ModArmorItem extends ArmorItem {
         for (Map.Entry<RegistryEntry<ArmorMaterial>, List<StatusEffectInstance>> entry : MATERIAL_TO_EFFECT_MAP.entrySet()) {
             RegistryEntry<ArmorMaterial> mapArmorMaterial = entry.getKey();
             List<StatusEffectInstance> mapStatusEffects = entry.getValue();
-
             if(hasCorrectArmorOn(mapArmorMaterial.value(), player)) {
                 addStatusEffectsForMaterial(player, mapArmorMaterial.value(), mapStatusEffects);
+
             }
         }
     }
@@ -87,7 +87,13 @@ public class ModArmorItem extends ArmorItem {
         ArmorItem breastplate = ((ArmorItem)player.getInventory().getArmorStack(2).getItem());
         ArmorItem helmet = ((ArmorItem)player.getInventory().getArmorStack(3).getItem());
 
-        return helmet.getMaterial().value() == material && breastplate.getMaterial().value() == material &&
-                leggings.getMaterial().value() == material && boots.getMaterial().value() == material;
+        return removeLayers(helmet.getMaterial().value().toString()).equals(removeLayers(material.toString())) &&
+                removeLayers(breastplate.getMaterial().value().toString()).equals(removeLayers(material.toString())) &&
+                removeLayers(leggings.getMaterial().value().toString()).equals(removeLayers(material.toString())) &&
+                removeLayers(boots.getMaterial().value().toString()).equals(removeLayers(material.toString()));
+    }
+    // Helper function to remove the layers part of the string
+    private String removeLayers(String materialString) {
+        return materialString.replaceAll(", layers=\\[.*?]", "");
     }
 }

@@ -38,70 +38,27 @@ public class StarFoliagePlacer extends FoliagePlacer {
 
     @Override
     protected void generate(TestableWorld world, BlockPlacer placer, Random random, TreeFeatureConfig config, int trunkHeight, TreeNode treeNode, int foliageHeight, int radius, int offset) {
-        BlockPos pos = treeNode.getCenter().up();  // Start placing leaves just above the top of the trunk
+        BlockPos pos = treeNode.getCenter().up();
 
-        double coneAngle = Math.toRadians(45); // 45 degrees downward
-
-        // Create a small point at the top of the tree
-        //placeLeavesRow(world, placer, random, config, pos.up(), 1); // A small 3x3 leaf area above the trunk
-        placeFoliageBlock(world, placer, random, config, pos.up(1)); // A single leaf block at the very top
-
-        // Create 4 cone-shaped leaves around the trunk
-        for (int i = 0; i < 4; i++) {
-            double horizontalAngle = (2 * Math.PI / 4) * i; // 90 degrees apart for each cone
-
-            BlockPos lastPos = pos; // Track the last position for the tip
-
-            for (int distance = 0; distance <= maxLength; distance++) {
-                // Calculate the current position along the cone's direction
-                int dx = (int) (distance * Math.cos(horizontalAngle) * Math.cos(coneAngle));
-                int dz = (int) (distance * Math.sin(horizontalAngle) * Math.cos(coneAngle));
-                int dy = (int) (-distance * Math.sin(coneAngle)); // Downward direction
-
-                BlockPos foliagePos = pos.add(dx, dy, dz);
-
-                // Calculate the current radius at this distance from the start
-                int currentRadius = Math.max(initialRadius - (int)(Math.pow(distance, 1.5) * initialRadius / (maxLength * maxLength)), 0);
-
-                // Place leaves at the calculated position
-                placeLeavesRow(world, placer, random, config, foliagePos, currentRadius);
-
-                // Occasionally place a log block along the cone to maintain leaf connection
-                if (distance % 3 == 0 || distance == maxLength) {
-                    placeLogBlock(world, placer, random, config, foliagePos);
-                }
-
-                // Update last position for the tip
-                lastPos = foliagePos;
+        // First layer (3x3)
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dz = -1; dz <= 1; dz++) {
+                placeFoliageBlock(world, placer, random, config, pos.add(dx, 0, dz));
             }
-            // Place a leaf block at the tip of the cone
-            placeFoliageBlock(world, placer, random, config, lastPos);
-            // Place a leaf block at the tip of the cone
-            placeFoliageBlock(world, placer, random, config, lastPos.down());
+        }
+
+        // Second layer (5x5 star pattern)
+        int[][] starPattern = {
+                {0, 1}, {0, 2}, {0, -1}, {0, -2},
+                {1, 0}, {2, 0}, {-1, 0}, {-2, 0},
+                {1, 1}, {-1, 1}, {1, -1}, {-1, -1}
+        };
+
+        for (int[] offsetPos : starPattern) {
+            placeFoliageBlock(world, placer, random, config, pos.add(offsetPos[0], 1, offsetPos[1]));
         }
     }
 
-    private void placeLogBlock(TestableWorld world, BlockPlacer placer, Random random, TreeFeatureConfig config, BlockPos pos) {
-        placer.placeBlock(pos, config.trunkProvider.get(random, pos));
-    }
-
-    private void placeLeavesRow(TestableWorld world, BlockPlacer placer, Random random, TreeFeatureConfig config, BlockPos pos, int radius) {
-        for (int dx = -radius; dx <= radius; dx++) {
-            for (int dz = -radius; dz <= radius; dz++) {
-                int i = Math.abs(dx) + Math.abs(dz);
-                if (i <= radius) {
-                    BlockPos foliagePos = pos.add(dx, 0, dz);
-                    placeFoliageBlock(world, placer, random, config, foliagePos);
-
-                    // Add two additional leaf blocks below the middle of the pattern
-                    if (i == radius) {
-                        BlockPos belowPos = foliagePos.down();
-                        placeFoliageBlock(world, placer, random, config, belowPos);
-                    }
-                }
-            }
-        }
-    }
 
     @Override
     public int getRandomHeight(Random random, int trunkHeight, TreeFeatureConfig config) {

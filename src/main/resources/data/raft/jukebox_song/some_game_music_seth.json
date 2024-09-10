@@ -1,0 +1,8 @@
+{
+  "comparator_output": 7,
+  "description": {
+    "translate": "some_game_music_music_disc.desc"
+  },
+  "length_in_seconds": 105.0,
+  "sound_event": "raft:music_disc.some_game_music_seth"
+}

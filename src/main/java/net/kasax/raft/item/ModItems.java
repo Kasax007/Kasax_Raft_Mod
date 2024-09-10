@@ -2,12 +2,14 @@ package net.kasax.raft.item;
 
 import net.kasax.raft.Raft;
 import net.kasax.raft.item.custom.*;
+import net.kasax.raft.sound.ModJukeboxSongs;
 import net.kasax.raft.sound.ModSounds;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Rarity;
 
 public class ModItems {
     public static final Item ANCIENT_ENERGY = registerItem("ancient_energy", new Item(new Item.Settings()));
@@ -26,25 +28,25 @@ public class ModItems {
 
 
     public static final Item TITANIUM_HELMET = registerItem("titanium_helmet",
-            new TitaniumArmorItem(ModArmorMaterials.TITANIUM.toArmorMaterial(), ArmorItem.Type.HELMET, new Item.Settings()));
+            new TitaniumArmorItem(ModArmorMaterials.TITANIUM.toArmorMaterial(), ArmorItem.Type.HELMET, new Item.Settings().maxCount(1)));
 
     public static final Item TITANIUM_CHESTPLATE = registerItem("titanium_chestplate",
-            new TitaniumArmorItem(ModArmorMaterials.TITANIUM.toArmorMaterial(), ArmorItem.Type.CHESTPLATE, new Item.Settings()));
+            new TitaniumArmorItem(ModArmorMaterials.TITANIUM.toArmorMaterial(), ArmorItem.Type.CHESTPLATE, new Item.Settings().maxCount(1)));
 
     public static final Item TITANIUM_LEGGINGS = registerItem("titanium_leggings",
-            new TitaniumArmorItem(ModArmorMaterials.TITANIUM.toArmorMaterial(), ArmorItem.Type.LEGGINGS, new Item.Settings()));
+            new TitaniumArmorItem(ModArmorMaterials.TITANIUM.toArmorMaterial(), ArmorItem.Type.LEGGINGS, new Item.Settings().maxCount(1)));
 
     public static final Item TITANIUM_BOOTS = registerItem("titanium_boots",
-            new TitaniumArmorItem(ModArmorMaterials.TITANIUM.toArmorMaterial(), ArmorItem.Type.BOOTS, new Item.Settings()));
+            new TitaniumArmorItem(ModArmorMaterials.TITANIUM.toArmorMaterial(), ArmorItem.Type.BOOTS, new Item.Settings().maxCount(1)));
 
 
     public static final Item NET = registerItem("net", new Item(new Item.Settings().maxCount(1).maxDamage(32)));
 
 
     public static final Item SOME_GAME_MUSIC_MUSIC_DISC = registerItem("some_game_music_music_disc",
-            new Item(new Item.Settings().maxCount(1).jukeboxPlayable(ModSounds.Some_Game_Music_Seth)));
+            new Item(new Item.Settings().maxCount(1).jukeboxPlayable(ModJukeboxSongs.SOME_GAME_MUSIC_SETH).rarity(Rarity.RARE)));
     public static final Item LOFI_BEAT_MUSIC_DISC = registerItem("lofi_beat_music_disc",
-            new Item(new Item.Settings().maxCount(1).jukeboxPlayable(ModSounds.Lofi_Beat_Seth)));
+            new Item(new Item.Settings().maxCount(1).jukeboxPlayable(ModJukeboxSongs.LOFI_BEAT_SETH).rarity(Rarity.RARE)));
 
     public static final Item ENERGY_STAFF = registerItem("energy_staff", new EnergyStaffItem(new Item.Settings().maxCount(1).maxDamage(64)));
 

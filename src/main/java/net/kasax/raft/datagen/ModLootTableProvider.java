@@ -20,6 +20,8 @@ import net.minecraft.loot.entry.LootPoolEntry;
 import net.minecraft.loot.function.ApplyBonusLootFunction;
 import net.minecraft.loot.function.SetCountLootFunction;
 import net.minecraft.loot.provider.number.UniformLootNumberProvider;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.entry.RegistryEntry;
 
@@ -81,13 +83,15 @@ public class ModLootTableProvider extends FabricBlockLootTableProvider {
         );
     }
     public LootTable.Builder copperLikeOreDrops(Block drop, Item item) {
+        RegistryWrapper.Impl<Enchantment> impl = this.registryLookup.getWrapperOrThrow(RegistryKeys.ENCHANTMENT);
         return this.dropsWithSilkTouch(drop, (LootPoolEntry.Builder)this.applyExplosionDecay(drop,
                 ((LeafEntry.Builder) ItemEntry.builder(item)
                         .apply(SetCountLootFunction.builder(UniformLootNumberProvider
                                 .create(2.0f, 5.0f))))
-                        .apply(ApplyBonusLootFunction.oreDrops((RegistryEntry<Enchantment>) Enchantments.FORTUNE))));
+                        .apply(ApplyBonusLootFunction.oreDrops(impl.getOrThrow(Enchantments.FORTUNE)))));
     }
     public LootTable.Builder fruitLeaveDrops(Block drop, Item item) {
+        RegistryWrapper.Impl<Enchantment> impl = this.registryLookup.getWrapperOrThrow(RegistryKeys.ENCHANTMENT);
         return this.dropsWithShears(drop,
                 (LootPoolEntry.Builder) this.applyExplosionDecay(drop,
                         ((LeafEntry.Builder) ItemEntry.builder(item)
@@ -95,7 +99,7 @@ public class ModLootTableProvider extends FabricBlockLootTableProvider {
                                 .conditionally(RandomChanceLootCondition.builder(0.5f)) // 50% chance to add this pool
                                 .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0f, 1.0f)))
                                 .conditionally(RandomChanceLootCondition.builder(0.2f)) // 20% chance to add this pool
-                                .apply(ApplyBonusLootFunction.oreDrops((RegistryEntry<Enchantment>) Enchantments.FORTUNE)
+                                .apply(ApplyBonusLootFunction.oreDrops(impl.getOrThrow(Enchantments.FORTUNE))
                                         ))));
     }
 }
