@@ -86,7 +86,14 @@ public class ModArmorItem extends ArmorItem {
         ArmorItem leggings = ((ArmorItem)player.getInventory().getArmorStack(1).getItem());
         ArmorItem breastplate = ((ArmorItem)player.getInventory().getArmorStack(2).getItem());
         ArmorItem helmet = ((ArmorItem)player.getInventory().getArmorStack(3).getItem());
-        return helmet.getMaterial().value().equals(material) && breastplate.getMaterial().value().equals(material) &&
-                leggings.getMaterial().value().equals(material) && boots.getMaterial().value().equals(material);
+
+        return removeLayers(helmet.getMaterial().value().toString()).equals(removeLayers(material.toString())) &&
+                removeLayers(breastplate.getMaterial().value().toString()).equals(removeLayers(material.toString())) &&
+                removeLayers(leggings.getMaterial().value().toString()).equals(removeLayers(material.toString())) &&
+                removeLayers(boots.getMaterial().value().toString()).equals(removeLayers(material.toString()));
+    }
+    // Helper function to remove the layers part of the string
+    private String removeLayers(String materialString) {
+        return materialString.replaceAll(", layers=\\[.*?]", "");
     }
 }
