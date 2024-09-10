@@ -51,7 +51,7 @@ public class ModConfiguredFeatures {
 
         register(context, PALMWOOD_KEY, Feature.TREE, new TreeFeatureConfig.Builder(
                 BlockStateProvider.of(ModBlocks.PALM_LOG),
-                new BendingTrunkPlacer(8, 3, 0, 8, ConstantIntProvider.create(1)),
+                new BendingTrunkPlacer(8, 3, 0, 10, ConstantIntProvider.create(1)),
                 //new BendingTrunkPlacer(4, 1, 1, 3, ConstantIntProvider.create(1)),
                 //new StraightTrunkPlacer(5, 1, 1),
 

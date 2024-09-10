@@ -1,4 +1,4 @@
-// 1.21	2024-09-10T13:56:03.112537	Raft/Block Loot Tables
+// 1.21	2024-09-10T14:50:24.6840835	Raft/Block Loot Tables
 a9403c32ba4d0d5b8fb2a0a511afed45b1529562 data\raft\loot_table\blocks\stripped_driftwood_log.json
 8c5df2b52ad78cdd70f622165b9619f2d9bc1b17 data\raft\loot_table\blocks\titanium_furnace.json
 9ab4483e86e9b093d3171ad4fb7a6d1ed2e5d2eb data\raft\loot_table\blocks\titanium_ore.json
@@ -27,8 +27,8 @@ dc4f9e546dcb206ca3cbd9bb62a0e5a623fa8fd6 data\raft\loot_table\blocks\driftwood_p
 3e7282b5a5645a9448beae3cdead77180733e6e7 data\raft\loot_table\blocks\driftwood_trapdoor.json
 df736a4963268c4cac71282fa112f56d0b866ef6 data\raft\loot_table\blocks\palm_trapdoor.json
 b123b7f8afa1ef14d520b74fde8febea5c437170 data\raft\loot_table\blocks\driftwood_door.json
-7d26987ea7da71a18aaa11c65aa16e22c48cf646 data\raft\loot_table\blocks\driftwood_button.json
 ad98e3d664bbd13b06acf30a918b906bbe3eebde data\raft\loot_table\blocks\item_catcher.json
+7d26987ea7da71a18aaa11c65aa16e22c48cf646 data\raft\loot_table\blocks\driftwood_button.json
 437f97537f7a720c94bdba338bcb152ac51f3b42 data\raft\loot_table\blocks\driftwood_planks.json
 c85c470e1e7688e9a6bdea24e2f164746026dd86 data\raft\loot_table\blocks\driftwood_sapling.json
 2a6a48a9acdf9539ea629ac790154ee4aef6461c data\raft\loot_table\blocks\palm_fence.json
