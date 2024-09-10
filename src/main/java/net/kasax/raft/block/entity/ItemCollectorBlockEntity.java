@@ -84,13 +84,13 @@ public class ItemCollectorBlockEntity extends BlockEntity implements NamedScreen
     }
 
     public void updateBlockState() {
+        if (this.world == null || this.pos == null) return;
+        if (this.world.isClient()) return;
         boolean hasNet = this.hasNetInInputSlot();
-        if (this.world != null && this.pos != null) {
-            BlockState currentState = this.world.getBlockState(this.pos);
-            BlockState newState = currentState.with(HAS_NET, hasNet);
-            if (currentState != newState) {
-                this.world.setBlockState(this.pos, newState);
-            }
+        BlockState currentState = this.world.getBlockState(this.pos);
+        BlockState newState = currentState.with(HAS_NET, hasNet);
+        if (currentState != newState) {
+            this.world.setBlockState(this.pos, newState);
         }
     }
 

@@ -2,12 +2,14 @@ package net.kasax.raft.item;
 
 import net.kasax.raft.Raft;
 import net.kasax.raft.item.custom.*;
+import net.kasax.raft.sound.ModJukeboxSongs;
 import net.kasax.raft.sound.ModSounds;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Rarity;
 
 public class ModItems {
     public static final Item ANCIENT_ENERGY = registerItem("ancient_energy", new Item(new Item.Settings()));
@@ -42,9 +44,9 @@ public class ModItems {
 
 
     public static final Item SOME_GAME_MUSIC_MUSIC_DISC = registerItem("some_game_music_music_disc",
-            new Item(new Item.Settings().maxCount(1).jukeboxPlayable(ModSounds.Some_Game_Music_Seth)));
+            new Item(new Item.Settings().maxCount(1).jukeboxPlayable(ModJukeboxSongs.SOME_GAME_MUSIC_SETH).rarity(Rarity.RARE)));
     public static final Item LOFI_BEAT_MUSIC_DISC = registerItem("lofi_beat_music_disc",
-            new Item(new Item.Settings().maxCount(1).jukeboxPlayable(ModSounds.Lofi_Beat_Seth)));
+            new Item(new Item.Settings().maxCount(1).jukeboxPlayable(ModJukeboxSongs.LOFI_BEAT_SETH).rarity(Rarity.RARE)));
 
     public static final Item ENERGY_STAFF = registerItem("energy_staff", new EnergyStaffItem(new Item.Settings().maxCount(1).maxDamage(64)));
 

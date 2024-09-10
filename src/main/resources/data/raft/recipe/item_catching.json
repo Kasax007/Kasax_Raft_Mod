@@ -4,6 +4,6 @@
     "item": "raft:net"
   },
   "output": {
-    "item": "raft:ocean_ball"
+    "id": "raft:unrefined_ocean_garbage"
   }
 }

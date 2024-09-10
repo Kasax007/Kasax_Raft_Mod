@@ -109,7 +109,9 @@ public class TeleporterUtil
 
                                 Vec3d destVec = new Vec3d(x, y, z);
                                 TeleportTarget teleportTarget = new TeleportTarget(destWorld, destVec, null, player.getYaw(), player.getPitch(), null);
-                                teleport(serverPlayer, destWorld, teleportTarget);
+                                // Teleport the player using the built-in teleport method
+                                serverPlayer.teleport(destWorld, x, y, z, player.getYaw(), player.getPitch());
+
 
                                 serverPlayer.fallDistance = 0.0F;
                                 world.playSound((PlayerEntity) null, player.getX(), player.getY(), player.getZ(),
@@ -136,14 +138,6 @@ public class TeleporterUtil
         }
 
         return TypedActionResult.success(stack);
-    }
-
-    @Nullable
-    public static <E extends net.minecraft.entity.Entity>
-    E teleport(E teleported,
-               net.minecraft.server.world.ServerWorld destination,
-               net.minecraft.world.TeleportTarget target) {
-        return null;
     }
 }
 

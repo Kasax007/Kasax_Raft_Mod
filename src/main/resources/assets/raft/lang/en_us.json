@@ -68,9 +68,9 @@
   "item.raft.teleporter3": "Unable to find a safe spot, please try again in another spot",
 
   "item.raft.some_game_music_music_disc": "Some Game Music Disc",
-  "item.raft.some_game_music_music_disc.desc": "Some Game Music - Seth Makes Sounds (CC0)",
+  "some_game_music_music_disc.desc": "Some Game Music - Seth Makes Sounds (CC0)",
   "item.raft.lofi_beat_music_disc": "Lofi Beat Music Disc",
-  "item.raft.lofi_beat_music_disc.desc": "Lofi Beat - Seth Makes Sounds (CC0)",
+  "lofi_beat_music_disc.desc": "Lofi Beat - Seth Makes Sounds (CC0)",
 
   "item.raft.net": "Item Catcher Net",
 

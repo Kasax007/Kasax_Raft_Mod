@@ -9,11 +9,9 @@
       }
     },
     "foliage_placer": {
-      "type": "raft:star_foliage_placer",
-      "initialRadius": 1,
-      "maxLength": 4,
+      "type": "minecraft:acacia_foliage_placer",
       "offset": 1,
-      "radius": 1
+      "radius": 2
     },
     "foliage_provider": {
       "type": "your_mod_id:randomized_block_state_provider",

@@ -1,17 +1,13 @@
 package net.kasax.raft.item.custom;
 
 import net.kasax.raft.item.ModItems;
-import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
@@ -58,7 +54,6 @@ public class TrashCubeItem extends Item {
             possibleDrops.put(new ItemStack(Items.COD, RANDOM.nextInt(3) + 1), 10); // common
             possibleDrops.put(new ItemStack(Items.SALMON, RANDOM.nextInt(3) + 1), 10); // common
             possibleDrops.put(new ItemStack(Items.PUFFERFISH, RANDOM.nextInt(1) + 1), 5); // common
-            possibleDrops.put(createEnchantedFishingRod(), 1); // very rare
             possibleDrops.put(new ItemStack(Items.BUCKET, RANDOM.nextInt(1) + 1), 3); // rare
             possibleDrops.put(new ItemStack(Items.PUFFERFISH_BUCKET, RANDOM.nextInt(1) + 1), 1); // very rare
             possibleDrops.put(new ItemStack(Items.OAK_SAPLING, 1), 5); // rare
@@ -127,42 +122,6 @@ public class TrashCubeItem extends Item {
         return ItemStack.EMPTY; // Fallback in case of an error
     }
 
-    private ItemStack createEnchantedFishingRod() {
-        ItemStack fishingRod = new ItemStack(Items.FISHING_ROD);
-
-        // Map to hold enchantments and their levels
-        Map<RegistryKey<Enchantment>, Integer> enchantments = new HashMap<>();
-
-        // Generate random levels for each enchantment
-        int lureLevel = getRandomEnchantmentLevel((RegistryEntry<Enchantment>) Enchantments.LURE);
-        int luckLevel = getRandomEnchantmentLevel((RegistryEntry<Enchantment>) Enchantments.LUCK_OF_THE_SEA);
-        int unbreakingLevel = getRandomEnchantmentLevel((RegistryEntry<Enchantment>) Enchantments.UNBREAKING);
-        int mendingLevel = getRandomEnchantmentLevel((RegistryEntry<Enchantment>) Enchantments.MENDING);
-
-        // Add enchantments if the level is greater than 0
-        if (lureLevel > 0) {
-            enchantments.put(Enchantments.LURE, lureLevel);
-        }
-        if (luckLevel > 0) {
-            enchantments.put(Enchantments.LUCK_OF_THE_SEA, luckLevel);
-        }
-        if (unbreakingLevel > 0) {
-            enchantments.put(Enchantments.UNBREAKING, unbreakingLevel);
-        }
-        if (mendingLevel > 0) {
-            enchantments.put(Enchantments.MENDING, mendingLevel);
-        }
-
-        // Apply the generated enchantments to the fishing rod
-        EnchantmentHelper.set(fishingRod, (ItemEnchantmentsComponent) enchantments);
-
-        // Set random durability
-        int maxDurability = fishingRod.getMaxDamage();
-        int randomDurability = RANDOM.nextInt(maxDurability);
-        fishingRod.setDamage(maxDurability - randomDurability);
-
-        return fishingRod;
-    }
     private int getRandomEnchantmentLevel(RegistryEntry<Enchantment> enchantment) {
         Enchantment enchantmentInstance = enchantment.value(); // Retrieve the actual Enchantment object
         int maxLevel = enchantmentInstance.getMaxLevel(); // Get the max level from the Enchantment

@@ -3,6 +3,7 @@ package net.kasax.raft;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.kasax.raft.datagen.*;
+import net.kasax.raft.sound.ModJukeboxSongs;
 import net.kasax.raft.world.biome.ModBiomes;
 import net.kasax.raft.world.dimension.ModDimensions;
 import net.kasax.raft.world.gen.ModConfiguredFeatures;
@@ -31,5 +32,6 @@ public class RaftDataGenerator implements DataGeneratorEntrypoint {
 		registryBuilder.addRegistry(RegistryKeys.PLACED_FEATURE, ModPlacedFeatures::bootstrap);
 		registryBuilder.addRegistry(RegistryKeys.DIMENSION_TYPE, ModDimensions::bootstrapType);
 		registryBuilder.addRegistry(RegistryKeys.BIOME, ModBiomes::bootstrap);
+		registryBuilder.addRegistry(RegistryKeys.JUKEBOX_SONG, ModJukeboxSongs::bootstrap);
 	}
 }
