@@ -28,16 +28,16 @@ public class ModItems {
 
 
     public static final Item TITANIUM_HELMET = registerItem("titanium_helmet",
-            new TitaniumArmorItem(ModArmorMaterials.TITANIUM.toArmorMaterial(), ArmorItem.Type.HELMET, new Item.Settings()));
+            new TitaniumArmorItem(ModArmorMaterials.TITANIUM.toArmorMaterial(), ArmorItem.Type.HELMET, new Item.Settings().maxCount(1)));
 
     public static final Item TITANIUM_CHESTPLATE = registerItem("titanium_chestplate",
-            new TitaniumArmorItem(ModArmorMaterials.TITANIUM.toArmorMaterial(), ArmorItem.Type.CHESTPLATE, new Item.Settings()));
+            new TitaniumArmorItem(ModArmorMaterials.TITANIUM.toArmorMaterial(), ArmorItem.Type.CHESTPLATE, new Item.Settings().maxCount(1)));
 
     public static final Item TITANIUM_LEGGINGS = registerItem("titanium_leggings",
-            new TitaniumArmorItem(ModArmorMaterials.TITANIUM.toArmorMaterial(), ArmorItem.Type.LEGGINGS, new Item.Settings()));
+            new TitaniumArmorItem(ModArmorMaterials.TITANIUM.toArmorMaterial(), ArmorItem.Type.LEGGINGS, new Item.Settings().maxCount(1)));
 
     public static final Item TITANIUM_BOOTS = registerItem("titanium_boots",
-            new TitaniumArmorItem(ModArmorMaterials.TITANIUM.toArmorMaterial(), ArmorItem.Type.BOOTS, new Item.Settings()));
+            new TitaniumArmorItem(ModArmorMaterials.TITANIUM.toArmorMaterial(), ArmorItem.Type.BOOTS, new Item.Settings().maxCount(1)));
 
 
     public static final Item NET = registerItem("net", new Item(new Item.Settings().maxCount(1).maxDamage(32)));

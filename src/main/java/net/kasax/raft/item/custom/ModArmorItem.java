@@ -1,5 +1,6 @@
 package net.kasax.raft.item.custom;
 
+import net.kasax.raft.Raft;
 import net.kasax.raft.item.ModArmorMaterials;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -12,6 +13,7 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.world.World;
 import org.spongepowered.include.com.google.common.collect.ImmutableMap;
 
+import java.io.Console;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -47,9 +49,9 @@ public class ModArmorItem extends ArmorItem {
         for (Map.Entry<RegistryEntry<ArmorMaterial>, List<StatusEffectInstance>> entry : MATERIAL_TO_EFFECT_MAP.entrySet()) {
             RegistryEntry<ArmorMaterial> mapArmorMaterial = entry.getKey();
             List<StatusEffectInstance> mapStatusEffects = entry.getValue();
-
             if(hasCorrectArmorOn(mapArmorMaterial.value(), player)) {
                 addStatusEffectsForMaterial(player, mapArmorMaterial.value(), mapStatusEffects);
+
             }
         }
     }
@@ -86,8 +88,7 @@ public class ModArmorItem extends ArmorItem {
         ArmorItem leggings = ((ArmorItem)player.getInventory().getArmorStack(1).getItem());
         ArmorItem breastplate = ((ArmorItem)player.getInventory().getArmorStack(2).getItem());
         ArmorItem helmet = ((ArmorItem)player.getInventory().getArmorStack(3).getItem());
-
-        return helmet.getMaterial().value() == material && breastplate.getMaterial().value() == material &&
-                leggings.getMaterial().value() == material && boots.getMaterial().value() == material;
+        return helmet.getMaterial().value().equals(material) && breastplate.getMaterial().value().equals(material) &&
+                leggings.getMaterial().value().equals(material) && boots.getMaterial().value().equals(material);
     }
 }
