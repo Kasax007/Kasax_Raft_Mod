@@ -1,6 +1,5 @@
 package net.kasax.raft.item.custom;
 
-import net.kasax.raft.Raft;
 import net.kasax.raft.item.ModArmorMaterials;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -13,7 +12,6 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.world.World;
 import org.spongepowered.include.com.google.common.collect.ImmutableMap;
 
-import java.io.Console;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;

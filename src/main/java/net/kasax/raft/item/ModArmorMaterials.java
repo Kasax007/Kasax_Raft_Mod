@@ -49,7 +49,10 @@ public enum ModArmorMaterials {
     }
 
     public RegistryEntry<ArmorMaterial> toArmorMaterial() {
-        var material = new ArmorMaterial(protectionAmounts, enchantability, equipSound, repairIngredient, List.of(), toughness, knockbackResistence);
+        List<ArmorMaterial.Layer> layers = List.of(
+                new ArmorMaterial.Layer(Identifier.of(ModArmorMaterials.TITANIUM.getName()))
+        );
+        var material = new ArmorMaterial(protectionAmounts, enchantability, equipSound, repairIngredient, layers, toughness, knockbackResistence);
         material = Registry.register(Registries.ARMOR_MATERIAL, Raft.MOD_ID, material);
         return RegistryEntry.of(material);
     }
