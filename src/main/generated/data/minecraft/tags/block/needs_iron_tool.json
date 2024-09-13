@@ -1,6 +1,8 @@
 {
   "values": [
     "raft:driftwood_portal_frame",
+    "raft:makeshift_solar_panel",
+    "raft:makeshift_battery",
     "raft:brick_furnace",
     "raft:titanium_furnace"
   ]

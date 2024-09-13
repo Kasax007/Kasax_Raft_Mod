@@ -32,6 +32,9 @@ public class ModModelProvider extends FabricModelProvider {
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.PALM_COCONUT_LEAVES);
         BlockStateModelGenerator.BlockTexturePool palmwoodPool = blockStateModelGenerator.registerCubeAllModelTexturePool(ModBlocks.PALM_PLANKS);
 
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.MAKESHIFT_SOLAR_PANEL);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.MAKESHIFT_BATTERY);
+
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.TITANIUM_BLOCK);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.TITANIUM_ORE);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.DEEPSLATE_TITANIUM_ORE);

@@ -5,6 +5,8 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.kasax.raft.block.ModBlocks;
+import net.kasax.raft.block.entity.MakeshiftBatteryBlockEntity;
+import net.kasax.raft.block.entity.MakeshiftSolarPanelBlockEntity;
 import net.kasax.raft.block.entity.ModBlockEntities;
 import net.kasax.raft.item.ModItemGroups;
 import net.kasax.raft.item.ModItems;
@@ -25,6 +27,7 @@ import net.minecraft.world.gen.foliage.FoliagePlacerType;
 import net.minecraft.world.gen.stateprovider.BlockStateProviderType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import team.reborn.energy.api.EnergyStorage;
 
 public class Raft implements ModInitializer {
 	// This logger is used to write text to the console and the log file.
@@ -85,6 +88,9 @@ public class Raft implements ModInitializer {
 
 		ModBlockEntities.registerBlockEntities();
 		ModScreenHandlers.registerScreenHandlers();
+
+		EnergyStorage.SIDED.registerForBlockEntity(MakeshiftSolarPanelBlockEntity::getEnergyProvider, ModBlockEntities.MAKESHIT_SOLAR_PANEL_BLOCK_ENTITY);
+		EnergyStorage.SIDED.registerForBlockEntity(MakeshiftBatteryBlockEntity::getEnergyProvider, ModBlockEntities.MAKESHIT_BATTERY_BLOCK_ENTITY);
 
 		CustomPortalBuilder.beginPortal().frameBlock(ModBlocks.DRIFTWOOD_PORTAL_FRAME)
 				.lightWithItem(ModItems.ENERGY_STAFF)

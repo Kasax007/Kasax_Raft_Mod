@@ -48,7 +48,9 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(ModBlocks.TITANIUM_ORE)
                 .add(ModBlocks.DEEPSLATE_TITANIUM_ORE)
                 .add(ModBlocks.TITANIUM_GRATES)
-                .add(ModBlocks.ITEM_CATCHER);
+                .add(ModBlocks.ITEM_CATCHER)
+                .add(ModBlocks.MAKESHIFT_SOLAR_PANEL)
+                .add(ModBlocks.MAKESHIFT_BATTERY);
 
         // Add all furnaces to the RAFT_MOD_BLOCK tag
         FurnaceBlocks.getFurnaces().forEach(furnace ->
@@ -63,7 +65,9 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(ModBlocks.TITANIUM_ORE)
                 .add(ModBlocks.TITANIUM_BLOCK)
                 .add(ModBlocks.DEEPSLATE_TITANIUM_ORE)
-                .add(ModBlocks.TITANIUM_GRATES);
+                .add(ModBlocks.TITANIUM_GRATES)
+                .add(ModBlocks.MAKESHIFT_SOLAR_PANEL)
+                .add(ModBlocks.MAKESHIFT_BATTERY);
 
         // Add all furnaces to the PICKAXE_MINEBALE tag
         FurnaceBlocks.getFurnaces().forEach(furnace ->
@@ -71,7 +75,9 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         );
 
         getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL)
-                .add(ModBlocks.DRIFTWOOD_PORTAL_FRAME);
+                .add(ModBlocks.DRIFTWOOD_PORTAL_FRAME)
+                .add(ModBlocks.MAKESHIFT_SOLAR_PANEL)
+                .add(ModBlocks.MAKESHIFT_BATTERY);
 
         // Add all furnaces to the NEEDS_IRON_TOOL tag
         FurnaceBlocks.getFurnaces().forEach(furnace ->

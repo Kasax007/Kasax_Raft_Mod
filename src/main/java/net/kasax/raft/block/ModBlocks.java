@@ -138,6 +138,12 @@ public class ModBlocks {
     public static final Block ITEM_CATCHER = registerBlock("item_catcher",
             new ItemCatcher(AbstractBlock.Settings.copy(Blocks.OAK_PLANKS).nonOpaque()));
 
+    public static final Block MAKESHIFT_SOLAR_PANEL = registerBlock("makeshift_solar_panel",
+            new MakeshiftSolarPanelBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)));
+
+    public static final Block MAKESHIFT_BATTERY = registerBlock("makeshift_battery",
+            new MakeshiftBatteryBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)));
+
     public static final Block TITANIUM_GRATES = registerBlock("titanium_grates",
             new TitaniumGrates(AbstractBlock.Settings.copy(Blocks.COPPER_BLOCK).nonOpaque().strength(4f)));
 
