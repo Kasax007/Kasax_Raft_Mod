@@ -2,6 +2,7 @@ package net.kasax.raft;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.kasax.raft.block.ModBlocks;
@@ -13,9 +14,7 @@ import net.kasax.raft.item.ModItems;
 import net.kasax.raft.recipe.ModRecipes;
 import net.kasax.raft.screen.ModScreenHandlers;
 import net.kasax.raft.sound.ModSounds;
-import net.kasax.raft.util.FurnaceBlocks;
-import net.kasax.raft.util.FurnaceEntities;
-import net.kasax.raft.util.ModLootTableModifiers;
+import net.kasax.raft.util.*;
 import net.kasax.raft.world.gen.ModWorldGeneration;
 import net.kasax.raft.world.gen.RandomizedBlockStateProvider;
 import net.kasax.raft.world.tree.StarFoliagePlacer;
@@ -88,6 +87,9 @@ public class Raft implements ModInitializer {
 
 		ModBlockEntities.registerBlockEntities();
 		ModScreenHandlers.registerScreenHandlers();
+
+		// Register the codec for the energy sync payload
+		PayloadTypeRegistry.playS2C().register(EnergySyncPayload.ID, EnergySyncPayload.CODEC);
 
 		EnergyStorage.SIDED.registerForBlockEntity(MakeshiftSolarPanelBlockEntity::getEnergyProvider, ModBlockEntities.MAKESHIT_SOLAR_PANEL_BLOCK_ENTITY);
 		EnergyStorage.SIDED.registerForBlockEntity(MakeshiftBatteryBlockEntity::getEnergyProvider, ModBlockEntities.MAKESHIT_BATTERY_BLOCK_ENTITY);

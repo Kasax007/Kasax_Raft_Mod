@@ -9,6 +9,7 @@ import net.kasax.raft.block.entity.renderer.ItemCatcherBlockEntityRenderer;
 import net.kasax.raft.screen.ItemCollectorScreen;
 import net.kasax.raft.screen.MakeshiftBatteryScreen;
 import net.kasax.raft.screen.ModScreenHandlers;
+import net.kasax.raft.util.ModPackets;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.RenderLayer;
@@ -32,6 +33,8 @@ public class RaftClient implements ClientModInitializer {
 
         HandledScreens.register(ModScreenHandlers.ITEM_COLLECTOR_SCREEN_HANDLER, ItemCollectorScreen::new);
         HandledScreens.register(ModScreenHandlers.MAKESHIFT_BATTERY_SCREEN_HANDLER, MakeshiftBatteryScreen::new);
+
+        ModPackets.registerS2CPackets();
 
         BlockEntityRendererFactories.register(ModBlockEntities.ITEM_COLLECTOR_BLOCK_ENTITY, ItemCatcherBlockEntityRenderer::new);
 

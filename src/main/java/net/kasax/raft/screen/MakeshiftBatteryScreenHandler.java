@@ -6,6 +6,7 @@ import net.kasax.raft.util.BlockPosPayload;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenHandlerType;
@@ -18,6 +19,8 @@ public class MakeshiftBatteryScreenHandler extends ScreenHandler {
 
     private final MakeshiftBatteryBlockEntity blockEntity;
     private final ScreenHandlerContext context;
+    private long energy;
+    private long maxEnergy;
 
     // Client Constructor
     public MakeshiftBatteryScreenHandler(int syncId, PlayerInventory playerInventory, BlockPosPayload payload) {
@@ -30,6 +33,9 @@ public class MakeshiftBatteryScreenHandler extends ScreenHandler {
 
         this.blockEntity = blockEntity;
         this.context = ScreenHandlerContext.create(this.blockEntity.getWorld(), this.blockEntity.getPos());
+        this.energy = blockEntity.getEnergyStorage().getAmount();
+        this.maxEnergy = blockEntity.getEnergyStorage().getCapacity();
+
 
         addPlayerInventory(playerInventory);
         addPlayerHotbar(playerInventory);
@@ -63,24 +69,25 @@ public class MakeshiftBatteryScreenHandler extends ScreenHandler {
         return this.blockEntity;
     }
 
+
     public long getEnergy() {
-        System.out.println("getEnergy: " + (this.blockEntity.getEnergyStorage().getAmount()));
-        return this.blockEntity.getEnergyStorage().getAmount();
+        return this.energy;
     }
 
     public long getMaxEnergy() {
-        return this.blockEntity.getEnergyStorage().getCapacity();
+        return this.maxEnergy;
+    }
+
+    public void setEnergy(long energy) {
+        this.energy = energy;
+    }
+
+    public void setMaxEnergy(long maxEnergy) {
+        this.maxEnergy = maxEnergy;
     }
 
     public float getEnergyPercent() {
-        SimpleEnergyStorage energyStorage = this.blockEntity.getEnergyStorage();
-        long energy = energyStorage.getAmount();
-        long maxEnergy = energyStorage.getCapacity();
-        if (maxEnergy == 0 || energy == 0)
-            return 0.0F;
-
-
-        System.out.println("getEnergyPercent: " + (MathHelper.clamp((float) energy / (float) maxEnergy, 0.0F, 1.0F)));
-        return MathHelper.clamp((float) energy / (float) maxEnergy, 0.0F, 1.0F);
+        return (maxEnergy == 0) ? 0.0f : (float) energy / maxEnergy;
     }
+
 }

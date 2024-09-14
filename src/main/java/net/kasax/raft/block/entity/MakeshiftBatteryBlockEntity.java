@@ -1,10 +1,13 @@
 package net.kasax.raft.block.entity;
 
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.kasax.raft.Raft;
 import net.kasax.raft.screen.MakeshiftBatteryScreenHandler;
 import net.kasax.raft.util.BlockPosPayload;
+import net.kasax.raft.util.EnergySyncPayload;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -17,6 +20,7 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -93,6 +97,14 @@ public class MakeshiftBatteryBlockEntity extends BlockEntity implements Extended
         markDirty();
         if(world != null)
             world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_ALL);
-        System.out.println(this.energyStorage.amount);
+        sendEnergySync((ServerWorld) this.world, this.pos, this.energyStorage.amount, this.energyStorage.getCapacity());
+    }
+
+    public static void sendEnergySync(ServerWorld world, BlockPos pos, long energy, long maxEnergy) {
+        EnergySyncPayload payload = new EnergySyncPayload(pos, energy, maxEnergy);
+        // Send the packet to all players tracking this block position
+        for (ServerPlayerEntity player : PlayerLookup.tracking(world, pos)) {
+            ServerPlayNetworking.send(player, payload);
+        }
     }
 }
