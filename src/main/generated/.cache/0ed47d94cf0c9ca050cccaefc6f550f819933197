@@ -1,4 +1,5 @@
-// 1.21.1	2024-09-14T17:55:33.3995133	Raft/Recipes
+// 1.21.1	2024-09-14T18:05:49.5032164	Raft/Recipes
+5affb3640a2775ea2d66dc35cb98f4481eac16e1 data\raft\advancement\recipes\misc\makeshift_solar_panel.json
 75e6d2bc534caca6f74fdfa4d38343bb4bd3b662 data\raft\recipe\driftwood_stairs.json
 6905bf35135cf7039fe234d13324098d092bdfd7 data\raft\recipe\driftwood_button_from_driftwood_planks.json
 c2e476055bd26817604cf79882d5922e3333d5a4 data\raft\advancement\recipes\misc\driftwood_portal_frame.json
@@ -12,6 +13,7 @@ fa4f23f7c3d02b1f01def9142b805eb4cd744b8d data\raft\recipe\driftwood_trapdoor.jso
 193be2d1ad5640e5449d0f3bd4b8f890416337f9 data\raft\advancement\recipes\redstone\palm_fence_gate.json
 475afff86aa1ff3f4805c16fa19fcdeb4b677b38 data\raft\recipe\driftwood_fence_gate.json
 4b9e6eadcaa7abdb999d558282e00de55b547a22 data\raft\recipe\stripped_palm_wood.json
+b600133dba5044755050b99e4ae9a7673eae72ff data\raft\recipe\makeshift_battery.json
 c8964a9bbce79426e7c1ad99f9db1ace20bc6b69 data\raft\recipe\palm_fence.json
 8042ce958d82ba6e0e45513f22c2c9f9fb226782 data\raft\recipe\circuit_board.json
 f81ac6c7c36cd3ca2635cd6474139a3c7cff8eb0 data\raft\advancement\recipes\misc\energy_staff.json
@@ -59,6 +61,7 @@ f1a325d9a8d93eea500087c9e988271a27dc054b data\raft\advancement\recipes\misc\tras
 eccd4a87fbc2222382650fda6dd061996d8604f9 data\raft\advancement\recipes\misc\raw_titanium_from_raw_titanium_block.json
 93470b49690582b06730839c36ec3a8d876d4a7c data\raft\recipe\titanium_leggings.json
 02f62b08db710370c7101c9d787350ab52feb4a4 data\raft\advancement\recipes\misc\titanium_leggings.json
+95c5b49274374a94313a6ead7bf5e0e7f5fad8b0 data\raft\recipe\makeshift_solar_panel.json
 0b2fb6724df0a66796ee38305f641376c86dd1f8 data\raft\advancement\recipes\building_blocks\palm_stairs.json
 65bf9aec656287f762889c4dbd62aed5f60da04e data\raft\advancement\recipes\redstone\driftwood_door.json
 189c61b7ac1af9c44498e0829e935ef335e90140 data\raft\recipe\titanium_chestplate.json
@@ -87,6 +90,7 @@ e15bb2ca83f8c7b4cd2a6a4af6db86dd060cd5f5 data\raft\advancement\recipes\misc\palm
 a47d5dd19a300911a8eff8b04d2f03379271e992 data\raft\recipe\titanium_ingot_from_smelting_raw_titanium.json
 a0d3f9626195a3406acb28c16b1cfcf27ff5e370 data\raft\recipe\titanium_furnace.json
 842d948676ac250774524a131d06d38a609f722b data\raft\advancement\recipes\misc\item_catcher.json
+f2cb7bac82f43082b1c3ffef2b0e41ebaa82f082 data\raft\advancement\recipes\misc\makeshift_battery.json
 2e7f57e0eae66e84b1df9d8023261588d94763ee data\raft\advancement\recipes\misc\titanium_block.json
 b68bec44649e1ad6b192621897e21418a98493de data\raft\advancement\recipes\misc\titanium_boots.json
 8bcb0a389310ea7af05a1f69c836cdffeb17775a data\raft\recipe\pina_colada.json

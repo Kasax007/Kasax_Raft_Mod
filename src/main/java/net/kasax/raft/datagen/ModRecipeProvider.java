@@ -188,6 +188,30 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .criterion(hasItem(ModItems.CIRCUIT_BOARD), conditionsFromItem(ModItems.CIRCUIT_BOARD))
                 .offerTo(exporter, Identifier.of(getRecipeName(ModItems.METAL_DETECTOR)));
 
+        ShapedRecipeJsonBuilder.create(MISC, ModBlocks.MAKESHIFT_BATTERY, 1)
+                .pattern("CSC")
+                .pattern("CBC")
+                .pattern("CSC")
+                .input('S', ModItems.CIRCUIT_BOARD)
+                .input('C', Items.IRON_INGOT)
+                .input('B', Items.REDSTONE)
+                .criterion(hasItem(ModItems.CIRCUIT_BOARD), conditionsFromItem(ModItems.CIRCUIT_BOARD))
+                .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
+                .criterion(hasItem(Items.REDSTONE), conditionsFromItem(Items.REDSTONE))
+                .offerTo(exporter, Identifier.of(getRecipeName(ModBlocks.MAKESHIFT_BATTERY.asItem())));
+
+        ShapedRecipeJsonBuilder.create(MISC, ModBlocks.MAKESHIFT_SOLAR_PANEL, 1)
+                .pattern("SSS")
+                .pattern("CCC")
+                .pattern("CBC")
+                .input('S', ModItems.CIRCUIT_BOARD)
+                .input('C', Items.IRON_INGOT)
+                .input('B', Items.REDSTONE)
+                .criterion(hasItem(ModItems.CIRCUIT_BOARD), conditionsFromItem(ModItems.CIRCUIT_BOARD))
+                .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
+                .criterion(hasItem(Items.REDSTONE), conditionsFromItem(Items.REDSTONE))
+                .offerTo(exporter, Identifier.of(getRecipeName(ModBlocks.MAKESHIFT_SOLAR_PANEL.asItem())));
+
         offerShapelessRecipe(exporter,ModBlocks.DRIFTWOOD_BUTTON.asItem(), ModBlocks.DRIFTWOOD_PLANKS.asItem(), "MISC4", 1);
 
         offerShapelessRecipe(exporter, ModItems.TITANIUM_NUGGET, ModItems.TITANIUM_INGOT, "MISC1", 9);

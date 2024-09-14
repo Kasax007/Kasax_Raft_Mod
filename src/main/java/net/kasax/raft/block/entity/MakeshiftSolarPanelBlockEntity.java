@@ -44,9 +44,11 @@ public class MakeshiftSolarPanelBlockEntity extends BlockEntity {
         if(this.world == null || this.world.isClient)
             return;
 
-        if(energyStorage.amount < energyStorage.getCapacity()) {
-            energyStorage.amount = MathHelper.clamp(energyStorage.amount + 10, 0, energyStorage.getCapacity());
-            update();
+        if (world.isDay() && world.isSkyVisible(pos.up())) {
+            if(energyStorage.amount < energyStorage.getCapacity()) {
+                energyStorage.amount = MathHelper.clamp(energyStorage.amount + 10, 0, energyStorage.getCapacity());
+                update();
+            }
         }
 
         for (Direction direction : Direction.values()) {
