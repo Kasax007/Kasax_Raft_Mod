@@ -4,10 +4,7 @@ import com.mojang.serialization.MapCodec;
 import net.kasax.raft.Raft;
 import net.kasax.raft.block.entity.MakeshiftSolarPanelBlockEntity;
 import net.kasax.raft.block.entity.ModBlockEntities;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
@@ -29,6 +26,11 @@ import java.util.List;
 public class MakeshiftSolarPanelBlock extends BlockWithEntity implements BlockEntityProvider {
     public MakeshiftSolarPanelBlock(Settings settings) {
         super(settings);
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
     }
 
     @Override

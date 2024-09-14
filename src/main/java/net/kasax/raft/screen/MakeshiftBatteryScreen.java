@@ -27,8 +27,7 @@ public class MakeshiftBatteryScreen extends HandledScreen<MakeshiftBatteryScreen
             super.render(context, mouseX, mouseY, delta);
             drawMouseoverTooltip(context, mouseX, mouseY);
 
-            int energyBarSize = MathHelper.ceil(this.handler.getEnergyPercent() * 66);
-            if (isPointWithinBounds(144, 10 + 66 - energyBarSize, 20, energyBarSize, mouseX, mouseY)) {
+            if (isPointWithinBounds(144, 10, 20, 66, mouseX, mouseY)) {
                 context.drawTooltip(this.textRenderer, Text.literal(this.handler.getEnergy() + " / " + this.handler.getMaxEnergy() + " FE"), mouseX, mouseY);
             }
         }

@@ -49,6 +49,9 @@
   "item.raft.titanium_ingot": "Titanium Ingot",
   "item.raft.titanium_nugget": "Titanium Nugget",
 
+  "block.raft.makeshift_solar_panel": "Makeshift Solar Panel",
+  "block.raft.makeshift_battery": "Makeshift Battery",
+
   "item.raft.titanium_helmet": "Titanium Helmet",
   "item.raft.titanium_chestplate": "Titanium Chestplate",
   "item.raft.titanium_leggings": "Titanium Leggings",
@@ -96,6 +99,7 @@
 
   "itemgroup.raft": "Raft",
   "tooltip.raft.makeshift_solar_panel.tooltip": "Generates 10 FE per Tick",
-  "tooltip.raft.makeshift_battery.tooltip": "Stores 1.000.000 FE Max In&Out: 10.000 FE",
+  "tooltip.raft.makeshift_battery.tooltip1": "Stores 1.000.000 FE",
+  "tooltip.raft.makeshift_battery.tooltip2": "Max In&Out: 10.000 FE",
   "container.raft.makeshift_battery": "Makeshift Battery"
 }

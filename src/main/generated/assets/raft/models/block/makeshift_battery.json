@@ -1,6 +1,8 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/cube_bottom_top",
   "textures": {
-    "all": "raft:block/makeshift_battery"
+    "bottom": "raft:block/makeshift_battery_bottom",
+    "side": "raft:block/makeshift_battery_side",
+    "top": "raft:block/makeshift_battery_top"
   }
 }

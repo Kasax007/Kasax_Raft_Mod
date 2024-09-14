@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import net.kasax.raft.block.entity.MakeshiftBatteryBlockEntity;
 import net.kasax.raft.block.entity.ModBlockEntities;
 import net.minecraft.block.BlockEntityProvider;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
@@ -34,6 +35,11 @@ public class MakeshiftBatteryBlock extends BlockWithEntity implements BlockEntit
     }
 
     @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
+    }
+
+    @Override
     protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if(!world.isClient) {
             if(world.getBlockEntity(pos) instanceof MakeshiftBatteryBlockEntity energyGenerator) {
@@ -52,7 +58,8 @@ public class MakeshiftBatteryBlock extends BlockWithEntity implements BlockEntit
 
     @Override
     public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
-        tooltip.add(Text.translatable("tooltip.raft.makeshift_battery.tooltip").formatted(Formatting.AQUA));
+        tooltip.add(Text.translatable("tooltip.raft.makeshift_battery.tooltip1").formatted(Formatting.AQUA));
+        tooltip.add(Text.translatable("tooltip.raft.makeshift_battery.tooltip2").formatted(Formatting.AQUA));
         super.appendTooltip(stack, context, tooltip, options);
     }
 

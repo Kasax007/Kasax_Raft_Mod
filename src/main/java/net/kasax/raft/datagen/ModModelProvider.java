@@ -5,11 +5,14 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.kasax.raft.block.ModBlocks;
 import net.kasax.raft.item.ModItems;
 import net.kasax.raft.util.FurnaceBlocks;
-import net.minecraft.data.client.BlockStateModelGenerator;
-import net.minecraft.data.client.ItemModelGenerator;
-import net.minecraft.data.client.Models;
-import net.minecraft.data.client.TexturedModel;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.data.client.*;
 import net.minecraft.item.ArmorItem;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
+
+import static net.minecraft.data.client.TextureMap.getSubId;
 
 public class ModModelProvider extends FabricModelProvider {
     public ModModelProvider(FabricDataOutput output) {
@@ -32,8 +35,9 @@ public class ModModelProvider extends FabricModelProvider {
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.PALM_COCONUT_LEAVES);
         BlockStateModelGenerator.BlockTexturePool palmwoodPool = blockStateModelGenerator.registerCubeAllModelTexturePool(ModBlocks.PALM_PLANKS);
 
-        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.MAKESHIFT_SOLAR_PANEL);
-        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.MAKESHIFT_BATTERY);
+        //blockStateModelGenerator.registerCubeAllModelTexturePool(ModBlocks.MAKESHIFT_SOLAR_PANEL);
+        blockStateModelGenerator.registerSingleton(ModBlocks.MAKESHIFT_BATTERY, TexturedModel.CUBE_BOTTOM_TOP);
+        blockStateModelGenerator.registerSingleton(ModBlocks.MAKESHIFT_SOLAR_PANEL, TexturedModel.CUBE_BOTTOM_TOP);
 
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.TITANIUM_BLOCK);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.TITANIUM_ORE);
@@ -95,5 +99,8 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.registerArmor(((ArmorItem) ModItems.TITANIUM_LEGGINGS));
         itemModelGenerator.registerArmor(((ArmorItem) ModItems.TITANIUM_BOOTS));
 
+    }
+    public static TextureMap registerSolarPanel(Block block) {
+        return (new TextureMap()).put(TextureKey.PARTICLE, getSubId(ModBlocks.MAKESHIFT_SOLAR_PANEL, "_side")).put(TextureKey.BOTTOM, getSubId(ModBlocks.MAKESHIFT_SOLAR_PANEL, "_bottom")).put(TextureKey.TOP, getSubId(ModBlocks.MAKESHIFT_SOLAR_PANEL, "_top")).put(TextureKey.SIDE, getSubId(ModBlocks.MAKESHIFT_SOLAR_PANEL, "_side"));
     }
 }
