@@ -71,6 +71,8 @@ public class ModLootTableProvider extends FabricBlockLootTableProvider {
         addDrop(ModBlocks.PALM_TRAPDOOR);
         addDrop(ModBlocks.MAKESHIFT_SOLAR_PANEL);
         addDrop(ModBlocks.MAKESHIFT_BATTERY);
+        addDrop(ModBlocks.QUARRY);
+        addDrop(ModBlocks.CHUNK_DESTROYER);
 
         addDrop(ModBlocks.TITANIUM_ORE, copperLikeOreDrops(ModBlocks.TITANIUM_ORE, ModItems.RAW_TITANIUM));
         addDrop(ModBlocks.DEEPSLATE_TITANIUM_ORE, copperLikeOreDrops(ModBlocks.DEEPSLATE_TITANIUM_ORE, ModItems.RAW_TITANIUM));

@@ -35,9 +35,10 @@ public class ModModelProvider extends FabricModelProvider {
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.PALM_COCONUT_LEAVES);
         BlockStateModelGenerator.BlockTexturePool palmwoodPool = blockStateModelGenerator.registerCubeAllModelTexturePool(ModBlocks.PALM_PLANKS);
 
-        //blockStateModelGenerator.registerCubeAllModelTexturePool(ModBlocks.MAKESHIFT_SOLAR_PANEL);
         blockStateModelGenerator.registerSingleton(ModBlocks.MAKESHIFT_BATTERY, TexturedModel.CUBE_BOTTOM_TOP);
         blockStateModelGenerator.registerSingleton(ModBlocks.MAKESHIFT_SOLAR_PANEL, TexturedModel.CUBE_BOTTOM_TOP);
+        blockStateModelGenerator.registerNorthDefaultHorizontalRotated(ModBlocks.QUARRY, TexturedModel.ORIENTABLE_WITH_BOTTOM);
+        blockStateModelGenerator.registerNorthDefaultHorizontalRotated(ModBlocks.CHUNK_DESTROYER, TexturedModel.ORIENTABLE_WITH_BOTTOM);
 
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.TITANIUM_BLOCK);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.TITANIUM_ORE);

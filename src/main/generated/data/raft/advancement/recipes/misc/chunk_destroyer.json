@@ -1,0 +1,65 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_circuit_board": {
+      "conditions": {
+        "items": [
+          {
+            "items": "raft:circuit_board"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_diamond_pickaxe": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:diamond_pickaxe"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_quarry": {
+      "conditions": {
+        "items": [
+          {
+            "items": "raft:quarry"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:chunk_destroyer"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_titanium_block": {
+      "conditions": {
+        "items": [
+          {
+            "items": "raft:titanium_block"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_circuit_board",
+      "has_diamond_pickaxe",
+      "has_titanium_block",
+      "has_quarry"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:chunk_destroyer"
+    ]
+  }
+}

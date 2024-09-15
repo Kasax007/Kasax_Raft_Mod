@@ -1,4 +1,4 @@
-// 1.21.1	2024-09-14T18:05:49.5032164	Raft/Recipes
+// 1.21.1	2024-09-15T16:22:27.6631522	Raft/Recipes
 5affb3640a2775ea2d66dc35cb98f4481eac16e1 data\raft\advancement\recipes\misc\makeshift_solar_panel.json
 75e6d2bc534caca6f74fdfa4d38343bb4bd3b662 data\raft\recipe\driftwood_stairs.json
 6905bf35135cf7039fe234d13324098d092bdfd7 data\raft\recipe\driftwood_button_from_driftwood_planks.json
@@ -8,10 +8,13 @@ b7db919f1c1a0dc8b474df7892ef8358b32068cc data\raft\advancement\recipes\misc\net.
 1d9efb0b19f53e5b445b12733d0d2108836bd2d1 data\raft\advancement\recipes\misc\titanium_ingot_from_smelting_raw_titanium.json
 f084daec3049a6219e3e10d137a9f79941c241e7 data\raft\advancement\recipes\misc\titanium_ingot_from_titanium_block.json
 c284c814944ca7d449b29bec0784d7af6353269b data\raft\recipe\stripped_driftwood_wood.json
+b29f0b53007cd1e144b5920c3a555890eebe8d79 data\raft\recipe\quarry.json
 24c4b15a7f78fd0d3c27df7ab83c128ea5c1e879 data\raft\recipe\driftwood_door.json
 fa4f23f7c3d02b1f01def9142b805eb4cd744b8d data\raft\recipe\driftwood_trapdoor.json
 193be2d1ad5640e5449d0f3bd4b8f890416337f9 data\raft\advancement\recipes\redstone\palm_fence_gate.json
 475afff86aa1ff3f4805c16fa19fcdeb4b677b38 data\raft\recipe\driftwood_fence_gate.json
+8299d9f9991b82f643115430b83d6387f3651303 data\raft\advancement\recipes\misc\quarry.json
+ee25f4ca032c40d1b60af1130140bed85fc0a573 data\raft\advancement\recipes\misc\chunk_destroyer.json
 4b9e6eadcaa7abdb999d558282e00de55b547a22 data\raft\recipe\stripped_palm_wood.json
 b600133dba5044755050b99e4ae9a7673eae72ff data\raft\recipe\makeshift_battery.json
 c8964a9bbce79426e7c1ad99f9db1ace20bc6b69 data\raft\recipe\palm_fence.json
@@ -19,6 +22,7 @@ c8964a9bbce79426e7c1ad99f9db1ace20bc6b69 data\raft\recipe\palm_fence.json
 f81ac6c7c36cd3ca2635cd6474139a3c7cff8eb0 data\raft\advancement\recipes\misc\energy_staff.json
 ee97d003ff5da98e26b4796ebde78ed46cd928a2 data\raft\advancement\recipes\building_blocks\palm_wood.json
 65d1d1e60c3a109fed411133174c4f21ed065538 data\raft\advancement\recipes\misc\driftwood_slab.json
+4fecbcec9a87d72600dc816443814c528ba8ae4a data\raft\recipe\chunk_destroyer.json
 bc5885187d52daaaf76bb5c01913a606526f581e data\raft\advancement\recipes\misc\raw_titanium_block.json
 120f309f501eb50ef4aadc2108495f04a49c7ec4 data\raft\recipe\energy_staff.json
 d77e9e684c192eab1b612a5b60e98473dacf5f2e data\raft\recipe\palm_pressure_plate.json

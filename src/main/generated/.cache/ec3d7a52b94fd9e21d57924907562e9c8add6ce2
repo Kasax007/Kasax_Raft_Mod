@@ -1,4 +1,4 @@
-// 1.21.1	2024-09-14T18:05:49.4976201	Raft/Block Loot Tables
+// 1.21.1	2024-09-15T16:22:27.657142	Raft/Block Loot Tables
 9ab4483e86e9b093d3171ad4fb7a6d1ed2e5d2eb data\raft\loot_table\blocks\titanium_ore.json
 ef6f73833cfa87d9c89271dbeb9df70dda44d1cb data\raft\loot_table\blocks\stripped_driftwood_wood.json
 18c8fb2aaa361de44ac399d2fd8c6a3a661c7c6a data\raft\loot_table\blocks\brick_furnace.json
@@ -15,6 +15,7 @@ fd4f6ed7a03c9e538aba5f9de4bbf6cd45c82705 data\raft\loot_table\blocks\stripped_pa
 cad8b3b09a01b457b7709a1816b292511f313459 data\raft\loot_table\blocks\driftwood_fence_gate.json
 07b7edaaffe0de10a85d8f1ccc594d242b78528a data\raft\loot_table\blocks\palm_sapling.json
 ad58d10b2d08433e39f838a26f4d4a964d88c656 data\raft\loot_table\blocks\driftwood_fence.json
+1241ca813b7562f9e9d9783614ba38491e1bfd6c data\raft\loot_table\blocks\quarry.json
 a5c84f44b12abab23869a369b55606b63ac7d38a data\raft\loot_table\blocks\palm_planks.json
 dc4f9e546dcb206ca3cbd9bb62a0e5a623fa8fd6 data\raft\loot_table\blocks\driftwood_pressure_plate.json
 597e2ec336322ee775fdc3ddf76512b67e1defe9 data\raft\loot_table\blocks\driftwood_leaves.json
@@ -25,6 +26,7 @@ fc670c44401059e3c991b7aa92a5d78a793c7dc3 data\raft\loot_table\blocks\palm_coconu
 437f97537f7a720c94bdba338bcb152ac51f3b42 data\raft\loot_table\blocks\driftwood_planks.json
 3e7282b5a5645a9448beae3cdead77180733e6e7 data\raft\loot_table\blocks\driftwood_trapdoor.json
 7d26987ea7da71a18aaa11c65aa16e22c48cf646 data\raft\loot_table\blocks\driftwood_button.json
+18efcf49e58d6b04256772a69eb816a4e6704e39 data\raft\loot_table\blocks\chunk_destroyer.json
 ee413d5a5abe27c44e29e315de64073729a9cc19 data\raft\loot_table\blocks\palm_leaves.json
 3cb227acfee0caf2c60a12ef20d10772e00e4787 data\raft\loot_table\blocks\palm_slab.json
 34513fd7fa69de38ce3b9b190ff9ece7600cdbbb data\raft\loot_table\blocks\titanium_block.json

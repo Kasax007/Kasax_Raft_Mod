@@ -6,9 +6,7 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.kasax.raft.block.ModBlocks;
-import net.kasax.raft.block.entity.MakeshiftBatteryBlockEntity;
-import net.kasax.raft.block.entity.MakeshiftSolarPanelBlockEntity;
-import net.kasax.raft.block.entity.ModBlockEntities;
+import net.kasax.raft.block.entity.*;
 import net.kasax.raft.item.ModItemGroups;
 import net.kasax.raft.item.ModItems;
 import net.kasax.raft.recipe.ModRecipes;
@@ -93,6 +91,8 @@ public class Raft implements ModInitializer {
 
 		EnergyStorage.SIDED.registerForBlockEntity(MakeshiftSolarPanelBlockEntity::getEnergyProvider, ModBlockEntities.MAKESHIT_SOLAR_PANEL_BLOCK_ENTITY);
 		EnergyStorage.SIDED.registerForBlockEntity(MakeshiftBatteryBlockEntity::getEnergyProvider, ModBlockEntities.MAKESHIT_BATTERY_BLOCK_ENTITY);
+		EnergyStorage.SIDED.registerForBlockEntity(QuarryBlockEntity::getEnergyProvider, ModBlockEntities.QUARRY_BLOCK_ENTITY);
+		EnergyStorage.SIDED.registerForBlockEntity(ChunkDestroyerBlockEntity::getEnergyProvider, ModBlockEntities.CHUNK_DESTROYER_BLOCK_ENTITY);
 
 		CustomPortalBuilder.beginPortal().frameBlock(ModBlocks.DRIFTWOOD_PORTAL_FRAME)
 				.lightWithItem(ModItems.ENERGY_STAFF)

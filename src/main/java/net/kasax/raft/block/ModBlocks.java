@@ -144,6 +144,12 @@ public class ModBlocks {
     public static final Block MAKESHIFT_BATTERY = registerBlock("makeshift_battery",
             new MakeshiftBatteryBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)));
 
+    public static final Block QUARRY = registerBlock("quarry",
+            new QuarryBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)));
+
+    public static final Block CHUNK_DESTROYER = registerBlock("chunk_destroyer",
+            new ChunkDestroyer(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)));
+
     public static final Block TITANIUM_GRATES = registerBlock("titanium_grates",
             new TitaniumGrates(AbstractBlock.Settings.copy(Blocks.COPPER_BLOCK).nonOpaque().strength(4f)));
 

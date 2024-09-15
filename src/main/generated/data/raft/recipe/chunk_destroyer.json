@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "raft:titanium_block"
+    },
+    "C": {
+      "item": "minecraft:diamond_pickaxe"
+    },
+    "S": {
+      "item": "raft:circuit_board"
+    },
+    "T": {
+      "item": "raft:quarry"
+    }
+  },
+  "pattern": [
+    "BSB",
+    "STS",
+    "BCB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:chunk_destroyer"
+  }
+}

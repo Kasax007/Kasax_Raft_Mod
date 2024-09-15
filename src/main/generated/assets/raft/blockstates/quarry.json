@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "raft:block/quarry",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "raft:block/quarry"
+    },
+    "facing=south": {
+      "model": "raft:block/quarry",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "raft:block/quarry",
+      "y": 270
+    }
+  }
+}

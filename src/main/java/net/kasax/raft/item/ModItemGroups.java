@@ -84,6 +84,8 @@ public class ModItemGroups {
                         entries.add(ModBlocks.TITANIUM_GRATES);
                         entries.add(ModBlocks.MAKESHIFT_SOLAR_PANEL);
                         entries.add(ModBlocks.MAKESHIFT_BATTERY);
+                        entries.add(ModBlocks.QUARRY);
+                        entries.add(ModBlocks.CHUNK_DESTROYER);
 
                         entries.add(ModItems.SOME_GAME_MUSIC_MUSIC_DISC);
                         entries.add(ModItems.LOFI_BEAT_MUSIC_DISC);

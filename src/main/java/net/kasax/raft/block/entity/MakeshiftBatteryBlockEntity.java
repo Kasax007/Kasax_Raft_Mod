@@ -61,6 +61,13 @@ public class MakeshiftBatteryBlockEntity extends BlockEntity implements Extended
         nbt.putLong("Energy", this.energyStorage.amount);
     }
 
+    @Override
+    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
+        var nbt = super.toInitialChunkDataNbt(registryLookup);
+        writeNbt(nbt, registryLookup);
+        return nbt;
+    }
+
     public SimpleEnergyStorage getEnergyStorage() {
         return this.energyStorage;
     }
@@ -90,6 +97,23 @@ public class MakeshiftBatteryBlockEntity extends BlockEntity implements Extended
         if(this.world == null || this.world.isClient)
             return;
         update();
+
+        for (Direction direction : Direction.values()) {
+            EnergyStorage storage = EnergyStorage.SIDED.find(this.world, this.pos.offset(direction), direction.getOpposite());
+            if(storage != null && storage.supportsInsertion()) {
+                try(Transaction transaction = Transaction.openOuter()) {
+                    long insertable;
+                    try (Transaction simulateTransaction = transaction.openNested()) {
+                        insertable = storage.insert(Long.MAX_VALUE, simulateTransaction);
+                    }
+
+                    long extracted = this.energyStorage.extract(insertable, transaction);
+                    long inserted = storage.insert(extracted, transaction);
+                    if (extracted == inserted)
+                        transaction.commit();
+                }
+            }
+        }
 
     }
 

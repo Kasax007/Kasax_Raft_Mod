@@ -1,6 +1,7 @@
 package net.kasax.raft.block.entity;
 
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.kasax.raft.world.dimension.ModDimensions;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -9,14 +10,19 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.dimension.DimensionTypes;
 import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 import team.reborn.energy.api.base.SimpleEnergyStorage;
+
+import java.util.Optional;
 
 public class MakeshiftSolarPanelBlockEntity extends BlockEntity {
     public MakeshiftSolarPanelBlockEntity(BlockPos pos, BlockState state) {
@@ -44,10 +50,17 @@ public class MakeshiftSolarPanelBlockEntity extends BlockEntity {
         if(this.world == null || this.world.isClient)
             return;
 
-        if (world.isDay() && world.isSkyVisible(pos.up())) {
-            if(energyStorage.amount < energyStorage.getCapacity()) {
-                energyStorage.amount = MathHelper.clamp(energyStorage.amount + 10, 0, energyStorage.getCapacity());
-                update();
+        Optional<RegistryKey<DimensionType>> dimensionKeyOptional = world.getDimensionEntry().getKey();
+        if (dimensionKeyOptional.isPresent()) {
+            RegistryKey<DimensionType> dimensionKey = dimensionKeyOptional.get();
+
+            // Check if the dimension is either Overworld or your custom dimension
+            if ((dimensionKey.equals(DimensionTypes.OVERWORLD) && world.isSkyVisible(pos.up()) && world.isDay()
+                    || dimensionKey.equals(ModDimensions.RAFT_DIM_TYPE)) && world.isSkyVisible(pos.up())) {
+                if (energyStorage.amount < energyStorage.getCapacity()) {
+                    energyStorage.amount = MathHelper.clamp(energyStorage.amount + 10, 0, energyStorage.getCapacity());
+                    update();
+                }
             }
         }
 

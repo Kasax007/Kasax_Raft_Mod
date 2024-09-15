@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "bottom": "raft:block/quarry_bottom",
+    "front": "raft:block/quarry_front",
+    "side": "raft:block/quarry_side",
+    "top": "raft:block/quarry_top"
+  }
+}

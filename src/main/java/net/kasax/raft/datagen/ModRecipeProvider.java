@@ -212,6 +212,34 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .criterion(hasItem(Items.REDSTONE), conditionsFromItem(Items.REDSTONE))
                 .offerTo(exporter, Identifier.of(getRecipeName(ModBlocks.MAKESHIFT_SOLAR_PANEL.asItem())));
 
+        ShapedRecipeJsonBuilder.create(MISC, ModBlocks.QUARRY, 1)
+                .pattern("BSB")
+                .pattern("STS")
+                .pattern("BCB")
+                .input('S', ModItems.CIRCUIT_BOARD)
+                .input('C', Items.DIAMOND_PICKAXE)
+                .input('B', Items.IRON_BLOCK.asItem())
+                .input('T', ModItems.TITANIUM_INGOT)
+                .criterion(hasItem(ModItems.CIRCUIT_BOARD), conditionsFromItem(ModItems.CIRCUIT_BOARD))
+                .criterion(hasItem(Items.DIAMOND_PICKAXE), conditionsFromItem(Items.DIAMOND_PICKAXE))
+                .criterion(hasItem(Items.IRON_BLOCK.asItem()), conditionsFromItem(Items.IRON_BLOCK.asItem()))
+                .criterion(hasItem(ModItems.TITANIUM_INGOT), conditionsFromItem(ModItems.TITANIUM_INGOT))
+                .offerTo(exporter, Identifier.of(getRecipeName(ModBlocks.QUARRY.asItem())));
+
+        ShapedRecipeJsonBuilder.create(MISC, ModBlocks.CHUNK_DESTROYER, 1)
+                .pattern("BSB")
+                .pattern("STS")
+                .pattern("BCB")
+                .input('S', ModItems.CIRCUIT_BOARD)
+                .input('C', Items.DIAMOND_PICKAXE)
+                .input('B', ModBlocks.TITANIUM_BLOCK.asItem())
+                .input('T', ModBlocks.QUARRY.asItem())
+                .criterion(hasItem(ModItems.CIRCUIT_BOARD), conditionsFromItem(ModItems.CIRCUIT_BOARD))
+                .criterion(hasItem(Items.DIAMOND_PICKAXE), conditionsFromItem(Items.DIAMOND_PICKAXE))
+                .criterion(hasItem(ModBlocks.TITANIUM_BLOCK.asItem()), conditionsFromItem(ModBlocks.TITANIUM_BLOCK.asItem()))
+                .criterion(hasItem(ModBlocks.QUARRY.asItem()), conditionsFromItem(ModBlocks.QUARRY.asItem()))
+                .offerTo(exporter, Identifier.of(getRecipeName(ModBlocks.CHUNK_DESTROYER.asItem())));
+
         offerShapelessRecipe(exporter,ModBlocks.DRIFTWOOD_BUTTON.asItem(), ModBlocks.DRIFTWOOD_PLANKS.asItem(), "MISC4", 1);
 
         offerShapelessRecipe(exporter, ModItems.TITANIUM_NUGGET, ModItems.TITANIUM_INGOT, "MISC1", 9);

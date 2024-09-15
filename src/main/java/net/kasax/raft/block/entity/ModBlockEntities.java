@@ -24,6 +24,16 @@ public class ModBlockEntities {
                     BlockEntityType.Builder.create(MakeshiftBatteryBlockEntity::new,
                             ModBlocks.MAKESHIFT_BATTERY).build());
 
+    public static final BlockEntityType<QuarryBlockEntity> QUARRY_BLOCK_ENTITY =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, Identifier.of(Raft.MOD_ID, "quarry_be"),
+                    BlockEntityType.Builder.create(QuarryBlockEntity::new,
+                            ModBlocks.QUARRY).build());
+
+    public static final BlockEntityType<ChunkDestroyerBlockEntity> CHUNK_DESTROYER_BLOCK_ENTITY =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, Identifier.of(Raft.MOD_ID, "chunk_destroyer_be"),
+                    BlockEntityType.Builder.create(ChunkDestroyerBlockEntity::new,
+                            ModBlocks.CHUNK_DESTROYER).build());
+
     public static void registerBlockEntities() {
         Raft.LOGGER.info("Registering Block Entities for "+ Raft.MOD_ID);
     }

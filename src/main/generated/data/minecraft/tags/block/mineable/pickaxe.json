@@ -6,6 +6,8 @@
     "raft:deepslate_titanium_ore",
     "raft:titanium_grates",
     "raft:makeshift_solar_panel",
+    "raft:quarry",
+    "raft:chunk_destroyer",
     "raft:makeshift_battery",
     "raft:brick_furnace",
     "raft:titanium_furnace"
