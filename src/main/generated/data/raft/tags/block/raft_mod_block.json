@@ -33,6 +33,7 @@
     "raft:makeshift_battery",
     "raft:quarry",
     "raft:brick_furnace",
-    "raft:titanium_furnace"
+    "raft:titanium_furnace",
+    "raft:copper_cable"
   ]
 }

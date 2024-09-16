@@ -93,6 +93,7 @@
 
   "block.raft.brick_furnace": "Brick Furnace",
   "block.raft.titanium_furnace": "Titanium Furnace",
+  "block.raft.copper_cable": "Copper Cable",
 
   "raft.text.dupelabel": " Dupe chance: %d",
   "raft.text.speedlabel": " Speed increase: %dx",
@@ -107,5 +108,6 @@
   "tooltip.raft.quarry.tooltip1": "Mines 11x11 Area",
   "tooltip.raft.quarry.tooltip2": "Consumes 1000 FE / Block",
   "tooltip.raft.chunk_destroyer.tooltip1": "Mines The Chunk Its In",
-  "tooltip.raft.chunk_destroyer.tooltip2": "Consumes 100.000 FE per Column"
+  "tooltip.raft.chunk_destroyer.tooltip2": "Consumes 100.000 FE per Column",
+  "tooltip.raft.cable.max_input": "Transfer Per Tick: %d FE"
 }

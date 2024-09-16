@@ -3,12 +3,14 @@ package net.kasax.raft.item;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.kasax.raft.Raft;
 import net.kasax.raft.block.ModBlocks;
+import net.kasax.raft.block.cable.RaftCable;
 import net.kasax.raft.util.FurnaceBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -84,6 +86,11 @@ public class ModItemGroups {
                         entries.add(ModBlocks.TITANIUM_GRATES);
                         entries.add(ModBlocks.MAKESHIFT_SOLAR_PANEL);
                         entries.add(ModBlocks.MAKESHIFT_BATTERY);
+
+                        for (RaftCable.Cables cable : RaftCable.Cables.values()) {
+                            entries.add(new ItemStack(cable));
+                        }
+
                         entries.add(ModBlocks.QUARRY);
                         entries.add(ModBlocks.CHUNK_DESTROYER);
 

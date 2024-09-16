@@ -1,4 +1,4 @@
-// 1.21.1	2024-09-15T16:22:27.657142	Raft/Block Loot Tables
+// 1.21.1	2024-09-16T19:21:01.2620121	Raft/Block Loot Tables
 9ab4483e86e9b093d3171ad4fb7a6d1ed2e5d2eb data\raft\loot_table\blocks\titanium_ore.json
 ef6f73833cfa87d9c89271dbeb9df70dda44d1cb data\raft\loot_table\blocks\stripped_driftwood_wood.json
 18c8fb2aaa361de44ac399d2fd8c6a3a661c7c6a data\raft\loot_table\blocks\brick_furnace.json
@@ -38,6 +38,7 @@ d9bade7c706fb41671946e088a2c64b0b0ccb71a data\raft\loot_table\blocks\palm_log.js
 7857f69d13435277902a708e3f1ba9ccf26135b7 data\raft\loot_table\blocks\driftwood_stairs.json
 3d1e1fb0d3ef9792387113bbe343da45a8e77ed5 data\raft\loot_table\blocks\driftwood_log.json
 c85c470e1e7688e9a6bdea24e2f164746026dd86 data\raft\loot_table\blocks\driftwood_sapling.json
+f78ebb0713a89b6679f904c3334e36ed51199879 data\raft\loot_table\blocks\copper_cable.json
 ade6d3cf998978c8a1edbe53a7648633cba4a77e data\raft\loot_table\blocks\palm_pressure_plate.json
 c10c69ec894c16da1879ea9f8e3040d8198fec57 data\raft\loot_table\blocks\makeshift_battery.json
 b123b7f8afa1ef14d520b74fde8febea5c437170 data\raft\loot_table\blocks\driftwood_door.json

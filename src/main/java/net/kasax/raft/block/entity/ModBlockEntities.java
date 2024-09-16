@@ -1,14 +1,21 @@
 package net.kasax.raft.block.entity;
 
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.kasax.raft.Raft;
 import net.kasax.raft.block.ModBlocks;
+import net.kasax.raft.block.cable.CableBlockEntity;
+import net.kasax.raft.block.cable.RaftCable;
+import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class ModBlockEntities {
+
     public static final BlockEntityType<ItemCollectorBlockEntity> ITEM_COLLECTOR_BLOCK_ENTITY =
             Registry.register(Registries.BLOCK_ENTITY_TYPE, Identifier.of(Raft.MOD_ID, "item_collector_be"),
                     BlockEntityType.Builder.create(ItemCollectorBlockEntity::new,
@@ -33,6 +40,18 @@ public class ModBlockEntities {
             Registry.register(Registries.BLOCK_ENTITY_TYPE, Identifier.of(Raft.MOD_ID, "chunk_destroyer_be"),
                     BlockEntityType.Builder.create(ChunkDestroyerBlockEntity::new,
                             ModBlocks.CHUNK_DESTROYER).build());
+
+    public static final BlockEntityType<CableBlockEntity> CABLE_BLOCK_ENTITY =
+            Registry.register(
+                    Registries.BLOCK_ENTITY_TYPE,
+                    Identifier.of(Raft.MOD_ID, "cable_block_entity"),
+                    BlockEntityType.Builder.create(CableBlockEntity::new,
+                            Arrays.stream(RaftCable.Cables.values())
+                                    .map(cable -> cable.block) // Get the blocks from the enum
+                                    .toArray(Block[]::new)
+                    ).build()
+            );
+
 
     public static void registerBlockEntities() {
         Raft.LOGGER.info("Registering Block Entities for "+ Raft.MOD_ID);

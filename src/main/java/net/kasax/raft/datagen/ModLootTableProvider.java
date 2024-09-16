@@ -4,6 +4,7 @@ package net.kasax.raft.datagen;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.kasax.raft.block.ModBlocks;
+import net.kasax.raft.block.cable.RaftCable;
 import net.kasax.raft.item.ModItems;
 import net.kasax.raft.util.FurnaceBlocks;
 import net.minecraft.block.Block;
@@ -24,7 +25,9 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.tag.BlockTags;
 
+import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
 public class ModLootTableProvider extends FabricBlockLootTableProvider {
@@ -81,10 +84,16 @@ public class ModLootTableProvider extends FabricBlockLootTableProvider {
         addDrop(ModBlocks.PALM_LEAVES, leavesDrops(ModBlocks.PALM_LEAVES, ModBlocks.PALM_SAPLING, 0.05f));
         addDrop(ModBlocks.PALM_COCONUT_LEAVES, fruitLeaveDrops(ModBlocks.PALM_COCONUT_LEAVES, ModItems.COCONUT));
 
+        // Add cables to the loot table
+        Arrays.stream(RaftCable.Cables.values()).forEach(cable -> {
+            addDrop(cable.block);
+        });
+
         // Register models for all custom furnaces
         FurnaceBlocks.getFurnaces().forEach(furnace ->
                 addDrop(furnace)
         );
+
     }
     public LootTable.Builder copperLikeOreDrops(Block drop, Item item) {
         RegistryWrapper.Impl<Enchantment> impl = this.registryLookup.getWrapperOrThrow(RegistryKeys.ENCHANTMENT);

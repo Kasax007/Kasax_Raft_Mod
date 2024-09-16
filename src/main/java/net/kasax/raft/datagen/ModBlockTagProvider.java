@@ -3,6 +3,7 @@ package net.kasax.raft.datagen;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.kasax.raft.block.ModBlocks;
+import net.kasax.raft.block.cable.RaftCable;
 import net.kasax.raft.util.FurnaceBlocks;
 import net.kasax.raft.util.ModTags;
 import net.minecraft.block.Block;
@@ -58,6 +59,10 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 getOrCreateTagBuilder(ModTags.Blocks.RAFT_MOD_BLOCK).add(furnace)
         );
 
+        for (RaftCable.Cables cable : RaftCable.Cables.values()) {
+            getOrCreateTagBuilder(ModTags.Blocks.RAFT_MOD_BLOCK).add(cable.block);
+        }
+
         getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
                 .add(ModBlocks.DRIFTWOOD_PORTAL_FRAME);
 
@@ -77,6 +82,10 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE).add(furnace)
         );
 
+        for (RaftCable.Cables cable : RaftCable.Cables.values()) {
+            getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE).add(cable.block);
+        }
+
         getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL)
                 .add(ModBlocks.DRIFTWOOD_PORTAL_FRAME)
                 .add(ModBlocks.MAKESHIFT_SOLAR_PANEL)
@@ -88,6 +97,10 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         FurnaceBlocks.getFurnaces().forEach(furnace ->
                 getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL).add(furnace)
         );
+
+        for (RaftCable.Cables cable : RaftCable.Cables.values()) {
+            getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL).add(cable.block);
+        }
 
         getOrCreateTagBuilder(BlockTags.NEEDS_DIAMOND_TOOL)
                 .add(ModBlocks.RAW_TITANIUM_BLOCK)

@@ -6,6 +6,7 @@
     "raft:chunk_destroyer",
     "raft:makeshift_battery",
     "raft:brick_furnace",
-    "raft:titanium_furnace"
+    "raft:titanium_furnace",
+    "raft:copper_cable"
   ]
 }

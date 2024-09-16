@@ -3,6 +3,7 @@ package net.kasax.raft.datagen;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.kasax.raft.block.ModBlocks;
+import net.kasax.raft.block.cable.RaftCable;
 import net.kasax.raft.config.FurnaceData;
 import net.kasax.raft.item.ModItems;
 import net.kasax.raft.util.FurnaceBlocks;
@@ -335,6 +336,35 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                         .offerTo(exporter, Identifier.of("raft", furnaceName));
             }
         });
+
+        // Generate Cable Recipes
+        RaftCable.Cables[] cables = RaftCable.Cables.values();
+        for (RaftCable.Cables cable : cables) {
+            String cableName = cable.name;
+
+            if ("copper_cable".equals(cableName)) {
+                // Recipe for Copper Cable
+                ShapedRecipeJsonBuilder.create(MISC, cable.asItem(), 6)
+                        .pattern("CCC")
+                        .pattern("RRR")
+                        .input('C', Items.COPPER_INGOT)
+                        .input('R', Items.REDSTONE)
+                        .criterion(hasItem(Items.COPPER_INGOT), conditionsFromItem(Items.COPPER_INGOT))
+                        .offerTo(exporter, Identifier.of("raft", cableName));
+            }
+
+//            if ("titanium_cable".equals(cableName)) {
+//                // Recipe for Titanium Cable
+//                ShapedRecipeJsonBuilder.create(MISC, cable.asItem(), 6)
+//                        .pattern("TTT")
+//                        .pattern("RRR")
+//                        .input('T', ModItems.TITANIUM_INGOT)
+//                        .input('R', Items.REDSTONE)
+//                        .criterion(hasItem(ModItems.TITANIUM_INGOT), conditionsFromItem(ModItems.TITANIUM_INGOT))
+//                        .offerTo(exporter, Identifier.of("raft", cableName));
+//            }
+        }
+
 
 
     }
