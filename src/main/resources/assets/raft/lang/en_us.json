@@ -94,6 +94,7 @@
   "block.raft.brick_furnace": "Brick Furnace",
   "block.raft.titanium_furnace": "Titanium Furnace",
   "block.raft.copper_cable": "Copper Cable",
+  "block.raft.titanium_cable": "Titanium Cable",
 
   "raft.text.dupelabel": " Dupe chance: %d",
   "raft.text.speedlabel": " Speed increase: %dx",

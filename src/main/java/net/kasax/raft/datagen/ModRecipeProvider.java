@@ -353,16 +353,16 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                         .offerTo(exporter, Identifier.of("raft", cableName));
             }
 
-//            if ("titanium_cable".equals(cableName)) {
-//                // Recipe for Titanium Cable
-//                ShapedRecipeJsonBuilder.create(MISC, cable.asItem(), 6)
-//                        .pattern("TTT")
-//                        .pattern("RRR")
-//                        .input('T', ModItems.TITANIUM_INGOT)
-//                        .input('R', Items.REDSTONE)
-//                        .criterion(hasItem(ModItems.TITANIUM_INGOT), conditionsFromItem(ModItems.TITANIUM_INGOT))
-//                        .offerTo(exporter, Identifier.of("raft", cableName));
-//            }
+            if ("titanium_cable".equals(cableName)) {
+                // Recipe for Titanium Cable
+                ShapedRecipeJsonBuilder.create(MISC, cable.asItem(), 6)
+                        .pattern("TTT")
+                        .pattern("RRR")
+                        .input('T', ModItems.TITANIUM_INGOT)
+                        .input('R', Items.REDSTONE)
+                        .criterion(hasItem(ModItems.TITANIUM_INGOT), conditionsFromItem(ModItems.TITANIUM_INGOT))
+                        .offerTo(exporter, Identifier.of("raft", cableName));
+            }
         }
 
 

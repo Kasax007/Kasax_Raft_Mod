@@ -1,0 +1,6 @@
+{
+  "parent": "raft:block/template/template_thin_cable_side",
+  "textures": {
+    "cable": "raft:block/cables/titanium_cable"
+  }
+}

@@ -32,7 +32,8 @@ import java.util.Locale;
 
 public class RaftCable {
     public enum Cables implements ItemConvertible {
-        COPPER_CABLE(128, 12.0, true, RaftEnergyTier.MEDIUM);
+        COPPER_CABLE(128, 12.0, true, RaftEnergyTier.MEDIUM),
+        TITANIUM_CABLE(512, 12.0, true, RaftEnergyTier.HIGH);
 
         public final String name;
         public final CableBlock block;

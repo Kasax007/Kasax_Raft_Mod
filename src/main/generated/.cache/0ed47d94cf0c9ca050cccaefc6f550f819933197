@@ -1,4 +1,4 @@
-// 1.21.1	2024-09-16T19:21:01.2691457	Raft/Recipes
+// 1.21.1	2024-09-17T13:42:50.4760752	Raft/Recipes
 5affb3640a2775ea2d66dc35cb98f4481eac16e1 data\raft\advancement\recipes\misc\makeshift_solar_panel.json
 75e6d2bc534caca6f74fdfa4d38343bb4bd3b662 data\raft\recipe\driftwood_stairs.json
 6905bf35135cf7039fe234d13324098d092bdfd7 data\raft\recipe\driftwood_button_from_driftwood_planks.json
@@ -19,6 +19,7 @@ ee25f4ca032c40d1b60af1130140bed85fc0a573 data\raft\advancement\recipes\misc\chun
 4b9e6eadcaa7abdb999d558282e00de55b547a22 data\raft\recipe\stripped_palm_wood.json
 b600133dba5044755050b99e4ae9a7673eae72ff data\raft\recipe\makeshift_battery.json
 c8964a9bbce79426e7c1ad99f9db1ace20bc6b69 data\raft\recipe\palm_fence.json
+5ef2741efadd56afa2e4fd8b6c009cb925cfc10c data\raft\recipe\titanium_cable.json
 8042ce958d82ba6e0e45513f22c2c9f9fb226782 data\raft\recipe\circuit_board.json
 f81ac6c7c36cd3ca2635cd6474139a3c7cff8eb0 data\raft\advancement\recipes\misc\energy_staff.json
 ee97d003ff5da98e26b4796ebde78ed46cd928a2 data\raft\advancement\recipes\building_blocks\palm_wood.json
@@ -104,4 +105,5 @@ b68bec44649e1ad6b192621897e21418a98493de data\raft\advancement\recipes\misc\tita
 125c2706cd4300fe44072ba0b66d7e0478d2bcdd data\raft\advancement\recipes\building_blocks\driftwood_stairs.json
 c27031ce80c9ac95020529136686151786997413 data\raft\advancement\recipes\misc\palm_pressure_plate.json
 0e62cb8b84fd7b748b20cc963413f08b80f54820 data\raft\advancement\recipes\misc\palm_slab.json
+dcd762361d19c59d0e9aadc9e004436cf511fc8b data\raft\advancement\recipes\misc\titanium_cable.json
 d530a94d4850fd085e4778a162df363edd20e30a data\raft\advancement\recipes\misc\titanium_nugget_from_titanium_ingot.json
