@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "T": {
+      "item": "raft:titanium_ingot"
+    }
+  },
+  "pattern": [
+    "TTT",
+    "RRR"
+  ],
+  "result": {
+    "count": 6,
+    "id": "raft:titanium_cable"
+  }
+}

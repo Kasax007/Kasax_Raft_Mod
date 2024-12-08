@@ -3,6 +3,7 @@ package net.kasax.raft.datagen;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.kasax.raft.block.ModBlocks;
+import net.kasax.raft.block.cable.RaftCable;
 import net.kasax.raft.config.FurnaceData;
 import net.kasax.raft.item.ModItems;
 import net.kasax.raft.util.FurnaceBlocks;
@@ -188,6 +189,58 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .criterion(hasItem(ModItems.CIRCUIT_BOARD), conditionsFromItem(ModItems.CIRCUIT_BOARD))
                 .offerTo(exporter, Identifier.of(getRecipeName(ModItems.METAL_DETECTOR)));
 
+        ShapedRecipeJsonBuilder.create(MISC, ModBlocks.MAKESHIFT_BATTERY, 1)
+                .pattern("CSC")
+                .pattern("CBC")
+                .pattern("CSC")
+                .input('S', ModItems.CIRCUIT_BOARD)
+                .input('C', Items.IRON_INGOT)
+                .input('B', Items.REDSTONE)
+                .criterion(hasItem(ModItems.CIRCUIT_BOARD), conditionsFromItem(ModItems.CIRCUIT_BOARD))
+                .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
+                .criterion(hasItem(Items.REDSTONE), conditionsFromItem(Items.REDSTONE))
+                .offerTo(exporter, Identifier.of(getRecipeName(ModBlocks.MAKESHIFT_BATTERY.asItem())));
+
+        ShapedRecipeJsonBuilder.create(MISC, ModBlocks.MAKESHIFT_SOLAR_PANEL, 1)
+                .pattern("SSS")
+                .pattern("CCC")
+                .pattern("CBC")
+                .input('S', ModItems.CIRCUIT_BOARD)
+                .input('C', Items.IRON_INGOT)
+                .input('B', Items.REDSTONE)
+                .criterion(hasItem(ModItems.CIRCUIT_BOARD), conditionsFromItem(ModItems.CIRCUIT_BOARD))
+                .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
+                .criterion(hasItem(Items.REDSTONE), conditionsFromItem(Items.REDSTONE))
+                .offerTo(exporter, Identifier.of(getRecipeName(ModBlocks.MAKESHIFT_SOLAR_PANEL.asItem())));
+
+        ShapedRecipeJsonBuilder.create(MISC, ModBlocks.QUARRY, 1)
+                .pattern("BSB")
+                .pattern("STS")
+                .pattern("BCB")
+                .input('S', ModItems.CIRCUIT_BOARD)
+                .input('C', Items.DIAMOND_PICKAXE)
+                .input('B', Items.IRON_BLOCK.asItem())
+                .input('T', ModItems.TITANIUM_INGOT)
+                .criterion(hasItem(ModItems.CIRCUIT_BOARD), conditionsFromItem(ModItems.CIRCUIT_BOARD))
+                .criterion(hasItem(Items.DIAMOND_PICKAXE), conditionsFromItem(Items.DIAMOND_PICKAXE))
+                .criterion(hasItem(Items.IRON_BLOCK.asItem()), conditionsFromItem(Items.IRON_BLOCK.asItem()))
+                .criterion(hasItem(ModItems.TITANIUM_INGOT), conditionsFromItem(ModItems.TITANIUM_INGOT))
+                .offerTo(exporter, Identifier.of(getRecipeName(ModBlocks.QUARRY.asItem())));
+
+        ShapedRecipeJsonBuilder.create(MISC, ModBlocks.CHUNK_DESTROYER, 1)
+                .pattern("BSB")
+                .pattern("STS")
+                .pattern("BCB")
+                .input('S', ModItems.CIRCUIT_BOARD)
+                .input('C', Items.DIAMOND_PICKAXE)
+                .input('B', ModBlocks.TITANIUM_BLOCK.asItem())
+                .input('T', ModBlocks.QUARRY.asItem())
+                .criterion(hasItem(ModItems.CIRCUIT_BOARD), conditionsFromItem(ModItems.CIRCUIT_BOARD))
+                .criterion(hasItem(Items.DIAMOND_PICKAXE), conditionsFromItem(Items.DIAMOND_PICKAXE))
+                .criterion(hasItem(ModBlocks.TITANIUM_BLOCK.asItem()), conditionsFromItem(ModBlocks.TITANIUM_BLOCK.asItem()))
+                .criterion(hasItem(ModBlocks.QUARRY.asItem()), conditionsFromItem(ModBlocks.QUARRY.asItem()))
+                .offerTo(exporter, Identifier.of(getRecipeName(ModBlocks.CHUNK_DESTROYER.asItem())));
+
         offerShapelessRecipe(exporter,ModBlocks.DRIFTWOOD_BUTTON.asItem(), ModBlocks.DRIFTWOOD_PLANKS.asItem(), "MISC4", 1);
 
         offerShapelessRecipe(exporter, ModItems.TITANIUM_NUGGET, ModItems.TITANIUM_INGOT, "MISC1", 9);
@@ -283,6 +336,35 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                         .offerTo(exporter, Identifier.of("raft", furnaceName));
             }
         });
+
+        // Generate Cable Recipes
+        RaftCable.Cables[] cables = RaftCable.Cables.values();
+        for (RaftCable.Cables cable : cables) {
+            String cableName = cable.name;
+
+            if ("copper_cable".equals(cableName)) {
+                // Recipe for Copper Cable
+                ShapedRecipeJsonBuilder.create(MISC, cable.asItem(), 6)
+                        .pattern("CCC")
+                        .pattern("RRR")
+                        .input('C', Items.COPPER_INGOT)
+                        .input('R', Items.REDSTONE)
+                        .criterion(hasItem(Items.COPPER_INGOT), conditionsFromItem(Items.COPPER_INGOT))
+                        .offerTo(exporter, Identifier.of("raft", cableName));
+            }
+
+            if ("titanium_cable".equals(cableName)) {
+                // Recipe for Titanium Cable
+                ShapedRecipeJsonBuilder.create(MISC, cable.asItem(), 6)
+                        .pattern("TTT")
+                        .pattern("RRR")
+                        .input('T', ModItems.TITANIUM_INGOT)
+                        .input('R', Items.REDSTONE)
+                        .criterion(hasItem(ModItems.TITANIUM_INGOT), conditionsFromItem(ModItems.TITANIUM_INGOT))
+                        .offerTo(exporter, Identifier.of("raft", cableName));
+            }
+        }
+
 
 
     }

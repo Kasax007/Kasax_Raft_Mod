@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "raft:block/chunk_destroyer",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "raft:block/chunk_destroyer"
+    },
+    "facing=south": {
+      "model": "raft:block/chunk_destroyer",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "raft:block/chunk_destroyer",
+      "y": 270
+    }
+  }
+}

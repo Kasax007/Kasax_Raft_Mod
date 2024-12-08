@@ -3,6 +3,7 @@ package net.kasax.raft.datagen;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.kasax.raft.block.ModBlocks;
+import net.kasax.raft.block.cable.RaftCable;
 import net.kasax.raft.util.FurnaceBlocks;
 import net.kasax.raft.util.ModTags;
 import net.minecraft.block.Block;
@@ -48,12 +49,19 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(ModBlocks.TITANIUM_ORE)
                 .add(ModBlocks.DEEPSLATE_TITANIUM_ORE)
                 .add(ModBlocks.TITANIUM_GRATES)
-                .add(ModBlocks.ITEM_CATCHER);
+                .add(ModBlocks.ITEM_CATCHER)
+                .add(ModBlocks.MAKESHIFT_SOLAR_PANEL)
+                .add(ModBlocks.MAKESHIFT_BATTERY)
+                .add(ModBlocks.QUARRY);
 
         // Add all furnaces to the RAFT_MOD_BLOCK tag
         FurnaceBlocks.getFurnaces().forEach(furnace ->
                 getOrCreateTagBuilder(ModTags.Blocks.RAFT_MOD_BLOCK).add(furnace)
         );
+
+        for (RaftCable.Cables cable : RaftCable.Cables.values()) {
+            getOrCreateTagBuilder(ModTags.Blocks.RAFT_MOD_BLOCK).add(cable.block);
+        }
 
         getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
                 .add(ModBlocks.DRIFTWOOD_PORTAL_FRAME);
@@ -63,20 +71,36 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(ModBlocks.TITANIUM_ORE)
                 .add(ModBlocks.TITANIUM_BLOCK)
                 .add(ModBlocks.DEEPSLATE_TITANIUM_ORE)
-                .add(ModBlocks.TITANIUM_GRATES);
+                .add(ModBlocks.TITANIUM_GRATES)
+                .add(ModBlocks.MAKESHIFT_SOLAR_PANEL)
+                .add(ModBlocks.QUARRY)
+                .add(ModBlocks.CHUNK_DESTROYER)
+                .add(ModBlocks.MAKESHIFT_BATTERY);
 
         // Add all furnaces to the PICKAXE_MINEBALE tag
         FurnaceBlocks.getFurnaces().forEach(furnace ->
                 getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE).add(furnace)
         );
 
+        for (RaftCable.Cables cable : RaftCable.Cables.values()) {
+            getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE).add(cable.block);
+        }
+
         getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL)
-                .add(ModBlocks.DRIFTWOOD_PORTAL_FRAME);
+                .add(ModBlocks.DRIFTWOOD_PORTAL_FRAME)
+                .add(ModBlocks.MAKESHIFT_SOLAR_PANEL)
+                .add(ModBlocks.QUARRY)
+                .add(ModBlocks.CHUNK_DESTROYER)
+                .add(ModBlocks.MAKESHIFT_BATTERY);
 
         // Add all furnaces to the NEEDS_IRON_TOOL tag
         FurnaceBlocks.getFurnaces().forEach(furnace ->
                 getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL).add(furnace)
         );
+
+        for (RaftCable.Cables cable : RaftCable.Cables.values()) {
+            getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL).add(cable.block);
+        }
 
         getOrCreateTagBuilder(BlockTags.NEEDS_DIAMOND_TOOL)
                 .add(ModBlocks.RAW_TITANIUM_BLOCK)

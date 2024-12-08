@@ -2,18 +2,18 @@ package net.kasax.raft;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.kasax.raft.block.ModBlocks;
-import net.kasax.raft.block.entity.ModBlockEntities;
+import net.kasax.raft.block.cable.CableBlockEntity;
+import net.kasax.raft.block.entity.*;
 import net.kasax.raft.item.ModItemGroups;
 import net.kasax.raft.item.ModItems;
 import net.kasax.raft.recipe.ModRecipes;
 import net.kasax.raft.screen.ModScreenHandlers;
 import net.kasax.raft.sound.ModSounds;
-import net.kasax.raft.util.FurnaceBlocks;
-import net.kasax.raft.util.FurnaceEntities;
-import net.kasax.raft.util.ModLootTableModifiers;
+import net.kasax.raft.util.*;
 import net.kasax.raft.world.gen.ModWorldGeneration;
 import net.kasax.raft.world.gen.RandomizedBlockStateProvider;
 import net.kasax.raft.world.tree.StarFoliagePlacer;
@@ -25,6 +25,7 @@ import net.minecraft.world.gen.foliage.FoliagePlacerType;
 import net.minecraft.world.gen.stateprovider.BlockStateProviderType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import team.reborn.energy.api.EnergyStorage;
 
 public class Raft implements ModInitializer {
 	// This logger is used to write text to the console and the log file.
@@ -86,6 +87,15 @@ public class Raft implements ModInitializer {
 		ModBlockEntities.registerBlockEntities();
 		ModScreenHandlers.registerScreenHandlers();
 
+		// Register the codec for the energy sync payload
+		PayloadTypeRegistry.playS2C().register(EnergySyncPayload.ID, EnergySyncPayload.CODEC);
+
+		EnergyStorage.SIDED.registerForBlockEntity(MakeshiftSolarPanelBlockEntity::getEnergyProvider, ModBlockEntities.MAKESHIT_SOLAR_PANEL_BLOCK_ENTITY);
+		EnergyStorage.SIDED.registerForBlockEntity(MakeshiftBatteryBlockEntity::getEnergyProvider, ModBlockEntities.MAKESHIT_BATTERY_BLOCK_ENTITY);
+		EnergyStorage.SIDED.registerForBlockEntity(QuarryBlockEntity::getEnergyProvider, ModBlockEntities.QUARRY_BLOCK_ENTITY);
+		EnergyStorage.SIDED.registerForBlockEntity(ChunkDestroyerBlockEntity::getEnergyProvider, ModBlockEntities.CHUNK_DESTROYER_BLOCK_ENTITY);
+		EnergyStorage.SIDED.registerForBlockEntity(CableBlockEntity::getSideEnergyStorage, ModBlockEntities.CABLE_BLOCK_ENTITY);
+
 		CustomPortalBuilder.beginPortal().frameBlock(ModBlocks.DRIFTWOOD_PORTAL_FRAME)
 				.lightWithItem(ModItems.ENERGY_STAFF)
 						.destDimID(Identifier.of(Raft.MOD_ID, "raftdim"))
@@ -98,6 +108,8 @@ public class Raft implements ModInitializer {
 
 		FurnaceBlocks.init();
 		FurnaceEntities.init();
+
+		ModBlocks.registerCables();
 
 		LOGGER.info("Raft mod initialized!");
 	}

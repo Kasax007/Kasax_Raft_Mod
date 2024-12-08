@@ -49,6 +49,11 @@
   "item.raft.titanium_ingot": "Titanium Ingot",
   "item.raft.titanium_nugget": "Titanium Nugget",
 
+  "block.raft.makeshift_solar_panel": "Makeshift Solar Panel",
+  "block.raft.makeshift_battery": "Makeshift Battery",
+  "block.raft.quarry": "Quarry",
+  "block.raft.chunk_destroyer": "Chunk Destroyer",
+
   "item.raft.titanium_helmet": "Titanium Helmet",
   "item.raft.titanium_chestplate": "Titanium Chestplate",
   "item.raft.titanium_leggings": "Titanium Leggings",
@@ -90,11 +95,22 @@
 
   "block.raft.brick_furnace": "Brick Furnace",
   "block.raft.titanium_furnace": "Titanium Furnace",
+  "block.raft.copper_cable": "Copper Cable",
+  "block.raft.titanium_cable": "Titanium Cable",
 
   "raft.text.dupelabel": " Dupe chance: %d",
   "raft.text.speedlabel": " Speed increase: %dx",
   "raft.text.fuellabel": " Fuel usage: %dx",
   "raft.text.tooltiplabel": "Furnace stats:",
 
-  "itemgroup.raft": "Raft"
+  "itemgroup.raft": "Raft",
+  "tooltip.raft.makeshift_solar_panel.tooltip": "Generates 10 FE per Tick",
+  "tooltip.raft.makeshift_battery.tooltip1": "Stores 1.000.000 FE",
+  "tooltip.raft.makeshift_battery.tooltip2": "Max In&Out: 10.000 FE",
+  "container.raft.makeshift_battery": "Makeshift Battery",
+  "tooltip.raft.quarry.tooltip1": "Mines 11x11 Area",
+  "tooltip.raft.quarry.tooltip2": "Consumes 1000 FE / Block",
+  "tooltip.raft.chunk_destroyer.tooltip1": "Mines The Chunk Its In",
+  "tooltip.raft.chunk_destroyer.tooltip2": "Consumes 100.000 FE per Column",
+  "tooltip.raft.cable.max_input": "Transfer Per Tick: %d FE"
 }

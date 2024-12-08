@@ -2,6 +2,7 @@ package net.kasax.raft.block;
 
 
 import net.kasax.raft.Raft;
+import net.kasax.raft.block.cable.RaftCable;
 import net.kasax.raft.block.custom.*;
 import net.kasax.raft.world.gen.ModConfiguredFeatures;
 import net.kasax.raft.world.tree.DriftwoodSaplingBlock;
@@ -13,7 +14,10 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
+import org.apache.commons.lang3.Validate;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Optional;
 
 public class ModBlocks {
@@ -138,8 +142,27 @@ public class ModBlocks {
     public static final Block ITEM_CATCHER = registerBlock("item_catcher",
             new ItemCatcher(AbstractBlock.Settings.copy(Blocks.OAK_PLANKS).nonOpaque()));
 
+    public static final Block MAKESHIFT_SOLAR_PANEL = registerBlock("makeshift_solar_panel",
+            new MakeshiftSolarPanelBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)));
+
+    public static final Block MAKESHIFT_BATTERY = registerBlock("makeshift_battery",
+            new MakeshiftBatteryBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)));
+
+    public static final Block QUARRY = registerBlock("quarry",
+            new QuarryBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)));
+
+    public static final Block CHUNK_DESTROYER = registerBlock("chunk_destroyer",
+            new ChunkDestroyer(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)));
+
     public static final Block TITANIUM_GRATES = registerBlock("titanium_grates",
             new TitaniumGrates(AbstractBlock.Settings.copy(Blocks.COPPER_BLOCK).nonOpaque().strength(4f)));
+
+    public static void registerCables() {
+        Arrays.stream(RaftCable.Cables.values()).forEach(value -> {
+            // Register the cable block with its name
+            registerBlock(value.name, value.block);
+        });
+    }
 
     private static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block);
@@ -150,6 +173,7 @@ public class ModBlocks {
         return Registry.register(Registries.ITEM, Identifier.of(Raft.MOD_ID, name),
                 new BlockItem(block, new Item.Settings()));
     }
+
     public static void registerModBlocks() {
         Raft.LOGGER.info("Registering ModBlocks for " + Raft.MOD_ID);
     }
