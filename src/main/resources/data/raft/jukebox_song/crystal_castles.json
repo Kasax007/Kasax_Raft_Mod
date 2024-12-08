@@ -1,0 +1,8 @@
+{
+  "comparator_output": 7,
+  "description": {
+    "translate": "crystal_castles_music_disc.desc"
+  },
+  "length_in_seconds": 144.0,
+  "sound_event": "raft:music_disc.crystal_castles"
+}
