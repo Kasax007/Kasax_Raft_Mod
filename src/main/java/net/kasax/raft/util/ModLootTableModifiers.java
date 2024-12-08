@@ -57,6 +57,16 @@ public class ModLootTableModifiers {
                 LootPool.Builder poolBuilder = LootPool.builder()
                         .rolls(ConstantLootNumberProvider.create(1)) //adds extra item
                         .conditionally(RandomChanceLootCondition.builder(0.1f)) //drop chance 25%
+                        .with(ItemEntry.builder(ModItems.CRYSTAL_CASTLES_MUSIC_DISC))
+                        .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0f, 5.0f)).build()); //amount
+                tableBuilder.pool(poolBuilder.build());
+            }
+        });
+        LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
+            if(SHIPWRECK_TREASURE_ID.equals(key)) {
+                LootPool.Builder poolBuilder = LootPool.builder()
+                        .rolls(ConstantLootNumberProvider.create(1)) //adds extra item
+                        .conditionally(RandomChanceLootCondition.builder(0.1f)) //drop chance 25%
                         .with(ItemEntry.builder(ModItems.SOME_GAME_MUSIC_MUSIC_DISC))
                         .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0f, 5.0f)).build()); //amount
                 tableBuilder.pool(poolBuilder.build());

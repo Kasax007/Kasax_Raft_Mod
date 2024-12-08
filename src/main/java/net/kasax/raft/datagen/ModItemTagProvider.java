@@ -49,6 +49,7 @@ public class ModItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
         getOrCreateTagBuilder(ItemTags.CREEPER_DROP_MUSIC_DISCS)
                 .add(ModItems.LOFI_BEAT_MUSIC_DISC)
+                .add(ModItems.CRYSTAL_CASTLES_MUSIC_DISC)
                 .add(ModItems.SOME_GAME_MUSIC_MUSIC_DISC);
 
         getOrCreateTagBuilder(ItemTags.TRIMMABLE_ARMOR)

@@ -17,6 +17,15 @@
       }
     ]
   },
+  "music_disc.crystal_castles": {
+    "subtitle": "sounds.raft.crystal_castles",
+    "sounds": [
+      {
+        "name": "raft:crystal_castles",
+        "stream": true
+      }
+    ]
+  },
   "portal_teleport_sound": {
     "subtitle": "sounds.raft.portal_teleport_sound",
     "sounds": [

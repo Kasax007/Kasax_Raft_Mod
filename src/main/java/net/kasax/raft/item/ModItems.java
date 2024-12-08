@@ -47,6 +47,8 @@ public class ModItems {
             new Item(new Item.Settings().maxCount(1).jukeboxPlayable(ModJukeboxSongs.SOME_GAME_MUSIC_SETH).rarity(Rarity.RARE)));
     public static final Item LOFI_BEAT_MUSIC_DISC = registerItem("lofi_beat_music_disc",
             new Item(new Item.Settings().maxCount(1).jukeboxPlayable(ModJukeboxSongs.LOFI_BEAT_SETH).rarity(Rarity.RARE)));
+    public static final Item CRYSTAL_CASTLES_MUSIC_DISC = registerItem("crystal_castles_music_disc",
+            new Item(new Item.Settings().maxCount(1).jukeboxPlayable(ModJukeboxSongs.CRYSTAL_CASTLES).rarity(Rarity.RARE)));
 
     public static final Item ENERGY_STAFF = registerItem("energy_staff", new EnergyStaffItem(new Item.Settings().maxCount(1).maxDamage(64)));
 

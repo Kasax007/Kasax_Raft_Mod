@@ -11,6 +11,7 @@ import net.minecraft.util.Util;
 
 public class ModJukeboxSongs {
     public static final RegistryKey<JukeboxSong> LOFI_BEAT_SETH = of("lofi_beat_seth");
+    public static final RegistryKey<JukeboxSong> CRYSTAL_CASTLES = of("crystal_castles");
     public static final RegistryKey<JukeboxSong> SOME_GAME_MUSIC_SETH = of("some_game_music_seth");
 
     private static RegistryKey<JukeboxSong> of(String id) {
@@ -23,11 +24,13 @@ public class ModJukeboxSongs {
 
     public static void bootstrap(Registerable<JukeboxSong> registry) {
         register(registry, LOFI_BEAT_SETH, LOFI_BEAT_SETH_EVENT, 120, 7);
+        register(registry, CRYSTAL_CASTLES, CRYSTAL_CASTLES_EVENT, 144, 7);
         register(registry, SOME_GAME_MUSIC_SETH, SOME_GAME_MUSIC_SETH_EVENT, 105, 7);
 
     }
 
     public static final RegistryEntry.Reference<SoundEvent> LOFI_BEAT_SETH_EVENT = registerReference1("music_disc.lofi_beat_seth");
+    public static final RegistryEntry.Reference<SoundEvent> CRYSTAL_CASTLES_EVENT = registerReference1("music_disc.crystal_castles");
     public static final RegistryEntry.Reference<SoundEvent> SOME_GAME_MUSIC_SETH_EVENT = registerReference1("music_disc.some_game_music_seth");
 
     private static RegistryEntry.Reference<SoundEvent> registerReference1(String id) {
