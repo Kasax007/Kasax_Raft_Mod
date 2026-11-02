@@ -53,7 +53,7 @@ public class ModDimensions {
                 1.0, // coordinateScale
                 -64, // minY
                 320, // height
-                256, // logicalHeight
+                320, // logicalHeight (portals and the raft platform up to Y 220 need the whole height)
                 blocks.getOrThrow(BlockTags.INFINIBURN_OVERWORLD), // infiniburn
                 1.0f, // ambientLight
                 new DimensionType.MonsterSettings(ConstantInt.of(0), 0),
