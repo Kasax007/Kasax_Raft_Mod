@@ -63,10 +63,11 @@ public class ModRecipeProvider extends FabricRecipeProvider {
 
             @Override
             public void buildRecipes() {
-                shaped(RecipeCategory.MISC, ModBlocks.DRIFTWOOD_PORTAL_FRAME)
-                        .pattern(" S ")
-                        .pattern("SRS")
-                        .pattern(" S ")
+                // 4 frames per craft: a portal (10 frames) costs 12 driftwood logs and 3 ancient energy
+                shaped(RecipeCategory.MISC, ModBlocks.DRIFTWOOD_PORTAL_FRAME, 4)
+                        .pattern(" R ")
+                        .pattern("RSR")
+                        .pattern(" R ")
                         .define('S', ModItems.ANCIENT_ENERGY)
                         .define('R', ModBlocks.DRIFTWOOD_LOG)
                         .unlockedBy(getHasName(ModItems.ANCIENT_BROKEN_RING), has(ModItems.ANCIENT_BROKEN_RING))

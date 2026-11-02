@@ -5,11 +5,12 @@
     "S": "raft:ancient_energy"
   },
   "pattern": [
-    " S ",
-    "SRS",
-    " S "
+    " R ",
+    "RSR",
+    " R "
   ],
   "result": {
+    "count": 4,
     "id": "raft:driftwood_portal_frame"
   }
 }

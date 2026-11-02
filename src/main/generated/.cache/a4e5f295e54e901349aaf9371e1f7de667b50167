@@ -4,5 +4,6 @@ de1e434900cf17c35c98e316779eb44a628b2bdd data/raft/worldgen/biome/raft_ocean_bio
 a711f0b3b1389801d9850241fa12bc97c5513c60 data/raft/worldgen/feature/driftwood.json
 f9c86d11b23b692332196ab85c78a462799d5faa data/raft/worldgen/feature/palmwood.json
 beb0d935bb57d280d131ea95aa03cbd57cddd32c data/raft/worldgen/feature/titanium_ore.json
+1a5b5e4457afd8553fa41e2ad29a63e988529e58 data/raft/worldgen/placed_feature/driftwood_beach_placed.json
 7299f08ca59f834cce179cd31f4966e66b34935d data/raft/worldgen/placed_feature/palm_placed.json
 10bd418b4ec21386cae8b5d2f9953efde7676325 data/raft/worldgen/placed_feature/titanium_ore_placed.json

@@ -13,5 +13,8 @@ public class ModWorldGeneration {
         // Palm trees
         BiomeModifications.addFeature(BiomeSelectors.includeByKey(ModBiomes.RAFT_OCEAN_BIOME),
                 GenerationStep.Decoration.VEGETAL_DECORATION, ModPlacedFeatures.PALM_PLACED_KEY);
+        // Driftwood trees wash up on overworld beaches (needed for the portal frame)
+        BiomeModifications.addFeature(BiomeSelectors.tag(net.minecraft.tags.BiomeTags.IS_BEACH),
+                GenerationStep.Decoration.VEGETAL_DECORATION, ModPlacedFeatures.DRIFTWOOD_BEACH_PLACED_KEY);
     }
 }

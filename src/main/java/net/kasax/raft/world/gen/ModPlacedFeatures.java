@@ -21,6 +21,8 @@ public class ModPlacedFeatures {
 
     public static final ResourceKey<PlacedFeature> TITANIUM_ORE_PLACED_KEY = registerKey("titanium_ore_placed");
     public static final ResourceKey<PlacedFeature> PALM_PLACED_KEY = registerKey("palm_placed");
+    /** Rare driftwood trees on overworld beaches, so the portal frame can be built before the first trip. */
+    public static final ResourceKey<PlacedFeature> DRIFTWOOD_BEACH_PLACED_KEY = registerKey("driftwood_beach_placed");
 
     public static void bootstrap(BootstrapContext<PlacedFeature> context) {
         HolderGetter<Feature> features = context.lookup(Registries.FEATURE);
@@ -31,6 +33,9 @@ public class ModPlacedFeatures {
 
         register(context, PALM_PLACED_KEY, features.getOrThrow(ModConfiguredFeatures.PALMWOOD_KEY),
                 VegetationPlacements.treePlacement(PlacementUtils.countExtra(1, 0.005f, 1), ModBlocks.PALM_SAPLING));
+
+        register(context, DRIFTWOOD_BEACH_PLACED_KEY, features.getOrThrow(ModConfiguredFeatures.DRIFTWOOD_KEY),
+                VegetationPlacements.treePlacement(net.minecraft.world.level.levelgen.placement.RarityFilter.onAverageOnceEvery(6), ModBlocks.DRIFTWOOD_SAPLING));
     }
 
     public static ResourceKey<PlacedFeature> registerKey(String name) {
