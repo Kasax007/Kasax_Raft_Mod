@@ -9,7 +9,7 @@ b20443211cc80ea423440ad4dc1668d39615bfbc data/minecraft/tags/block/leaves.json
 0f449e893088dede4d7a8253ba356a91f26bf3d5 data/minecraft/tags/block/mineable/hoe.json
 a0b1a0084f98ea799833696b86d86e70ee0b647f data/minecraft/tags/block/mineable/pickaxe.json
 2394c5566b8ee1e0a8b3bd83203da976c3b1ad18 data/minecraft/tags/block/needs_diamond_tool.json
-11c8853c68eb4b8f281035a526152e7fa73154f1 data/minecraft/tags/block/needs_iron_tool.json
+303ee918a4e257f2bee8fc5bce3d1840ca94afce data/minecraft/tags/block/needs_iron_tool.json
 19cf3c5d4dbde1884bd48cf84d7151f14c2e8d59 data/minecraft/tags/block/needs_stone_tool.json
 95e4ae8c8364ffbca6d808649a6ba0768071df43 data/minecraft/tags/block/planks.json
 cce350d4cb9b451c677ce88b4dfdc5bc3d0bd42d data/minecraft/tags/block/portals.json

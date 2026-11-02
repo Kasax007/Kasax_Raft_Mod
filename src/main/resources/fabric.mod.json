@@ -3,7 +3,7 @@
 	"id": "raft",
 	"version": "${version}",
 	"name": "Raft",
-	"description": "Adds a Raft dimension to Minecraft, inspired by the survival game Raft: floating debris, driftwood and palm wood, titanium tools and machines, a portal and a lot of ocean.",
+	"description": "Adds a Raft dimension to Minecraft, inspired by the survival game Raft: floating debris, a hungry shark, driftwood and palm wood, titanium armor and machines, a portal and a lot of ocean.",
 	"authors": [
 		"Kasax"
 	],

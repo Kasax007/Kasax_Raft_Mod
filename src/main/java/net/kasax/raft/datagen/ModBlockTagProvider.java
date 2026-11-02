@@ -95,7 +95,6 @@ public class ModBlockTagProvider extends FabricTagsProvider<Block> {
         }
 
         addAll(BlockTags.NEEDS_IRON_TOOL,
-                ModBlocks.DRIFTWOOD_PORTAL_FRAME,
                 ModBlocks.MAKESHIFT_SOLAR_PANEL,
                 ModBlocks.QUARRY,
                 ModBlocks.CHUNK_DESTROYER,

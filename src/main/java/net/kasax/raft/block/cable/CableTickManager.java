@@ -35,6 +35,8 @@ class CableTickManager {
     private static final List<CableBlockEntity> cableList = new ArrayList<>();
     private static final List<OfferedEnergyStorage> targetStorages = new ArrayList<>();
     private static final Deque<CableBlockEntity> bfsQueue = new ArrayDeque<>();
+    /** Storages the network pulled from this tick: energy is not pushed straight back into them (batteries are both source and sink). */
+    private static final Set<EnergyStorage> drainedThisTick = Collections.newSetFromMap(new IdentityHashMap<>());
     private static long tickCounter = 0;
 
     static {
@@ -70,9 +72,10 @@ class CableTickManager {
             }
 
             // Pull energy from storages.
-            networkAmount += dispatchTransfer(startingCable.getCableType(), EnergyStorage::extract, networkCapacity - networkAmount);
+            drainedThisTick.clear();
+            networkAmount += dispatchTransfer(startingCable.getCableType(), EnergyStorage::extract, networkCapacity - networkAmount, true);
             // Push energy into storages.
-            networkAmount -= dispatchTransfer(startingCable.getCableType(), EnergyStorage::insert, networkAmount);
+            networkAmount -= dispatchTransfer(startingCable.getCableType(), EnergyStorage::insert, networkAmount, false);
 
             // Split energy evenly across cables.
             int cableCount = cableList.size();
@@ -86,6 +89,7 @@ class CableTickManager {
         } finally {
             cableList.clear();
             targetStorages.clear();
+            drainedThisTick.clear();
             bfsQueue.clear();
         }
     }
@@ -125,10 +129,12 @@ class CableTickManager {
     /**
      * Perform a transfer operation across a list of targets.
      */
-    private static long dispatchTransfer(RaftCable.Cables cableType, TransferOperation operation, long maxAmount) {
+    private static long dispatchTransfer(RaftCable.Cables cableType, TransferOperation operation, long maxAmount, boolean extracting) {
         // Build target list.
+        boolean inserting = !extracting;
         List<SortableStorage> sortedTargets = new ArrayList<>();
         for (var storage : targetStorages) {
+            if (inserting && drainedThisTick.contains(storage.storage())) continue;
             sortedTargets.add(new SortableStorage(operation, storage));
         }
         // Shuffle for better average transfer.
@@ -148,6 +154,7 @@ class CableTickManager {
                 long localTransferred = operation.transfer(target.storage.storage(), targetMaxAmount, transaction);
                 if (localTransferred > 0) {
                     transferredAmount += localTransferred;
+                    if (!inserting) drainedThisTick.add(target.storage.storage());
                     // Block duplicate operations.
                     target.storage.afterTransfer();
                 }

@@ -13,7 +13,8 @@ public class ScarecrowEvents {
                 return true;
             }
             if (reason != EntitySpawnReason.NATURAL && reason != EntitySpawnReason.CHUNK_GENERATION
-                    && reason != EntitySpawnReason.PATROL && reason != EntitySpawnReason.REINFORCEMENT) {
+                    && reason != EntitySpawnReason.PATROL && reason != EntitySpawnReason.REINFORCEMENT
+                    && reason != EntitySpawnReason.JOCKEY) {
                 return true;
             }
             return !ScarecrowBlock.isNear(level, entity.blockPosition(), ScarecrowBlock.SPAWN_RADIUS);

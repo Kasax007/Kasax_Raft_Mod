@@ -100,6 +100,22 @@ public class ItemCollectorBlockEntity extends BlockEntity implements MenuProvide
         }
     }
 
+    /** Hoppers may only insert nets into the top slot and only take the catch from the bottom slot. */
+    @Override
+    public boolean canPlaceItemThroughFace(int slot, ItemStack stack, net.minecraft.core.@org.jspecify.annotations.Nullable Direction side) {
+        return slot == INPUT_SLOT && stack.is(ModItems.NET);
+    }
+
+    @Override
+    public boolean canTakeItemThroughFace(int slot, ItemStack stack, net.minecraft.core.Direction side) {
+        return slot == OUTPUT_SLOT;
+    }
+
+    @Override
+    public boolean canPlaceItem(int slot, ItemStack stack) {
+        return slot == INPUT_SLOT && stack.is(ModItems.NET);
+    }
+
     @Override
     public Component getDisplayName() {
         return Component.translatable("raft.item_collector_display_name");
@@ -120,6 +136,8 @@ public class ItemCollectorBlockEntity extends BlockEntity implements MenuProvide
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
+        // loadAllItems only sets non-empty slots: clear first, or an emptied slot keeps its old item on the client
+        for (int i = 0; i < inventory.size(); i++) inventory.set(i, ItemStack.EMPTY);
         ContainerHelper.loadAllItems(input, inventory);
         progress = input.getIntOr("item_collector.progress", 0);
     }
@@ -128,6 +146,10 @@ public class ItemCollectorBlockEntity extends BlockEntity implements MenuProvide
     public void setChanged() {
         super.setChanged();
         updateBlockState();
+        // the caught item is drawn on top of the catcher: tell the clients when the slots change (GUI, hopper)
+        if (level != null && !level.isClientSide()) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        }
     }
 
     @Override
@@ -232,7 +254,7 @@ public class ItemCollectorBlockEntity extends BlockEntity implements MenuProvide
         }
 
         // Add the result to the output slot
-        this.setItem(OUTPUT_SLOT, new ItemStack(result.getItem(), this.getItem(OUTPUT_SLOT).getCount() + result.getCount()));
+        this.setItem(OUTPUT_SLOT, result.copyWithCount(this.getItem(OUTPUT_SLOT).getCount() + result.getCount()));
         updateBlockState();
         level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
     }

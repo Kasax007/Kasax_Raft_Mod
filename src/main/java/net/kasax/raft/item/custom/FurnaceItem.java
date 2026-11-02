@@ -30,13 +30,18 @@ public class FurnaceItem extends BlockItem {
         builder.accept(Component.translatable("raft.text.tooltiplabel").withStyle(ChatFormatting.GRAY));
 
         // add stats
-        builder.accept(Component.translatable("raft.text.speedlabel", block.getSpeedModifier()).withStyle(ChatFormatting.DARK_GREEN));
-        builder.accept(Component.translatable("raft.text.fuellabel", block.getFuelModifier()).withStyle(ChatFormatting.DARK_GREEN));
+        builder.accept(Component.translatable("raft.text.speedlabel", fmt(block.getSpeedModifier())).withStyle(ChatFormatting.DARK_GREEN));
+        builder.accept(Component.translatable("raft.text.fuellabel", fmt(block.getFuelModifier())).withStyle(ChatFormatting.DARK_GREEN));
 
         if (block.getDuplicationChance() > 0) {
-            builder.accept(Component.translatable("raft.text.dupelabel", block.getDuplicationChance()).withStyle(ChatFormatting.DARK_GREEN).append(Component.literal("%").withStyle(ChatFormatting.DARK_GREEN)));
+            builder.accept(Component.translatable("raft.text.dupelabel", fmt(block.getDuplicationChance())).withStyle(ChatFormatting.DARK_GREEN).append(Component.literal("%").withStyle(ChatFormatting.DARK_GREEN)));
         }
 
         super.appendHoverText(stack, context, display, builder, flag);
+    }
+
+    /** 1.5 -> "1.5", 32.0 -> "32" */
+    private static String fmt(double v) {
+        return v == Math.rint(v) ? String.valueOf((long) v) : String.valueOf(v);
     }
 }

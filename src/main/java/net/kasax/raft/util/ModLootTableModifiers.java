@@ -26,9 +26,9 @@ public class ModLootTableModifiers {
             if (BuiltInLootTables.SHIPWRECK_TREASURE.equals(key)) {
                 tableBuilder.pool(extraPool(ModItems.ANCIENT_CRYSTAL, 0.5f, 1, 5).build());
                 tableBuilder.pool(extraPool(ModItems.ANCIENT_BROKEN_RING, 0.6f, 1, 2).build());
-                tableBuilder.pool(extraPool(ModItems.LOFI_BEAT_MUSIC_DISC, 0.1f, 1, 5).build());
-                tableBuilder.pool(extraPool(ModItems.CRYSTAL_CASTLES_MUSIC_DISC, 0.1f, 1, 5).build());
-                tableBuilder.pool(extraPool(ModItems.SOME_GAME_MUSIC_MUSIC_DISC, 0.1f, 1, 5).build());
+                tableBuilder.pool(extraPool(ModItems.LOFI_BEAT_MUSIC_DISC, 0.1f, 1, 1).build());
+                tableBuilder.pool(extraPool(ModItems.CRYSTAL_CASTLES_MUSIC_DISC, 0.1f, 1, 1).build());
+                tableBuilder.pool(extraPool(ModItems.SOME_GAME_MUSIC_MUSIC_DISC, 0.1f, 1, 1).build());
             }
             if (BuiltInLootTables.FISHING_TREASURE.equals(key)) {
                 tableBuilder.pool(extraPool(ModItems.ANCIENT_BROKEN_RING, 0.25f, 1, 1).build());

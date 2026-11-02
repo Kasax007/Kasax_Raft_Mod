@@ -16,7 +16,6 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.Random;
 
 public class TeleporterUtil {
     /**
@@ -44,56 +43,37 @@ public class TeleporterUtil {
             return false;
         }
 
-        // Check a number of times for a safe spot
+        // Check a number of times for a safe spot within 5 blocks of the player's X/Z
+        serverPlayer.sendOverlayMessage(Component.translatable("item.raft.teleporter1"));
+        net.minecraft.util.RandomSource rand = destWorld.getRandom();
         for (int i = 1; i < 6; i++) {
-            serverPlayer.sendOverlayMessage(Component.translatable(i == 1 ? "item.raft.teleporter1" : "item.raft.teleporter2"));
-
             BlockPos playerLoc = player.blockPosition();
-            Random rand = new Random();
-
-            // Use players current x and z for starting point
-            int x = playerLoc.getX() + rand.nextInt(10 + 5) - 5;
-            int y = heightMax;   // starting height for a given dimension
-            int z = playerLoc.getZ() + rand.nextInt(10 + 5) - 5;
-
+            int x = playerLoc.getX() + rand.nextInt(11) - 5;
+            int z = playerLoc.getZ() + rand.nextInt(11) - 5;
             ChunkAccess chunk = destWorld.getChunk(x >> 4, z >> 4);
 
-            //Let's avoid putting them underground
-            while (y > heightMin) {
+            // The ground is the first block from the top that is not air; two air blocks above it by construction.
+            int y = Math.min(heightMax, destWorld.getMaxY() + 2);
+            while (y - 2 > heightMin && chunk.getBlockState(new BlockPos(x, y - 2, z)).isAir()) {
                 y--;
-                BlockPos groundPos = new BlockPos(x, y - 2, z);
-
-                boolean isAir = chunk.getBlockState(groundPos).isAir();
-                boolean isBedrock = chunk.getBlockState(groundPos).is(Blocks.BEDROCK);
-                boolean isLava = chunk.getBlockState(groundPos).is(Blocks.LAVA) || chunk.getBlockState(groundPos).is(Blocks.MAGMA_BLOCK);
-                boolean canFit = (y - 2) > heightMin;
-
-                if (!isAir && !isBedrock && !isLava && canFit) {
-                    // If block pos under feet is water, place a stone block
-                    if (chunk.getBlockState(groundPos).is(Blocks.WATER)) {
-                        chunk.setBlockState(groundPos, Blocks.STONE.defaultBlockState(), 0);
-                    }
-
-                    BlockPos legPos = new BlockPos(x, y - 1, z);
-
-                    if (chunk.getBlockState(legPos).isAir()) {
-                        BlockPos headPos = new BlockPos(x, y, z);
-
-                        if (chunk.getBlockState(headPos).isAir()) {
-                            serverPlayer.stopRiding();
-
-                            Vec3 destVec = new Vec3(x + 0.5, y, z + 0.5);
-                            serverPlayer.teleport(new TeleportTransition(destWorld, destVec, Vec3.ZERO,
-                                    player.getYRot(), player.getXRot(), TeleportTransition.DO_NOTHING));
-
-                            serverPlayer.fallDistance = 0.0F;
-                            destWorld.playSound(null, x, y, z, SoundEvents.LODESTONE_COMPASS_LOCK, SoundSource.NEUTRAL, 0.5F,
-                                    1F / (destWorld.getRandom().nextFloat() * 0.4F + 0.8F));
-                            return true;
-                        }
-                    }
-                }
             }
+            if (y - 2 <= heightMin) continue;
+            BlockPos groundPos = new BlockPos(x, y - 2, z);
+            var ground = chunk.getBlockState(groundPos);
+            // never into lava, onto magma or the nether roof - and never down into a cave below them: try another spot
+            if (ground.is(Blocks.BEDROCK) || ground.is(Blocks.LAVA) || ground.is(Blocks.MAGMA_BLOCK)) continue;
+            // Water under the feet: a stone block to stand on (a real block update, so every player sees it)
+            if (ground.is(Blocks.WATER)) {
+                destWorld.setBlockAndUpdate(groundPos, Blocks.STONE.defaultBlockState());
+            }
+            serverPlayer.stopRiding();
+            Vec3 destVec = new Vec3(x + 0.5, groundPos.getY() + 1, z + 0.5);
+            serverPlayer.teleport(new TeleportTransition(destWorld, destVec, Vec3.ZERO,
+                    player.getYRot(), player.getXRot(), TeleportTransition.DO_NOTHING));
+            serverPlayer.fallDistance = 0.0F;
+            destWorld.playSound(null, x, groundPos.getY() + 1, z, SoundEvents.LODESTONE_COMPASS_LOCK, SoundSource.NEUTRAL, 0.5F,
+                    1F / (destWorld.getRandom().nextFloat() * 0.4F + 0.8F));
+            return true;
         }
         serverPlayer.sendOverlayMessage(Component.translatable("item.raft.teleporter3"));
         return false;

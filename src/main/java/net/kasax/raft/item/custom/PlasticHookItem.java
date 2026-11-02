@@ -3,7 +3,6 @@ package net.kasax.raft.item.custom;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -65,7 +64,7 @@ public class PlasticHookItem extends TooltipItem {
             item.needsSync = true;
         }
         if (!items.isEmpty() && remainingUseTicks % 20 == 0) {
-            stack.hurtAndBreak(1, user, EquipmentSlot.MAINHAND);
+            stack.hurtAndBreak(1, user, user.getUsedItemHand());
             if (stack.isEmpty()) {
                 user.stopUsingItem();
             }

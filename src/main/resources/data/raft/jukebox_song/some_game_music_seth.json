@@ -3,6 +3,6 @@
   "description": {
     "translate": "some_game_music_music_disc.desc"
   },
-  "length_in_seconds": 105.0,
+  "length_in_seconds": 98.0,
   "sound_event": "raft:music_disc.some_game_music_seth"
 }

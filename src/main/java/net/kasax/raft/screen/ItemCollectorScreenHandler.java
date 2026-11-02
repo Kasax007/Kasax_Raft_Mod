@@ -8,6 +8,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
+import net.kasax.raft.item.ModItems;
 import net.minecraft.world.item.ItemStack;
 
 public class ItemCollectorScreenHandler extends AbstractContainerMenu {
@@ -24,8 +25,19 @@ public class ItemCollectorScreenHandler extends AbstractContainerMenu {
         this.inventory = inventory;
         this.propertyDelegate = arrayPropertyDelegate;
 
-        this.addSlot(new Slot(inventory, 0, 80, 11));
-        this.addSlot(new Slot(inventory, 1, 80, 59));
+        // top: only a net goes in; bottom: the catch, take-only
+        this.addSlot(new Slot(inventory, 0, 80, 11) {
+            @Override
+            public boolean mayPlace(ItemStack stack) {
+                return stack.is(ModItems.NET);
+            }
+        });
+        this.addSlot(new Slot(inventory, 1, 80, 59) {
+            @Override
+            public boolean mayPlace(ItemStack stack) {
+                return false;
+            }
+        });
 
         addStandardInventorySlots(playerInventory, 8, 84);
 

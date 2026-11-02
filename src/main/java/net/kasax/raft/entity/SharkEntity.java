@@ -67,6 +67,29 @@ public class SharkEntity extends Monster {
                 (target, level) -> target.isInWater() && !target.isSpectator()));
     }
 
+    /**
+     * Monster rates a spot by darkness, and with the raft sky's full light every spot gets a negative value, which also
+     * fails the natural spawn check (Mob.checkSpawnRules). A shark rates water instead, like a dolphin.
+     */
+    @Override
+    public float getWalkTargetValue(net.minecraft.core.BlockPos pos, net.minecraft.world.level.LevelReader level) {
+        return level.getFluidState(pos).is(net.minecraft.tags.FluidTags.WATER) ? 10.0F : 0.0F;
+    }
+
+    /** Monster ages twice as fast in bright light (it would despawn in seconds under the raft sky): a shark does not. */
+    @Override
+    protected void updateNoActionTime() {
+    }
+
+    @Override
+    protected void customServerAiStep(net.minecraft.server.level.ServerLevel level) {
+        super.customServerAiStep(level);
+        // Sharks only hunt swimmers: a player who climbs back onto the raft is safe again.
+        if (this.getTarget() instanceof Player player && !player.isInWater() && this.getLastHurtByMob() != player) {
+            this.setTarget(null);
+        }
+    }
+
     @Override
     protected PathNavigation createNavigation(Level level) {
         return new WaterBoundPathNavigation(this, level);

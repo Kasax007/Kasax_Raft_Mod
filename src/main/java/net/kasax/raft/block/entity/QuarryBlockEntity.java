@@ -106,10 +106,11 @@ public class QuarryBlockEntity extends BlockEntity implements TickableBlockEntit
                         new LootParams.Builder((ServerLevel) this.level)
                                 .withParameter(LootContextParams.TOOL, Items.DIAMOND_PICKAXE.getDefaultInstance())
                                 .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(this.miningPos))
-                                .withOptionalParameter(LootContextParams.BLOCK_ENTITY, this)));
+                                .withOptionalParameter(LootContextParams.BLOCK_ENTITY, this.level.getBlockEntity(this.miningPos))));
 
                 this.level.destroyBlock(this.miningPos, false);
                 this.energyStorage.amount -= 1000;
+                this.setChanged();
 
                 Storage<ItemVariant> aboveStorage = findItemStorage((ServerLevel) this.level, this.worldPosition.above());
                 if (aboveStorage != null && aboveStorage.supportsInsertion()) {
@@ -155,7 +156,7 @@ public class QuarryBlockEntity extends BlockEntity implements TickableBlockEntit
                 for (int y = this.worldPosition.getY(); y >= this.level.getMinY(); y--) { // Looping top to bottom
                     mutablePos.set(this.worldPosition.getX() + x, y, this.worldPosition.getZ() + z); // Set Y explicitly
                     BlockState blockState = this.level.getBlockState(mutablePos);
-                    if (blockState.is(Blocks.WATER) || blockState.is(Blocks.LAVA)) {
+                    if (!blockState.getFluidState().isEmpty()) {
                         this.level.setBlock(mutablePos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
                     }
                 }
@@ -182,7 +183,7 @@ public class QuarryBlockEntity extends BlockEntity implements TickableBlockEntit
                     //System.out.println("bottom " + this.level.getMinY());
                     mutablePos.set(this.worldPosition.getX() + x, y, this.worldPosition.getZ() + z); // Set Y explicitly
                     BlockState blockState = this.level.getBlockState(mutablePos);
-                    if (blockState.is(Blocks.WATER) || blockState.is(Blocks.LAVA)) {
+                    if (!blockState.getFluidState().isEmpty()) {
                         this.level.setBlock(mutablePos, Blocks.GLASS.defaultBlockState(), Block.UPDATE_ALL);
                     }
                 }
@@ -239,5 +240,10 @@ public class QuarryBlockEntity extends BlockEntity implements TickableBlockEntit
 
     public BlockPos getMiningPos() {
         return this.miningPos;
+    }
+
+    /** Stored energy, for the status message. */
+    public long getEnergyAmount() {
+        return this.energyStorage.amount;
     }
 }

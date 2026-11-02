@@ -43,6 +43,10 @@ public class ModDimensions {
                 .set(EnvironmentAttributes.STRAW_BED_RULE, BedRule.DESTROY_ON_LEAVE)
                 .set(EnvironmentAttributes.RESPAWN_ANCHOR_WORKS, false)
                 .set(EnvironmentAttributes.AMBIENT_SOUNDS, AmbientSounds.LEGACY_CAVE_SETTINGS)
+                // without timelines both angles would default to 0: the full moon drawn right on top of the sun
+                .set(EnvironmentAttributes.MOON_ANGLE, 180F)
+                // eternal day: undead burn like at noon in the overworld (vanilla only sets this through the day timeline)
+                .set(EnvironmentAttributes.MONSTERS_BURN, true)
                 .build();
 
         context.register(RAFT_DIM_TYPE, new DimensionType(

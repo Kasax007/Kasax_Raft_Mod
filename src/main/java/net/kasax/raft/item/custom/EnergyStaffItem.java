@@ -38,7 +38,8 @@ public class EnergyStaffItem extends Item {
         BlockState state = level.getBlockState(pos);
 
         if (state.is(ModBlocks.DRIFTWOOD_PORTAL_FRAME)) {
-            if (level.dimension() != Level.OVERWORLD) {
+            // the overworld side, and the raft side too (to repair a broken return portal)
+            if (level.dimension() != Level.OVERWORLD && level.dimension() != net.kasax.raft.world.dimension.ModDimensions.RAFTDIM_LEVEL_KEY) {
                 if (!level.isClientSide() && user != null) {
                     user.sendOverlayMessage(Component.translatable("chat.raft.energy_staff.overworld_only").withStyle(ChatFormatting.BLUE));
                 }

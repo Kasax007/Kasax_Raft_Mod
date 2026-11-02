@@ -17,6 +17,9 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 /**
  * A two block tall scarecrow. Natural hostile mob spawns within 24 blocks and crop trampling within
@@ -45,6 +48,14 @@ public class ScarecrowBlock extends DoublePlantBlock {
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState state = super.getStateForPlacement(context);
         return state == null ? null : state.setValue(FACING, context.getHorizontalDirection().getOpposite());
+    }
+
+    /** Vanilla places the upper half from the default state (facing north); the head must face the same way as the body. */
+    @Override
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity by, ItemStack itemStack) {
+        BlockPos above = pos.above();
+        level.setBlockAndUpdate(above, copyWaterloggedFrom(level, above,
+                defaultBlockState().setValue(HALF, DoubleBlockHalf.UPPER).setValue(FACING, state.getValue(FACING))));
     }
 
     @Override

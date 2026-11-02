@@ -28,6 +28,7 @@
         "translate": "block.minecraft.bed.no_sleep"
       }
     },
+    "minecraft:gameplay/monsters_burn": true,
     "minecraft:gameplay/respawn_anchor_works": false,
     "minecraft:gameplay/straw_bed_rule": {
       "can_set_spawn": "never",
@@ -41,6 +42,7 @@
     "minecraft:visual/cloud_color": "#ccffffff",
     "minecraft:visual/cloud_height": 192.33,
     "minecraft:visual/fog_color": "#22a1e6",
+    "minecraft:visual/moon_angle": 180.0,
     "minecraft:visual/sky_color": "#6cbaea"
   },
   "coordinate_scale": 1.0,

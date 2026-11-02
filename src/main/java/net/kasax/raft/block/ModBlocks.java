@@ -1,5 +1,7 @@
 package net.kasax.raft.block;
 
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
+
 import net.kasax.raft.Raft;
 import net.kasax.raft.block.cable.RaftCable;
 import net.kasax.raft.block.custom.*;
@@ -28,7 +30,7 @@ import java.util.function.Function;
 public class ModBlocks {
 
     public static final Block DRIFTWOOD_PORTAL_FRAME = register("driftwood_portal_frame",
-            DriftwoodPortalFrameBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).sound(SoundType.WOOD),
+            DriftwoodPortalFrameBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).strength(1.5f, 6.0f).sound(SoundType.WOOD),
             "tooltip.raft.driftwood_portal_frame.tooltip");
 
     public static final Block RAFT_PORTAL = registerBlockOnly("raft_portal",
@@ -107,13 +109,15 @@ public class ModBlocks {
             p -> new DriftwoodSaplingBlock(ModTreeGrowers.DRIFTWOOD, p), BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SAPLING));
 
     public static final Block TITANIUM_ORE = register("titanium_ore",
-            Block::new, BlockBehaviour.Properties.ofFullCopy(Blocks.DIAMOND_ORE).strength(4f));
+            p -> new net.minecraft.world.level.block.DropExperienceBlock(net.minecraft.util.valueproviders.UniformInt.of(3, 7), p),
+            BlockBehaviour.Properties.ofFullCopy(Blocks.DIAMOND_ORE).strength(4f));
     public static final Block DEEPSLATE_TITANIUM_ORE = register("deepslate_titanium_ore",
-            Block::new, BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_DIAMOND_ORE).strength(4f));
+            p -> new net.minecraft.world.level.block.DropExperienceBlock(net.minecraft.util.valueproviders.UniformInt.of(3, 7), p),
+            BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_DIAMOND_ORE).strength(4.5f, 4f));
     public static final Block RAW_TITANIUM_BLOCK = register("raw_titanium_block",
-            Block::new, BlockBehaviour.Properties.ofFullCopy(Blocks.DIAMOND_BLOCK).strength(4f));
+            Block::new, BlockBehaviour.Properties.ofFullCopy(Blocks.DIAMOND_BLOCK).strength(5f, 6f));
     public static final Block TITANIUM_BLOCK = register("titanium_block",
-            Block::new, BlockBehaviour.Properties.ofFullCopy(Blocks.NETHERITE_BLOCK).strength(4f));
+            Block::new, BlockBehaviour.Properties.ofFullCopy(Blocks.NETHERITE_BLOCK).strength(5f, 6f));
 
     public static final Block ITEM_CATCHER = register("item_catcher",
             ItemCatcher::new, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).noOcclusion());
@@ -229,9 +233,31 @@ public class ModBlocks {
         return Registry.register(BuiltInRegistries.ITEM, ResourceKey.create(Registries.ITEM, Raft.id(name)), item);
     }
 
+    /**
+     * In 26.3 furnace fuel is the item's cooking_fuel component: wooden blocks of the driftwood and palm sets burn like
+     * their oak counterparts (logs, planks, stairs, fences... 300 ticks, slabs 150, doors 200, buttons 100).
+     */
+    private static Item.Properties withWoodFuel(String name, Item.Properties properties) {
+        String n = name.startsWith("stripped_") ? name.substring("stripped_".length()) : name;
+        if ((n.startsWith("driftwood_") || n.startsWith("palm_")) && n.endsWith("_leaves")) {
+            return properties.compostable(ContextIntProviders.COMPOSTABLE_LOW);
+        }
+        if ((n.startsWith("driftwood_") || n.startsWith("palm_")) && n.endsWith("_sapling")) {
+            return properties.compostable(ContextIntProviders.COMPOSTABLE_LOW).cookingFuel(ContextIntProviders.COOKING_TIME_DRY_PLANTS);
+        }
+        boolean wood = (n.startsWith("driftwood_") || n.startsWith("palm_")) && !n.contains("leaves") && !n.contains("sapling")
+                && !n.contains("thatch") && !n.contains("portal") && !n.contains("coconut");
+        if (!wood) return properties;
+        var time = n.endsWith("_slab") ? ContextIntProviders.COOKING_TIME_WOOD_SLABS
+                : n.endsWith("_door") ? ContextIntProviders.COOKING_TIME_WOOD_ITEMS_LARGE
+                : n.endsWith("_button") ? ContextIntProviders.COOKING_TIME_WOOD_ITEMS_EXTRA_SMALL
+                : ContextIntProviders.COOKING_TIME_WOOD_BLOCKS;
+        return properties.cookingFuel(time);
+    }
+
     public static Item registerBlockItem(String name, Block block, Item.Properties properties, String... tooltips) {
         ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Raft.id(name));
-        properties = properties.setId(key).useBlockDescriptionPrefix();
+        properties = withWoodFuel(name, properties).setId(key).useBlockDescriptionPrefix();
         Item item = tooltips.length == 0 ? new BlockItem(block, properties) : new TooltipBlockItem(block, properties, tooltips);
         return Registry.register(BuiltInRegistries.ITEM, key, item);
     }

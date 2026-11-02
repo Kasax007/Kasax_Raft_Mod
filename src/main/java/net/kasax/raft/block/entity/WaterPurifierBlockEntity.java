@@ -32,7 +32,8 @@ public class WaterPurifierBlockEntity extends BaseContainerBlockEntity implement
     public static final int SLOT_FUEL = 1;
     public static final int SLOT_OUTPUT = 2;
     private static final int[] SLOTS_UP = {SLOT_INPUT};
-    private static final int[] SLOTS_DOWN = {SLOT_OUTPUT, SLOT_FUEL};
+    // the empty bucket left in the input slot can be pulled out from below too (see canTakeItemThroughFace)
+    private static final int[] SLOTS_DOWN = {SLOT_OUTPUT, SLOT_FUEL, SLOT_INPUT};
     private static final int[] SLOTS_SIDE = {SLOT_FUEL, SLOT_INPUT};
 
     public static final int BOTTLE_TIME = 200;

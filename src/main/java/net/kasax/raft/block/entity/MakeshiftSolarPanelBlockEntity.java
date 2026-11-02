@@ -78,9 +78,13 @@ public class MakeshiftSolarPanelBlockEntity extends BlockEntity {
         }
     }
 
+    private int ticksSinceSync;
+
+    /** Saves every tick, but tells the clients only once a second (it charges every tick in daylight). */
     private void update() {
         setChanged();
-        if (level instanceof ServerLevel serverLevel) {
+        if (++ticksSinceSync >= 20 && level instanceof ServerLevel serverLevel) {
+            ticksSinceSync = 0;
             serverLevel.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
         }
     }

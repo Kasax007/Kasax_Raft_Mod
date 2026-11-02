@@ -58,6 +58,8 @@ public final class RaftPortalForcer {
         if (raftDim) {
             baseY = Mth.clamp(Mth.clamp(origin.getY(), RAFT_MIN_Y + 5, RAFT_MAX_Y - 5), minY, maxY);
         } else {
+            // look for a free spot nearby first, so the exit does not cut into builds or trees
+            origin = findFreeSite(level, origin, direction, side);
             int surface = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, origin.getX(), origin.getZ());
             baseY = Mth.clamp(surface, minY, maxY);
         }
@@ -102,6 +104,46 @@ public final class RaftPortalForcer {
 
         RaftPortalShape.findEmptyPortalShape(level, base, axis).ifPresent(shape -> shape.createPortalBlocks(level));
         return Optional.of(new BlockUtil.FoundRectangle(base.immutable(), 2, 3));
+    }
+
+    /**
+     * The nearest column within 16 blocks (rings outwards) whose 6x4 platform area has nothing but air, plants or
+     * snow in the five blocks above the surface (no builds, no trees) and solid ground or water below. Falls back to
+     * the origin when there is no such spot.
+     */
+    private static BlockPos findFreeSite(ServerLevel level, BlockPos origin, Direction direction, Direction side) {
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        for (int r = 0; r <= 16; r++) {
+            for (int dx = -r; dx <= r; dx++) {
+                for (int dz = -r; dz <= r; dz++) {
+                    if (Math.max(Math.abs(dx), Math.abs(dz)) != r) continue;
+                    int x = origin.getX() + dx, z = origin.getZ() + dz;
+                    int surface = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
+                    BlockPos base = new BlockPos(x, surface, z);
+                    if (isFree(level, base, direction, side, pos)) {
+                        return base;
+                    }
+                }
+            }
+        }
+        return origin;
+    }
+
+    private static boolean isFree(ServerLevel level, BlockPos base, Direction direction, Direction side, BlockPos.MutableBlockPos pos) {
+        for (int w = -2; w <= 3; w++) {
+            for (int d = -2; d <= 1; d++) {
+                for (int h = -1; h <= 4; h++) {
+                    pos.setWithOffset(base, w * direction.getStepX() + d * side.getStepX(), h, w * direction.getStepZ() + d * side.getStepZ());
+                    BlockState state = level.getBlockState(pos);
+                    if (h == -1) {
+                        if (state.hasBlockEntity()) return false;
+                    } else if (!state.canBeReplaced() || state.hasBlockEntity() || !state.getFluidState().isEmpty()) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     /** Which axis a portal block at the position uses (X when it is not a portal). */

@@ -30,6 +30,8 @@ public class WaterPurifierScreen extends AbstractContainerScreen<WaterPurifierMe
             graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, leftPos + 57, topPos + 36 + 12 - flame, 176, 12 - flame, 14, flame + 1, 256, 256);
         }
         int arrow = menu.getCookProgress();
-        graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, leftPos + 79, topPos + 34, 176, 14, arrow + 1, 16, 256, 256);
+        if (arrow > 0) {
+            graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, leftPos + 79, topPos + 34, 176, 14, arrow, 16, 256, 256);
+        }
     }
 }

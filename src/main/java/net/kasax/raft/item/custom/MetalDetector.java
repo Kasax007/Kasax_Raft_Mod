@@ -1,5 +1,7 @@
 package net.kasax.raft.item.custom;
 
+import net.minecraft.ChatFormatting;
+
 import net.kasax.raft.block.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -38,7 +40,7 @@ public class MetalDetector extends Item {
             }
 
             if (!foundBlock) {
-                player.sendSystemMessage(Component.literal("No Valuables Found!"));
+                player.sendOverlayMessage(Component.translatable("item.raft.metal_detector.nothing").withStyle(ChatFormatting.AQUA));
             }
 
             player.getCooldowns().addCooldown(context.getItemInHand(), 20);
@@ -49,8 +51,8 @@ public class MetalDetector extends Item {
     }
 
     private void outputValuableCoordinates(BlockPos blockPos, Player player, Block block) {
-        player.sendSystemMessage(Component.literal("Found " + block.getName().getString() + " at " +
-                "Y-Level " + blockPos.getY()));
+        player.sendOverlayMessage(Component.translatable("item.raft.metal_detector.found", block.getName(), blockPos.getY())
+                .withStyle(ChatFormatting.AQUA));
     }
 
     private boolean isValuableBlock(BlockState state) {

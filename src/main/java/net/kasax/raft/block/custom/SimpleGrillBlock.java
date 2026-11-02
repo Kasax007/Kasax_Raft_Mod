@@ -98,8 +98,15 @@ public class SimpleGrillBlock extends BaseEntityBlock {
                     level.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 0.8f, 1.0f);
                     return InteractionResult.SUCCESS_SERVER;
                 }
+                if (!stack.isEmpty()) {
+                    // full grill or not cookable: do nothing here (do not take food back), let the item do its own thing
+                    return serverLevel.recipeAccess().propertySet(net.minecraft.world.item.crafting.RecipePropertySet.CAMPFIRE_INPUT).test(stack)
+                            ? InteractionResult.CONSUME : InteractionResult.PASS;
+                }
             } else if (level.recipeAccess().propertySet(net.minecraft.world.item.crafting.RecipePropertySet.CAMPFIRE_INPUT).test(stack)) {
                 return InteractionResult.SUCCESS;
+            } else if (!stack.isEmpty()) {
+                return InteractionResult.PASS;
             }
         }
         return InteractionResult.TRY_WITH_EMPTY_HAND;

@@ -39,8 +39,8 @@ public class PalmLeaves extends LeavesBlock {
             level.removeBlock(pos, false);
             return;
         }
-        // The leaves slowly regrow a coconut.
-        if (state.getValue(HAS_COCONUT) && random.nextInt(5000) == 1) {
+        // The leaves regrow a coconut after a while: 1 in 20 random ticks, about 20-25 minutes at the default tick speed.
+        if (state.getValue(HAS_COCONUT) && random.nextInt(20) == 0) {
             level.setBlock(pos, ModBlocks.PALM_COCONUT_LEAVES.defaultBlockState()
                     .setValue(PERSISTENT, state.getValue(PERSISTENT))
                     .setValue(DISTANCE, state.getValue(DISTANCE))

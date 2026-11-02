@@ -95,6 +95,11 @@ public class MakeshiftBatteryBlockEntity extends BlockEntity implements Extended
         update();
 
         for (Direction direction : Direction.values()) {
+            // cables pull from the battery themselves, and two batteries side by side would only push the same energy back and forth
+            var neighbour = this.level.getBlockEntity(this.worldPosition.relative(direction));
+            if (neighbour instanceof MakeshiftBatteryBlockEntity || neighbour instanceof net.kasax.raft.block.cable.CableBlockEntity) {
+                continue;
+            }
             EnergyStorage storage = EnergyStorage.SIDED.find(this.level, this.worldPosition.relative(direction), direction.getOpposite());
             if (storage != null && storage.supportsInsertion()) {
                 try (Transaction transaction = Transaction.openOuter()) {
@@ -112,7 +117,16 @@ public class MakeshiftBatteryBlockEntity extends BlockEntity implements Extended
         }
     }
 
+    private long lastSyncedEnergy = -1;
+    private int ticksSinceSync;
+
+    /** Saves and syncs the energy to the clients: at most 4 times a second and only when it changed. */
     private void update() {
+        if (++ticksSinceSync < 5 || this.energyStorage.amount == lastSyncedEnergy) {
+            return;
+        }
+        ticksSinceSync = 0;
+        lastSyncedEnergy = this.energyStorage.amount;
         setChanged();
         if (level instanceof ServerLevel serverLevel) {
             serverLevel.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);

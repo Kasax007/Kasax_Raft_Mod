@@ -40,7 +40,7 @@ public class MakeshiftSolarPanelBlock extends BaseEntityBlock {
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (!level.isClientSide()) {
             if (level.getBlockEntity(pos) instanceof MakeshiftSolarPanelBlockEntity solarPanel) {
-                player.sendOverlayMessage(Component.literal("Energy: " + solarPanel.getEnergy() + " / Max Energy: " + solarPanel.getMaxEnergy()));
+                player.sendOverlayMessage(Component.translatable("message.raft.solar_panel.energy", solarPanel.getEnergy(), solarPanel.getMaxEnergy()));
             }
         }
         return InteractionResult.SUCCESS;

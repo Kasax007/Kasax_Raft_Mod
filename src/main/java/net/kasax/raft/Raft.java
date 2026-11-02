@@ -73,6 +73,10 @@ public class Raft implements ModInitializer {
 		FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.PALM_LEAVES, 30, 60);
 		FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.PALM_COCONUT_LEAVES, 30, 60);
 
+		for (var b : new net.minecraft.world.level.block.Block[] {ModBlocks.DRIFTWOOD_STAIRS, ModBlocks.DRIFTWOOD_SLAB, ModBlocks.DRIFTWOOD_FENCE,
+				ModBlocks.DRIFTWOOD_FENCE_GATE, ModBlocks.PALM_STAIRS, ModBlocks.PALM_SLAB, ModBlocks.PALM_FENCE, ModBlocks.PALM_FENCE_GATE}) {
+			FlammableBlockRegistry.getDefaultInstance().add(b, 5, 20);
+		}
 		FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.PALM_THATCH, 60, 80);
 		FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.PALM_THATCH_STAIRS, 60, 80);
 		FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.PALM_THATCH_SLAB, 60, 80);

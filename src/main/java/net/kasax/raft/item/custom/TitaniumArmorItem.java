@@ -25,18 +25,22 @@ public class TitaniumArmorItem extends Item {
         super(properties);
     }
 
+    private static final int EFFECT_TICKS = 100;
+
     private static List<MobEffectInstance> setEffects() {
         return List.of(
-                new MobEffectInstance(MobEffects.WATER_BREATHING, 400, 1, false, false, true),
-                new MobEffectInstance(MobEffects.DOLPHINS_GRACE, 400, 1, false, false, true),
-                new MobEffectInstance(MobEffects.CONDUIT_POWER, 400, 1, false, false, true));
+                new MobEffectInstance(MobEffects.WATER_BREATHING, EFFECT_TICKS, 1, false, false, true),
+                new MobEffectInstance(MobEffects.DOLPHINS_GRACE, EFFECT_TICKS, 1, false, false, true),
+                new MobEffectInstance(MobEffects.CONDUIT_POWER, EFFECT_TICKS, 1, false, false, true));
     }
 
     @Override
     public void inventoryTick(ItemStack stack, ServerLevel level, Entity owner, @Nullable EquipmentSlot slot) {
         if (slot != null && owner instanceof Player player && hasFullSetOn(player)) {
             for (MobEffectInstance effect : setEffects()) {
-                if (!player.hasEffect(effect.getEffect())) {
+                // short effects that are topped up while the set is worn: they end about 5 s after a piece comes off
+                MobEffectInstance current = player.getEffect(effect.getEffect());
+                if (current == null || current.getDuration() < EFFECT_TICKS / 2) {
                     player.addEffect(effect);
                 }
             }
@@ -56,7 +60,7 @@ public class TitaniumArmorItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag flag) {
-        builder.accept(Component.literal("Full Armor set provides effects").withStyle(ChatFormatting.AQUA));
+        builder.accept(Component.translatable("tooltip.raft.titanium_armor.set").withStyle(ChatFormatting.AQUA));
         super.appendHoverText(stack, context, display, builder, flag);
     }
 }

@@ -51,7 +51,8 @@ public class ChunkDestroyer extends BaseEntityBlock {
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (!level.isClientSide()) {
             if (level.getBlockEntity(pos) instanceof ChunkDestroyerBlockEntity blockEntity) {
-                player.sendOverlayMessage(Component.literal("Mining at: " + blockEntity.getMiningPos()));
+                net.minecraft.core.BlockPos m = blockEntity.getMiningPos();
+                player.sendOverlayMessage(Component.translatable("message.raft.machine.status", blockEntity.getEnergyAmount(), m.getX(), m.getY(), m.getZ()));
             }
         }
         return InteractionResult.SUCCESS;

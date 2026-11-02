@@ -353,9 +353,11 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                         .define('R', ModItems.ROPE)
                         .unlockedBy(getHasName(ModItems.ROPE), has(ModItems.ROPE))
                         .save(output);
+                // rope on top of white wool (the same RR/RR pattern as the rope coil made one of them uncraftable)
                 shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.SAIL_CANVAS, 2)
-                        .pattern("RR").pattern("RR")
+                        .pattern("RR").pattern("WW")
                         .define('R', ModItems.ROPE)
+                        .define('W', Items.WOOL.white())
                         .unlockedBy(getHasName(ModItems.ROPE), has(ModItems.ROPE))
                         .save(output);
                 shapeless(RecipeCategory.BUILDING_BLOCKS, ModBlocks.SAIL_CANVAS_RED_STRIPED)

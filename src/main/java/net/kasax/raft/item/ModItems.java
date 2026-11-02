@@ -31,7 +31,7 @@ public class ModItems {
     public static final Item CIRCUIT_BOARD = registerItem("circuit_board", Item::new, new Item.Properties());
     public static final Item COCONUT = registerItem("coconut", Item::new, new Item.Properties().food(ModFoodComponents.COCONUT));
     public static final Item PINA_COLADA = registerItem("pina_colada", Item::new,
-            new Item.Properties().food(ModFoodComponents.PINA_COLADA, ModFoodComponents.PINA_COLADA_EFFECTS));
+            new Item.Properties().food(ModFoodComponents.PINA_COLADA, ModFoodComponents.PINA_COLADA_EFFECTS).usingConvertsTo(Items.BOWL));
     public static final Item TRASH_CUBE = registerItem("trash_cube", TrashCubeItem::new, new Item.Properties());
     public static final Item UNREFINED_OCEAN_GARBAGE = registerItem("unrefined_ocean_garbage", Item::new, new Item.Properties());
 

@@ -88,7 +88,7 @@ public class ChunkDestroyerBlockEntity extends BlockEntity implements TickableBl
                     new LootParams.Builder((ServerLevel) this.level)
                             .withParameter(LootContextParams.TOOL, Items.DIAMOND_PICKAXE.getDefaultInstance())
                             .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(currentPos))
-                            .withOptionalParameter(LootContextParams.BLOCK_ENTITY, this)));
+                            .withOptionalParameter(LootContextParams.BLOCK_ENTITY, this.level.getBlockEntity(currentPos))));
 
             this.level.destroyBlock(currentPos, false);
             drops.addAll(blockDrops);
@@ -152,7 +152,7 @@ public class ChunkDestroyerBlockEntity extends BlockEntity implements TickableBl
                     mutablePos.set(x, y, z); // Set the current block position
 
                     BlockState blockState = this.level.getBlockState(mutablePos);
-                    if (blockState.is(Blocks.WATER) || blockState.is(Blocks.LAVA)) {
+                    if (!blockState.getFluidState().isEmpty()) {
                         this.level.setBlock(mutablePos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL); // Replace with air
                     }
                 }
@@ -177,7 +177,7 @@ public class ChunkDestroyerBlockEntity extends BlockEntity implements TickableBl
                     mutablePos.set(x, y, z); // Set the current block position
 
                     BlockState blockState = this.level.getBlockState(mutablePos);
-                    if (blockState.is(Blocks.WATER) || blockState.is(Blocks.LAVA)) {
+                    if (!blockState.getFluidState().isEmpty()) {
                         this.level.setBlock(mutablePos, Blocks.GLASS.defaultBlockState(), Block.UPDATE_ALL); // Replace with glass
                     }
                 }
@@ -234,5 +234,10 @@ public class ChunkDestroyerBlockEntity extends BlockEntity implements TickableBl
 
     public BlockPos getMiningPos() {
         return this.miningPos;
+    }
+
+    /** Stored energy, for the status message. */
+    public long getEnergyAmount() {
+        return this.energyStorage.amount;
     }
 }

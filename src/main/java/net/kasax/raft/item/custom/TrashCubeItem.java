@@ -91,7 +91,7 @@ public class TrashCubeItem extends Item {
             // Trigger a game event for the action
             level.gameEvent(player, GameEvent.ENTITY_PLACE, player.blockPosition());
             level.playSound(null, player.getX(), player.getY(), player.getZ(),
-                    SoundEvents.SNIFFER_EGG_CRACK, SoundSource.NEUTRAL, 20F,
+                    SoundEvents.SNIFFER_EGG_CRACK, SoundSource.NEUTRAL, 1.0F,
                     1F / (level.getRandom().nextFloat() * 0.4F + 0.8F));
 
             // Consume one trash cube from the player's hand

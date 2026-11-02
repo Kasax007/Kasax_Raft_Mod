@@ -18,6 +18,8 @@ public class ModFoodComponents {
             .build();
     public static final Consumable PINA_COLADA_EFFECTS = Consumable.builder()
             .animation(ItemUseAnimation.DRINK)
+            .sound(SoundEvents.GENERIC_DRINK)
+            .hasConsumeParticles(false)
             .onConsume(new ApplyStatusEffectsConsumeEffect(List.of(
                     new MobEffectInstance(MobEffects.SPEED, 3000),
                     new MobEffectInstance(MobEffects.REGENERATION, 50),
@@ -40,7 +42,7 @@ public class ModFoodComponents {
             .animation(ItemUseAnimation.DRINK)
             .sound(SoundEvents.GENERIC_DRINK)
             .hasConsumeParticles(false)
-            .onConsume(new ApplyStatusEffectsConsumeEffect(List.of(new MobEffectInstance(MobEffects.SATURATION, 5, 0))))
+            .onConsume(new ApplyStatusEffectsConsumeEffect(List.of(new MobEffectInstance(MobEffects.SATURATION, 2, 0))))
             .build();
 
     /** Coconut milk: Regeneration I for five seconds. */
