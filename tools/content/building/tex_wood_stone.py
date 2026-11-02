@@ -510,3 +510,87 @@ def glowing_tidestone_runes(frames=8):
             put(img, x, y, c)
         out.append(img)
     return out
+
+
+def weathered_door_bottom():
+    """Lower half of a dock-shack door: vertical boards, a Z brace and a rope pull."""
+    p = WEATHERED
+    img = new()
+    for x in range(16):
+        board = x // 4
+        t = [4, 3, 4, 3][board]
+        for y in range(16):
+            put(img, x, y, p[t])
+        if x % 4 == 3:
+            for y in range(16):
+                put(img, x, y, p[1])
+        if x % 4 == 0:
+            for y in range(16):
+                if (y * 7 + x) % 5:
+                    put(img, x, y, p[t + 1])
+    rnd = random.Random(501)
+    for _ in range(10):  # grain
+        x, y = rnd.randrange(16), rnd.randrange(16)
+        if x % 4 not in (0, 3):
+            for k in range(rnd.randrange(2, 5)):
+                put_in(img, x, y + k, p[2])
+    for x in range(16):  # rails
+        for y in (2, 3, 12, 13):
+            put(img, x, y, p[5] if y in (2, 12) else p[1])
+    for k in range(9):  # diagonal brace
+        x, y = 1 + k * 13 // 8, 11 - k
+        put(img, x, y, p[6])
+        put(img, x + 1, y, p[5])
+        put(img, x, y + 1, p[1])
+        put(img, x + 1, y + 1, p[2])
+    for (x, y) in [(2, 2), (13, 2), (2, 12), (13, 12)]:
+        put(img, x, y, p[0])
+    put(img, 13, 6, TW_ROPE[2])
+    put(img, 13, 7, TW_ROPE[1])
+    put(img, 12, 8, TW_ROPE[1])
+    return img
+
+
+TW_ROPE = pal('#6e5634', '#9c7f4e', '#c7a86f')
+
+
+def weathered_door_top():
+    p = WEATHERED
+    img = weathered_door_bottom()
+    for x in range(16):  # replace the brace area with a small open window
+        for y in range(4, 12):
+            pass
+    fill(img, 4, 5, 11, 9, (0, 0, 0, 0))
+    bevel(img, 3, 4, 12, 10, p[2], p[5])
+    for y in range(5, 10):
+        put(img, 7, y, p[3])
+    for x in range(16):
+        for y in (12, 13):
+            put(img, x, y, p[5] if y == 12 else p[2])
+        for y in (14, 15):
+            put(img, x, y, img.getpixel((x, 0)))
+    return img
+
+
+def weathered_trapdoor():
+    """Dock hatch: planks with two battens and a rope handle."""
+    p = WEATHERED
+    img = new()
+    for y in range(16):
+        b = y // 4
+        t = [4, 3, 4, 3][b]
+        for x in range(16):
+            put(img, x, y, p[t] if y % 4 != 3 else p[t - 2])
+        if y % 4 == 0:
+            for x in range(16):
+                if (x * 5 + y) % 7:
+                    put(img, x, y, p[t + 1])
+    for y in range(16):  # battens
+        for x in (2, 3, 12, 13):
+            put(img, x, y, p[5] if x in (2, 12) else p[2])
+    bevel(img, 0, 0, 15, 15, p[5], p[1])
+    for (x, y) in [(7, 7), (8, 7), (6, 8), (9, 8)]:
+        put(img, x, y, TW_ROPE[2] if y == 7 else TW_ROPE[1])
+    for (x, y) in [(2, 1), (13, 1), (2, 14), (13, 14)]:
+        put(img, x, y, p[0])
+    return img

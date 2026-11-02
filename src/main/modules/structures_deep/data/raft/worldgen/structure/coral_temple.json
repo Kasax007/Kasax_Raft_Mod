@@ -1,0 +1,72 @@
+{
+  "type": "minecraft:jigsaw",
+  "biomes": "#raft:has_structure/coral_temple",
+  "liquid_settings": "ignore_waterlogging",
+  "max_distance_from_center": 80,
+  "project_start_to_heightmap": "OCEAN_FLOOR_WG",
+  "size": 1,
+  "spawn_overrides": {
+    "monster": {
+      "bounding_box": "piece",
+      "spawns": [
+        {
+          "type": "raft:moray_eel",
+          "count": {
+            "type": "minecraft:uniform",
+            "max_inclusive": 2,
+            "min_inclusive": 1
+          },
+          "weight": 4
+        },
+        {
+          "type": "minecraft:drowned",
+          "count": {
+            "type": "minecraft:uniform",
+            "max_inclusive": 1,
+            "min_inclusive": 1
+          },
+          "weight": 1
+        }
+      ]
+    },
+    "water_ambient": {
+      "bounding_box": "piece",
+      "spawns": [
+        {
+          "type": "raft:moray_eel",
+          "count": {
+            "type": "minecraft:uniform",
+            "max_inclusive": 1,
+            "min_inclusive": 1
+          },
+          "weight": 3
+        },
+        {
+          "type": "minecraft:tropical_fish",
+          "count": {
+            "type": "minecraft:uniform",
+            "max_inclusive": 6,
+            "min_inclusive": 3
+          },
+          "weight": 8
+        },
+        {
+          "type": "minecraft:pufferfish",
+          "count": {
+            "type": "minecraft:uniform",
+            "max_inclusive": 2,
+            "min_inclusive": 1
+          },
+          "weight": 2
+        }
+      ]
+    }
+  },
+  "start_height": {
+    "absolute": -1
+  },
+  "start_pool": "raft:coral_temple/start",
+  "step": "surface_structures",
+  "terrain_adaptation": "beard_box",
+  "use_expansion_hack": false
+}

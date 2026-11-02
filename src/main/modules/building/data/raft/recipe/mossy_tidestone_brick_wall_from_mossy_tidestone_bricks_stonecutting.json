@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "raft:mossy_tidestone_bricks",
+  "result": {
+    "count": 1,
+    "id": "raft:mossy_tidestone_brick_wall"
+  }
+}

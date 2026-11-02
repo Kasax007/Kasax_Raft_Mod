@@ -961,12 +961,12 @@ public class SeagullEntity extends Animal {
             SeagullEntity gull = SeagullEntity.this;
             double a = gull.random.nextDouble() * Math.PI * 2.0;
             double d = 1.0 + gull.random.nextDouble() * 1.5;
-            gull.getMoveControl().setWantedPosition(gull.getX() + Math.cos(a) * d, gull.getY(), gull.getZ() + Math.sin(a) * d, 0.7);
+            gull.getNavigation().moveTo(gull.getX() + Math.cos(a) * d, gull.getY(), gull.getZ() + Math.sin(a) * d, 0.7);
         }
 
         @Override
         public boolean canContinueToUse() {
-            return false;
+            return SeagullEntity.this.onGround() && !SeagullEntity.this.getNavigation().isDone();
         }
     }
 

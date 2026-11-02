@@ -1,0 +1,600 @@
+{
+  "entity.crab.ambient": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/silverfish/step1",
+        "volume": 0.5,
+        "pitch": 0.75
+      },
+      {
+        "name": "minecraft:mob/silverfish/step2",
+        "volume": 0.5,
+        "pitch": 0.75
+      },
+      {
+        "name": "minecraft:mob/silverfish/step3",
+        "volume": 0.5,
+        "pitch": 0.75
+      },
+      {
+        "name": "minecraft:mob/silverfish/step4",
+        "volume": 0.5,
+        "pitch": 0.75
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.crab.ambient"
+  },
+  "entity.crab.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/turtle/hurt1",
+        "volume": 0.8,
+        "pitch": 1.45
+      },
+      {
+        "name": "minecraft:mob/turtle/hurt2",
+        "volume": 0.8,
+        "pitch": 1.45
+      },
+      {
+        "name": "minecraft:mob/turtle/hurt3",
+        "volume": 0.8,
+        "pitch": 1.45
+      },
+      {
+        "name": "minecraft:mob/turtle/hurt4",
+        "volume": 0.8,
+        "pitch": 1.45
+      },
+      {
+        "name": "minecraft:mob/turtle/hurt5",
+        "volume": 0.8,
+        "pitch": 1.45
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.crab.hurt"
+  },
+  "entity.crab.death": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/turtle/death1",
+        "volume": 0.8,
+        "pitch": 1.45
+      },
+      {
+        "name": "minecraft:mob/turtle/death2",
+        "volume": 0.8,
+        "pitch": 1.45
+      },
+      {
+        "name": "minecraft:mob/turtle/death3",
+        "volume": 0.8,
+        "pitch": 1.45
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.crab.death"
+  },
+  "entity.crab.step": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/silverfish/step1",
+        "volume": 0.35,
+        "pitch": 1.3
+      },
+      {
+        "name": "minecraft:mob/silverfish/step2",
+        "volume": 0.35,
+        "pitch": 1.3
+      },
+      {
+        "name": "minecraft:mob/silverfish/step3",
+        "volume": 0.35,
+        "pitch": 1.3
+      },
+      {
+        "name": "minecraft:mob/silverfish/step4",
+        "volume": 0.35,
+        "pitch": 1.3
+      }
+    ]
+  },
+  "entity.crab.pinch": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/armadillo/scute_drop1",
+        "volume": 0.9,
+        "pitch": 1.55
+      },
+      {
+        "name": "minecraft:mob/armadillo/scute_drop2",
+        "volume": 0.9,
+        "pitch": 1.55
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.crab.pinch"
+  },
+  "entity.crab.burrow": {
+    "sounds": [
+      {
+        "name": "minecraft:dig/sand1",
+        "volume": 0.7,
+        "pitch": 1.2
+      },
+      {
+        "name": "minecraft:dig/sand2",
+        "volume": 0.7,
+        "pitch": 1.2
+      },
+      {
+        "name": "minecraft:dig/sand3",
+        "volume": 0.7,
+        "pitch": 1.2
+      },
+      {
+        "name": "minecraft:dig/sand4",
+        "volume": 0.7,
+        "pitch": 1.2
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.crab.burrow"
+  },
+  "entity.ember_crab.ambient": {
+    "sounds": [
+      {
+        "name": "minecraft:random/fizz",
+        "volume": 0.4,
+        "pitch": 0.8
+      },
+      {
+        "name": "minecraft:mob/silverfish/step1",
+        "volume": 0.4,
+        "pitch": 0.8
+      },
+      {
+        "name": "minecraft:mob/silverfish/step2",
+        "volume": 0.4,
+        "pitch": 0.8
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.ember_crab.ambient"
+  },
+  "entity.ember_crab.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/turtle/hurt1",
+        "volume": 0.9,
+        "pitch": 1.05
+      },
+      {
+        "name": "minecraft:mob/turtle/hurt2",
+        "volume": 0.9,
+        "pitch": 1.05
+      },
+      {
+        "name": "minecraft:mob/turtle/hurt3",
+        "volume": 0.9,
+        "pitch": 1.05
+      },
+      {
+        "name": "minecraft:mob/turtle/hurt4",
+        "volume": 0.9,
+        "pitch": 1.05
+      },
+      {
+        "name": "minecraft:mob/turtle/hurt5",
+        "volume": 0.9,
+        "pitch": 1.05
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.ember_crab.hurt"
+  },
+  "entity.ember_crab.death": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/turtle/death1",
+        "volume": 0.9,
+        "pitch": 1.0
+      },
+      {
+        "name": "minecraft:mob/turtle/death2",
+        "volume": 0.9,
+        "pitch": 1.0
+      },
+      {
+        "name": "minecraft:mob/turtle/death3",
+        "volume": 0.9,
+        "pitch": 1.0
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.ember_crab.death"
+  },
+  "entity.seagull.ambient": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/parrot/idle1",
+        "volume": 0.9,
+        "pitch": 0.78
+      },
+      {
+        "name": "minecraft:mob/parrot/idle2",
+        "volume": 0.9,
+        "pitch": 0.78
+      },
+      {
+        "name": "minecraft:mob/parrot/idle3",
+        "volume": 0.9,
+        "pitch": 0.78
+      },
+      {
+        "name": "minecraft:mob/parrot/idle4",
+        "volume": 0.9,
+        "pitch": 0.78
+      },
+      {
+        "name": "minecraft:mob/parrot/idle5",
+        "volume": 0.9,
+        "pitch": 0.78
+      },
+      {
+        "name": "minecraft:mob/parrot/idle6",
+        "volume": 0.9,
+        "pitch": 0.78
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.seagull.ambient"
+  },
+  "entity.seagull.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/parrot/hurt1",
+        "volume": 0.9,
+        "pitch": 0.85
+      },
+      {
+        "name": "minecraft:mob/parrot/hurt2",
+        "volume": 0.9,
+        "pitch": 0.85
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.seagull.hurt"
+  },
+  "entity.seagull.death": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/parrot/death1",
+        "volume": 0.9,
+        "pitch": 0.85
+      },
+      {
+        "name": "minecraft:mob/parrot/death2",
+        "volume": 0.9,
+        "pitch": 0.85
+      },
+      {
+        "name": "minecraft:mob/parrot/death3",
+        "volume": 0.9,
+        "pitch": 0.85
+      },
+      {
+        "name": "minecraft:mob/parrot/death4",
+        "volume": 0.9,
+        "pitch": 0.85
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.seagull.death"
+  },
+  "entity.seagull.flap": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/parrot/fly1",
+        "volume": 0.6,
+        "pitch": 0.8
+      },
+      {
+        "name": "minecraft:mob/parrot/fly2",
+        "volume": 0.6,
+        "pitch": 0.8
+      },
+      {
+        "name": "minecraft:mob/parrot/fly3",
+        "volume": 0.6,
+        "pitch": 0.8
+      },
+      {
+        "name": "minecraft:mob/parrot/fly4",
+        "volume": 0.6,
+        "pitch": 0.8
+      },
+      {
+        "name": "minecraft:mob/parrot/fly5",
+        "volume": 0.6,
+        "pitch": 0.8
+      },
+      {
+        "name": "minecraft:mob/parrot/fly6",
+        "volume": 0.6,
+        "pitch": 0.8
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.seagull.flap"
+  },
+  "entity.seagull.peck": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/parrot/eat1",
+        "volume": 0.8,
+        "pitch": 0.9
+      },
+      {
+        "name": "minecraft:mob/parrot/eat2",
+        "volume": 0.8,
+        "pitch": 0.9
+      },
+      {
+        "name": "minecraft:mob/parrot/eat3",
+        "volume": 0.8,
+        "pitch": 0.9
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.seagull.peck"
+  },
+  "entity.seagull.steal": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/parrot/idle1",
+        "volume": 1.0,
+        "pitch": 1.05
+      },
+      {
+        "name": "minecraft:mob/parrot/idle2",
+        "volume": 1.0,
+        "pitch": 1.05
+      },
+      {
+        "name": "minecraft:mob/parrot/idle3",
+        "volume": 1.0,
+        "pitch": 1.05
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.seagull.steal"
+  },
+  "entity.penguin.ambient": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/horse/donkey/idle1",
+        "volume": 0.5,
+        "pitch": 1.75
+      },
+      {
+        "name": "minecraft:mob/horse/donkey/idle2",
+        "volume": 0.5,
+        "pitch": 1.75
+      },
+      {
+        "name": "minecraft:mob/horse/donkey/idle3",
+        "volume": 0.5,
+        "pitch": 1.75
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.penguin.ambient"
+  },
+  "entity.penguin.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/horse/donkey/hit1",
+        "volume": 0.6,
+        "pitch": 1.8
+      },
+      {
+        "name": "minecraft:mob/horse/donkey/hit2",
+        "volume": 0.6,
+        "pitch": 1.8
+      },
+      {
+        "name": "minecraft:mob/horse/donkey/hit3",
+        "volume": 0.6,
+        "pitch": 1.8
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.penguin.hurt"
+  },
+  "entity.penguin.death": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/horse/donkey/death",
+        "volume": 0.6,
+        "pitch": 1.8
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.penguin.death"
+  },
+  "entity.penguin.step": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/frog/step1",
+        "volume": 0.5,
+        "pitch": 1.35
+      },
+      {
+        "name": "minecraft:mob/frog/step2",
+        "volume": 0.5,
+        "pitch": 1.35
+      },
+      {
+        "name": "minecraft:mob/frog/step3",
+        "volume": 0.5,
+        "pitch": 1.35
+      },
+      {
+        "name": "minecraft:mob/frog/step4",
+        "volume": 0.5,
+        "pitch": 1.35
+      }
+    ]
+  },
+  "entity.penguin.slide": {
+    "sounds": [
+      {
+        "name": "minecraft:step/snow1",
+        "volume": 1.0,
+        "pitch": 0.7
+      },
+      {
+        "name": "minecraft:step/snow2",
+        "volume": 1.0,
+        "pitch": 0.7
+      },
+      {
+        "name": "minecraft:step/snow3",
+        "volume": 1.0,
+        "pitch": 0.7
+      },
+      {
+        "name": "minecraft:step/snow4",
+        "volume": 1.0,
+        "pitch": 0.7
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.penguin.slide"
+  },
+  "entity.sea_otter.ambient": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/axolotl/idle_air1",
+        "volume": 0.8,
+        "pitch": 1.25
+      },
+      {
+        "name": "minecraft:mob/axolotl/idle_air2",
+        "volume": 0.8,
+        "pitch": 1.25
+      },
+      {
+        "name": "minecraft:mob/axolotl/idle_air3",
+        "volume": 0.8,
+        "pitch": 1.25
+      },
+      {
+        "name": "minecraft:mob/axolotl/idle_air4",
+        "volume": 0.8,
+        "pitch": 1.25
+      },
+      {
+        "name": "minecraft:mob/axolotl/idle_air5",
+        "volume": 0.8,
+        "pitch": 1.25
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.sea_otter.ambient"
+  },
+  "entity.sea_otter.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/fox/hurt1",
+        "volume": 0.8,
+        "pitch": 1.2
+      },
+      {
+        "name": "minecraft:mob/fox/hurt2",
+        "volume": 0.8,
+        "pitch": 1.2
+      },
+      {
+        "name": "minecraft:mob/fox/hurt3",
+        "volume": 0.8,
+        "pitch": 1.2
+      },
+      {
+        "name": "minecraft:mob/fox/hurt4",
+        "volume": 0.8,
+        "pitch": 1.2
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.sea_otter.hurt"
+  },
+  "entity.sea_otter.death": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/fox/death1",
+        "volume": 0.8,
+        "pitch": 1.2
+      },
+      {
+        "name": "minecraft:mob/fox/death2",
+        "volume": 0.8,
+        "pitch": 1.2
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.sea_otter.death"
+  },
+  "entity.sea_otter.crack": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/turtle/egg/egg_crack1",
+        "volume": 0.8,
+        "pitch": 1.3
+      },
+      {
+        "name": "minecraft:mob/turtle/egg/egg_crack2",
+        "volume": 0.8,
+        "pitch": 1.3
+      },
+      {
+        "name": "minecraft:mob/turtle/egg/egg_crack3",
+        "volume": 0.8,
+        "pitch": 1.3
+      },
+      {
+        "name": "minecraft:mob/turtle/egg/egg_crack4",
+        "volume": 0.8,
+        "pitch": 1.3
+      },
+      {
+        "name": "minecraft:mob/turtle/egg/egg_crack5",
+        "volume": 0.8,
+        "pitch": 1.3
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.sea_otter.crack"
+  },
+  "entity.sea_otter.gift": {
+    "sounds": [
+      {
+        "name": "minecraft:random/pop",
+        "volume": 0.6,
+        "pitch": 1.2
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.sea_otter.gift"
+  },
+  "entity.drowned_corsair.ambient": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/drowned/idle1",
+        "volume": 0.9,
+        "pitch": 0.8
+      },
+      {
+        "name": "minecraft:mob/drowned/idle2",
+        "volume": 0.9,
+        "pitch": 0.8
+      },
+      {
+        "name": "minecraft:mob/drowned/idle3",
+        "volume": 0.9,
+        "pitch": 0.8
+      },
+      {
+        "name": "minecraft:mob/zombie/say1",
+        "volume": 0.7,
+        "pitch": 0.75
+      },
+      {
+        "name": "minecraft:mob/zombie/say2",
+        "volume": 0.7,
+        "pitch": 0.75
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.drowned_corsair.ambient"
+  }
+}

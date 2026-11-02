@@ -258,6 +258,34 @@ def pillars(s):
         s.set(hx, ytop - length, hz, 'minecraft:sea_lantern')
 
 
+def drum_wall(s):
+    """Inside face of the drum: a ring of stone benches at the foot of the wall and glowing rune plaques on every
+    rib (interior positions only, the shell behind stays whole)."""
+    for x in range(-22, 23):
+        for z in range(-22, 23):
+            r = rad(x, z)
+            if not (20.6 < r <= IN_RX) or abs(x) <= 3:
+                continue
+            y = FLOOR_Y + 1
+            if s.name_at(x, y, z) != 'minecraft:air':
+                continue
+            a = ang(x, z)
+            out = max((('east', math.cos(math.radians(a))), ('west', -math.cos(math.radians(a))),
+                       ('south', math.sin(math.radians(a))), ('north', -math.sin(math.radians(a)))),
+                      key=lambda t: t[1])[0]
+            s.set(x, y, z, f'raft:tidestone_brick_stairs[facing={out},half=bottom]')
+    for k in range(12):
+        a = math.radians(30 * k)
+        if k in (3, 9):            # above the entrance and the reward corridor
+            continue
+        for rr in (21.3, 21.0):
+            x, z = round(math.cos(a) * rr), round(math.sin(a) * rr)
+            if s.name_at(x, FLOOR_Y + 3, z) == 'minecraft:air':
+                for y in (FLOOR_Y + 3, FLOOR_Y + 4):
+                    s.set(x, y, z, 'raft:glowing_tidestone' if y == FLOOR_Y + 3 else 'raft:chiseled_tidestone')
+                break
+
+
 def altar_ring(s):
     ax, ay, az = ALTAR
     # dais inlay around the altar (floor stays flush; the altar stands on the floor, contract 9.2)
@@ -533,8 +561,6 @@ def pylons(s, rnd):
     for (sx, sz) in ((-19, -19), (19, -19), (-19, 19), (19, 19)):
         for x in range(sx - 2, sx + 3):
             for z in range(sz - 2, sz + 3):
-                if s.name_at(x, 10, z) is None and rad(x, z) > 25:
-                    pass
                 for y in range(5, 29):
                     edge = abs(x - sx) == 2 or abs(z - sz) == 2
                     corner = abs(x - sx) == 2 and abs(z - sz) == 2
@@ -598,6 +624,7 @@ def build(seed=31415962):
     dome(s, rnd)
     interior(s, rnd)
     pillars(s)
+    drum_wall(s)
     altar_ring(s)
     braziers(s)
     entrance(s, rnd)

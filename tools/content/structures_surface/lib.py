@@ -587,3 +587,16 @@ for _col, _rgb in (('white', (235, 235, 230)), ('red', (210, 60, 50)), ('orange'
         _pv._FALLBACK.setdefault(f'cushion_{_col}', _rgb + (255,))
     except Exception:
         pass
+
+
+def sign(s, x, y, z, state, lines, color='black', glow=False, hanging=False):
+    """Sign with text (26.3 block entity format: messages as text components)."""
+    from bclib.nbt import Byte
+    msgs = [{'text': t} for t in (list(lines) + ['', '', '', ''])[:4]]
+    empty = [{'text': ''} for _ in range(4)]
+    s.set(x, y, z, state, {
+        'id': 'minecraft:hanging_sign' if hanging else 'minecraft:sign',
+        'front_text': {'messages': msgs, 'color': color, 'has_glowing_text': Byte(1 if glow else 0)},
+        'back_text': {'messages': msgs if hanging else empty, 'color': color, 'has_glowing_text': Byte(1 if glow else 0)},
+        'is_waxed': Byte(1),
+    })

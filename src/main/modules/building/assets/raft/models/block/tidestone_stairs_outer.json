@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "raft:block/tidestone",
+    "side": "raft:block/tidestone",
+    "top": "raft:block/tidestone"
+  }
+}

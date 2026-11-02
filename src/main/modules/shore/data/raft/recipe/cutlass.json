@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "I": "#minecraft:iron_tool_materials",
+    "T": "raft:teak_planks"
+  },
+  "pattern": [
+    "  I",
+    " I ",
+    "T  "
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:cutlass"
+  }
+}

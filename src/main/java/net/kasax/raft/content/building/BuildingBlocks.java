@@ -65,6 +65,12 @@ public final class BuildingBlocks {
     public static final Block WEATHERED_SLAB = woodSlab("weathered_slab", WEATHERED_PLANKS);
     public static final Block WEATHERED_FENCE = woodFence("weathered_fence", WEATHERED_PLANKS);
     public static final Block WEATHERED_FENCE_GATE = woodFenceGate("weathered_fence_gate", WEATHERED_PLANKS, WoodType.OAK);
+    public static final Block WEATHERED_DOOR = door("weathered_door", BlockSetType.OAK,
+            planks(MapColor.COLOR_LIGHT_GRAY).strength(3.0F).noOcclusion().pushReaction(PushReaction.POPPED),
+            ContextIntProviders.COOKING_TIME_WOOD_ITEMS_LARGE);
+    public static final Block WEATHERED_TRAPDOOR = trapdoor("weathered_trapdoor", BlockSetType.OAK,
+            planks(MapColor.COLOR_LIGHT_GRAY).strength(3.0F).noOcclusion().isValidSpawn(Blocks::never),
+            ContextIntProviders.COOKING_TIME_WOOD_BLOCKS);
 
     public static final Block TEAK_PLANKS = wood("teak_planks", planks(MapColor.TERRACOTTA_BROWN), ContextIntProviders.COOKING_TIME_WOOD_BLOCKS);
     public static final Block TEAK_STAIRS = woodStairs("teak_stairs", TEAK_PLANKS);
@@ -88,32 +94,50 @@ public final class BuildingBlocks {
 
     // ------------------------------------------------------------------------------------------------- coral stone
     public static final Block CORAL_STONE = block("coral_stone", Block::new, stone(MapColor.TERRACOTTA_PINK));
+    public static final Block CORAL_STONE_STAIRS = stairs("coral_stone_stairs", CORAL_STONE);
+    public static final Block CORAL_STONE_SLAB = slab("coral_stone_slab", CORAL_STONE);
+    public static final Block CORAL_STONE_WALL = wall("coral_stone_wall", CORAL_STONE);
     public static final Block POLISHED_CORAL_STONE = block("polished_coral_stone", Block::new, stone(MapColor.TERRACOTTA_PINK));
+    public static final Block POLISHED_CORAL_STONE_STAIRS = stairs("polished_coral_stone_stairs", POLISHED_CORAL_STONE);
+    public static final Block POLISHED_CORAL_STONE_SLAB = slab("polished_coral_stone_slab", POLISHED_CORAL_STONE);
     public static final Block CORAL_STONE_BRICKS = block("coral_stone_bricks", Block::new, stone(MapColor.TERRACOTTA_PINK));
     public static final Block CORAL_STONE_BRICK_STAIRS = stairs("coral_stone_brick_stairs", CORAL_STONE_BRICKS);
     public static final Block CORAL_STONE_BRICK_SLAB = slab("coral_stone_brick_slab", CORAL_STONE_BRICKS);
     public static final Block CORAL_STONE_BRICK_WALL = wall("coral_stone_brick_wall", CORAL_STONE_BRICKS);
     public static final Block MOSSY_CORAL_STONE_BRICKS = block("mossy_coral_stone_bricks", Block::new, stone(MapColor.TERRACOTTA_PINK));
+    public static final Block MOSSY_CORAL_STONE_BRICK_STAIRS = stairs("mossy_coral_stone_brick_stairs", MOSSY_CORAL_STONE_BRICKS);
+    public static final Block MOSSY_CORAL_STONE_BRICK_SLAB = slab("mossy_coral_stone_brick_slab", MOSSY_CORAL_STONE_BRICKS);
+    public static final Block MOSSY_CORAL_STONE_BRICK_WALL = wall("mossy_coral_stone_brick_wall", MOSSY_CORAL_STONE_BRICKS);
 
     // ------------------------------------------------------------------------------------------------- tidestone
     public static final Block TIDESTONE = block("tidestone", Block::new, stone(MapColor.COLOR_CYAN));
+    public static final Block TIDESTONE_STAIRS = stairs("tidestone_stairs", TIDESTONE);
+    public static final Block TIDESTONE_SLAB = slab("tidestone_slab", TIDESTONE);
+    public static final Block TIDESTONE_WALL = wall("tidestone_wall", TIDESTONE);
     public static final Block TIDESTONE_BRICKS = block("tidestone_bricks", Block::new, stone(MapColor.COLOR_CYAN));
     public static final Block TIDESTONE_BRICK_STAIRS = stairs("tidestone_brick_stairs", TIDESTONE_BRICKS);
     public static final Block TIDESTONE_BRICK_SLAB = slab("tidestone_brick_slab", TIDESTONE_BRICKS);
     public static final Block TIDESTONE_BRICK_WALL = wall("tidestone_brick_wall", TIDESTONE_BRICKS);
     public static final Block CRACKED_TIDESTONE_BRICKS = block("cracked_tidestone_bricks", Block::new, stone(MapColor.COLOR_CYAN));
     public static final Block MOSSY_TIDESTONE_BRICKS = block("mossy_tidestone_bricks", Block::new, stone(MapColor.COLOR_CYAN));
+    public static final Block MOSSY_TIDESTONE_BRICK_STAIRS = stairs("mossy_tidestone_brick_stairs", MOSSY_TIDESTONE_BRICKS);
+    public static final Block MOSSY_TIDESTONE_BRICK_SLAB = slab("mossy_tidestone_brick_slab", MOSSY_TIDESTONE_BRICKS);
+    public static final Block MOSSY_TIDESTONE_BRICK_WALL = wall("mossy_tidestone_brick_wall", MOSSY_TIDESTONE_BRICKS);
     public static final Block CHISELED_TIDESTONE = block("chiseled_tidestone", Block::new, stone(MapColor.COLOR_CYAN));
     public static final Block TIDESTONE_PILLAR = block("tidestone_pillar", RotatedPillarBlock::new, stone(MapColor.COLOR_CYAN));
     public static final Block GLOWING_TIDESTONE = block("glowing_tidestone", Block::new, stone(MapColor.COLOR_CYAN).lightLevel(s -> 10));
 
     // ------------------------------------------------------------------------------------------------- drowned city
     public static final Block CRACKED_CONCRETE = block("cracked_concrete", Block::new, concrete(MapColor.COLOR_GRAY));
+    public static final Block CRACKED_CONCRETE_STAIRS = stairs("cracked_concrete_stairs", CRACKED_CONCRETE);
+    public static final Block CRACKED_CONCRETE_SLAB = slab("cracked_concrete_slab", CRACKED_CONCRETE);
+    public static final Block CRACKED_CONCRETE_WALL = wall("cracked_concrete_wall", CRACKED_CONCRETE);
     public static final Block MOSSY_CONCRETE = block("mossy_concrete", Block::new, concrete(MapColor.COLOR_GRAY));
     public static final Block REBAR_CONCRETE = block("rebar_concrete", Block::new, concrete(MapColor.COLOR_GRAY));
     public static final Block ASPHALT = block("asphalt", Block::new, asphalt());
     public static final Block ASPHALT_LINE = block("asphalt_line", HorizontalAxisBlock::new, asphalt());
     public static final Block ASPHALT_SLAB = slab("asphalt_slab", ASPHALT);
+    public static final Block ASPHALT_STAIRS = stairs("asphalt_stairs", ASPHALT);
     public static final Block CRACKED_GLASS = block("cracked_glass", TransparentBlock::new, glass(MapColor.NONE));
     public static final Block CRACKED_GLASS_PANE = block("cracked_glass_pane", IronBarsBlock::new, glass(MapColor.NONE));
 
@@ -160,7 +184,8 @@ public final class BuildingBlocks {
     public static final Block SERVER_RACK = block("server_rack", p -> new ServerRackBlock(p, box(1, 0, 1, 15, 16, 15)),
             metal(MapColor.COLOR_GRAY, SoundType.METAL).strength(3.5F, 6.0F).lightLevel(s -> 3));
     public static final Block SATELLITE_DISH = block("satellite_dish", p -> new ShapedFacingBlock(p, Shapes.or(
-                    box(3, 0, 3, 13, 2, 13), box(6.5, 2, 6.5, 9.5, 7, 9.5), box(1, 6, 1, 15, 16, 13))),
+                    box(3, 0, 3, 13, 2, 13), box(6.5, 2, 6.5, 9.5, 7, 9.5), box(5, 6, 7, 11, 9, 9.5),
+                    box(1, 4.5, 3, 15, 15, 14), box(6.5, 12, 2.5, 9.5, 15.5, 5))),
             metal(MapColor.COLOR_LIGHT_GRAY, SoundType.METAL).strength(3.0F, 6.0F).noOcclusion());
     public static final Block WIND_TURBINE = BcReg.blockWithItem("wind_turbine", WindTurbineBlock::new,
             metal(MapColor.SNOW, SoundType.METAL).strength(3.5F, 6.0F).noOcclusion(), TAB,

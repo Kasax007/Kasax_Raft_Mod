@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "raft:block/mossy_coral_stone_bricks",
+    "side": "raft:block/mossy_coral_stone_bricks",
+    "top": "raft:block/mossy_coral_stone_bricks"
+  }
+}

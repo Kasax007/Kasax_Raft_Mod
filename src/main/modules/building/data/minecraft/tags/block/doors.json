@@ -1,6 +1,7 @@
 {
   "values": [
     "raft:teak_door",
+    "raft:weathered_door",
     "raft:bulkhead_door"
   ]
 }

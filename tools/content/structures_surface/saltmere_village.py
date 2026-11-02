@@ -10,7 +10,7 @@ every child has exactly one entry  name raft:saltmere_in  on its north edge (z=0
 """
 import math
 
-from .lib import B, Pal, stairs, slab, log, trapdoor, rnd, look, validate, DIRS, OPP, CW, CCW, MODULE
+from .lib import B, Pal, stairs, slab, log, trapdoor, rnd, look, validate, sign, DIRS, OPP, CW, CCW, MODULE
 
 DY = 29          # deck block layer (absolute 101)
 WATER = 27       # top water layer (absolute 99)
@@ -292,8 +292,53 @@ def tidewarden_statue(s, cx, fy, cz, face='north'):
 
 
 # ------------------------------------------------------------------------------------------------ pieces
-def plaza():
-    s = new('plaza')
+def plaza_b_centre(s):
+    """Variant b: fire circle of coral stone, a half-built outrigger canoe on trestles, net frames, two stalls."""
+    # fire circle (stone base so the deck does not burn)
+    for x in range(10, 15):
+        for z in range(10, 15):
+            d = math.hypot(x - 12, z - 12)
+            if d <= 2.3:
+                s.set(x, DY, z, 'raft:coral_stone_bricks' if d > 1 else 'raft:polished_coral_stone')
+            if 1.6 < d <= 2.3:
+                s.set(x, DY + 1, z, 'raft:coral_stone_brick_slab[type=bottom,waterlogged=false]')
+    s.set(12, DY + 1, 12, 'minecraft:campfire[facing=north,lit=false,signal_fire=false,waterlogged=false]')
+    for (x, z, f) in ((12, 8, 'south'), (16, 12, 'west'), (12, 16, 'north'), (8, 12, 'east')):
+        s.set(x, DY + 1, z, stairs('raft:palm_stairs', f))
+    for (x, z) in ((9, 9), (15, 9), (9, 15), (15, 15)):
+        s.set(x, DY + 1, z, f'raft:cushion_{("red", "yellow", "blue", "green")[(x + z) % 4]}')
+    # canoe under construction on two trestles (west side): hull along z
+    for z in range(15, 23):
+        tip = z in (15, 22)
+        s.set(6, DY + 2, z, slab('raft:palm_slab', 'bottom') if tip else 'raft:stripped_palm_log[axis=z]')
+        if not tip and z % 2 == 0:
+            s.set(5, DY + 2, z, stairs('raft:palm_stairs', 'east', 'top'))
+            s.set(7, DY + 2, z, stairs('raft:palm_stairs', 'west', 'top'))
+            s.set(5, DY + 3, z, 'raft:palm_fence'); s.set(7, DY + 3, z, 'raft:palm_fence')
+    for z in (17, 20):
+        s.set(5, DY + 1, z, 'raft:palm_fence'); s.set(7, DY + 1, z, 'raft:palm_fence')
+        s.set(6, DY + 1, z, 'raft:palm_fence')
+    s.set(8, DY + 1, 21, 'raft:wooden_crate[facing=west,open=true]')
+    s.set(8, DY + 1, 16, 'minecraft:grindstone[face=floor,facing=east]')
+    s.set(4, DY + 1, 18, 'raft:rope_coil')
+    # net drying frames on the east side
+    for z in (8, 13):
+        s.set(17, DY + 1, z, FENCE); s.set(17, DY + 2, z, FENCE); s.set(17, DY + 3, z, FENCE)
+        s.set(17, DY + 1, z + 3, FENCE); s.set(17, DY + 2, z + 3, FENCE); s.set(17, DY + 3, z + 3, FENCE)
+        for zz in range(z + 1, z + 3):
+            s.set(17, DY + 3, zz, 'raft:stripped_palm_log[axis=z]')
+            s.set(18, DY + 2, zz, 'raft:cargo_net[facing=east,waterlogged=false]')
+            s.set(18, DY + 3, zz, 'raft:cargo_net[facing=east,waterlogged=false]')
+    # two stalls in the north-west and south
+    market_stall(s, 8, 6, 'south', ('lime', 'white'), ['minecraft:melon', 'raft:seashells[shells=2,waterlogged=false]', 'minecraft:pumpkin'], chest=True)
+    market_stall(s, 13, 18, 'north', ('purple', 'white'), ['minecraft:dried_kelp_block', 'minecraft:sea_pickle[pickles=4,waterlogged=false]', 'minecraft:hay_block[axis=y]'])
+    s.set(19, DY + 1, 17, 'minecraft:barrel[facing=up,open=false]')
+    s.set(19, DY + 2, 17, 'raft:jelly_lamp[hanging=false,waterlogged=false]')
+    s.set(3, DY + 1, 12, 'raft:deck_chair[facing=east]')
+
+
+def plaza(variant='a'):
+    s = new('plaza' if variant == 'a' else 'plaza_' + variant)
     W = 25
     corner = 3
     cells = []
@@ -318,7 +363,7 @@ def plaza():
         else:
             s.put(x, DY, z, DECK)
     # rope railing along the outline, leaving gaps at the connectors
-    gaps = {(7, 0), (17, 0), (24, 7), (24, 17), (7, 24), (17, 24), (0, 7), (0, 17)}
+    gaps = set(PLAZA_GAPS)
     for (x, z) in cells:
         edge = any((x + dx, z + dz) not in cs for dx, dz in DIRS.values())
         if not edge:
@@ -327,27 +372,28 @@ def plaza():
         if near_gap:
             continue
         s.set(x, DY + 1, z, FENCE if (x + z) % 4 == 0 else ROPE)
-    # well: 3x3 opening to the sea with winch
-    for x in range(11, 14):
-        for z in range(11, 14):
-            s.set(x, DY, z, 'minecraft:air')
-            s.set(x, DY - 1, z, 'minecraft:air')
-    for x in range(10, 15):
-        for z in range(10, 15):
-            if x in (10, 14) or z in (10, 14):
-                s.set(x, DY, z, 'raft:stripped_palm_log[axis=x]' if z in (10, 14) else 'raft:stripped_palm_log[axis=z]')
-                s.set(x, DY + 1, z, slab('raft:palm_slab', 'bottom')) if (x + z) % 2 == 0 else s.set(x, DY + 1, z, 'minecraft:bamboo_trapdoor[facing=north,half=bottom,open=false,powered=false,waterlogged=false]')
-    for x in (10, 14):
-        for y in range(DY + 1, DY + 5):
-            s.set(x, y, 12, POST)
-    for x in range(10, 15):
-        s.set(x, DY + 5, 12, 'raft:stripped_palm_log[axis=x]')
-    s.set(13, DY + 4, 12, 'minecraft:air')
-    for y in range(WATER, DY + 5):
-        s.set(12, y, 12, 'minecraft:iron_chain[axis=y,waterlogged=false]')
-    s.set(12, DY + 5, 12, 'minecraft:oak_log[axis=x]')
-    s.set(15, DY + 1, 12, 'minecraft:cauldron')
-    s.set(15, DY + 1, 13, 'minecraft:barrel[facing=up,open=false]')
+    if variant == 'a':
+        # well: 3x3 opening to the sea with winch
+        for x in range(11, 14):
+            for z in range(11, 14):
+                s.set(x, DY, z, 'minecraft:air')
+                s.set(x, DY - 1, z, 'minecraft:air')
+        for x in range(10, 15):
+            for z in range(10, 15):
+                if x in (10, 14) or z in (10, 14):
+                    s.set(x, DY, z, 'raft:stripped_palm_log[axis=x]' if z in (10, 14) else 'raft:stripped_palm_log[axis=z]')
+                    s.set(x, DY + 1, z, slab('raft:palm_slab', 'bottom')) if (x + z) % 2 == 0 else s.set(x, DY + 1, z, 'minecraft:bamboo_trapdoor[facing=north,half=bottom,open=false,powered=false,waterlogged=false]')
+        for x in (10, 14):
+            for y in range(DY + 1, DY + 5):
+                s.set(x, y, 12, POST)
+        for x in range(10, 15):
+            s.set(x, DY + 5, 12, 'raft:stripped_palm_log[axis=x]')
+        s.set(13, DY + 4, 12, 'minecraft:air')
+        for y in range(WATER, DY + 5):
+            s.set(12, y, 12, 'minecraft:iron_chain[axis=y,waterlogged=false]')
+        s.set(12, DY + 5, 12, 'minecraft:oak_log[axis=x]')
+        s.set(15, DY + 1, 12, 'minecraft:cauldron')
+        s.set(15, DY + 1, 13, 'minecraft:barrel[facing=up,open=false]')
     # bunting frame: four tall poles and beams across the plaza
     poles = [(4, 4), (20, 4), (4, 20), (20, 20)]
     for (x, z) in poles:
@@ -364,47 +410,81 @@ def plaza():
     for i, z in enumerate(range(7, 18, 4)):
         s.set(4, DY + 5, z, plantern(LANTERN_COLORS[(i + 2) % 9]))
         s.set(20, DY + 5, z, plantern(LANTERN_COLORS[(i + 6) % 9]))
+    # welcome sign hanging from the north beam
+    sign(s, 12, DY + 5, 4, 'minecraft:bamboo_hanging_sign[attached=false,rotation=0,waterlogged=false]',
+         ['Welcome to', 'SALTMERE', '~ nets & fish ~', 'and good folk'], color='brown', hanging=True)
     # tiki torches at the entrances
-    for (x, z) in ((6, 2), (8, 2), (16, 2), (18, 2), (22, 6), (22, 8), (22, 16), (22, 18), (6, 22), (8, 22),
-                   (2, 16), (2, 18)):
+    for (x, z) in ((10, 2), (14, 2), (22, 10), (22, 14), (10, 22), (14, 22), (2, 10), (2, 14)):
         s.tall(x, DY + 1, z, 'raft:tiki_torch', 'lit=true')
-    # market stalls
-    market_stall(s, 6, 8, 'east', ('red', 'white'), ['minecraft:melon', 'minecraft:sea_pickle[pickles=3,waterlogged=false]', 'minecraft:pumpkin'], chest=True)
-    market_stall(s, 16, 7, 'south', ('cyan', 'white'), ['minecraft:hay_block[axis=y]', 'raft:seashells[shells=4,waterlogged=false]', 'minecraft:dried_kelp_block'])
-    market_stall(s, 18, 15, 'west', ('yellow', 'orange'), ['minecraft:melon', 'minecraft:sea_pickle[pickles=2,waterlogged=false]', 'minecraft:hay_block[axis=x]'])
-    # communal table with cushions and a fire bowl
-    for x in range(9, 12):
-        s.set(x, DY + 1, 17, 'raft:palm_table[waterlogged=false]')
-    for x in range(9, 12):
-        s.set(x, DY + 1, 16, f'raft:cushion_{("red", "yellow", "blue")[x % 3]}')
-        s.set(x, DY + 1, 18, f'raft:cushion_{("green", "white", "red")[x % 3]}')
-    s.set(13, DY + 1, 18, 'raft:brazier[lit=false,waterlogged=false]')
-    s.set(10, DY + 2, 17, 'raft:seashell_lamp[waterlogged=false]')
-    # benches along the south rail
-    for x in range(12, 16):
-        s.set(x, DY + 1, 22, stairs('raft:palm_stairs', 'south'))
-    # left-behind things: overturned crate, net, a fishing rod rack
-    s.set(19, DY + 1, 10, 'raft:wooden_crate[facing=west,open=true]')
-    s.set(20, DY + 1, 11, 'raft:rope_coil')
-    s.set(5, DY + 1, 15, 'minecraft:barrel[facing=up,open=false]')
-    s.set(5, DY + 2, 15, 'raft:jelly_lamp[hanging=false,waterlogged=false]')
-    s.set(5, DY + 1, 16, 'minecraft:barrel[facing=north,open=false]')
+    if variant == 'a':
+        # market stalls
+        market_stall(s, 6, 8, 'east', ('red', 'white'), ['minecraft:melon', 'minecraft:sea_pickle[pickles=3,waterlogged=false]', 'minecraft:pumpkin'], chest=True)
+        market_stall(s, 16, 7, 'south', ('cyan', 'white'), ['minecraft:hay_block[axis=y]', 'raft:seashells[shells=4,waterlogged=false]', 'minecraft:dried_kelp_block'])
+        market_stall(s, 18, 15, 'west', ('yellow', 'orange'), ['minecraft:melon', 'minecraft:sea_pickle[pickles=2,waterlogged=false]', 'minecraft:hay_block[axis=x]'])
+        # communal table with cushions and a fire bowl
+        for x in range(9, 12):
+            s.set(x, DY + 1, 17, 'raft:palm_table[waterlogged=false]')
+        for x in range(9, 12):
+            s.set(x, DY + 1, 16, f'raft:cushion_{("red", "yellow", "blue")[x % 3]}')
+            s.set(x, DY + 1, 18, f'raft:cushion_{("green", "white", "red")[x % 3]}')
+        s.set(13, DY + 1, 18, 'raft:brazier[lit=false,waterlogged=false]')
+        s.set(10, DY + 2, 17, 'raft:seashell_lamp[waterlogged=false]')
+        # benches along the south rail
+        for x in range(15, 18):
+            s.set(x, DY + 1, 22, stairs('raft:palm_stairs', 'south'))
+        # left-behind things: overturned crate, net, a fishing rod rack
+        s.set(19, DY + 1, 10, 'raft:wooden_crate[facing=west,open=true]')
+        s.set(20, DY + 1, 11, 'raft:rope_coil')
+        s.set(5, DY + 1, 15, 'minecraft:barrel[facing=up,open=false]')
+        s.set(5, DY + 2, 15, 'raft:jelly_lamp[hanging=false,waterlogged=false]')
+        s.set(5, DY + 1, 16, 'minecraft:barrel[facing=north,open=false]')
+    else:
+        plaza_b_centre(s)
     # deck damage: a few missing boards near the edge
     for (x, z) in ((2, 10), (3, 10), (22, 13), (14, 23)):
         s.set(x, DY, z, 'minecraft:air')
+    # lookout tower over the south-east corner (landmark seen from afar)
+    legs = [(20, 20), (22, 20), (20, 22), (22, 22)]
+    for (x, z) in legs:
+        for y in range(DY + 1, DY + 12):
+            s.set(x, y, z, POST)
+    for x in range(19, 24):
+        for z in range(19, 24):
+            if (x, z) not in legs:
+                s.set(x, DY + 8, z, DECK.pick(x, DY + 8, z))
+    for x in range(19, 24):
+        for z in range(19, 24):
+            if (x in (19, 23) or z in (19, 23)) and (x, z) not in legs:
+                s.set(x, DY + 9, z, ROPE)
+    s.set(21, DY + 8, 21, 'minecraft:air')                      # hatch for the ladder
+    for y in range(DY + 1, DY + 9):
+        s.set(21, y, 21, 'minecraft:ladder[facing=north,waterlogged=false]')
+    for y in range(DY + 1, DY + 8):
+        s.set(21, y, 22, WALL.pick(21, y, 22))                  # ladder backing board
+    s.hip_roof(20, 20, 22, 22, DY + 12, THATCH_ST, fill=THATCH, overhang=1, top=THATCH_SL, steep=False)
+    s.set(21, DY + 15, 21, 'raft:stripped_palm_log[axis=y]')
+    s.set(21, DY + 16, 21, 'raft:raft_flag[facing=east]')
+    s.set(21, DY + 11, 21, 'raft:ship_lantern[hanging=true,waterlogged=false]')
+    s.set(22, DY + 9, 21, 'raft:spyglass_stand[facing=east,waterlogged=false]')
     # connectors
-    exit_(s, 7, 0, 'north', 'elder', prio=10)
-    exit_(s, 24, 7, 'east', 'shrine', prio=9)
-    exit_(s, 7, 24, 'south', 'docks', prio=8)
-    exit_(s, 17, 0, 'north', 'walkways')
-    exit_(s, 24, 17, 'east', 'walkways')
-    exit_(s, 17, 24, 'south', 'walkways')
-    exit_(s, 0, 7, 'west', 'walkways')
-    exit_(s, 0, 17, 'west', 'huts')
+    # story pieces on three sides (placed first), a house on the fourth, and a pinwheel of boardwalks
+    # leaving near the corners so that their huts (attached on the right-hand side) stay clear of the big pieces
+    exit_(s, 12, 0, 'north', 'elder', prio=10)
+    exit_(s, 24, 12, 'east', 'shrine', prio=9)
+    exit_(s, 12, 24, 'south', 'docks', prio=8)
+    exit_(s, 0, 12, 'west', 'huts', prio=7)
+    exit_(s, 21, 0, 'north', 'walkways')
+    exit_(s, 24, 21, 'east', 'walkways')
+    exit_(s, 3, 24, 'south', 'walkways')
+    exit_(s, 0, 3, 'west', 'walkways')
     return s
 
 
-def walk_straight(name='walk_straight', L=9, lamp=True):
+PLAZA_GAPS = ((12, 0), (24, 12), (12, 24), (0, 12), (21, 0), (24, 21), (3, 24), (0, 3))
+
+
+def walk_straight(name='walk_straight', L=9, lamp=True, side=None):
+    """Boardwalk; side = z of a hut connector on the west edge (the right-hand side when walking away)."""
     s = new(name)
     deck(s, 0, 0, 2, L - 1, seed=name)
     for z in range(0, L, 4):
@@ -416,6 +496,14 @@ def walk_straight(name='walk_straight', L=9, lamp=True):
     rail_line(s, [(2, z) for z in range(1, L - 1)], post_every=4)
     if lamp:
         s.set(2, DY + 2, 4, plantern('orange', False)) if s.name_at(2, DY + 1, 4) == FENCE else None
+    if side is not None:
+        for z in (side - 1, side, side + 1):
+            s.set(0, DY + 1, z, 'minecraft:air')
+            s.put(0, DY, z, DECK)
+        s.set(0, DY + 1, side - 2, FENCE); s.set(0, DY + 2, side - 2, FENCE)
+        s.set(0, DY + 3, side - 2, plantern(LANTERN_COLORS[L % 9], False))
+        s.set(0, DY + 1, side + 2, FENCE)
+        exit_(s, 0, side, 'west', 'huts')
     entry(s, 1)
     exit_(s, 1, L - 1, 'south', 'junctions')
     return s
@@ -505,19 +593,19 @@ def junction_l():
     stilts_rect(s, 0, 0, 6, 6, step=3)
     edge = [(x, 0) for x in range(7)] + [(x, 6) for x in range(7)] + [(0, z) for z in range(1, 6)] + [(6, z) for z in range(1, 6)]
     for (x, z) in edge:
-        if (x, z) in ((2, 0), (3, 0), (4, 0), (6, 2), (6, 3), (6, 4), (2, 6), (3, 6), (4, 6)):
+        if (x, z) in ((2, 0), (3, 0), (4, 0), (0, 2), (0, 3), (0, 4), (2, 6), (3, 6), (4, 6)):
             continue
         s.set(x, DY + 1, z, FENCE if (x in (0, 6) and z in (0, 6)) else ROPE)
-    s.set(0, DY + 2, 6, FENCE); s.set(0, DY + 3, 6, 'raft:ship_lantern[hanging=false,waterlogged=false]')
-    s.set(0, DY + 2, 0, FENCE); s.set(0, DY + 3, 0, plantern('lime', False))
+    s.set(6, DY + 2, 6, FENCE); s.set(6, DY + 3, 6, 'raft:ship_lantern[hanging=false,waterlogged=false]')
+    s.set(6, DY + 2, 0, FENCE); s.set(6, DY + 3, 0, plantern('lime', False))
     # small fish drying rack along the west side
-    s.set(1, DY + 1, 2, FENCE); s.set(1, DY + 2, 2, FENCE)
-    s.set(1, DY + 1, 4, FENCE); s.set(1, DY + 2, 4, FENCE)
-    s.set(1, DY + 2, 3, ROPE)
-    s.set(1, DY + 1, 3, 'minecraft:dried_kelp_block')
+    s.set(5, DY + 1, 2, FENCE); s.set(5, DY + 2, 2, FENCE)
+    s.set(5, DY + 1, 4, FENCE); s.set(5, DY + 2, 4, FENCE)
+    s.set(5, DY + 2, 3, ROPE)
+    s.set(5, DY + 1, 3, 'minecraft:dried_kelp_block')
     s.set(5, DY + 1, 5, 'raft:deck_chair[facing=south]')
     entry(s, 3)
-    exit_(s, 6, 3, 'east', 'huts')
+    exit_(s, 0, 3, 'west', 'huts')
     exit_(s, 3, 6, 'south', 'huts')
     return s
 
@@ -575,7 +663,7 @@ def hut_fisher():
     W, D = 9, 13
     cx = porch(s, W, 3)
     # front deck (work area) z 3..5
-    deck(s, 0, 3, W - 1, 5, seed='ff')
+    deck(s, 0, 3, W - 1, D - 1, seed='ff')
     stilts_rect(s, 0, 3, W - 1, D - 1, step=4)
     top = hut(s, 1, 6, W - 2, D - 1, DY, 4, WALL, door=(cx, 6, 'north'),
               windows=[(1, 8, 'west', 2), (W - 2, 8, 'east', 2), (3, D - 1, 'south', 1)], roof='hip')
@@ -584,8 +672,11 @@ def hut_fisher():
     for x in range(1, W - 1):
         if x not in (cx - 1, cx, cx + 1):
             s.set(x, DY + 1, 3, ROPE)
-    for z in (4, 5):
-        s.set(0, DY + 1, z, ROPE); s.set(W - 1, DY + 1, z, ROPE)
+    for z in range(4, D):
+        if s.name_at(0, DY + 1, z) is None:
+            s.set(0, DY + 1, z, ROPE if z % 4 else FENCE)
+        if s.name_at(W - 1, DY + 1, z) is None:
+            s.set(W - 1, DY + 1, z, ROPE if z % 4 else FENCE)
     # work area: fish barrels, nets on the wall, drying rack, rod rack
     s.set(1, DY + 1, 5, 'minecraft:barrel[facing=up,open=false]')
     s.set(2, DY + 1, 5, 'minecraft:barrel[facing=up,open=false]')
@@ -901,6 +992,8 @@ def elder():
     for x in range(cx - 2, cx + 3):
         s.set(x, fy + 5, z1 - 1, THATCH_SL)
         s.set(x, fy + 5, z1 - 2, THATCH_SL)
+    sign(s, cx + 1, fy + 2, z1 - 2, 'minecraft:jungle_wall_sign[facing=north,waterlogged=false]',
+         ['', 'Nana Kalea', 'Elder', 'knock twice'])
     # interior
     ix1, iz1, ix2, iz2 = x1 + 1, z1 + 1, x2 - 1, z2 - 1
     s.bed(ix1, fy + 1, iz2 - 1, 'magenta', 'south')
@@ -1113,8 +1206,9 @@ def docks():
 
 # ------------------------------------------------------------------------------------------------ build
 PIECES = {
-    'plaza': plaza, 'walk_straight': walk_straight, 'walk_bridge': walk_bridge,
-    'walk_long': lambda: walk_straight('walk_long', 15, True), 'walk_short': walk_short,
+    'plaza': plaza, 'plaza_b': lambda: plaza('b'), 'walk_straight': walk_straight, 'walk_bridge': walk_bridge,
+    'walk_long': lambda: walk_straight('walk_long', 15, True, side=7),
+    'walk_side': lambda: walk_straight('walk_side', 13, True, side=6), 'walk_short': walk_short,
     'junction_t': junction_t, 'junction_l': junction_l, 'end_cap': end_cap, 'fishing_platform': fishing_platform,
     'hut_fisher': hut_fisher, 'hut_netmaker': hut_netmaker, 'hut_cookhouse': hut_cookhouse,
     'hut_house_a': lambda: hut_house('a'), 'hut_house_b': lambda: hut_house('b'), 'hut_house_c': lambda: hut_house('c'),
@@ -1163,11 +1257,12 @@ def build_all(preview=True):
 
     def el(n, w=1):
         return (f'raft:{P}/{n}', w, proc, 'rigid')
-    wg.pool(f'{P}/plaza', [el('plaza')])
+    wg.pool(f'{P}/plaza', [el('plaza'), el('plaza_b')])
     wg.pool(f'{P}/elder', [el('elder')], fallback=f'raft:{P}/ends')
     wg.pool(f'{P}/shrine', [el('shrine')], fallback=f'raft:{P}/ends')
     wg.pool(f'{P}/docks', [el('docks')], fallback=f'raft:{P}/ends')
-    wg.pool(f'{P}/walkways', [el('walk_straight', 3), el('walk_bridge', 2), el('walk_long', 1)], fallback=f'raft:{P}/ends')
+    wg.pool(f'{P}/walkways', [el('walk_side', 4), el('walk_long', 2), el('walk_bridge', 2), el('walk_straight', 1)],
+            fallback=f'raft:{P}/ends')
     wg.pool(f'{P}/junctions', [el('junction_t', 2), el('junction_l', 2)], fallback=f'raft:{P}/ends')
     wg.pool(f'{P}/outer', [el('walk_short', 3), el('fishing_platform', 1)], fallback=f'raft:{P}/ends')
     wg.pool(f'{P}/huts', [el('hut_fisher', 2), el('hut_netmaker', 1), el('hut_cookhouse', 1), el('hut_house_a', 2),

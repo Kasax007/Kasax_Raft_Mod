@@ -10,7 +10,7 @@ Template y=0 is the ground layer (beard_thin flattens the terrain to it).
 """
 import math
 
-from .lib import B, Pal, stairs, slab, log, trapdoor, rnd, noise2, look, DIRS, OPP, MODULE
+from .lib import B, Pal, stairs, slab, log, trapdoor, rnd, noise2, look, sign, DIRS, OPP, MODULE
 
 # ------------------------------------------------------------------------------------------------ palettes
 WHITE = Pal(('minecraft:white_concrete', 55), ('minecraft:calcite', 30), ('minecraft:white_terracotta', 9),
@@ -186,7 +186,7 @@ def spiral_stairs(s):
     cx, cz = TC
     ring = [(0, -1), (1, -1), (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1)]   # clockwise from north
     start = 6   # first step on the west cell (next to the door)
-    top_k = 2 * Y_DECK - 7 + 2      # step whose top is at Y_DECK + 1
+    top_k = 2 * Y_DECK - 7          # last step, level with the deck (stand at Y_DECK + 1)
     for k in range(0, top_k + 1):
         rx, rz = ring[(start + k) % 8]
         x, z = cx + rx, cz + rz
@@ -265,7 +265,7 @@ def gallery_and_lantern(s):
     # stair opening in the deck around the spiral (the top steps sit in it)
     ring = [(0, -1), (1, -1), (1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1)]
     start = 6
-    top_k = 2 * Y_DECK - 7 + 2
+    top_k = 2 * Y_DECK - 7
     for k in range(top_k - 7, top_k + 1):
         rx, rz = ring[(start + k) % 8]
         x, z = cx + rx, cz + rz
@@ -444,6 +444,8 @@ def cottage(s):
     # door (south, open) with porch
     s.door(13, 2, z2, 'minecraft:spruce_door', 'south', hinge='right', open_=True)
     s.set(16, 2, z2, log('minecraft:stripped_spruce_log'))
+    sign(s, 14, 3, z2 + 1, 'minecraft:spruce_wall_sign[facing=south,waterlogged=false]',
+         ['', 'T. FENN', 'Keeper of', 'the Light'])
     # porch deck + roof
     for x in range(11, 17):
         for z in range(z2 + 1, z2 + 4):
@@ -651,10 +653,40 @@ def build_compound(variant):
         del s.blocks[pos]
     jetty_link(s)
     if variant == 'b':
-        # variant b: overgrown – vines on the tower base and cottage, more moss, a fallen part of the garden fence
+        # variant b: storm-worn and overgrown – vines on the tower, moss, wild garden, broken fences, shed roof down
         s.replace(lambda n: n == 'minecraft:cobblestone', 'minecraft:mossy_cobblestone', chance=0.45, seed=7)
         s.replace(lambda n: n == 'minecraft:stone_bricks', 'minecraft:mossy_stone_bricks', chance=0.3, seed=8)
         s.replace(lambda n: n == 'minecraft:spruce_fence', 'minecraft:air', chance=0.18, seed=9)
+        r = rnd('lh_b')
+        cx, cz = TC
+        for y in range(Y_FLOOR + 1, Y_FLOOR + 12):
+            for x in range(cx - 8, cx + 9):
+                for z in range(cz - 8, cz + 9):
+                    if s.name_at(x, y, z) is not None:
+                        continue
+                    ang = math.degrees(math.atan2(z - cz, x - cx)) % 360
+                    if not (150 < ang < 300):        # north-west side only
+                        continue
+                    for f, (dx, dz) in DIRS.items():
+                        nb = s.name_at(x + dx, y, z + dz)
+                        if nb and ('concrete' in nb or 'calcite' in nb or 'terracotta' in nb or 'nether_bricks' in nb
+                                   or 'diorite' in nb) and r.random() < 0.55 - (y - Y_FLOOR) * 0.04:
+                            s.set(x, y, z, f'minecraft:vine[{f}=true]')
+                            break
+        for (pos, (name, props, nbt)) in list(s.blocks.items()):
+            if name.startswith('minecraft:carrots') or name.startswith('minecraft:potatoes') or name.startswith('minecraft:beetroots'):
+                q = r.random()
+                if q < 0.35:
+                    s.set(*pos, 'minecraft:short_grass')
+                elif q < 0.45:
+                    s.set(*pos, 'minecraft:tall_grass[half=lower]')
+                    s.set(pos[0], pos[1] + 1, pos[2], 'minecraft:tall_grass[half=upper]')
+        for x in range(25, 29):
+            for z in range(29, 33):
+                if s.name_at(x, 5, z) and 'corrugated' in s.name_at(x, 5, z) and r.random() < 0.6:
+                    s.set(x, 5, z, 'minecraft:air')
+        s.set(26, 1, 30, 'raft:corrugated_metal_slab[type=bottom,waterlogged=false]')
+        s.set(27, 1, 31, 'raft:corrugated_metal_slab[type=bottom,waterlogged=false]')
     s.finalize()
     return s
 

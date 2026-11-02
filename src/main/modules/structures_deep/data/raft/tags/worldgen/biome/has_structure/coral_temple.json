@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "raft:coral_shallows",
+      "required": false
+    },
+    {
+      "id": "raft:glowing_lagoon",
+      "required": false
+    }
+  ]
+}

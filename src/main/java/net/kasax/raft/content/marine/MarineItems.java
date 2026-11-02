@@ -3,6 +3,7 @@ package net.kasax.raft.content.marine;
 import net.kasax.raft.content.BcReg;
 import net.kasax.raft.content.BcTabs;
 import net.kasax.raft.item.ModItems;
+import net.kasax.raft.item.custom.TooltipItem;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -43,9 +44,11 @@ public final class MarineItems {
                 new Item.Properties().spawnEgg(MarineEntities.ANGLERFISH), tab);
         MORAY_EEL_SPAWN_EGG = BcReg.item("moray_eel_spawn_egg", SpawnEggItem::new, new Item.Properties().spawnEgg(MarineEntities.MORAY_EEL), tab);
 
-        JELLY_BLOB = BcReg.item("jelly_blob", Item::new, new Item.Properties(), tab);
-        GLOW_JELLY = BcReg.item("glow_jelly", Item::new, new Item.Properties().rarity(Rarity.UNCOMMON), tab);
-        ANGLER_LURE = BcReg.item("angler_lure", Item::new, new Item.Properties().rarity(Rarity.UNCOMMON), tab);
+        JELLY_BLOB = BcReg.item("jelly_blob", p -> new TooltipItem(p, "tooltip.raft.jelly_blob"), new Item.Properties(), tab);
+        GLOW_JELLY = BcReg.item("glow_jelly", p -> new TooltipItem(p, "tooltip.raft.glow_jelly"),
+                new Item.Properties().rarity(Rarity.UNCOMMON), tab);
+        ANGLER_LURE = BcReg.item("angler_lure", p -> new TooltipItem(p, "tooltip.raft.angler_lure"),
+                new Item.Properties().rarity(Rarity.UNCOMMON), tab);
         EEL_FILLET = BcReg.item("eel_fillet", Item::new, new Item.Properties().food(EEL_FILLET_FOOD), tab);
         COOKED_EEL_FILLET = BcReg.item("cooked_eel_fillet", Item::new, new Item.Properties().food(COOKED_EEL_FILLET_FOOD), tab);
 

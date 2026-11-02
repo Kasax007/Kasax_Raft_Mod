@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "raft:block/cracked_concrete_slab"
+    },
+    "type=top": {
+      "model": "raft:block/cracked_concrete_slab_top"
+    },
+    "type=double": {
+      "model": "raft:block/cracked_concrete"
+    }
+  }
+}

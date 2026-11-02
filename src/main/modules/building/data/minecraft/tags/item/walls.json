@@ -1,6 +1,11 @@
 {
   "values": [
     "raft:coral_stone_brick_wall",
-    "raft:tidestone_brick_wall"
+    "raft:coral_stone_wall",
+    "raft:mossy_coral_stone_brick_wall",
+    "raft:tidestone_brick_wall",
+    "raft:tidestone_wall",
+    "raft:mossy_tidestone_brick_wall",
+    "raft:cracked_concrete_wall"
   ]
 }

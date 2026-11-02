@@ -66,9 +66,9 @@ RAFT_FULL = {
     'tidestone_pillar', 'glowing_tidestone', 'coral_stone', 'polished_coral_stone', 'coral_stone_bricks',
     'mossy_coral_stone_bricks', 'aqua_sea_glass', 'green_sea_glass', 'blue_sea_glass', 'cracked_concrete',
     'mossy_concrete', 'rebar_concrete', 'cracked_glass', 'riveted_hull', 'rusty_hull', 'corrugated_metal',
-    'rusted_plate', 'steel_beam', 'porthole', 'shipping_container_red', 'shipping_container_blue',
+    'rusted_plate', 'porthole', 'shipping_container_red', 'shipping_container_blue',
     'shipping_container_green', 'sanctum_tidestone', 'sanctum_glass', 'tide_seal', 'bubble_vent', 'pumice',
-    'shell_sand', 'black_sand', 'volcanic_ash', 'aquarium', 'wooden_crate', 'lighthouse_lens', 'server_rack',
+    'shell_sand', 'black_sand', 'volcanic_ash', 'aquarium', 'wooden_crate', 'lighthouse_lens',
     'weathered_planks', 'teak_planks', 'asphalt', 'asphalt_line'}
 _NONFULL_SUFFIX = ('_stairs', '_slab', '_wall', '_fence', '_fence_gate', '_pane', '_bars', '_chain', '_door',
                    '_trapdoor', '_sign', '_button', '_pressure_plate', '_carpet', '_bed', '_torch', '_lantern',

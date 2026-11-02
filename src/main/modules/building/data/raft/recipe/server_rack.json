@@ -1,6 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "decorations",
+  "category": "misc",
   "key": {
     "S": "raft:scrap_metal",
     "C": "raft:circuit_board",

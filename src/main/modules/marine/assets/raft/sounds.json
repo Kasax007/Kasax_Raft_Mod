@@ -1,0 +1,26 @@
+{
+  "entity.whale.song": {
+    "sounds": [
+      {
+        "name": "raft:marine/whale_song1",
+        "stream": true
+      },
+      {
+        "name": "raft:marine/whale_song2",
+        "stream": true
+      },
+      {
+        "name": "raft:marine/whale_song3",
+        "stream": true
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.whale.song"
+  },
+  "entity.whale.spout": {
+    "sounds": [
+      "raft:marine/whale_spout1",
+      "raft:marine/whale_spout2"
+    ],
+    "subtitle": "subtitles.raft.entity.whale.spout"
+  }
+}

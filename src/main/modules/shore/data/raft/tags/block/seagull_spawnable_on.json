@@ -1,0 +1,26 @@
+{
+  "values": [
+    "#minecraft:sand",
+    "#minecraft:dirt",
+    "minecraft:grass_block",
+    "minecraft:stone",
+    "minecraft:gravel",
+    "minecraft:mud",
+    {
+      "id": "raft:shell_sand",
+      "required": false
+    },
+    {
+      "id": "raft:black_sand",
+      "required": false
+    },
+    {
+      "id": "raft:pumice",
+      "required": false
+    },
+    {
+      "id": "raft:volcanic_ash",
+      "required": false
+    }
+  ]
+}

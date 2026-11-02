@@ -163,6 +163,36 @@ def smelt(name, ingredient, result):
     _unlock(name, 'building', [ingredient])
 
 
+def guard_foreign_items():
+    """Recipes and unlock advancements that use items of other modules (e.g. raft:sea_glass_shard of `world`) only
+    load when that item exists, so a missing item never breaks registry loading (fabric:load_conditions)."""
+    import glob
+    import json
+    import re
+    from bclib.paths import RESOURCES
+    known = set()
+    base_lang = json.load(open(os.path.join(RESOURCES, 'assets', NS, 'lang', 'en_us.json')))
+    for k in list(base_lang) + list(LANG):
+        m = re.match(r'(?:block|item)\.raft\.([a-z0-9_]+)$', k)
+        if m:
+            known.add(m.group(1))
+    root = module_dir(M)
+    files = glob.glob(os.path.join(root, 'data', NS, 'recipe', '*.json')) + \
+        glob.glob(os.path.join(root, 'data', NS, 'advancement', 'recipes', '*', '*.json'))
+    for f in files:
+        d = json.load(open(f))
+        txt = json.dumps({k: v for k, v in d.items() if k not in ('result', 'rewards')})
+        foreign = sorted({x for x in re.findall(r'"raft:([a-z0-9_]+)"', txt)
+                          if x not in known and not f.endswith(f'/{x}.json')} - {
+            r.split(':')[1] for r in re.findall(r'"recipes": "(raft:[a-z0-9_]+)"', txt)})
+        if foreign:
+            d = {'fabric:load_conditions': [{'condition': 'fabric:registry_contains', 'registry': 'minecraft:item',
+                                             'values': [rid(x) for x in foreign]}], **d}
+            with open(f, 'w', encoding='utf-8') as fh:
+                json.dump(d, fh, indent=2)
+                fh.write('\n')
+
+
 def write_unlocks():
     for name, folder, ids in UNLOCKS:
         items = [i for i in ids if not i.startswith('#')]
@@ -210,6 +240,11 @@ def textures():
     S(top, 'block/teak_door_top')
     S(tex.outline(TW.teak_door_item(bottom, top)), 'item/teak_door')
     S(TW.teak_trapdoor(), 'block/teak_trapdoor')
+    bottom, top = TW.weathered_door_bottom(), TW.weathered_door_top()
+    S(bottom, 'block/weathered_door_bottom')
+    S(top, 'block/weathered_door_top')
+    S(tex.outline(TW.teak_door_item(bottom, top)), 'item/weathered_door')
+    S(TW.weathered_trapdoor(), 'block/weathered_trapdoor')
     # sea glass
     for c in ('aqua', 'green', 'blue'):
         S(TW.sea_glass(c), f'block/{c}_sea_glass')
@@ -369,22 +404,25 @@ def wood():
            group='planks')
     wood_family('teak', 'Teak')
     shapeless('teak_planks', ['minecraft:dark_oak_planks', 'raft:palm_planks'], 'teak_planks', 2)
-    # teak door + trapdoor
-    A.door(M, 'teak_door', 'block/teak_door_bottom', 'block/teak_door_top')
-    loot_door('teak_door')
-    name('teak_door', 'Teak Door')
-    A.trapdoor(M, 'teak_trapdoor', 'block/teak_trapdoor')
-    loot_self('teak_trapdoor')
-    name('teak_trapdoor', 'Teak Hatch Grating')
-    both('minecraft:doors', 'teak_door')
-    both('minecraft:wooden_doors', 'teak_door')
-    both('minecraft:trapdoors', 'teak_trapdoor')
-    both('minecraft:wooden_trapdoors', 'teak_trapdoor')
-    tag('block', 'minecraft:mineable/axe', 'teak_door', 'teak_trapdoor')
-    shaped('teak_door', ['PP', 'PP', 'PP'], {'P': 'teak_planks'}, 'teak_door', 3, category='redstone',
-           group='wooden_door')
-    shaped('teak_trapdoor', ['PPP', 'PPP'], {'P': 'teak_planks'}, 'teak_trapdoor', 2, category='redstone',
-           group='wooden_trapdoor')
+    wood_doors('teak', 'Teak', 'Teak Hatch Grating')
+    wood_doors('weathered', 'Weathered', 'Weathered Hatch')
+
+
+def wood_doors(wood, label, hatch_label):
+    door, hatch = f'{wood}_door', f'{wood}_trapdoor'
+    A.door(M, door, f'block/{door}_bottom', f'block/{door}_top')
+    loot_door(door)
+    name(door, f'{label} Door')
+    A.trapdoor(M, hatch, f'block/{hatch}')
+    loot_self(hatch)
+    name(hatch, hatch_label)
+    both('minecraft:doors', door)
+    both('minecraft:wooden_doors', door)
+    both('minecraft:trapdoors', hatch)
+    both('minecraft:wooden_trapdoors', hatch)
+    tag('block', 'minecraft:mineable/axe', door, hatch)
+    shaped(door, ['PP', 'PP', 'PP'], {'P': f'{wood}_planks'}, door, 3, category='redstone', group='wooden_door')
+    shaped(hatch, ['PPP', 'PPP'], {'P': f'{wood}_planks'}, hatch, 2, category='redstone', group='wooden_trapdoor')
 
 
 def sea_glass():
@@ -396,7 +434,7 @@ def sea_glass():
         loot_self(f'{b}_pane')
         name(f'{b}_pane', f'{lab} Sea Glass Pane')
         tag('block', 'minecraft:impermeable', b)
-        shaped(f'{b}_pane', ['GGG', 'GGG'], {'G': b}, f'{b}_pane', 16, category='decorations')
+        shaped(f'{b}_pane', ['GGG', 'GGG'], {'G': b}, f'{b}_pane', 16, category='misc')
     S = 'raft:sea_glass_shard'
     shaped('aqua_sea_glass', ['SS', 'SS'], {'S': S}, 'aqua_sea_glass', 1)
     shapeless('green_sea_glass', [S, S, S, S, 'minecraft:green_dye'], 'green_sea_glass', 1)
@@ -410,6 +448,11 @@ def coral_stone():
     simple('mossy_coral_stone_bricks', 'Mossy Coral Stone Bricks')
     stone_set('coral_stone_bricks', 'Coral Stone Brick', 'coral_stone_brick_stairs', 'coral_stone_brick_slab',
               'coral_stone_brick_wall', cut_from=('coral_stone', 'polished_coral_stone'))
+    stone_set('coral_stone', 'Coral Stone', 'coral_stone_stairs', 'coral_stone_slab', 'coral_stone_wall')
+    stone_set('polished_coral_stone', 'Polished Coral Stone', 'polished_coral_stone_stairs',
+              'polished_coral_stone_slab', cut_from=('coral_stone',))
+    stone_set('mossy_coral_stone_bricks', 'Mossy Coral Stone Brick', 'mossy_coral_stone_brick_stairs',
+              'mossy_coral_stone_brick_slab', 'mossy_coral_stone_brick_wall')
     corals = ['minecraft:tube_coral_block', 'minecraft:brain_coral_block', 'minecraft:bubble_coral_block',
               'minecraft:fire_coral_block', 'minecraft:horn_coral_block', 'minecraft:dead_tube_coral_block',
               'minecraft:dead_brain_coral_block', 'minecraft:dead_bubble_coral_block',
@@ -423,7 +466,10 @@ def coral_stone():
     cut('polished_coral_stone', 'coral_stone_bricks')
     shapeless('mossy_coral_stone_bricks', ['coral_stone_bricks', MOSS], 'mossy_coral_stone_bricks')
     tag('block', 'minecraft:mineable/pickaxe', 'coral_stone', 'polished_coral_stone', 'coral_stone_bricks',
-        'mossy_coral_stone_bricks', 'coral_stone_brick_stairs', 'coral_stone_brick_slab', 'coral_stone_brick_wall')
+        'mossy_coral_stone_bricks', 'coral_stone_brick_stairs', 'coral_stone_brick_slab', 'coral_stone_brick_wall',
+        'coral_stone_stairs', 'coral_stone_slab', 'coral_stone_wall', 'polished_coral_stone_stairs',
+        'polished_coral_stone_slab', 'mossy_coral_stone_brick_stairs', 'mossy_coral_stone_brick_slab',
+        'mossy_coral_stone_brick_wall')
 
 
 MOSS = ['minecraft:kelp', 'minecraft:vine', 'minecraft:moss_block']
@@ -449,6 +495,9 @@ def tidestone():
     name('glowing_tidestone', 'Glowing Tidestone')
     stone_set('tidestone_bricks', 'Tidestone Brick', 'tidestone_brick_stairs', 'tidestone_brick_slab',
               'tidestone_brick_wall', cut_from=('tidestone',))
+    stone_set('tidestone', 'Tidestone', 'tidestone_stairs', 'tidestone_slab', 'tidestone_wall')
+    stone_set('mossy_tidestone_bricks', 'Mossy Tidestone Brick', 'mossy_tidestone_brick_stairs',
+              'mossy_tidestone_brick_slab', 'mossy_tidestone_brick_wall')
     shaped('tidestone', ['SP', 'PS'], {'S': ['minecraft:stone', 'minecraft:cobblestone'],
                                        'P': 'minecraft:prismarine_shard'}, 'tidestone', 2)
     shaped('tidestone_bricks', ['TT', 'TT'], {'T': 'tidestone'}, 'tidestone_bricks', 4)
@@ -463,7 +512,9 @@ def tidestone():
               'glowing_tidestone')
     tag('block', 'minecraft:mineable/pickaxe', 'tidestone', 'tidestone_bricks', 'cracked_tidestone_bricks',
         'mossy_tidestone_bricks', 'chiseled_tidestone', 'tidestone_pillar', 'glowing_tidestone',
-        'tidestone_brick_stairs', 'tidestone_brick_slab', 'tidestone_brick_wall')
+        'tidestone_brick_stairs', 'tidestone_brick_slab', 'tidestone_brick_wall', 'tidestone_stairs',
+        'tidestone_slab', 'tidestone_wall', 'mossy_tidestone_brick_stairs', 'mossy_tidestone_brick_slab',
+        'mossy_tidestone_brick_wall')
 
 
 def drowned_city():
@@ -487,7 +538,10 @@ def drowned_city():
     shapeless('rebar_concrete', ['cracked_concrete', 'minecraft:iron_nugget', 'minecraft:iron_nugget'],
               'rebar_concrete')
     del concrete
-    tag('block', 'minecraft:mineable/pickaxe', 'cracked_concrete', 'mossy_concrete', 'rebar_concrete')
+    stone_set('cracked_concrete', 'Cracked Concrete', 'cracked_concrete_stairs', 'cracked_concrete_slab',
+              'cracked_concrete_wall')
+    tag('block', 'minecraft:mineable/pickaxe', 'cracked_concrete', 'mossy_concrete', 'rebar_concrete',
+        'cracked_concrete_stairs', 'cracked_concrete_slab', 'cracked_concrete_wall')
 
     simple('asphalt', 'Asphalt')
     A.block_model(M, 'asphalt_line', 'minecraft:block/cube_bottom_top',
@@ -504,7 +558,10 @@ def drowned_city():
     shaped('asphalt_slab', ['AAA'], {'A': 'asphalt'}, 'asphalt_slab', 6)
     cut('asphalt', 'asphalt_slab', 2)
     cut('asphalt', 'asphalt_line')
-    tag('block', 'minecraft:mineable/pickaxe', 'asphalt', 'asphalt_line', 'asphalt_slab')
+    stairs('asphalt_stairs', 'Asphalt Stairs', 'block/asphalt')
+    shaped('asphalt_stairs', ['A  ', 'AA ', 'AAA'], {'A': 'asphalt'}, 'asphalt_stairs', 4)
+    cut('asphalt', 'asphalt_stairs')
+    tag('block', 'minecraft:mineable/pickaxe', 'asphalt', 'asphalt_line', 'asphalt_slab', 'asphalt_stairs')
 
     simple('cracked_glass', 'Cracked Glass', loot=loot_silk)
     A.pane(M, 'cracked_glass_pane', 'block/cracked_glass', 'block/cracked_glass_pane_top')
@@ -513,7 +570,7 @@ def drowned_city():
     tag('block', 'minecraft:impermeable', 'cracked_glass')
     shapeless('cracked_glass', ['minecraft:glass', 'minecraft:gravel'], 'cracked_glass')
     shaped('cracked_glass_pane', ['GGG', 'GGG'], {'G': 'cracked_glass'}, 'cracked_glass_pane', 16,
-           category='decorations')
+           category='misc')
 
 
 METAL = []  # blocks that need a pickaxe and at least a stone tool
@@ -592,7 +649,7 @@ def ship_steel():
     A.item_def(M, 'steel_railing')
     loot_self('steel_railing')
     name('steel_railing', 'Steel Railing')
-    shaped('steel_railing', ['NNN', 'NNN'], {'N': N}, 'steel_railing', 6, category='decorations')
+    shaped('steel_railing', ['NNN', 'NNN'], {'N': N}, 'steel_railing', 6, category='misc')
 
     simple('porthole', 'Porthole')
     shaped('porthole', [' I ', 'IGI', ' I '], {'I': I, 'G': 'minecraft:glass'}, 'porthole', 2)
@@ -693,7 +750,7 @@ def tech():
     loot_self('control_panel')
     name('control_panel', 'Control Panel')
     shaped('control_panel', [' G ', 'RCR', 'SSS'], {'G': 'minecraft:glass_pane', 'R': R, 'C': C, 'S': SC},
-           'control_panel', 1, category='decorations')
+           'control_panel', 1, category='misc')
 
     # server rack: cabinet with an emissive LED overlay on the front
     rack = [
@@ -712,7 +769,7 @@ def tech():
     loot_self('server_rack')
     name('server_rack', 'Server Rack')
     shaped('server_rack', ['SCS', 'SRS', 'SCS'], {'S': SC, 'C': C, 'R': R}, 'server_rack', 1,
-           category='decorations')
+           category='misc')
 
     # satellite dish: base, post, yoke, a dish tilted 45 deg up-north with a feed arm and horn
     dish_rot = {'origin': [8, 10, 8], 'axis': 'x', 'angle': 45}
@@ -738,7 +795,7 @@ def tech():
     loot_self('satellite_dish')
     name('satellite_dish', 'Satellite Dish')
     shaped('satellite_dish', ['S S', ' C ', 'SIS'], {'S': SC, 'C': C, 'I': I}, 'satellite_dish', 1,
-           category='decorations')
+           category='misc')
 
     # wind turbine: pole + nacelle + tail vane (the rotor is drawn by the block entity renderer)
     W = {'particle': 'block/wind_turbine_body', 'body': 'block/wind_turbine_body',
@@ -812,6 +869,7 @@ def main():
     write_unlocks()
     lang()
     A.flush(M)
+    guard_foreign_items()
     n = sum(len(f) for _, _, f in os.walk(root))
     print(f'building: wrote {n} files into {root}')
 

@@ -1,0 +1,18 @@
+{
+  "values": [
+    "#minecraft:sand",
+    "minecraft:gravel",
+    "minecraft:mud",
+    "minecraft:grass_block",
+    "minecraft:coarse_dirt",
+    "minecraft:muddy_mangrove_roots",
+    {
+      "id": "raft:shell_sand",
+      "required": false
+    },
+    {
+      "id": "raft:black_sand",
+      "required": false
+    }
+  ]
+}

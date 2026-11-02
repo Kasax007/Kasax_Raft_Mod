@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "raft:block/tidestone_slab"
+    },
+    "type=top": {
+      "model": "raft:block/tidestone_slab_top"
+    },
+    "type=double": {
+      "model": "raft:block/tidestone"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "S": "minecraft:prismarine_shard",
+    "L": "raft:angler_lure"
+  },
+  "pattern": [
+    " S ",
+    "SLS",
+    " S "
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:sea_lantern"
+  }
+}

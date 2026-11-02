@@ -3,7 +3,13 @@
     "raft:weathered_slab",
     "raft:teak_slab",
     "raft:coral_stone_brick_slab",
+    "raft:coral_stone_slab",
+    "raft:polished_coral_stone_slab",
+    "raft:mossy_coral_stone_brick_slab",
     "raft:tidestone_brick_slab",
+    "raft:tidestone_slab",
+    "raft:mossy_tidestone_brick_slab",
+    "raft:cracked_concrete_slab",
     "raft:asphalt_slab",
     "raft:corrugated_metal_slab",
     "raft:catwalk"

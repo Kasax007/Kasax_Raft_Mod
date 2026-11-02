@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "raft:block/coral_stone",
+    "top": "raft:block/coral_stone",
+    "side": "raft:block/coral_stone"
+  }
+}

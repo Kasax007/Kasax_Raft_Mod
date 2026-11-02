@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "raft:pirate_cove",
+      "required": false
+    },
+    {
+      "id": "raft:wreck_galleon",
+      "required": false
+    }
+  ]
+}

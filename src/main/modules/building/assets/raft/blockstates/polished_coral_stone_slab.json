@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "raft:block/polished_coral_stone_slab"
+    },
+    "type=top": {
+      "model": "raft:block/polished_coral_stone_slab_top"
+    },
+    "type=double": {
+      "model": "raft:block/polished_coral_stone"
+    }
+  }
+}

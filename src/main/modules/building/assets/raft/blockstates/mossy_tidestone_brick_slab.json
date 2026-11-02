@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "raft:block/mossy_tidestone_brick_slab"
+    },
+    "type=top": {
+      "model": "raft:block/mossy_tidestone_brick_slab_top"
+    },
+    "type=double": {
+      "model": "raft:block/mossy_tidestone_bricks"
+    }
+  }
+}

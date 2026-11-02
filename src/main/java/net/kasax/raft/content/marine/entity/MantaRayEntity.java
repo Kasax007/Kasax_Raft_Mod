@@ -40,6 +40,7 @@ public class MantaRayEntity extends WaterAnimal {
     public MantaRayEntity(EntityType<? extends MantaRayEntity> type, Level level) {
         super(type, level);
         this.moveControl = new GlideMoveControl(this, 3.0F, 20.0F, 1.5F);
+        this.lookControl = new GlideLookControl(this);
         this.nextLeap = 2400 + this.random.nextInt(3600);
     }
 
@@ -101,8 +102,13 @@ public class MantaRayEntity extends WaterAnimal {
     @Override
     public void aiStep() {
         super.aiStep();
-        if (!this.level().isClientSide() && this.panicTicks > 0) {
-            this.panicTicks--;
+        if (!this.level().isClientSide()) {
+            if (this.panicTicks > 0) {
+                this.panicTicks--;
+            }
+            if (this.nextLeap > 0) {
+                this.nextLeap--;
+            }
         }
         if (this.level().isClientSide() && this.isInWater() && this.random.nextInt(30) == 0) {
             this.level().addParticle(ParticleTypes.BUBBLE, this.getRandomX(1.0), this.getY() + 0.2, this.getRandomZ(1.0), 0.0, 0.05, 0.0);
@@ -269,7 +275,7 @@ public class MantaRayEntity extends WaterAnimal {
         @Override
         public boolean canUse() {
             MantaRayEntity m = MantaRayEntity.this;
-            if (--m.nextLeap > 0 || !m.isInWater()) {
+            if (m.nextLeap > 0 || !m.isInWater()) {
                 return false;
             }
             m.nextLeap = 2400 + m.random.nextInt(3600);

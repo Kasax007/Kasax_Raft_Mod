@@ -49,6 +49,7 @@ public class WhaleEntity extends WaterAnimal {
     public WhaleEntity(EntityType<? extends WhaleEntity> type, Level level) {
         super(type, level);
         this.moveControl = new GlideMoveControl(this, 1.6F, 25.0F, 1.2F);
+        this.lookControl = new GlideLookControl(this);
         this.nextBreath = 600 + this.random.nextInt(1200);
         this.nextSong = 200 + this.random.nextInt(900);
     }
@@ -197,6 +198,9 @@ public class WhaleEntity extends WaterAnimal {
         }
         if (this.panicTicks > 0) {
             this.panicTicks--;
+        }
+        if (this.nextBreath > 0) {
+            this.nextBreath--;
         }
         if (--this.nextSong <= 0) {
             this.nextSong = 900 + this.random.nextInt(1500);
@@ -372,7 +376,7 @@ public class WhaleEntity extends WaterAnimal {
         @Override
         public boolean canUse() {
             WhaleEntity w = WhaleEntity.this;
-            if (w.isInWater() && --w.nextBreath <= 0) {
+            if (w.isInWater() && w.nextBreath <= 0) {
                 w.nextBreath = 1200 + w.random.nextInt(1200);
                 return true;
             }

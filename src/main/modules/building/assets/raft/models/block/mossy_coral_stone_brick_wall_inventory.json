@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/wall_inventory",
+  "textures": {
+    "wall": "raft:block/mossy_coral_stone_bricks"
+  }
+}

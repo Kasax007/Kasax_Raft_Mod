@@ -368,7 +368,8 @@ public class SharkRaftGoal extends Goal {
                 break;
             }
         }
-        this.swimY = surface - 0.25;
+        // feet just above the top water block: the body stays under water, the dorsal fin cuts the surface
+        this.swimY = surface + 0.05;
         return true;
     }
 

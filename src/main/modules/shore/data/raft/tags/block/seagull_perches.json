@@ -1,0 +1,44 @@
+{
+  "values": [
+    "raft:raft_foundation",
+    "raft:reinforced_foundation",
+    "#minecraft:fences",
+    "#minecraft:logs",
+    "#minecraft:walls",
+    "raft:palm_thatch",
+    "raft:palm_thatch_slab",
+    "raft:rope_coil",
+    {
+      "id": "raft:weathered_planks",
+      "required": false
+    },
+    {
+      "id": "raft:weathered_planks_slab",
+      "required": false
+    },
+    {
+      "id": "raft:teak_planks",
+      "required": false
+    },
+    {
+      "id": "raft:rope_railing",
+      "required": false
+    },
+    {
+      "id": "raft:steel_railing",
+      "required": false
+    },
+    {
+      "id": "raft:buoy_red",
+      "required": false
+    },
+    {
+      "id": "raft:buoy_green",
+      "required": false
+    },
+    {
+      "id": "raft:catwalk",
+      "required": false
+    }
+  ]
+}

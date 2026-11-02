@@ -11,6 +11,8 @@
     "raft:teak_fence",
     "raft:teak_fence_gate",
     "raft:teak_door",
-    "raft:teak_trapdoor"
+    "raft:teak_trapdoor",
+    "raft:weathered_door",
+    "raft:weathered_trapdoor"
   ]
 }

@@ -3,7 +3,14 @@
     "raft:weathered_stairs",
     "raft:teak_stairs",
     "raft:coral_stone_brick_stairs",
+    "raft:coral_stone_stairs",
+    "raft:polished_coral_stone_stairs",
+    "raft:mossy_coral_stone_brick_stairs",
     "raft:tidestone_brick_stairs",
+    "raft:tidestone_stairs",
+    "raft:mossy_tidestone_brick_stairs",
+    "raft:cracked_concrete_stairs",
+    "raft:asphalt_stairs",
     "raft:corrugated_metal_stairs"
   ]
 }
