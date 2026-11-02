@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "hanging=false": {
+      "model": "raft:block/coconut_lantern"
+    },
+    "hanging=true": {
+      "model": "raft:block/coconut_lantern_hanging"
+    }
+  }
+}

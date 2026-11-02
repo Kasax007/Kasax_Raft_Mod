@@ -1,0 +1,136 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "raft:block/shark_jaw_trophy",
+    "trophy": "raft:block/shark_jaw_trophy"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        14
+      ],
+      "to": [
+        16,
+        16,
+        15
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#trophy"
+        },
+        "south": {
+          "uv": [
+            16,
+            0,
+            0,
+            16
+          ],
+          "texture": "#trophy"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            1
+          ],
+          "texture": "#trophy"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            1
+          ],
+          "texture": "#trophy"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            1,
+            16
+          ],
+          "texture": "#trophy"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            1,
+            16
+          ],
+          "texture": "#trophy"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        4,
+        13
+      ],
+      "to": [
+        13,
+        12,
+        14
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            3,
+            5,
+            13,
+            13
+          ],
+          "texture": "#trophy"
+        },
+        "up": {
+          "uv": [
+            3,
+            5,
+            13,
+            6
+          ],
+          "texture": "#trophy"
+        },
+        "down": {
+          "uv": [
+            3,
+            5,
+            13,
+            6
+          ],
+          "texture": "#trophy"
+        },
+        "east": {
+          "uv": [
+            3,
+            5,
+            4,
+            13
+          ],
+          "texture": "#trophy"
+        },
+        "west": {
+          "uv": [
+            3,
+            5,
+            4,
+            13
+          ],
+          "texture": "#trophy"
+        }
+      }
+    }
+  ]
+}

@@ -23,7 +23,12 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.phys.AABB;
+import net.kasax.raft.world.OceanDebris;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -149,6 +154,10 @@ public class ItemCollectorBlockEntity extends BlockEntity implements MenuProvide
         }
         boolean isWaterlogged = state.getValue(ItemCatcher.WATERLOGGED);
 
+        if (isWaterlogged && level.getGameTime() % 5 == 0) {
+            catchDebris(serverLevel, pos);
+        }
+
         Holder<Biome> biomeEntry = level.getBiome(pos);
 
         if (isWaterlogged && biomeEntry.is(ModBiomes.RAFT_OCEAN_BIOME)) {
@@ -168,6 +177,39 @@ public class ItemCollectorBlockEntity extends BlockEntity implements MenuProvide
                 this.resetProgress();
                 setChanged(level, pos, state);
             }
+        }
+    }
+
+    /**
+     * Collects floating ocean debris that drifts into the catcher. The items go to the output slot,
+     * as long as the slot holds the same item (or nothing) and has room.
+     */
+    private void catchDebris(ServerLevel level, BlockPos pos) {
+        AABB area = new AABB(pos).inflate(1.5, 1.0, 1.5);
+        for (ItemEntity item : level.getEntitiesOfClass(ItemEntity.class, area, OceanDebris::isDebris)) {
+            ItemStack stack = item.getItem();
+            ItemStack out = this.getItem(OUTPUT_SLOT);
+            if (out.isEmpty()) {
+                this.setItem(OUTPUT_SLOT, stack.copy());
+                item.discard();
+            } else if (ItemStack.isSameItemSameComponents(out, stack)) {
+                int moved = Math.min(out.getMaxStackSize() - out.getCount(), stack.getCount());
+                if (moved <= 0) {
+                    continue;
+                }
+                out.grow(moved);
+                stack.shrink(moved);
+                if (stack.isEmpty()) {
+                    item.discard();
+                } else {
+                    item.setItem(stack);
+                }
+            } else {
+                continue;
+            }
+            level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.3F, 1.2F);
+            setChanged(level, pos, getBlockState());
+            level.sendBlockUpdated(pos, getBlockState(), getBlockState(), 3);
         }
     }
 

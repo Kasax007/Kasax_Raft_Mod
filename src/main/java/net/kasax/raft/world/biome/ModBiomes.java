@@ -1,6 +1,7 @@
 package net.kasax.raft.world.biome;
 
 import net.kasax.raft.Raft;
+import net.kasax.raft.entity.ModEntities;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BiomeDefaultFeatures;
@@ -39,6 +40,8 @@ public class ModBiomes {
         MobSpawnSettings.Builder spawns = new MobSpawnSettings.Builder();
         // squid, tropical fish, dolphins, drowned and the usual night monsters and cave mobs
         BiomeDefaultFeatures.warmOceanSpawns(spawns, 1, 3);
+        // Bruce, the shark (rare)
+        spawns.addSpawn(ModEntities.SHARK, 3, 1, 1);
 
         HolderGetter<PlacedFeature> placedFeatures = context.lookup(Registries.PLACED_FEATURE);
         HolderGetter<WorldCarver> carvers = context.lookup(Registries.CARVER);

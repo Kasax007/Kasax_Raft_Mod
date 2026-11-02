@@ -2,11 +2,13 @@
 06d1dcc4a13041ed3690107737e30557cb649d44 data/minecraft/tags/item/chest_armor.json
 ea6d645677f032cc897e1cf832b7de63b21c2339 data/minecraft/tags/item/creeper_drop_music_discs.json
 89f756f954abeacddc056d6df23e05bfb5c98ce8 data/minecraft/tags/item/fence_gates.json
+a654f37368f924e2b111aa1a4c7b0c25b66bd125 data/minecraft/tags/item/fishes.json
 074b12059e47d50a93f0b7bb8f4211ce87b93125 data/minecraft/tags/item/foot_armor.json
 4c334f2346ee024d1ace30bac8530cf14fcf942b data/minecraft/tags/item/head_armor.json
 b20443211cc80ea423440ad4dc1668d39615bfbc data/minecraft/tags/item/leaves.json
 ec7148304d0cf137746539db553185724fa0296b data/minecraft/tags/item/leg_armor.json
 335bc946e0674586b9a2e6f3c0a6d7de3b0d1950 data/minecraft/tags/item/logs_that_burn.json
+a654f37368f924e2b111aa1a4c7b0c25b66bd125 data/minecraft/tags/item/meat.json
 95e4ae8c8364ffbca6d808649a6ba0768071df43 data/minecraft/tags/item/planks.json
 a90e953f3bc97d588de5a5f1fe92688fb4dcb855 data/minecraft/tags/item/saplings.json
 78c37061029c58d78cab5bfe6884d9cf7ee2e730 data/minecraft/tags/item/trimmable_armor.json
@@ -14,9 +16,10 @@ ce5e411358069772eac3cab4b25a89ea72b9ecb4 data/minecraft/tags/item/wooden_buttons
 55611d43920495262d5f9d523888cd2bae374f28 data/minecraft/tags/item/wooden_doors.json
 2d08d1e9b1120d3469e7a0c0778581564b258a13 data/minecraft/tags/item/wooden_fences.json
 a342d27dc9b69e504d5ec628de89b86588a6e6b0 data/minecraft/tags/item/wooden_pressure_plates.json
-33124f60b9e55c62b578ad33782cc23b73d11aa6 data/minecraft/tags/item/wooden_slabs.json
+8b9a4dbdd06d87587fc4b12f8de817e30ee62130 data/minecraft/tags/item/wooden_slabs.json
 21d55dfa334b0f81faa4f691d72ef8d033ae9bf9 data/minecraft/tags/item/wooden_stairs.json
 ee4bd2914894ded1d3c235e6b85cb5c175aae501 data/minecraft/tags/item/wooden_trapdoors.json
 baa07e4c9cf6977211c4372483240ef68b8c1e97 data/raft/tags/item/driftwood_logs.json
+66b4c3064ce37d174e38989ffe31ffe9c9d382cc data/raft/tags/item/grill_fuel.json
 b44145a4684e7846c3e6b1b84fd7d92d4a078232 data/raft/tags/item/palm_logs.json
 47e039e2c52b475662e4a2777e3ca7dd21f54cf3 data/raft/tags/item/repairs_titanium_armor.json

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "P": "#minecraft:planks",
+    "T": "raft:shark_tooth"
+  },
+  "pattern": [
+    "PPP",
+    "TTT"
+  ],
+  "result": {
+    "id": "raft:shark_jaw_trophy"
+  }
+}

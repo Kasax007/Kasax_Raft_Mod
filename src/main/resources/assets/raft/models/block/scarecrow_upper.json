@@ -1,0 +1,281 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "raft:block/scarecrow",
+    "scarecrow": "raft:block/scarecrow"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        7
+      ],
+      "to": [
+        9,
+        4,
+        9
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            8,
+            8,
+            10,
+            16
+          ],
+          "texture": "#scarecrow"
+        },
+        "south": {
+          "uv": [
+            8,
+            8,
+            10,
+            16
+          ],
+          "texture": "#scarecrow"
+        },
+        "east": {
+          "uv": [
+            8,
+            8,
+            10,
+            16
+          ],
+          "texture": "#scarecrow"
+        },
+        "west": {
+          "uv": [
+            8,
+            8,
+            10,
+            16
+          ],
+          "texture": "#scarecrow"
+        },
+        "up": {
+          "uv": [
+            8,
+            8,
+            10,
+            16
+          ],
+          "texture": "#scarecrow"
+        },
+        "down": {
+          "uv": [
+            8,
+            8,
+            10,
+            16
+          ],
+          "texture": "#scarecrow"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        4,
+        4
+      ],
+      "to": [
+        12,
+        12,
+        12
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            8,
+            8
+          ],
+          "texture": "#scarecrow"
+        },
+        "south": {
+          "uv": [
+            8,
+            0,
+            16,
+            8
+          ],
+          "texture": "#scarecrow"
+        },
+        "east": {
+          "uv": [
+            8,
+            0,
+            16,
+            8
+          ],
+          "texture": "#scarecrow"
+        },
+        "west": {
+          "uv": [
+            8,
+            0,
+            16,
+            8
+          ],
+          "texture": "#scarecrow"
+        },
+        "up": {
+          "uv": [
+            8,
+            0,
+            16,
+            8
+          ],
+          "texture": "#scarecrow"
+        },
+        "down": {
+          "uv": [
+            8,
+            0,
+            16,
+            8
+          ],
+          "texture": "#scarecrow"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        12,
+        2
+      ],
+      "to": [
+        14,
+        13,
+        14
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            8,
+            0,
+            16,
+            2
+          ],
+          "texture": "#scarecrow"
+        },
+        "south": {
+          "uv": [
+            8,
+            0,
+            16,
+            2
+          ],
+          "texture": "#scarecrow"
+        },
+        "east": {
+          "uv": [
+            8,
+            0,
+            16,
+            2
+          ],
+          "texture": "#scarecrow"
+        },
+        "west": {
+          "uv": [
+            8,
+            0,
+            16,
+            2
+          ],
+          "texture": "#scarecrow"
+        },
+        "up": {
+          "uv": [
+            8,
+            0,
+            16,
+            2
+          ],
+          "texture": "#scarecrow"
+        },
+        "down": {
+          "uv": [
+            8,
+            0,
+            16,
+            2
+          ],
+          "texture": "#scarecrow"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        13,
+        5
+      ],
+      "to": [
+        11,
+        16,
+        11
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            8,
+            0,
+            14,
+            3
+          ],
+          "texture": "#scarecrow"
+        },
+        "south": {
+          "uv": [
+            8,
+            0,
+            14,
+            3
+          ],
+          "texture": "#scarecrow"
+        },
+        "east": {
+          "uv": [
+            8,
+            0,
+            14,
+            3
+          ],
+          "texture": "#scarecrow"
+        },
+        "west": {
+          "uv": [
+            8,
+            0,
+            14,
+            3
+          ],
+          "texture": "#scarecrow"
+        },
+        "up": {
+          "uv": [
+            8,
+            0,
+            14,
+            3
+          ],
+          "texture": "#scarecrow"
+        },
+        "down": {
+          "uv": [
+            8,
+            0,
+            14,
+            3
+          ],
+          "texture": "#scarecrow"
+        }
+      }
+    }
+  ]
+}

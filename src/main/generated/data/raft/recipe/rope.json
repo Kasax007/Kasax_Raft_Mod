@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "L": "raft:palm_leaves"
+  },
+  "pattern": [
+    "L",
+    "L"
+  ],
+  "result": {
+    "id": "raft:rope"
+  }
+}

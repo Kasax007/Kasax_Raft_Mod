@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "G": "minecraft:glass_bottle",
+    "M": "raft:scrap_metal",
+    "P": "raft:plastic"
+  },
+  "pattern": [
+    "PPP",
+    "PGP",
+    "MMM"
+  ],
+  "result": {
+    "id": "raft:water_purifier"
+  }
+}

@@ -14,6 +14,7 @@ import net.kasax.raft.recipe.ModRecipes;
 import net.kasax.raft.screen.ModScreenHandlers;
 import net.kasax.raft.sound.ModSounds;
 import net.kasax.raft.util.*;
+import net.kasax.raft.world.OceanDebris;
 import net.kasax.raft.world.gen.ModWorldGeneration;
 import net.kasax.raft.world.gen.RandomizedBlockStateProvider;
 import net.kasax.raft.world.portal.ModPoiTypes;
@@ -90,6 +91,8 @@ public class Raft implements ModInitializer {
 		ModRecipes.registerRecipes();
 
 		ModEntities.register();
+		ScarecrowEvents.register();
+		OceanDebris.register();
 		ModBlockEntities.registerBlockEntities();
 		ModScreenHandlers.registerScreenHandlers();
 		ModPoiTypes.register();

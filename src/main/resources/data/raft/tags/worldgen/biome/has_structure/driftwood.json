@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "#minecraft:is_beach",
-    "minecraft:stony_shore"
+    "minecraft:stony_shore",
+    "raft:raft_ocean_biome"
   ]
 }

@@ -12,6 +12,10 @@
     "raft:brick_furnace",
     "raft:titanium_furnace",
     "raft:copper_cable",
-    "raft:titanium_cable"
+    "raft:titanium_cable",
+    "raft:scrap_metal_block",
+    "raft:plastic_block",
+    "raft:simple_grill",
+    "raft:water_purifier"
   ]
 }

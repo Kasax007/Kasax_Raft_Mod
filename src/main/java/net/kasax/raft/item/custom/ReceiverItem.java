@@ -16,14 +16,14 @@ import net.minecraft.world.level.Level;
  * Shows the direction (cardinal direction and degrees) and the distance to the nearest raft structure.
  * The cooldown protects the server from repeated structure searches.
  */
-public class ReceiverItem extends Item {
+public class ReceiverItem extends TooltipItem {
     public static final int COOLDOWN_TICKS = 60;
     /** Search radius in chunks. */
     public static final int SEARCH_RADIUS = 64;
     private static final String[] CARDINALS = {"N", "NE", "E", "SE", "S", "SW", "W", "NW"};
 
     public ReceiverItem(Properties properties) {
-        super(properties);
+        super(properties, "tooltip.raft.receiver");
     }
 
     @Override

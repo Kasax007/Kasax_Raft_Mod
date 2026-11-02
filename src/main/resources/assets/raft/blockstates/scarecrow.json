@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "half=lower,facing=north": {
+      "model": "raft:block/scarecrow_lower"
+    },
+    "half=lower,facing=east": {
+      "model": "raft:block/scarecrow_lower",
+      "y": 90
+    },
+    "half=lower,facing=south": {
+      "model": "raft:block/scarecrow_lower",
+      "y": 180
+    },
+    "half=lower,facing=west": {
+      "model": "raft:block/scarecrow_lower",
+      "y": 270
+    },
+    "half=upper,facing=north": {
+      "model": "raft:block/scarecrow_upper"
+    },
+    "half=upper,facing=east": {
+      "model": "raft:block/scarecrow_upper",
+      "y": 90
+    },
+    "half=upper,facing=south": {
+      "model": "raft:block/scarecrow_upper",
+      "y": 180
+    },
+    "half=upper,facing=west": {
+      "model": "raft:block/scarecrow_upper",
+      "y": 270
+    }
+  }
+}

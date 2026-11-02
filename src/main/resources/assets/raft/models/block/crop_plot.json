@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/template_cube_bottom_top_indented",
+  "textures": {
+    "bottom": "raft:block/crop_plot_side",
+    "side": "raft:block/crop_plot_side",
+    "top": "raft:block/crop_plot_top"
+  }
+}

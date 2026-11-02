@@ -66,10 +66,10 @@ public class ModItems {
             new Item.Properties().food(ModFoodComponents.SHARK_MEAT, ModFoodComponents.SHARK_MEAT_EFFECTS));
     public static final Item COOKED_SHARK_MEAT = registerItem("cooked_shark_meat", Item::new,
             new Item.Properties().food(ModFoodComponents.COOKED_SHARK_MEAT));
-    public static final Item FRESH_WATER = registerItem("fresh_water", Item::new,
+    public static final Item FRESH_WATER = registerItem("fresh_water", p -> new TooltipItem(p, "tooltip.raft.fresh_water"),
             new Item.Properties().stacksTo(16).component(DataComponents.CONSUMABLE, ModFoodComponents.FRESH_WATER)
                     .usingConvertsTo(Items.GLASS_BOTTLE));
-    public static final Item COCONUT_MILK = registerItem("coconut_milk", Item::new,
+    public static final Item COCONUT_MILK = registerItem("coconut_milk", p -> new TooltipItem(p, "tooltip.raft.coconut_milk"),
             new Item.Properties().stacksTo(16).component(DataComponents.CONSUMABLE, ModFoodComponents.COCONUT_MILK)
                     .usingConvertsTo(Items.GLASS_BOTTLE));
     public static final Item RECEIVER = registerItem("receiver", ReceiverItem::new, new Item.Properties().stacksTo(1));

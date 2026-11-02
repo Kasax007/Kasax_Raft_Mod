@@ -17,14 +17,14 @@ import net.minecraft.world.phys.Vec3;
 import java.util.List;
 
 /** Hold right click to pull floating items that are in front of you to your feet. */
-public class PlasticHookItem extends Item {
+public class PlasticHookItem extends TooltipItem {
     public static final double RANGE = 12.0;
     /** Cosine of the half angle of the pulling cone (about 30 degrees). */
     private static final double CONE = 0.866;
     private static final double PULL = 0.3;
 
     public PlasticHookItem(Properties properties) {
-        super(properties);
+        super(properties, "tooltip.raft.plastic_hook");
     }
 
     @Override

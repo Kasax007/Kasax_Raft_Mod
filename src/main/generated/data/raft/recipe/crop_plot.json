@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": "minecraft:dirt",
+    "P": "#minecraft:planks"
+  },
+  "pattern": [
+    "DDD",
+    "PPP"
+  ],
+  "result": {
+    "count": 3,
+    "id": "raft:crop_plot"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_plastic_block": {
+      "conditions": {
+        "items": [
+          {
+            "items": "raft:plastic_block"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipes": "raft:plastic"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_plastic_block"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "raft:plastic"
+    ]
+  }
+}

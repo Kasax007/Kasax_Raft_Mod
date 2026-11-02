@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "raft:coconut",
+    "S": "minecraft:stick",
+    "T": "raft:palm_thatch"
+  },
+  "pattern": [
+    " C ",
+    "STS",
+    " S "
+  ],
+  "result": {
+    "id": "raft:scarecrow"
+  }
+}

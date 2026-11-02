@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "raft:block/simple_grill"
+    },
+    "lit=true": {
+      "model": "raft:block/simple_grill_on"
+    }
+  }
+}

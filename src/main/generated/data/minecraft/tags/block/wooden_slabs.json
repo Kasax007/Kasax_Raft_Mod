@@ -1,6 +1,7 @@
 {
   "values": [
     "raft:driftwood_slab",
-    "raft:palm_slab"
+    "raft:palm_slab",
+    "raft:palm_thatch_slab"
   ]
 }

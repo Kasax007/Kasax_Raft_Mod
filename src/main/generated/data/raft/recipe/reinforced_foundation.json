@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    "raft:raft_foundation",
+    "raft:scrap_metal",
+    "raft:scrap_metal"
+  ],
+  "result": {
+    "id": "raft:reinforced_foundation"
+  }
+}

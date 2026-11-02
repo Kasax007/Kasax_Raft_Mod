@@ -2,6 +2,12 @@
   "values": [
     "raft:driftwood_leaves",
     "raft:palm_leaves",
-    "raft:palm_coconut_leaves"
+    "raft:palm_coconut_leaves",
+    "raft:palm_thatch",
+    "raft:palm_thatch_stairs",
+    "raft:palm_thatch_slab",
+    "raft:sail_canvas",
+    "raft:sail_canvas_red_striped",
+    "raft:rope_coil"
   ]
 }

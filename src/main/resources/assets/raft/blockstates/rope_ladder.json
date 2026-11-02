@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "raft:block/rope_ladder"
+    },
+    "facing=east": {
+      "model": "raft:block/rope_ladder",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "raft:block/rope_ladder",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "raft:block/rope_ladder",
+      "y": 270
+    }
+  }
+}

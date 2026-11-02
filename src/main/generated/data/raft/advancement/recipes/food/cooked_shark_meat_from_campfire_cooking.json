@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_shark_meat": {
+      "conditions": {
+        "items": [
+          {
+            "items": "raft:shark_meat"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipes": "raft:cooked_shark_meat_from_campfire_cooking"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_shark_meat"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "raft:cooked_shark_meat_from_campfire_cooking"
+    ]
+  }
+}

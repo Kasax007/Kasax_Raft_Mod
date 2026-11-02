@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "P": "#minecraft:planks",
+    "R": "raft:rope"
+  },
+  "pattern": [
+    "PRP",
+    "PPP",
+    "PRP"
+  ],
+  "result": {
+    "count": 4,
+    "id": "raft:raft_foundation"
+  }
+}

@@ -9,6 +9,7 @@ import net.kasax.raft.util.FurnaceBlocks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
@@ -69,8 +70,29 @@ public class ModLootTableProvider extends FabricBlockLootSubProvider {
         add(ModBlocks.DEEPSLATE_TITANIUM_ORE, titaniumOreDrops(ModBlocks.DEEPSLATE_TITANIUM_ORE, ModItems.RAW_TITANIUM));
 
         add(ModBlocks.DRIFTWOOD_LEAVES, createLeavesDrops(ModBlocks.DRIFTWOOD_LEAVES, ModBlocks.DRIFTWOOD_SAPLING, 0.0025f));
-        add(ModBlocks.PALM_LEAVES, createLeavesDrops(ModBlocks.PALM_LEAVES, ModBlocks.PALM_SAPLING, 0.05f));
+        add(ModBlocks.PALM_LEAVES, withRopeChance(createLeavesDrops(ModBlocks.PALM_LEAVES, ModBlocks.PALM_SAPLING, 0.05f)));
         add(ModBlocks.PALM_COCONUT_LEAVES, fruitLeaveDrops(ModBlocks.PALM_COCONUT_LEAVES, ModItems.COCONUT));
+
+        // decoration and survival blocks
+        dropSelf(ModBlocks.RAFT_FOUNDATION);
+        dropSelf(ModBlocks.REINFORCED_FOUNDATION);
+        dropSelf(ModBlocks.SCRAP_METAL_BLOCK);
+        dropSelf(ModBlocks.PLASTIC_BLOCK);
+        dropSelf(ModBlocks.PALM_THATCH);
+        dropSelf(ModBlocks.PALM_THATCH_STAIRS);
+        add(ModBlocks.PALM_THATCH_SLAB, createSlabItemTable(ModBlocks.PALM_THATCH_SLAB));
+        dropSelf(ModBlocks.SAIL_CANVAS);
+        dropSelf(ModBlocks.SAIL_CANVAS_RED_STRIPED);
+        dropSelf(ModBlocks.ROPE_LADDER);
+        dropSelf(ModBlocks.ROPE_COIL);
+        dropSelf(ModBlocks.SHIP_WHEEL);
+        dropSelf(ModBlocks.SHARK_JAW_TROPHY);
+        dropSelf(ModBlocks.RAFT_FLAG);
+        dropSelf(ModBlocks.COCONUT_LANTERN);
+        dropSelf(ModBlocks.CROP_PLOT);
+        dropSelf(ModBlocks.SIMPLE_GRILL);
+        dropSelf(ModBlocks.WATER_PURIFIER);
+        add(ModBlocks.SCARECROW, createDoorTable(ModBlocks.SCARECROW));
 
         // Cables
         for (RaftCable.Cables cable : RaftCable.Cables.values()) {
@@ -79,6 +101,14 @@ public class ModLootTableProvider extends FabricBlockLootSubProvider {
 
         // All custom furnaces
         FurnaceBlocks.getFurnaces().forEach(this::dropSelf);
+    }
+
+    /** Palm fibres: broken palm leaves (without shears) sometimes give a piece of rope. */
+    private LootTable.Builder withRopeChance(LootTable.Builder builder) {
+        return builder.withPool(LootPool.lootPool()
+                .when(doesNotHaveShearsOrSilkTouch())
+                .when(LootItemRandomChanceCondition.randomChance(0.1f))
+                .add(LootItem.lootTableItem(ModItems.ROPE)));
     }
 
     /** Ore that drops 2 to 5 raw items, with fortune; silk touch gives the ore block. */

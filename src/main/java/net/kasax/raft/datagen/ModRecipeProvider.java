@@ -15,7 +15,11 @@ import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.crafting.CampfireCookingRecipe;
 import net.minecraft.world.item.crafting.CookingBookCategory;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
+import net.minecraft.world.item.crafting.SmokingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
@@ -290,6 +294,161 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                                 .save(output);
                     }
                 }
+
+                buildRaftSurvivalRecipes();
+            }
+
+            private void buildRaftSurvivalRecipes() {
+                ItemLike leaves = ModBlocks.PALM_LEAVES;
+
+                // ---- materials ----
+                shaped(RecipeCategory.MISC, ModItems.ROPE)
+                        .pattern("L").pattern("L")
+                        .define('L', leaves)
+                        .unlockedBy(getHasName(leaves), has(leaves))
+                        .save(output);
+                shaped(RecipeCategory.MISC, ModItems.ROPE, 2)
+                        .pattern("S").pattern("S").pattern("S")
+                        .define('S', Items.STRING)
+                        .unlockedBy(getHasName(Items.STRING), has(Items.STRING))
+                        .save(output, "raft:rope_from_string");
+                nineBlockStorageRecipes(RecipeCategory.MISC, ModItems.SCRAP_METAL, RecipeCategory.BUILDING_BLOCKS, ModBlocks.SCRAP_METAL_BLOCK);
+                nineBlockStorageRecipes(RecipeCategory.MISC, ModItems.PLASTIC, RecipeCategory.BUILDING_BLOCKS, ModBlocks.PLASTIC_BLOCK);
+                shapeless(RecipeCategory.MISC, ModItems.ROPE, 4)
+                        .requires(ModBlocks.ROPE_COIL)
+                        .unlockedBy(getHasName(ModBlocks.ROPE_COIL), has(ModBlocks.ROPE_COIL))
+                        .save(output, "raft:rope_from_rope_coil");
+
+                // ---- decoration ----
+                shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.PALM_THATCH, 3)
+                        .pattern("LL").pattern("LL")
+                        .define('L', leaves)
+                        .unlockedBy(getHasName(leaves), has(leaves))
+                        .save(output);
+                stairBuilder(ModBlocks.PALM_THATCH_STAIRS, Ingredient.of(ModBlocks.PALM_THATCH))
+                        .unlockedBy(getHasName(ModBlocks.PALM_THATCH), has(ModBlocks.PALM_THATCH)).save(output);
+                slab(RecipeCategory.BUILDING_BLOCKS, ModBlocks.PALM_THATCH_SLAB, ModBlocks.PALM_THATCH);
+
+                shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.RAFT_FOUNDATION, 4)
+                        .pattern("PRP").pattern("PPP").pattern("PRP")
+                        .define('P', ItemTags.PLANKS)
+                        .define('R', ModItems.ROPE)
+                        .unlockedBy(getHasName(ModItems.ROPE), has(ModItems.ROPE))
+                        .save(output);
+                shapeless(RecipeCategory.BUILDING_BLOCKS, ModBlocks.REINFORCED_FOUNDATION)
+                        .requires(ModBlocks.RAFT_FOUNDATION)
+                        .requires(ModItems.SCRAP_METAL, 2)
+                        .unlockedBy(getHasName(ModItems.SCRAP_METAL), has(ModItems.SCRAP_METAL))
+                        .save(output);
+
+                shaped(RecipeCategory.DECORATIONS, ModBlocks.ROPE_LADDER, 6)
+                        .pattern("RSR").pattern("RSR").pattern("RSR")
+                        .define('R', ModItems.ROPE)
+                        .define('S', Items.STICK)
+                        .unlockedBy(getHasName(ModItems.ROPE), has(ModItems.ROPE))
+                        .save(output);
+                shaped(RecipeCategory.DECORATIONS, ModBlocks.ROPE_COIL)
+                        .pattern("RR").pattern("RR")
+                        .define('R', ModItems.ROPE)
+                        .unlockedBy(getHasName(ModItems.ROPE), has(ModItems.ROPE))
+                        .save(output);
+                shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.SAIL_CANVAS, 2)
+                        .pattern("RR").pattern("RR")
+                        .define('R', ModItems.ROPE)
+                        .unlockedBy(getHasName(ModItems.ROPE), has(ModItems.ROPE))
+                        .save(output);
+                shapeless(RecipeCategory.BUILDING_BLOCKS, ModBlocks.SAIL_CANVAS_RED_STRIPED)
+                        .requires(ModBlocks.SAIL_CANVAS)
+                        .requires(Items.DYE.red())
+                        .unlockedBy(getHasName(ModBlocks.SAIL_CANVAS), has(ModBlocks.SAIL_CANVAS))
+                        .save(output);
+                shaped(RecipeCategory.DECORATIONS, ModBlocks.SHIP_WHEEL)
+                        .pattern("SPS").pattern("PMP").pattern("SPS")
+                        .define('S', Items.STICK)
+                        .define('P', ItemTags.PLANKS)
+                        .define('M', ModItems.SCRAP_METAL)
+                        .unlockedBy(getHasName(ModItems.SCRAP_METAL), has(ModItems.SCRAP_METAL))
+                        .save(output);
+                shaped(RecipeCategory.DECORATIONS, ModBlocks.SHARK_JAW_TROPHY)
+                        .pattern("PPP").pattern("TTT")
+                        .define('P', ItemTags.PLANKS)
+                        .define('T', ModItems.SHARK_TOOTH)
+                        .unlockedBy(getHasName(ModItems.SHARK_TOOTH), has(ModItems.SHARK_TOOTH))
+                        .save(output);
+                shaped(RecipeCategory.DECORATIONS, ModBlocks.RAFT_FLAG, 2)
+                        .pattern("C").pattern("S").pattern("S")
+                        .define('C', ModBlocks.SAIL_CANVAS_RED_STRIPED)
+                        .define('S', Items.STICK)
+                        .unlockedBy(getHasName(ModBlocks.SAIL_CANVAS_RED_STRIPED), has(ModBlocks.SAIL_CANVAS_RED_STRIPED))
+                        .save(output);
+                shaped(RecipeCategory.DECORATIONS, ModBlocks.COCONUT_LANTERN)
+                        .pattern("R").pattern("C").pattern("T")
+                        .define('R', ModItems.ROPE)
+                        .define('C', ModItems.COCONUT)
+                        .define('T', Items.TORCH)
+                        .unlockedBy(getHasName(ModItems.COCONUT), has(ModItems.COCONUT))
+                        .save(output);
+
+                // ---- functional ----
+                shaped(RecipeCategory.DECORATIONS, ModBlocks.CROP_PLOT, 3)
+                        .pattern("DDD").pattern("PPP")
+                        .define('D', Items.DIRT)
+                        .define('P', ItemTags.PLANKS)
+                        .unlockedBy(getHasName(Items.DIRT), has(Items.DIRT))
+                        .save(output);
+                shaped(RecipeCategory.DECORATIONS, ModBlocks.SIMPLE_GRILL)
+                        .pattern("MMM").pattern("S S")
+                        .define('M', ModItems.SCRAP_METAL)
+                        .define('S', Items.STICK)
+                        .unlockedBy(getHasName(ModItems.SCRAP_METAL), has(ModItems.SCRAP_METAL))
+                        .save(output);
+                shaped(RecipeCategory.DECORATIONS, ModBlocks.WATER_PURIFIER)
+                        .pattern("PPP").pattern("PGP").pattern("MMM")
+                        .define('P', ModItems.PLASTIC)
+                        .define('G', Items.GLASS_BOTTLE)
+                        .define('M', ModItems.SCRAP_METAL)
+                        .unlockedBy(getHasName(ModItems.PLASTIC), has(ModItems.PLASTIC))
+                        .save(output);
+                shaped(RecipeCategory.DECORATIONS, ModBlocks.SCARECROW)
+                        .pattern(" C ").pattern("STS").pattern(" S ")
+                        .define('C', ModItems.COCONUT)
+                        .define('S', Items.STICK)
+                        .define('T', ModBlocks.PALM_THATCH)
+                        .unlockedBy(getHasName(ModBlocks.PALM_THATCH), has(ModBlocks.PALM_THATCH))
+                        .save(output);
+                shapeless(RecipeCategory.FOOD, ModItems.COCONUT_MILK)
+                        .requires(ModItems.COCONUT)
+                        .requires(Items.GLASS_BOTTLE)
+                        .unlockedBy(getHasName(ModItems.COCONUT), has(ModItems.COCONUT))
+                        .save(output);
+
+                // ---- tools ----
+                shaped(RecipeCategory.TOOLS, ModItems.RECEIVER)
+                        .pattern(" N ").pattern("MCM").pattern("MMM")
+                        .define('N', ModItems.TITANIUM_NUGGET)
+                        .define('M', ModItems.SCRAP_METAL)
+                        .define('C', ModItems.CIRCUIT_BOARD)
+                        .unlockedBy(getHasName(ModItems.CIRCUIT_BOARD), has(ModItems.CIRCUIT_BOARD))
+                        .save(output);
+                shaped(RecipeCategory.TOOLS, ModItems.PLASTIC_HOOK)
+                        .pattern("PP").pattern("PR").pattern(" S")
+                        .define('P', ModItems.PLASTIC)
+                        .define('R', ModItems.ROPE)
+                        .define('S', Items.STICK)
+                        .unlockedBy(getHasName(ModItems.PLASTIC), has(ModItems.PLASTIC))
+                        .save(output);
+                shaped(RecipeCategory.TOOLS, ModItems.PADDLE)
+                        .pattern(" PP").pattern(" PP").pattern("S  ")
+                        .define('P', ItemTags.PLANKS)
+                        .define('S', Items.STICK)
+                        .unlockedBy(getHasName(ModItems.ROPE), has(ModItems.ROPE))
+                        .unlockedBy(getHasName(Items.STICK), has(Items.STICK))
+                        .save(output);
+
+                // ---- shark ----
+                simpleCookingRecipe("smelting", SmeltingRecipe::new, 200, ModItems.SHARK_MEAT, ModItems.COOKED_SHARK_MEAT, 0.35f);
+                simpleCookingRecipe("smoking", SmokingRecipe::new, 100, ModItems.SHARK_MEAT, ModItems.COOKED_SHARK_MEAT, 0.35f);
+                simpleCookingRecipe("campfire_cooking", CampfireCookingRecipe::new, 600, ModItems.SHARK_MEAT, ModItems.COOKED_SHARK_MEAT, 0.35f);
             }
         };
     }

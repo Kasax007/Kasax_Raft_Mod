@@ -148,6 +148,29 @@ public class ModBlockTagProvider extends FabricTagsProvider<Block> {
                 ModBlocks.PALM_PLANKS, ModBlocks.PALM_STAIRS, ModBlocks.PALM_SLAB, ModBlocks.PALM_FENCE,
                 ModBlocks.PALM_FENCE_GATE, ModBlocks.PALM_DOOR, ModBlocks.PALM_TRAPDOOR, ModBlocks.PALM_BUTTON,
                 ModBlocks.PALM_PRESSURE_PLATE, ModBlocks.ITEM_CATCHER);
-        addAll(BlockTags.MINEABLE_WITH_HOE, ModBlocks.DRIFTWOOD_LEAVES, ModBlocks.PALM_LEAVES, ModBlocks.PALM_COCONUT_LEAVES);
+        addAll(BlockTags.MINEABLE_WITH_HOE, ModBlocks.DRIFTWOOD_LEAVES, ModBlocks.PALM_LEAVES, ModBlocks.PALM_COCONUT_LEAVES,
+                ModBlocks.PALM_THATCH, ModBlocks.PALM_THATCH_STAIRS, ModBlocks.PALM_THATCH_SLAB,
+                ModBlocks.SAIL_CANVAS, ModBlocks.SAIL_CANVAS_RED_STRIPED, ModBlocks.ROPE_COIL);
+
+        // ---- raft decoration and survival blocks ----
+        addAll(ModTags.Blocks.RAFT_MOD_BLOCK,
+                ModBlocks.PALM_THATCH, ModBlocks.PALM_THATCH_STAIRS, ModBlocks.PALM_THATCH_SLAB,
+                ModBlocks.RAFT_FOUNDATION, ModBlocks.REINFORCED_FOUNDATION, ModBlocks.SCRAP_METAL_BLOCK, ModBlocks.PLASTIC_BLOCK,
+                ModBlocks.ROPE_LADDER, ModBlocks.ROPE_COIL, ModBlocks.SAIL_CANVAS, ModBlocks.SAIL_CANVAS_RED_STRIPED,
+                ModBlocks.SHIP_WHEEL, ModBlocks.SHARK_JAW_TROPHY, ModBlocks.RAFT_FLAG, ModBlocks.COCONUT_LANTERN,
+                ModBlocks.CROP_PLOT, ModBlocks.SIMPLE_GRILL, ModBlocks.WATER_PURIFIER, ModBlocks.SCARECROW);
+        addAll(BlockTags.MINEABLE_WITH_AXE,
+                ModBlocks.RAFT_FOUNDATION, ModBlocks.REINFORCED_FOUNDATION, ModBlocks.ROPE_LADDER, ModBlocks.SHIP_WHEEL,
+                ModBlocks.SHARK_JAW_TROPHY, ModBlocks.RAFT_FLAG, ModBlocks.COCONUT_LANTERN, ModBlocks.CROP_PLOT, ModBlocks.SCARECROW);
+        addAll(BlockTags.MINEABLE_WITH_PICKAXE,
+                ModBlocks.SCRAP_METAL_BLOCK, ModBlocks.PLASTIC_BLOCK, ModBlocks.SIMPLE_GRILL, ModBlocks.WATER_PURIFIER);
+        addAll(BlockTags.NEEDS_STONE_TOOL, ModBlocks.SCRAP_METAL_BLOCK);
+        addAll(BlockTags.CLIMBABLE, ModBlocks.ROPE_LADDER);
+        addAll(BlockTags.WOODEN_SLABS, ModBlocks.PALM_THATCH_SLAB);
+        addAll(BlockTags.SLABS, ModBlocks.PALM_THATCH_SLAB);
+        addAll(BlockTags.STAIRS, ModBlocks.PALM_THATCH_STAIRS);
+        // The crop plot is farmland in every way that matters to crops.
+        addAll(BlockTags.SUPPORTS_CROPS, ModBlocks.CROP_PLOT);
+        addAll(BlockTags.GROWS_CROPS, ModBlocks.CROP_PLOT);
     }
 }

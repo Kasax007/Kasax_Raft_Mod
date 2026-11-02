@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_rope_coil": {
+      "conditions": {
+        "items": [
+          {
+            "items": "raft:rope_coil"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipes": "raft:rope_from_rope_coil"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_rope_coil"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "raft:rope_from_rope_coil"
+    ]
+  }
+}

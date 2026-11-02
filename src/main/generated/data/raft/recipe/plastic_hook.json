@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "P": "raft:plastic",
+    "R": "raft:rope",
+    "S": "minecraft:stick"
+  },
+  "pattern": [
+    "PP",
+    "PR",
+    " S"
+  ],
+  "result": {
+    "id": "raft:plastic_hook"
+  }
+}

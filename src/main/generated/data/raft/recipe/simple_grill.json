@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "M": "raft:scrap_metal",
+    "S": "minecraft:stick"
+  },
+  "pattern": [
+    "MMM",
+    "S S"
+  ],
+  "result": {
+    "id": "raft:simple_grill"
+  }
+}

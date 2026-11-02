@@ -105,6 +105,11 @@
                 "min_inclusive": 1
               },
               "weight": 2
+            },
+            {
+              "type": "raft:shark",
+              "count": 1,
+              "weight": 3
             }
           ]
         }

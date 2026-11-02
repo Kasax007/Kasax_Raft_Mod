@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "raft:sail_canvas_red_striped",
+    "S": "minecraft:stick"
+  },
+  "pattern": [
+    "C",
+    "S",
+    "S"
+  ],
+  "result": {
+    "count": 2,
+    "id": "raft:raft_flag"
+  }
+}

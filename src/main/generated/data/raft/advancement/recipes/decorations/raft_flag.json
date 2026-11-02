@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_sail_canvas_red_striped": {
+      "conditions": {
+        "items": [
+          {
+            "items": "raft:sail_canvas_red_striped"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipes": "raft:raft_flag"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_sail_canvas_red_striped"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "raft:raft_flag"
+    ]
+  }
+}

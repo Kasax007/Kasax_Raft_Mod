@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": "raft:coconut",
+    "R": "raft:rope",
+    "T": "minecraft:torch"
+  },
+  "pattern": [
+    "R",
+    "C",
+    "T"
+  ],
+  "result": {
+    "id": "raft:coconut_lantern"
+  }
+}

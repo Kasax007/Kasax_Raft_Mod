@@ -68,5 +68,12 @@ public class ModItemTagProvider extends FabricTagsProvider<Item> {
         addAll(ItemTags.FOOT_ARMOR, ModItems.TITANIUM_BOOTS);
 
         addAll(ModTags.Items.TITANIUM_ARMOR_REPAIR, ModItems.TITANIUM_INGOT);
+
+        // Fuel of the simple grill and the water purifier: planks, logs and coal.
+        addAll(ModTags.Items.GRILL_FUEL, Items.COAL, Items.CHARCOAL);
+        tag(ModTags.Items.GRILL_FUEL).forceAddTag(ItemTags.PLANKS).forceAddTag(ItemTags.LOGS);
+        addAll(ItemTags.WOODEN_SLABS, ModBlocks.PALM_THATCH_SLAB);
+        addAll(ItemTags.MEAT, ModItems.SHARK_MEAT, ModItems.COOKED_SHARK_MEAT);
+        addAll(ItemTags.FISHES, ModItems.SHARK_MEAT, ModItems.COOKED_SHARK_MEAT);
     }
 }

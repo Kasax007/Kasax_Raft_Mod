@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_shark_tooth": {
+      "conditions": {
+        "items": [
+          {
+            "items": "raft:shark_tooth"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipes": "raft:shark_jaw_trophy"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_shark_tooth"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "raft:shark_jaw_trophy"
+    ]
+  }
+}

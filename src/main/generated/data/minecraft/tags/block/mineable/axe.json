@@ -27,6 +27,15 @@
     "raft:palm_trapdoor",
     "raft:palm_button",
     "raft:palm_pressure_plate",
-    "raft:item_catcher"
+    "raft:item_catcher",
+    "raft:raft_foundation",
+    "raft:reinforced_foundation",
+    "raft:rope_ladder",
+    "raft:ship_wheel",
+    "raft:shark_jaw_trophy",
+    "raft:raft_flag",
+    "raft:coconut_lantern",
+    "raft:crop_plot",
+    "raft:scarecrow"
   ]
 }

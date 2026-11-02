@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "R": "raft:rope",
+    "S": "minecraft:stick"
+  },
+  "pattern": [
+    "RSR",
+    "RSR",
+    "RSR"
+  ],
+  "result": {
+    "count": 6,
+    "id": "raft:rope_ladder"
+  }
+}

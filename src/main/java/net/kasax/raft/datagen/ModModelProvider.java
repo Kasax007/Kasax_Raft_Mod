@@ -64,6 +64,17 @@ public class ModModelProvider extends FabricModelProvider {
         generators.createDoor(ModBlocks.PALM_DOOR);
         generators.createTrapdoor(ModBlocks.PALM_TRAPDOOR);
 
+        // decoration and utility blocks of the raft survival set
+        generators.createTrivialCube(ModBlocks.RAFT_FOUNDATION);
+        generators.createTrivialCube(ModBlocks.REINFORCED_FOUNDATION);
+        generators.createTrivialCube(ModBlocks.SCRAP_METAL_BLOCK);
+        generators.createTrivialCube(ModBlocks.PLASTIC_BLOCK);
+        generators.createTrivialCube(ModBlocks.SAIL_CANVAS);
+        generators.createTrivialCube(ModBlocks.SAIL_CANVAS_RED_STRIPED);
+        BlockModelGenerators.BlockFamilyProvider thatchPool = generators.family(ModBlocks.PALM_THATCH);
+        thatchPool.stairs(ModBlocks.PALM_THATCH_STAIRS);
+        thatchPool.slab(ModBlocks.PALM_THATCH_SLAB);
+
         // Models for all custom furnaces
         FurnaceBlocks.getFurnaces().forEach(furnace ->
                 generators.createFurnace(furnace, TexturedModel.ORIENTABLE_ONLY_TOP));
@@ -91,6 +102,18 @@ public class ModModelProvider extends FabricModelProvider {
 
         generators.generateFlatItem(ModItems.NET, ModelTemplates.FLAT_ITEM);
 
+        generators.generateFlatItem(ModItems.ROPE, ModelTemplates.FLAT_ITEM);
+        generators.generateFlatItem(ModItems.SCRAP_METAL, ModelTemplates.FLAT_ITEM);
+        generators.generateFlatItem(ModItems.SHARK_TOOTH, ModelTemplates.FLAT_ITEM);
+        generators.generateFlatItem(ModItems.SHARK_MEAT, ModelTemplates.FLAT_ITEM);
+        generators.generateFlatItem(ModItems.COOKED_SHARK_MEAT, ModelTemplates.FLAT_ITEM);
+        generators.generateFlatItem(ModItems.FRESH_WATER, ModelTemplates.FLAT_ITEM);
+        generators.generateFlatItem(ModItems.COCONUT_MILK, ModelTemplates.FLAT_ITEM);
+        generators.generateFlatItem(ModItems.RECEIVER, ModelTemplates.FLAT_ITEM);
+        generators.generateFlatItem(ModItems.PLASTIC_HOOK, ModelTemplates.FLAT_HANDHELD_ITEM);
+        generators.generateFlatItem(ModItems.PADDLE, ModelTemplates.FLAT_HANDHELD_ITEM);
+        generators.generateFlatItem(ModItems.SHARK_SPAWN_EGG, ModelTemplates.FLAT_ITEM);
+
         generators.generateFlatItem(ModItems.TITANIUM_HELMET, ModelTemplates.FLAT_ITEM);
         generators.generateFlatItem(ModItems.TITANIUM_CHESTPLATE, ModelTemplates.FLAT_ITEM);
         generators.generateFlatItem(ModItems.TITANIUM_LEGGINGS, ModelTemplates.FLAT_ITEM);
@@ -102,6 +125,12 @@ public class ModModelProvider extends FabricModelProvider {
         generators.declareCustomModelItem(ModBlocks.ITEM_CATCHER.asItem());
         for (RaftCable.Cables cable : RaftCable.Cables.values()) {
             generators.declareCustomModelItem(cable.asItem());
+        }
+        // Block items whose models are written by hand (models/item/<name>.json).
+        for (var block : new net.minecraft.world.level.block.Block[] {
+                ModBlocks.ROPE_LADDER, ModBlocks.ROPE_COIL, ModBlocks.SHIP_WHEEL, ModBlocks.SHARK_JAW_TROPHY, ModBlocks.RAFT_FLAG,
+                ModBlocks.COCONUT_LANTERN, ModBlocks.CROP_PLOT, ModBlocks.SIMPLE_GRILL, ModBlocks.WATER_PURIFIER, ModBlocks.SCARECROW}) {
+            generators.declareCustomModelItem(block.asItem());
         }
         // The energy staff has a 3D model in the hand and a flat sprite in the GUI:
         // resources/assets/raft/items/energy_staff.json (select on display_context).

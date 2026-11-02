@@ -35,6 +35,25 @@
     "raft:brick_furnace",
     "raft:titanium_furnace",
     "raft:copper_cable",
-    "raft:titanium_cable"
+    "raft:titanium_cable",
+    "raft:palm_thatch",
+    "raft:palm_thatch_stairs",
+    "raft:palm_thatch_slab",
+    "raft:raft_foundation",
+    "raft:reinforced_foundation",
+    "raft:scrap_metal_block",
+    "raft:plastic_block",
+    "raft:rope_ladder",
+    "raft:rope_coil",
+    "raft:sail_canvas",
+    "raft:sail_canvas_red_striped",
+    "raft:ship_wheel",
+    "raft:shark_jaw_trophy",
+    "raft:raft_flag",
+    "raft:coconut_lantern",
+    "raft:crop_plot",
+    "raft:simple_grill",
+    "raft:water_purifier",
+    "raft:scarecrow"
   ]
 }

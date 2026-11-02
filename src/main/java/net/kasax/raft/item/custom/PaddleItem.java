@@ -16,13 +16,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 /** Sitting in a boat, a right click with the paddle gives the boat a push forward. */
-public class PaddleItem extends Item {
+public class PaddleItem extends TooltipItem {
     public static final int COOLDOWN_TICKS = 30;
     public static final double BOOST = 0.55;
     public static final double MAX_SPEED = 1.1;
 
     public PaddleItem(Properties properties) {
-        super(properties);
+        super(properties, "tooltip.raft.paddle");
     }
 
     @Override
