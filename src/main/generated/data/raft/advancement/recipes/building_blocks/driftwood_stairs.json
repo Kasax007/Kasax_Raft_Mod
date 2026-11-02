@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:driftwood_stairs"
+        "recipes": "raft:driftwood_stairs"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:driftwood_stairs"
+      "raft:driftwood_stairs"
     ]
   }
 }

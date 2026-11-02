@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:trash_cube_from_smelting_unrefined_ocean_garbage"
+        "recipes": "raft:trash_cube_from_smelting_unrefined_ocean_garbage"
       },
       "trigger": "minecraft:recipe_unlocked"
     },
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:trash_cube_from_smelting_unrefined_ocean_garbage"
+      "raft:trash_cube_from_smelting_unrefined_ocean_garbage"
     ]
   }
 }

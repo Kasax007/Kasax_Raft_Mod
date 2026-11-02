@@ -3,12 +3,12 @@
 	"id": "raft",
 	"version": "${version}",
 	"name": "Raft",
-	"description": "This is a mod which adds a Raft dimension to Minecraft, inspired by the popular game Raft!",
+	"description": "Adds a Raft dimension to Minecraft, inspired by the survival game Raft: floating debris, driftwood and palm wood, titanium tools and machines, a portal and a lot of ocean.",
 	"authors": [
 		"Kasax"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
+		"homepage": "https://www.curseforge.com/minecraft/mc-mods/raft",
 		"sources": "https://github.com/Kasax007/Kasax_Raft_Mod"
 	},
 	"license": "MIT",
@@ -25,16 +25,10 @@
 			"net.kasax.raft.RaftDataGenerator"
 		]
 	},
-	"mixins": [
-		"raft.mixins.json"
-	],
 	"depends": {
-		"fabricloader": ">=0.16.5",
-		"minecraft": "~1.21",
-		"java": ">=21",
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.3",
+		"java": ">=25",
 		"fabric-api": "*"
-	},
-	"suggests": {
-		"another-mod": "*"
 	}
 }

@@ -23,7 +23,7 @@ package net.kasax.raft.block.cable;
  */
 
 
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
 import team.reborn.energy.api.EnergyStorage;
 
 /**

@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "raft:titanium"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "raft:titanium"
+      }
+    ]
+  }
+}

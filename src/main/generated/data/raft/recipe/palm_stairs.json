@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "#": {
-      "item": "raft:palm_planks"
-    }
+    "#": "raft:palm_planks"
   },
   "pattern": [
     "#  ",

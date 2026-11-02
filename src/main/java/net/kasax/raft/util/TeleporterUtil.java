@@ -1,143 +1,101 @@
 // CC0 https://github.com/kwpugh/mining_Dimensions
 
 package net.kasax.raft.util;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.TeleportTarget;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
-import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.portal.TeleportTransition;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Random;
 
-import static net.minecraft.sound.SoundEvents.ITEM_LODESTONE_COMPASS_LOCK;
-
-public class TeleporterUtil
-{
-    public static TypedActionResult<ItemStack> movePlayer(RegistryKey<World> dimKey, World world, PlayerEntity player, Hand hand)
-    {
-        ItemStack stack = player.getStackInHand(hand);
-        ItemStack stack1 = player.getStackInHand(hand);
-
+public class TeleporterUtil {
+    /**
+     * Moves the player to the target dimension (or back to the overworld when already there) and
+     * puts him on safe ground. Returns true when the player was teleported.
+     */
+    public static boolean movePlayer(ResourceKey<Level> dimKey, Level level, Player player) {
         int heightMax = 300;
         int heightMin = 0;
 
         // Only run on server side
-        if(world.isClient) return TypedActionResult.success(stack);
+        if (level.isClientSide() || !(level instanceof ServerLevel serverLevel) || !(player instanceof ServerPlayer serverPlayer)) {
+            return false;
+        }
 
         // Logic to either send to dim of teleporter in hand or back to Overworld, depending on current location
-        if(!player.isSneaking())
-        {
-            ServerWorld destWorld;
-            ServerWorld overWorld = ((ServerWorld)world).getServer().getWorld(World.OVERWORLD);
-            ServerWorld targetWorld = ((ServerWorld)world).getServer().getWorld(dimKey);
-            ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;
-            RegistryKey<World> currentWorldKey = world.getRegistryKey();
+        if (player.isShiftKeyDown()) {
+            return false;
+        }
 
-            if(currentWorldKey == dimKey)
-            {
-                destWorld = overWorld;
-            }
-            else
-            {
-                destWorld = targetWorld;
-            }
+        ServerLevel overWorld = serverLevel.getServer().getLevel(Level.OVERWORLD);
+        ServerLevel targetWorld = serverLevel.getServer().getLevel(dimKey);
+        ServerLevel destWorld = level.dimension() == dimKey ? overWorld : targetWorld;
+        if (destWorld == null) {
+            return false;
+        }
 
-            assert destWorld != null;
-            RegistryKey<World> destKey = destWorld.getRegistryKey();
+        // Check a number of times for a safe spot
+        for (int i = 1; i < 6; i++) {
+            serverPlayer.sendOverlayMessage(Component.translatable(i == 1 ? "item.raft.teleporter1" : "item.raft.teleporter2"));
 
-            // Check a number of times for a safe spot
-            for (int i = 1; i < 6; i++)
-            {
+            BlockPos playerLoc = player.blockPosition();
+            Random rand = new Random();
 
-                if (i == 1)
-                {
-                    serverPlayer.sendMessage((Text.translatable("item.raft.teleporter1")), true);   //checking...
-                }
+            // Use players current x and z for starting point
+            int x = playerLoc.getX() + rand.nextInt(10 + 5) - 5;
+            int y = heightMax;   // starting height for a given dimension
+            int z = playerLoc.getZ() + rand.nextInt(10 + 5) - 5;
 
-                if (i > 1)
-                {
-                    serverPlayer.sendMessage((Text.translatable("item.raft.teleporter2")), true);
-                }
+            ChunkAccess chunk = destWorld.getChunk(x >> 4, z >> 4);
 
-                BlockPos playerLoc = player.getBlockPos();
-                Random rand = new Random();
+            //Let's avoid putting them underground
+            while (y > heightMin) {
+                y--;
+                BlockPos groundPos = new BlockPos(x, y - 2, z);
 
-                // Use players current x and z for starting point
-                int x = Math.round(playerLoc.getX()) + rand.nextInt(10 + 5) - 5;
-                int y = heightMax;   // starting height for a given dimension
-                int z = Math.round(playerLoc.getZ()) + rand.nextInt(10 + 5) - 5;
+                boolean isAir = chunk.getBlockState(groundPos).isAir();
+                boolean isBedrock = chunk.getBlockState(groundPos).is(Blocks.BEDROCK);
+                boolean isLava = chunk.getBlockState(groundPos).is(Blocks.LAVA) || chunk.getBlockState(groundPos).is(Blocks.MAGMA_BLOCK);
+                boolean canFit = (y - 2) > heightMin;
 
-                Chunk chunk = destWorld.getChunk(x >> 4, z >> 4);
+                if (!isAir && !isBedrock && !isLava && canFit) {
+                    // If block pos under feet is water, place a stone block
+                    if (chunk.getBlockState(groundPos).is(Blocks.WATER)) {
+                        chunk.setBlockState(groundPos, Blocks.STONE.defaultBlockState(), 0);
+                    }
 
-                //Let's avoid putting them underground
-                while(y > heightMin)
-                {
-                    y--;
-                    BlockPos groundPos = new BlockPos(x, y - 2, z);
+                    BlockPos legPos = new BlockPos(x, y - 1, z);
 
-                    boolean isAir = chunk.getBlockState(groundPos).getBlock() == Blocks.AIR;
-                    boolean isBedrock = chunk.getBlockState(groundPos).getBlock() == Blocks.BEDROCK;
-                    boolean isLava = chunk.getBlockState(groundPos).getBlock() == Blocks.LAVA || chunk.getBlockState(groundPos).getBlock() == Blocks.MAGMA_BLOCK;
-                    boolean canFit = (y - 2) > heightMin;
+                    if (chunk.getBlockState(legPos).isAir()) {
+                        BlockPos headPos = new BlockPos(x, y, z);
 
-                    if (!isAir && !isBedrock && !isLava && canFit)
-                    {
-                        // If block pos under feet is water, place a stone block
-                        if(chunk.getBlockState(groundPos).getBlock().equals(Blocks.WATER)) chunk.setBlockState(groundPos, Blocks.STONE.getDefaultState(), false);
+                        if (chunk.getBlockState(headPos).isAir()) {
+                            serverPlayer.stopRiding();
 
-                        BlockPos legPos = new BlockPos(x, y - 1, z);
+                            Vec3 destVec = new Vec3(x + 0.5, y, z + 0.5);
+                            serverPlayer.teleport(new TeleportTransition(destWorld, destVec, Vec3.ZERO,
+                                    player.getYRot(), player.getXRot(), TeleportTransition.DO_NOTHING));
 
-                        if (chunk.getBlockState(legPos).getBlock() == Blocks.AIR)
-                        {
-                            BlockPos headPos = new BlockPos(x, y, z);
-
-                            if (chunk.getBlockState(headPos).getBlock() == Blocks.AIR)
-                            {
-                                serverPlayer.stopRiding();
-
-                                Vec3d destVec = new Vec3d(x, y, z);
-                                TeleportTarget teleportTarget = new TeleportTarget(destWorld, destVec, null, player.getYaw(), player.getPitch(), null);
-                                // Teleport the player using the built-in teleport method
-                                serverPlayer.teleport(destWorld, x, y, z, player.getYaw(), player.getPitch());
-
-
-                                serverPlayer.fallDistance = 0.0F;
-                                world.playSound((PlayerEntity) null, player.getX(), player.getY(), player.getZ(),
-                                        ITEM_LODESTONE_COMPASS_LOCK, SoundCategory.NEUTRAL, 0.5F,
-                                        1F / (world.getRandom().nextFloat() * 0.4F + 0.8F));
-                                //world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_ENDERMAN_TELEPORT, SoundCategory.NEUTRAL, 0.5F, 0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F));
-
-                                return TypedActionResult.success(stack);
-                            }
+                            serverPlayer.fallDistance = 0.0F;
+                            destWorld.playSound(null, x, y, z, SoundEvents.LODESTONE_COMPASS_LOCK, SoundSource.NEUTRAL, 0.5F,
+                                    1F / (destWorld.getRandom().nextFloat() * 0.4F + 0.8F));
+                            return true;
                         }
                     }
                 }
             }
-            //BlockPos playerLoc = player.getBlockPos();
-            //Random rand = new Random();
-            // Use players current x and z for starting point
-            //int x = Math.round(playerLoc.getX()) + rand.nextInt(10 + 5) - 5;
-            //int y = heightMax;   // starting height for a given dimension
-            //int z = Math.round(playerLoc.getZ()) + rand.nextInt(10 + 5) - 5;
-            //Vec3d destVec = new Vec3d(x, y, z);
-            //TeleportTarget teleportTarget = new TeleportTarget(destVec, null, player.getYaw(), player.getPitch());
-            //FabricDimensions.teleport(serverPlayer, destWorld, teleportTarget);
-            serverPlayer.sendMessage((Text.translatable("item.raft.teleporter3")), true);
         }
-
-        return TypedActionResult.success(stack);
+        serverPlayer.sendOverlayMessage(Component.translatable("item.raft.teleporter3"));
+        return false;
     }
 }
-

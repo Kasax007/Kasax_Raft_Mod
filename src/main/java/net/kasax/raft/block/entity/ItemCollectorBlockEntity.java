@@ -3,56 +3,59 @@ package net.kasax.raft.block.entity;
 import net.kasax.raft.block.custom.ItemCatcher;
 import net.kasax.raft.item.ModItems;
 import net.kasax.raft.recipe.ItemCatchingRecipe;
+import net.kasax.raft.recipe.ModRecipes;
 import net.kasax.raft.screen.ItemCollectorScreenHandler;
-import net.kasax.raft.util.BlockPosPayload;
 import net.kasax.raft.world.biome.ModBiomes;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.recipe.RecipeManager;
-import net.minecraft.recipe.input.RecipeInput;
-import net.minecraft.recipe.input.SingleStackRecipeInput;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.screen.PropertyDelegate;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.text.Text;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Containers;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 
-public class ItemCollectorBlockEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory {
-    public static final BooleanProperty HAS_NET = BooleanProperty.of("has_net");
-    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(2, ItemStack.EMPTY);
+public class ItemCollectorBlockEntity extends BlockEntity implements MenuProvider, ImplementedInventory {
+    public static final BooleanProperty HAS_NET = BooleanProperty.create("has_net");
+    private final NonNullList<ItemStack> inventory = NonNullList.withSize(2, ItemStack.EMPTY);
 
     private static final int INPUT_SLOT = 0;
     private static final int OUTPUT_SLOT = 1;
 
-    protected final PropertyDelegate propertyDelegate;
+    protected final ContainerData propertyDelegate;
     private int progress = 0;
     private int maxProgress = 576;
 
-    private final RecipeManager.MatchGetter<RecipeInput, ItemCatchingRecipe> matchGetter = RecipeManager.createCachedMatchGetter(ItemCatchingRecipe.Type.INSTANCE);
+    private final RecipeManager.CachedCheck<SingleRecipeInput, ItemCatchingRecipe> matchGetter =
+            RecipeManager.createCheck(ModRecipes.ITEM_CATCHING_TYPE);
 
     public ItemCollectorBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.ITEM_COLLECTOR_BLOCK_ENTITY, pos, state);
-        this.propertyDelegate = new PropertyDelegate() {
+        this.propertyDelegate = new ContainerData() {
             @Override
             public int get(int index) {
                 return switch (index) {
@@ -68,89 +71,94 @@ public class ItemCollectorBlockEntity extends BlockEntity implements NamedScreen
                     case 0 -> ItemCollectorBlockEntity.this.progress = value;
                     case 1 -> ItemCollectorBlockEntity.this.maxProgress = value;
                 }
-
             }
 
             @Override
-            public int size() {
+            public int getCount() {
                 return 2;
             }
         };
-        updateBlockState();
     }
 
     public ItemStack getRenderStack() {
-        return this.getStack(OUTPUT_SLOT);
+        return this.getItem(OUTPUT_SLOT);
     }
 
     public void updateBlockState() {
-        if (this.world == null || this.pos == null) return;
-        if (this.world.isClient()) return;
-        boolean hasNet = this.hasNetInInputSlot();
-        BlockState currentState = this.world.getBlockState(this.pos);
-        BlockState newState = currentState.with(HAS_NET, hasNet);
+        Level level = this.level;
+        if (level == null || level.isClientSide()) return;
+        BlockState currentState = level.getBlockState(this.worldPosition);
+        if (!currentState.hasProperty(HAS_NET)) return;
+        BlockState newState = currentState.setValue(HAS_NET, this.hasNetInInputSlot());
         if (currentState != newState) {
-            this.world.setBlockState(this.pos, newState);
+            level.setBlock(this.worldPosition, newState, 3);
         }
     }
 
     @Override
-    public Text getDisplayName() {
-        return Text.translatable("item_collector_display_name");
+    public Component getDisplayName() {
+        return Component.translatable("raft.item_collector_display_name");
     }
 
     @Override
-    public DefaultedList<ItemStack> getItems() {
+    public NonNullList<ItemStack> getItems() {
         return inventory;
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.writeNbt(nbt, registryLookup);
-        Inventories.writeNbt(nbt, inventory, registryLookup);
-        nbt.putInt("item_collector.progress", progress);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        ContainerHelper.saveAllItems(output, inventory);
+        output.putInt("item_collector.progress", progress);
     }
 
     @Override
-    public void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.readNbt(nbt, registryLookup);
-        Inventories.readNbt(nbt, inventory, registryLookup);
-        progress = nbt.getInt("item_collector.progress");
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        ContainerHelper.loadAllItems(input, inventory);
+        progress = input.getIntOr("item_collector.progress", 0);
+    }
+
+    @Override
+    public void setChanged() {
+        super.setChanged();
         updateBlockState();
     }
+
     @Override
-    public void markDirty() {
-        //world.updateListeners(pos, getCachedState(), getCachedState(), 3);
-        super.markDirty();
-        updateBlockState();
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        if (this.level != null) {
+            Containers.dropContents(this.level, pos, this);
+        }
+        super.preRemoveSideEffects(pos, state);
     }
 
     public boolean hasNetInInputSlot() {
-        return this.getStack(INPUT_SLOT).isOf(ModItems.NET);
+        return this.getItem(INPUT_SLOT).is(ModItems.NET);
     }
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
+    public AbstractContainerMenu createMenu(int syncId, Inventory playerInventory, Player player) {
         return new ItemCollectorScreenHandler(syncId, playerInventory, this, this.propertyDelegate);
     }
 
-    public void tick(World world, BlockPos pos, BlockState state) {
-        if(world.isClient()) {
+    public void tick(Level level, BlockPos pos, BlockState state) {
+        if (!(level instanceof ServerLevel serverLevel)) {
             return;
         }
-        boolean isWaterlogged = state.get(ItemCatcher.WATERLOGGED);
+        boolean isWaterlogged = state.getValue(ItemCatcher.WATERLOGGED);
 
-        RegistryEntry<Biome> biomeEntry = world.getBiome(pos);
+        Holder<Biome> biomeEntry = level.getBiome(pos);
 
-        if (isWaterlogged && biomeEntry.matchesKey(ModBiomes.RAFT_OCEAN_BIOME)) {
+        if (isWaterlogged && biomeEntry.is(ModBiomes.RAFT_OCEAN_BIOME)) {
             if (isOutputSlotEmptyOrReceivable()) {
-                if (this.hasRecipe()) {
+                if (this.hasRecipe(serverLevel)) {
                     this.increaseCraftProgress();
-                    markDirty(world, pos, state);
+                    setChanged(level, pos, state);
 
                     if (hasCraftingFinished()) {
-                        this.craftItemKeepInput();
+                        this.craftItemKeepInput(serverLevel);
                         this.resetProgress();
                     }
                 } else {
@@ -158,7 +166,7 @@ public class ItemCollectorBlockEntity extends BlockEntity implements NamedScreen
                 }
             } else {
                 this.resetProgress();
-                markDirty(world, pos, state);
+                setChanged(level, pos, state);
             }
         }
     }
@@ -167,28 +175,25 @@ public class ItemCollectorBlockEntity extends BlockEntity implements NamedScreen
         this.progress = 0;
     }
 
-    private void craftItemKeepInput() {
-        if (!(this.world instanceof ServerWorld serverWorld)) return;
-        Optional<RecipeEntry<ItemCatchingRecipe>> recipe = getCurrentRecipe();
-        ItemStack inputStack = this.getStack(INPUT_SLOT);
-        ItemStack result = recipe.get().value().getResult(null).getItem().getDefaultStack();
+    private void craftItemKeepInput(ServerLevel level) {
+        Optional<RecipeHolder<ItemCatchingRecipe>> recipe = getCurrentRecipe(level);
+        if (recipe.isEmpty()) return;
+        ItemStack result = recipe.get().value().assemble(new SingleRecipeInput(this.inventory.getFirst()));
 
+        ItemStack inputStack = this.getItem(INPUT_SLOT);
         if (!inputStack.isEmpty()) {
-            // Damage the item in the input slot by 1
-            inputStack.damage(1, serverWorld, null, item -> {});
-
-            // Check if the item is completely damaged, and if so, replace it with an empty ItemStack
-            if (inputStack.getDamage() >= inputStack.getMaxDamage()) {
-                this.setStack(INPUT_SLOT, ItemStack.EMPTY);
-            } else {
-                this.setStack(INPUT_SLOT, inputStack);
+            // Damage the net in the input slot by 1 (it is removed when it breaks).
+            inputStack.hurtAndBreak(1, level, null, item -> {});
+            if (inputStack.isEmpty()) {
+                this.setItem(INPUT_SLOT, ItemStack.EMPTY);
             }
         }
 
         // Add the result to the output slot
-        this.setStack(OUTPUT_SLOT, new ItemStack(result.getItem(), this.getStack(OUTPUT_SLOT).getCount() + result.getCount()));
+        this.setItem(OUTPUT_SLOT, new ItemStack(result.getItem(), this.getItem(OUTPUT_SLOT).getCount() + result.getCount()));
+        updateBlockState();
+        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
     }
-
 
     private boolean hasCraftingFinished() {
         return progress >= maxProgress;
@@ -198,39 +203,38 @@ public class ItemCollectorBlockEntity extends BlockEntity implements NamedScreen
         progress++;
     }
 
-    private boolean hasRecipe() {
-        Optional<RecipeEntry<ItemCatchingRecipe>> recipe = getCurrentRecipe();
-
-        return recipe.isPresent() && canInsertAmountIntoOutputSlot(recipe.get().value().getResult(null))
-                && canInsertItemIntoOutputSlot(recipe.get().value().getResult(null).getItem());
+    private boolean hasRecipe(ServerLevel level) {
+        Optional<RecipeHolder<ItemCatchingRecipe>> recipe = getCurrentRecipe(level);
+        if (recipe.isEmpty()) return false;
+        ItemStack result = recipe.get().value().assemble(new SingleRecipeInput(this.inventory.getFirst()));
+        return canInsertAmountIntoOutputSlot(result) && canInsertItemIntoOutputSlot(result.getItem());
     }
 
-    private Optional<RecipeEntry<ItemCatchingRecipe>> getCurrentRecipe() {
-        return this.matchGetter.getFirstMatch(new SingleStackRecipeInput(this.inventory.getFirst()), this.getWorld());
+    private Optional<RecipeHolder<ItemCatchingRecipe>> getCurrentRecipe(ServerLevel level) {
+        return this.matchGetter.getRecipeFor(new SingleRecipeInput(this.inventory.getFirst()), level);
     }
-
 
     private boolean canInsertItemIntoOutputSlot(Item item) {
-        return this.getStack(OUTPUT_SLOT).getItem() == item || this.getStack(OUTPUT_SLOT).isEmpty();
+        return this.getItem(OUTPUT_SLOT).getItem() == item || this.getItem(OUTPUT_SLOT).isEmpty();
     }
 
     private boolean canInsertAmountIntoOutputSlot(ItemStack result) {
-        return this.getStack(OUTPUT_SLOT).getCount() + result.getCount() <= getStack(OUTPUT_SLOT).getMaxCount();
+        return this.getItem(OUTPUT_SLOT).getCount() + result.getCount() <= getItem(OUTPUT_SLOT).getMaxStackSize();
     }
 
     private boolean isOutputSlotEmptyOrReceivable() {
-        return this.getStack(OUTPUT_SLOT).isEmpty() || this.getStack(OUTPUT_SLOT).getCount() < this.getStack(OUTPUT_SLOT).getMaxCount();
+        return this.getItem(OUTPUT_SLOT).isEmpty() || this.getItem(OUTPUT_SLOT).getCount() < this.getItem(OUTPUT_SLOT).getMaxStackSize();
     }
 
     //Sync for client renderer of item
     @Nullable
     @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        return createNbt(registryLookup);
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return saveWithoutMetadata(registries);
     }
 }

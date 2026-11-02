@@ -1,16 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
-    "D": {
-      "item": "minecraft:stick"
-    },
-    "R": {
-      "item": "raft:ancient_crystal"
-    },
-    "S": {
-      "item": "raft:ancient_energy"
-    }
+    "D": "minecraft:stick",
+    "R": "raft:ancient_crystal",
+    "S": "raft:ancient_energy"
   },
   "pattern": [
     " S ",
@@ -18,7 +11,6 @@
     " D "
   ],
   "result": {
-    "count": 1,
     "id": "raft:energy_staff"
   }
 }

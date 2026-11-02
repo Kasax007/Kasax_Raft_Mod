@@ -22,10 +22,10 @@ package net.kasax.raft.block.cable;
  * SOFTWARE.
  */
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
@@ -40,23 +40,23 @@ public final class CableShapeUtil {
         CableBlock cableBlock = (CableBlock) state.getBlock();
 
         final double size = cableBlock.type.cableThickness;
-        final VoxelShape baseShape = VoxelShapes.cuboid(size, size, size, 1 - size, 1 - size, 1 - size);
+        final VoxelShape baseShape = Shapes.box(size, size, size, 1 - size, 1 - size, 1 - size);
 
         final List<VoxelShape> connections = new ArrayList<>();
         for (Direction dir : Direction.values()) {
-            if (state.get(CableBlock.PROPERTY_MAP.get(dir))) {
+            if (state.getValue(CableBlock.PROPERTY_MAP.get(dir))) {
                 double[] mins = new double[] { size, size, size };
                 double[] maxs = new double[] { 1 - size, 1 - size, 1 - size };
                 int axis = dir.getAxis().ordinal();
-                if (dir.getDirection() == Direction.AxisDirection.POSITIVE) {
+                if (dir.getAxisDirection() == Direction.AxisDirection.POSITIVE) {
                     maxs[axis] = 1;
                 } else {
                     mins[axis] = 0;
                 }
-                connections.add(VoxelShapes.cuboid(mins[0], mins[1], mins[2], maxs[0], maxs[1], maxs[2]));
+                connections.add(Shapes.box(mins[0], mins[1], mins[2], maxs[0], maxs[1], maxs[2]));
             }
         }
-        return VoxelShapes.union(baseShape, connections.toArray(new VoxelShape[]{}));
+        return Shapes.or(baseShape, connections.toArray(new VoxelShape[]{}));
     }
 
     public static VoxelShape getShape(BlockState state) {

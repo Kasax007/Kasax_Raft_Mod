@@ -1,16 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
-    "B": {
-      "item": "minecraft:redstone"
-    },
-    "C": {
-      "item": "minecraft:iron_ingot"
-    },
-    "S": {
-      "item": "raft:circuit_board"
-    }
+    "B": "minecraft:redstone",
+    "C": "minecraft:iron_ingot",
+    "S": "raft:circuit_board"
   },
   "pattern": [
     "CSC",
@@ -18,7 +11,6 @@
     "CSC"
   ],
   "result": {
-    "count": 1,
     "id": "raft:makeshift_battery"
   }
 }

@@ -1,15 +1,12 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
+  "category": "redstone",
   "key": {
-    "S": {
-      "item": "raft:driftwood_planks"
-    }
+    "#": "raft:driftwood_planks"
   },
   "pattern": [
-    "   ",
-    "SSS",
-    "SSS"
+    "###",
+    "###"
   ],
   "result": {
     "count": 2,

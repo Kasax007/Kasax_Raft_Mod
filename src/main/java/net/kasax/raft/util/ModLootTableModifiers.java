@@ -2,96 +2,36 @@ package net.kasax.raft.util;
 
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.kasax.raft.item.ModItems;
-import net.minecraft.loot.LootPool;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.condition.RandomChanceLootCondition;
-import net.minecraft.loot.entry.ItemEntry;
-import net.minecraft.loot.entry.LootPoolEntry;
-import net.minecraft.loot.function.SetCountLootFunction;
-import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
-import net.minecraft.loot.provider.number.UniformLootNumberProvider;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+/** Adds the mod's items to the vanilla shipwreck treasure and fishing treasure loot tables. */
 public class ModLootTableModifiers {
-    private static final Identifier FISHING_TREASURE_ID =
-            Identifier.of("minecraft", "gameplay/fishing/treasure");
-    private static final Identifier SHIPWRECK_TREASURE_ID =
-            Identifier.of("minecraft", "chests/shipwreck_treasure");
+
+    private static LootPool.Builder extraPool(Item item, float chance, int minCount, int maxCount) {
+        return LootPool.lootPool()
+                .setRolls(ContextIntProviders.exactly(1))
+                .when(LootItemRandomChanceCondition.randomChance(chance))
+                .add(LootItem.lootTableItem(item))
+                .apply(SetItemCountFunction.setCount(ContextIntProviders.between(minCount, maxCount)));
+    }
 
     public static void modifyLootTables() {
-        //LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
-        //    if(FISHING_TREASURE_ID.equals(key)) {
-        //               .rolls(ConstantLootNumberProvider.create(1)) //adds extra item
-        //                .conditionally(RandomChanceLootCondition.builder(0.25f)) //drop chance 25%
-        //                .with(ItemEntry.builder(ModItems.ANCIENT_BROKEN_RING))
-        //                .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0f, 4.0f)).build()); //amount
-        //        tableBuilder.pool(poolBuilder.build());
-        //    }
-        //});
         LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
-            if(SHIPWRECK_TREASURE_ID.equals(key)) {
-                LootPool.Builder poolBuilder = LootPool.builder()
-                .rolls(ConstantLootNumberProvider.create(1)) //adds extra item
-                .conditionally(RandomChanceLootCondition.builder(0.5f)) //drop chance 25%
-                .with(ItemEntry.builder(ModItems.ANCIENT_CRYSTAL))
-                .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0f, 5.0f)).build()); //amount
-                tableBuilder.pool(poolBuilder.build());
+            if (BuiltInLootTables.SHIPWRECK_TREASURE.equals(key)) {
+                tableBuilder.pool(extraPool(ModItems.ANCIENT_CRYSTAL, 0.5f, 1, 5).build());
+                tableBuilder.pool(extraPool(ModItems.LOFI_BEAT_MUSIC_DISC, 0.1f, 1, 5).build());
+                tableBuilder.pool(extraPool(ModItems.CRYSTAL_CASTLES_MUSIC_DISC, 0.1f, 1, 5).build());
+                tableBuilder.pool(extraPool(ModItems.SOME_GAME_MUSIC_MUSIC_DISC, 0.1f, 1, 5).build());
+            }
+            if (BuiltInLootTables.FISHING_TREASURE.equals(key)) {
+                tableBuilder.pool(extraPool(ModItems.ANCIENT_BROKEN_RING, 0.05f, 1, 1).build());
             }
         });
-        LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
-            if(SHIPWRECK_TREASURE_ID.equals(key)) {
-                LootPool.Builder poolBuilder = LootPool.builder()
-                        .rolls(ConstantLootNumberProvider.create(1)) //adds extra item
-                        .conditionally(RandomChanceLootCondition.builder(0.1f)) //drop chance 25%
-                        .with(ItemEntry.builder(ModItems.LOFI_BEAT_MUSIC_DISC))
-                        .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0f, 5.0f)).build()); //amount
-                tableBuilder.pool(poolBuilder.build());
-            }
-        });
-        LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
-            if(SHIPWRECK_TREASURE_ID.equals(key)) {
-                LootPool.Builder poolBuilder = LootPool.builder()
-                        .rolls(ConstantLootNumberProvider.create(1)) //adds extra item
-                        .conditionally(RandomChanceLootCondition.builder(0.1f)) //drop chance 25%
-                        .with(ItemEntry.builder(ModItems.CRYSTAL_CASTLES_MUSIC_DISC))
-                        .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0f, 5.0f)).build()); //amount
-                tableBuilder.pool(poolBuilder.build());
-            }
-        });
-        LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
-            if(SHIPWRECK_TREASURE_ID.equals(key)) {
-                LootPool.Builder poolBuilder = LootPool.builder()
-                        .rolls(ConstantLootNumberProvider.create(1)) //adds extra item
-                        .conditionally(RandomChanceLootCondition.builder(0.1f)) //drop chance 25%
-                        .with(ItemEntry.builder(ModItems.SOME_GAME_MUSIC_MUSIC_DISC))
-                        .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0f, 5.0f)).build()); //amount
-                tableBuilder.pool(poolBuilder.build());
-            }
-        });
-        LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
-            if(FISHING_TREASURE_ID.equals(key)) {
-                LootPool.Builder poolBuilder = LootPool.builder()
-                        .rolls(ConstantLootNumberProvider.create(1)) //adds extra item
-                        .conditionally(RandomChanceLootCondition.builder(0.05f)) //drop chance 25%
-                        .with(ItemEntry.builder(ModItems.ANCIENT_BROKEN_RING))
-                        .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0f, 1.0f)).build()); //amount
-                tableBuilder.pool(poolBuilder.build());
-            }
-        });
-        //LootTableEvents.REPLACE.register((resourceManager, lootManager, key, original, source) -> {
-        //    if(FISHING_TREASURE_ID.equals(key)) {
-        //        List<LootPoolEntry> entries = new ArrayList<>(Arrays.asList(original.pools[0].entries));
-        //        entries.add(ItemEntry.builder(ModItems.ANCIENT_BROKEN_RING).build());
-//
-        //        LootPool.Builder pool = LootPool.builder().with(entries);
-        //        return LootTable.builder().pool(pool).build();
-        //    }
-        //    return null;
-        //});
-
     }
 }

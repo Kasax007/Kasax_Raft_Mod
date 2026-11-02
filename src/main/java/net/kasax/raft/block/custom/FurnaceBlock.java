@@ -5,172 +5,85 @@ package net.kasax.raft.block.custom;
 //The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 //THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import com.mojang.serialization.MapCodec;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.kasax.raft.block.entity.FurnaceEntity;
 import net.kasax.raft.util.FurnaceEntities;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.context.LootContext;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.stat.Stats;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.AbstractFurnaceBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+public class FurnaceBlock extends AbstractFurnaceBlock {
+    protected final double speed;
+    protected final double fuel;
+    protected final int dupe;
 
-public class FurnaceBlock extends BlockWithEntity implements BlockEntityProvider{
-    private static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
-    public static final BooleanProperty LIT = RedstoneTorchBlock.LIT;
-
-    protected double speed;
-    protected double fuel;
-    protected int dupe;
-
-    public FurnaceBlock(Settings settings, double speedMultiplier, double fuelMultiplier, int dupeChance100) {
-        super(settings);
-
+    public FurnaceBlock(Properties properties, double speedMultiplier, double fuelMultiplier, int dupeChance100) {
+        super(properties);
         this.speed = speedMultiplier;
         this.fuel = fuelMultiplier;
         this.dupe = dupeChance100;
-
-        this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH).with(LIT, false));
-    }
-
-    @Nullable
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(world, type, FurnaceEntities.RAFT_FURNACE);
     }
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new FurnaceEntity(pos, state);
     }
 
+    @Nullable
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        if (!world.isClient) {
-            this.openContainer(world, pos, player);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        if (level.isClientSide()) {
+            return null;
         }
-
-        return ActionResult.SUCCESS;
+        return createTickerHelper(type, FurnaceEntities.RAFT_FURNACE,
+                (lvl, pos, st, be) -> FurnaceEntity.tick((net.minecraft.server.level.ServerLevel) lvl, pos, st, be));
     }
 
     @Override
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (!state.isOf(newState.getBlock())) {
-            BlockEntity be = world.getBlockEntity(pos);
-            if (be instanceof FurnaceEntity furnace) {
-                if (world instanceof ServerWorld) {
-                    ItemScatterer.spawn(world, pos, furnace);
-                    ((FurnaceEntity)be).getRecipesUsedAndDropExperience((ServerWorld)world, Vec3d.ofCenter(pos));
-                }
-
-                world.updateComparators(pos, this);
-            }
-
-            super.onStateReplaced(state, world, pos, newState, moved);
-        }
-    }
-
-    private void openContainer(World world, BlockPos blockPos, PlayerEntity playerEntity) {
-        BlockEntity blockEntity = world.getBlockEntity(blockPos);
-
+    protected void openContainer(Level level, BlockPos pos, Player player) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof FurnaceEntity) {
-            playerEntity.openHandledScreen((NamedScreenHandlerFactory) blockEntity);
-            playerEntity.increaseStat(Stats.INTERACT_WITH_FURNACE, 1);
+            player.openMenu((MenuProvider) blockEntity);
+            player.awardStat(Stats.INTERACT_WITH_FURNACE);
         }
     }
 
-    //@Override
-    public List<ItemStack> getDroppedStacks(BlockState blockState, LootContext.Builder lootContext$Builder) {
-        ArrayList<ItemStack> dropList = new ArrayList<ItemStack>();
-        dropList.add(new ItemStack(this));
-        return dropList;
-    }
-    @Environment(EnvType.CLIENT)
-    //@Override
-    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        if (state.get(LIT)) {
-            double x = (double) pos.getX() + 0.5D;
-            double y = (double) pos.getY();
-            double z = (double) pos.getZ() + 0.5D;
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        if (state.getValue(LIT)) {
+            double x = pos.getX() + 0.5D;
+            double y = pos.getY();
+            double z = pos.getZ() + 0.5D;
 
             if (random.nextDouble() < 0.1D) {
-                world.playSound(x, y, z, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+                level.playLocalSound(x, y, z, SoundEvents.FURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 1.0F, 1.0F, false);
             }
 
-            Direction direction_1 = state.get(FACING);
-            Direction.Axis direction$Axis_1 = direction_1.getAxis();
+            Direction direction = state.getValue(FACING);
+            Direction.Axis axis = direction.getAxis();
 
-            double double_5 = random.nextDouble() * 0.6D - 0.3D;
-            double double_6 = direction$Axis_1 == Direction.Axis.X ? (double) direction_1.getOffsetX() * 0.52D : double_5;
-            double double_7 = random.nextDouble() * 6.0D / 16.0D;
-            double double_8 = direction$Axis_1 == Direction.Axis.Z ? (double) direction_1.getOffsetZ() * 0.52D : double_5;
+            double side = random.nextDouble() * 0.6D - 0.3D;
+            double dx = axis == Direction.Axis.X ? direction.getStepX() * 0.52D : side;
+            double dy = random.nextDouble() * 6.0D / 16.0D;
+            double dz = axis == Direction.Axis.Z ? direction.getStepZ() * 0.52D : side;
 
-            world.addParticle(ParticleTypes.SMOKE, x + double_6, y + double_7, z + double_8, 0.0D, 0.0D, 0.0D);
-            world.addParticle(ParticleTypes.FLAME, x + double_6, y + double_7, z + double_8, 0.0D, 0.0D, 0.0D);
+            level.addParticle(ParticleTypes.SMOKE, x + dx, y + dy, z + dz, 0.0D, 0.0D, 0.0D);
+            level.addParticle(ParticleTypes.FLAME, x + dx, y + dy, z + dz, 0.0D, 0.0D, 0.0D);
         }
     }
-
-    @Override
-    public BlockState getPlacementState(ItemPlacementContext context) {
-        return this.getDefaultState().with(FACING, context.getHorizontalPlayerFacing().getOpposite());
-    }
-
-    @Override
-    public boolean hasComparatorOutput(BlockState state) {
-        return true;
-    }
-
-    @Override
-    public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
-        return ScreenHandler.calculateComparatorOutput(world.getBlockEntity(pos));
-    }
-
-    @Override
-    protected MapCodec<? extends BlockWithEntity> getCodec() {
-        return null;
-    }
-
-    @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
-    }
-
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING, LIT);
-    }
-
-    @Nullable
-    protected static <T extends BlockEntity> BlockEntityTicker<T> checkType(World world, BlockEntityType<T> givenType, BlockEntityType<? extends FurnaceEntity> expectedType) {
-        return world.isClient ? null : (givenType == expectedType ? (BlockEntityTicker<T>) (world1, pos, state, blockEntity) -> FurnaceEntity.tick(world1, pos, state, (FurnaceEntity) blockEntity) : null);
-    }
-
 
     public double getSpeedModifier() {
         return speed;

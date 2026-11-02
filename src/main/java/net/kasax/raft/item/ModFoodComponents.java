@@ -1,15 +1,25 @@
 package net.kasax.raft.item;
 
-import net.minecraft.component.type.FoodComponent;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.ItemUseAnimation;
+import net.minecraft.world.item.component.Consumable;
+import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
+
+import java.util.List;
 
 public class ModFoodComponents {
-    public static final FoodComponent COCONUT = new FoodComponent.Builder().nutrition(6).saturationModifier(0.25f).build();
-    public static final FoodComponent PINA_COLADA = new FoodComponent.Builder().nutrition(9).saturationModifier(1f)
-            .statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 3000), 1f)
-            .statusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 50), 1f)
-            .statusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 20), 1f)
+    public static final FoodProperties COCONUT = new FoodProperties.Builder().nutrition(6).saturationModifier(0.25f).build();
+
+    public static final FoodProperties PINA_COLADA = new FoodProperties.Builder().nutrition(9).saturationModifier(1f)
             .alwaysEdible()
+            .build();
+    public static final Consumable PINA_COLADA_EFFECTS = Consumable.builder()
+            .animation(ItemUseAnimation.DRINK)
+            .onConsume(new ApplyStatusEffectsConsumeEffect(List.of(
+                    new MobEffectInstance(MobEffects.SPEED, 3000),
+                    new MobEffectInstance(MobEffects.REGENERATION, 50),
+                    new MobEffectInstance(MobEffects.NAUSEA, 20))))
             .build();
 }

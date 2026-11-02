@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:ancient_energy_from_smelting_ancient_broken_ring"
+        "recipes": "raft:ancient_energy_from_smelting_ancient_broken_ring"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:ancient_energy_from_smelting_ancient_broken_ring"
+      "raft:ancient_energy_from_smelting_ancient_broken_ring"
     ]
   }
 }

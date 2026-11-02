@@ -25,8 +25,8 @@ package net.kasax.raft.block.cable;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import team.reborn.energy.api.EnergyStorage;
 
 import java.util.*;
@@ -42,7 +42,7 @@ class CableTickManager {
     }
 
     static void handleCableTick(CableBlockEntity startingCable) {
-        if (!(startingCable.getWorld() instanceof ServerWorld)) throw new IllegalStateException();
+        if (!(startingCable.getLevel() instanceof ServerLevel)) throw new IllegalStateException();
 
         try {
             gatherCables(startingCable);
@@ -80,7 +80,7 @@ class CableTickManager {
                 cable.energyContainer.amount = networkAmount / cableCount;
                 networkAmount -= cable.energyContainer.amount;
                 cableCount--;
-                cable.markDirty();
+                cable.setChanged();
                 cable.ioBlocked = false;
             }
         } finally {
@@ -94,7 +94,7 @@ class CableTickManager {
         // Make sure we only gather and tick each cable once per tick.
         if (current.lastTick == tickCounter) return false;
         // Make sure we ignore cables in non-ticking chunks.
-        return current.getWorld() instanceof ServerWorld sw && sw.isChunkLoaded(current.getPos());
+        return current.getLevel() instanceof ServerLevel sw && sw.isLoaded(current.getBlockPos());
     }
 
     /**

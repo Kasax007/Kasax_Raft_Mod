@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "#raft:driftwood_logs"
+            "items": "#raft:palm_logs"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "raft:palm_planks"
+        "recipes": "raft:palm_planks"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

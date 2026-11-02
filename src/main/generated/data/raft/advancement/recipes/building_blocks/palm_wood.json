@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "raft:palm_wood"
+        "recipes": "raft:palm_wood"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

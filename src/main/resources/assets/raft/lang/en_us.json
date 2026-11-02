@@ -2,7 +2,6 @@
   "item.raft.ancient_energy": "Ancient Energy",
   "item.raft.ancient_broken_ring": "Ancient Broken Ring",
   "item.raft.ancient_crystal": "Ancient Crystal",
-
   "block.raft.driftwood_portal_frame": "Driftwood Portal Frame",
   "block.raft.driftwood_log": "Driftwood Log",
   "block.raft.driftwood_wood": "Driftwood Wood",
@@ -12,7 +11,6 @@
   "block.raft.driftwood_leaves": "Driftwood Leaves",
   "block.raft.driftwood_sapling": "Driftwood Sapling",
   "block.raft.item_catcher": "Item Catcher",
-
   "block.raft.palm_log": "Palm Log",
   "block.raft.palm_wood": "Palm Wood",
   "block.raft.stripped_palm_log": "Stripped Palm Log",
@@ -21,7 +19,6 @@
   "block.raft.palm_leaves": "Palm Leaves",
   "block.raft.palm_coconut_leaves": "Palm Coconut Leaves",
   "block.raft.palm_sapling": "Palm Sapling",
-
   "block.raft.driftwood_stairs": "Driftwood Stairs",
   "block.raft.driftwood_slab": "Driftwood Slab",
   "block.raft.driftwood_button": "Driftwood Button",
@@ -30,7 +27,6 @@
   "block.raft.driftwood_fence_gate": "Driftwood Fence Gate",
   "block.raft.driftwood_door": "Driftwood Door",
   "block.raft.driftwood_trapdoor": "Driftwood Trapdoor",
-
   "block.raft.palm_stairs": "Palm Stairs",
   "block.raft.palm_slab": "Palm Slab",
   "block.raft.palm_button": "Palm Button",
@@ -39,7 +35,6 @@
   "block.raft.palm_fence_gate": "Palm Fence Gate",
   "block.raft.palm_door": "Palm Door",
   "block.raft.palm_trapdoor": "Palm Trapdoor",
-
   "block.raft.titanium_ore": "Titanium Ore",
   "block.raft.deepslate_titanium_ore": "Deepslate Titanium Ore",
   "block.raft.raw_titanium_block": "Raw Titanium Block",
@@ -48,17 +43,14 @@
   "item.raft.raw_titanium": "Raw Titanium",
   "item.raft.titanium_ingot": "Titanium Ingot",
   "item.raft.titanium_nugget": "Titanium Nugget",
-
   "block.raft.makeshift_solar_panel": "Makeshift Solar Panel",
   "block.raft.makeshift_battery": "Makeshift Battery",
   "block.raft.quarry": "Quarry",
   "block.raft.chunk_destroyer": "Chunk Destroyer",
-
   "item.raft.titanium_helmet": "Titanium Helmet",
   "item.raft.titanium_chestplate": "Titanium Chestplate",
   "item.raft.titanium_leggings": "Titanium Leggings",
   "item.raft.titanium_boots": "Titanium Boots",
-
   "item.raft.energy_staff": "Energy Staff",
   "item.raft.raft_teleporter": "Raft Dimension Teleporter",
   "item.raft.metal_detector": "Metal Detector",
@@ -71,38 +63,29 @@
   "item.raft.teleporter1": "Please stand still, checking for a safe spot",
   "item.raft.teleporter2": "Still checking...",
   "item.raft.teleporter3": "Unable to find a safe spot, please try again in another spot",
-
   "item.raft.some_game_music_music_disc": "Some Game Music Disc",
   "some_game_music_music_disc.desc": "Some Game Music - Seth Makes Sounds (CC0)",
   "item.raft.lofi_beat_music_disc": "Lofi Beat Music Disc",
   "lofi_beat_music_disc.desc": "Lofi Beat - Seth Makes Sounds (CC0)",
   "item.raft.crystal_castles_music_disc": "Crystal Castles Music Disc",
   "crystal_castles_music_disc.desc": "Crystal Castles - Seth Makes Sounds (CC0)",
-
   "item.raft.net": "Item Catcher Net",
-
   "tooltip.raft.energy_staff.tooltip": "Used to light the Raft Portal!",
   "tooltip.raft.raft_teleporter.tooltip": "Use to teleport directly to the Raft Dimension!",
   "tooltip.raft.driftwood_portal_frame.tooltip": "Used to build the Raft Portal!",
   "tooltip.raft.trash_cube.tooltip": "Right Click to reveal the contents!",
-
-  "chat.raft.energy_staff.invalid_target": "This staff can only be used on a Driftwood Portal Frame Portal!",
-
+  "chat.raft.energy_staff.invalid_target": "This staff can only be used on a Driftwood Portal Frame!",
   "sounds.raft.lofi_beat_seth": "Lofi Beat - Seth Makes Sounds",
   "sounds.raft.some_game_music_seth": "Some Game Music - Seth Makes Sounds",
-
   "raft.item_collector_display_name": "Item Collector",
-
   "block.raft.brick_furnace": "Brick Furnace",
   "block.raft.titanium_furnace": "Titanium Furnace",
   "block.raft.copper_cable": "Copper Cable",
   "block.raft.titanium_cable": "Titanium Cable",
-
   "raft.text.dupelabel": " Dupe chance: %d",
   "raft.text.speedlabel": " Speed increase: %dx",
   "raft.text.fuellabel": " Fuel usage: %dx",
   "raft.text.tooltiplabel": "Furnace stats:",
-
   "itemgroup.raft": "Raft",
   "tooltip.raft.makeshift_solar_panel.tooltip": "Generates 10 FE per Tick",
   "tooltip.raft.makeshift_battery.tooltip1": "Stores 1.000.000 FE",
@@ -112,5 +95,12 @@
   "tooltip.raft.quarry.tooltip2": "Consumes 1000 FE / Block",
   "tooltip.raft.chunk_destroyer.tooltip1": "Mines The Chunk Its In",
   "tooltip.raft.chunk_destroyer.tooltip2": "Consumes 100.000 FE per Column",
-  "tooltip.raft.cable.max_input": "Transfer Per Tick: %d FE"
+  "tooltip.raft.cable.max_input": "Transfer Per Tick: %d FE",
+  "block.raft.raft_portal": "Raft Portal",
+  "chat.raft.energy_staff.no_portal": "The frame is not a valid portal: it needs an empty 2x3 (or bigger) rectangle inside.",
+  "chat.raft.energy_staff.overworld_only": "The Raft Portal can only be lit in the Overworld!",
+  "tooltip.raft.ancient_broken_ring": "Can be found while fishing",
+  "tooltip.raft.ancient_crystal": "Can be found in Shipwrecks",
+  "sounds.raft.crystal_castles": "Crystal Castles - Seth Makes Sounds",
+  "sounds.raft.portal_teleport_sound": "Portal teleport"
 }

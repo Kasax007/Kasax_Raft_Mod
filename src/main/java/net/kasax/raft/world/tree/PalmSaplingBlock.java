@@ -1,21 +1,19 @@
 package net.kasax.raft.world.tree;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SaplingBlock;
-import net.minecraft.block.SaplingGenerator;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SaplingBlock;
+import net.minecraft.world.level.block.grower.TreeGrower;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class PalmSaplingBlock extends SaplingBlock {
-
-
-    public PalmSaplingBlock(SaplingGenerator generator, Settings settings) {
-        super(generator, settings);
+    public PalmSaplingBlock(TreeGrower grower, Properties properties) {
+        super(grower, properties);
     }
 
     @Override
-    protected boolean canPlantOnTop(BlockState floor, BlockView world, BlockPos pos) {
-        return floor.isOf(Blocks.SAND);
+    protected boolean mayPlaceOn(BlockState floor, BlockGetter level, BlockPos pos) {
+        return floor.is(Blocks.SAND);
     }
 }

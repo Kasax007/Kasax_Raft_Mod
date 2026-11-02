@@ -2,110 +2,90 @@ package net.kasax.raft.recipe;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.recipe.input.RecipeInput;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.world.World;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.PlacementInfo;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeBookCategories;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
+import net.minecraft.world.level.Level;
+import org.jspecify.annotations.Nullable;
 
-public class ItemCatchingRecipe implements Recipe<RecipeInput> {
-    private final ItemStack output;
+/** The item catcher turns a net into ocean garbage. The recipe type is {@code raft:item_catching}. */
+public class ItemCatchingRecipe implements Recipe<SingleRecipeInput> {
     private final Ingredient ingredient;
+    private final ItemStackTemplate output;
+    private @Nullable PlacementInfo placementInfo;
 
-    public ItemCatchingRecipe(Ingredient ingredient, ItemStack itemStack) {
-        this.output = itemStack;
+    public ItemCatchingRecipe(Ingredient ingredient, ItemStackTemplate output) {
         this.ingredient = ingredient;
+        this.output = output;
     }
 
     @Override
-    public boolean matches(RecipeInput input, World world) {
-        if(world.isClient()) {
-            return false;
+    public boolean matches(SingleRecipeInput input, Level level) {
+        return ingredient.test(input.item());
+    }
+
+    @Override
+    public ItemStack assemble(SingleRecipeInput input) {
+        return output.create();
+    }
+
+    @Override
+    public boolean showNotification() {
+        return false;
+    }
+
+    @Override
+    public String group() {
+        return "";
+    }
+
+    @Override
+    public RecipeSerializer<ItemCatchingRecipe> getSerializer() {
+        return ModRecipes.ITEM_CATCHING_SERIALIZER;
+    }
+
+    @Override
+    public RecipeType<ItemCatchingRecipe> getType() {
+        return ModRecipes.ITEM_CATCHING_TYPE;
+    }
+
+    @Override
+    public PlacementInfo placementInfo() {
+        if (placementInfo == null) {
+            placementInfo = PlacementInfo.create(ingredient);
         }
-
-        return ingredient.test(input.getStackInSlot(0)); // ingredient from recipe json // inventory.getStack(0) block entity slot index
+        return placementInfo;
     }
 
     @Override
-    public ItemStack craft(RecipeInput input, RegistryWrapper.WrapperLookup lookup) {
-        return output.copy();
+    public RecipeBookCategory recipeBookCategory() {
+        return RecipeBookCategories.CRAFTING_MISC;
     }
 
-    @Override
-    public boolean fits(int width, int height) {
-        return true;
+    public Ingredient ingredient() {
+        return ingredient;
     }
 
-
-    @Override
-    public ItemStack getResult(RegistryWrapper.WrapperLookup registriesLookup) {
+    public ItemStackTemplate output() {
         return output;
     }
 
-    @Override
-    public DefaultedList<Ingredient> getIngredients() {
-        DefaultedList<Ingredient> list = DefaultedList.ofSize(1);
-        list.add(ingredient);
-        return list;
-    }
+    public static final MapCodec<ItemCatchingRecipe> CODEC = RecordCodecBuilder.mapCodec(in -> in.group(
+            Ingredient.CODEC.fieldOf("ingredient").forGetter(ItemCatchingRecipe::ingredient),
+            ItemStackTemplate.CODEC.fieldOf("output").forGetter(ItemCatchingRecipe::output)
+    ).apply(in, ItemCatchingRecipe::new));
 
-    @Override
-    public RecipeSerializer<?> getSerializer() {
-        return Serializer.INSTANCE;
-    }
-
-    @Override
-    public RecipeType<?> getType() {
-        return Type.INSTANCE;
-    }
-
-    public static class Type implements RecipeType<ItemCatchingRecipe> {
-        public static final Type INSTANCE = new Type();
-        public static final String ID = "item_catching";
-    }
-
-    public static class Serializer implements RecipeSerializer<ItemCatchingRecipe> {
-        public static final Serializer INSTANCE = new Serializer();
-        public static final String ID = "item_catching";
-
-        public static final MapCodec<ItemCatchingRecipe> CODEC = RecordCodecBuilder.mapCodec(in -> in.group(
-                Ingredient.DISALLOW_EMPTY_CODEC.fieldOf("ingredient").forGetter(itemCatchingRecipe -> itemCatchingRecipe.ingredient),
-                ItemStack.VALIDATED_CODEC.fieldOf("output").forGetter(r -> r.output)
-        ).apply(in, ItemCatchingRecipe::new));
-
-        public static final PacketCodec<RegistryByteBuf, ItemCatchingRecipe> PACKET_CODEC = PacketCodec.ofStatic(Serializer::write, Serializer::read);
-
-        @Override
-        public MapCodec<ItemCatchingRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public PacketCodec<RegistryByteBuf, ItemCatchingRecipe> packetCodec() {
-            return PACKET_CODEC;
-        }
-
-        public static ItemCatchingRecipe read(RegistryByteBuf buf) {
-
-            Ingredient ingredient = Ingredient.PACKET_CODEC.decode(buf);
-
-            ItemStack output = ItemStack.PACKET_CODEC.decode(buf);
-
-            return new ItemCatchingRecipe(ingredient, output);
-        }
-
-
-        public static void write(RegistryByteBuf buf, ItemCatchingRecipe recipe) {
-
-            Ingredient.PACKET_CODEC.encode(buf, recipe.ingredient);
-
-            ItemStack.PACKET_CODEC.encode(buf, recipe.output);
-        }
-    }
+    public static final StreamCodec<RegistryFriendlyByteBuf, ItemCatchingRecipe> STREAM_CODEC = StreamCodec.composite(
+            Ingredient.CONTENTS_STREAM_CODEC, ItemCatchingRecipe::ingredient,
+            ItemStackTemplate.STREAM_CODEC, ItemCatchingRecipe::output,
+            ItemCatchingRecipe::new);
 }

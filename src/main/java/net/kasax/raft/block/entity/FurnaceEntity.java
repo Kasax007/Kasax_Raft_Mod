@@ -6,61 +6,84 @@ package net.kasax.raft.block.entity;
 
 import net.kasax.raft.block.custom.FurnaceBlock;
 import net.kasax.raft.util.FurnaceEntities;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.screen.FurnaceScreenHandler;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.FurnaceMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
+/**
+ * Furnace block entity of the raft furnaces. The speed and fuel multipliers hook into the
+ * 26.x cooking-fuel API; the duplication chance is applied right after each cooking tick.
+ */
 public class FurnaceEntity extends AbstractFurnaceBlockEntity {
+    private static final Component DEFAULT_NAME = Component.translatable("container.furnace");
+
     public FurnaceEntity(BlockPos pos, BlockState state) {
         super(FurnaceEntities.RAFT_FURNACE, pos, state, RecipeType.SMELTING);
     }
-    public static void tick(World world, BlockPos pos, BlockState state, FurnaceEntity blockEntity) {
-        // Implementation of tick logic
-        AbstractFurnaceBlockEntity.tick(world, pos, state, blockEntity);
-    }
-    @Override
-    public int getFuelTime(ItemStack fuel) {
-        return (int) (super.getFuelTime(fuel) / getFuelModifier());
+
+    public static void tick(ServerLevel level, BlockPos pos, BlockState state, FurnaceEntity furnace) {
+        ItemStack before = furnace.items.get(SLOT_RESULT).copy();
+        AbstractFurnaceBlockEntity.serverTick(level, pos, state, furnace);
+
+        int chance = furnace.getDuplicationChance();
+        if (chance > 0) {
+            ItemStack out = furnace.items.get(SLOT_RESULT);
+            if (!out.isEmpty() && (before.isEmpty() || ItemStack.isSameItemSameComponents(before, out))) {
+                int produced = out.getCount() - (before.isEmpty() ? 0 : before.getCount());
+                if (produced > 0 && level.getRandom().nextInt(100) < chance
+                        && out.getCount() < Math.min(furnace.getMaxStackSize(), out.getMaxStackSize())) {
+                    out.grow(1);
+                    furnace.setChanged();
+                }
+            }
+        }
     }
 
     @Override
-    public Text getContainerName() {
-        return Text.translatable("container.furnace");
+    protected int getBurnDuration(ServerLevel level, ItemStack fuelItem) {
+        return (int) (super.getBurnDuration(level, fuelItem) / getFuelModifier());
     }
 
     @Override
-    public ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
-        return new FurnaceScreenHandler(syncId, playerInventory, this, this.propertyDelegate);
+    protected float getSpeedMultiplier(ServerLevel level, ItemStack fuelItem) {
+        return super.getSpeedMultiplier(level, fuelItem) * (float) getSpeedModifier();
+    }
+
+    @Override
+    protected Component getDefaultName() {
+        return DEFAULT_NAME;
+    }
+
+    @Override
+    protected AbstractContainerMenu createMenu(int containerId, Inventory inventory) {
+        return new FurnaceMenu(containerId, inventory, this, this.dataAccess);
     }
 
     public double getSpeedModifier() {
-        if(getCachedState().getBlock() instanceof FurnaceBlock) {
-            return ((FurnaceBlock) getCachedState().getBlock()).getSpeedModifier();
+        if (getBlockState().getBlock() instanceof FurnaceBlock block) {
+            return block.getSpeedModifier();
         }
-
         return 1;
     }
 
     public double getFuelModifier() {
-        if(getCachedState().getBlock() instanceof FurnaceBlock) {
-            return ((FurnaceBlock) getCachedState().getBlock()).getFuelModifier();
+        if (getBlockState().getBlock() instanceof FurnaceBlock block) {
+            return block.getFuelModifier();
         }
-
         return 1;
     }
 
     public int getDuplicationChance() {
-        if(getCachedState().getBlock() instanceof FurnaceBlock) {
-            return ((FurnaceBlock) getCachedState().getBlock()).getDuplicationChance();
+        if (getBlockState().getBlock() instanceof FurnaceBlock block) {
+            return block.getDuplicationChance();
         }
-
         return 0;
     }
 }

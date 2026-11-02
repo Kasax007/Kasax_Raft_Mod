@@ -2,54 +2,54 @@ package net.kasax.raft.block.custom;
 
 import net.kasax.raft.block.ModBlocks;
 import net.kasax.raft.item.ModItems;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.LeavesBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.sounds.AmbientLeavesBlockSoundPlayer;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.BlockHitResult;
 
+/** Palm leaves carrying a coconut. Right-click to pick the coconut; the leaves regrow one after a while. */
 public class PalmCoconutLeaves extends LeavesBlock {
-    public static final BooleanProperty HAS_COCONUT = BooleanProperty.of("has_coconut");
+    public static final BooleanProperty HAS_COCONUT = BooleanProperty.create("has_coconut");
 
-    public PalmCoconutLeaves(Settings settings) {
-        super(settings);
-        this.setDefaultState(this.stateManager.getDefaultState().with(HAS_COCONUT, true). with(PERSISTENT, false));
+    public PalmCoconutLeaves(Properties properties) {
+        super(AmbientLeavesBlockSoundPlayer.noAmbientSound(), properties);
+        this.registerDefaultState(this.stateDefinition.any()
+                .setValue(DISTANCE, 7).setValue(PERSISTENT, false).setValue(WATERLOGGED, false)
+                .setValue(HAS_COCONUT, true));
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         builder.add(HAS_COCONUT);
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        if (!world.isClient) {
-            if (!state.get(PERSISTENT)) {
-                // Drop a coconut
-                dropStack(world, pos, new ItemStack(ModItems.COCONUT));
-                world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_ITEM_FRAME_REMOVE_ITEM, SoundCategory.NEUTRAL, 0.5f, 1f);
-
-                // Copy over block state properties from the current state to the new PALM_LEAVES block
-                BlockState newState = ModBlocks.PALM_LEAVES.getDefaultState()
-                        .with(DISTANCE, state.get(DISTANCE))
-                        .with(PERSISTENT, false)
-                        .with(HAS_COCONUT, true)
-                        .with(WATERLOGGED, false);
-
-                // Replace the block with the new PALM_LEAVES
-                world.setBlockState(pos, newState, 3);
-            }
-            else return ActionResult.FAIL;
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        if (state.getValue(PERSISTENT)) {
+            return InteractionResult.FAIL;
         }
-        return ActionResult.SUCCESS;
+        if (!level.isClientSide()) {
+            Block.popResource(level, pos, new ItemStack(ModItems.COCONUT));
+            level.playSound(null, pos, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.NEUTRAL, 0.5f, 1f);
+
+            BlockState newState = ModBlocks.PALM_LEAVES.defaultBlockState()
+                    .setValue(DISTANCE, state.getValue(DISTANCE))
+                    .setValue(PERSISTENT, false)
+                    .setValue(HAS_COCONUT, true)
+                    .setValue(WATERLOGGED, state.getValue(WATERLOGGED));
+            level.setBlock(pos, newState, Block.UPDATE_ALL);
+        }
+        return InteractionResult.SUCCESS;
     }
 }

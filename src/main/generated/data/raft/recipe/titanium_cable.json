@@ -1,13 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
+  "category": "redstone",
   "key": {
-    "R": {
-      "item": "minecraft:redstone"
-    },
-    "T": {
-      "item": "raft:titanium_ingot"
-    }
+    "R": "minecraft:redstone",
+    "T": "raft:titanium_ingot"
   },
   "pattern": [
     "TTT",

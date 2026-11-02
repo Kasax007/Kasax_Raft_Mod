@@ -2,31 +2,28 @@ package net.kasax.raft.block.entity;
 
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.kasax.raft.world.dimension.ModDimensions;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.dimension.DimensionTypes;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import org.jspecify.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 import team.reborn.energy.api.base.SimpleEnergyStorage;
 
-import java.util.Optional;
-
 public class MakeshiftSolarPanelBlockEntity extends BlockEntity {
     public MakeshiftSolarPanelBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.MAKESHIT_SOLAR_PANEL_BLOCK_ENTITY, pos, state);
+        super(ModBlockEntities.MAKESHIFT_SOLAR_PANEL_BLOCK_ENTITY, pos, state);
     }
 
     private final SimpleEnergyStorage energyStorage = new SimpleEnergyStorage(100_000, 0, 1_000) {
@@ -46,28 +43,27 @@ public class MakeshiftSolarPanelBlockEntity extends BlockEntity {
         return this.energyStorage.getCapacity();
     }
 
-    public void tick(World world, BlockPos pos, BlockState state) {
-        if(this.world == null || this.world.isClient)
+    public void tick(Level level, BlockPos pos, BlockState state) {
+        if (this.level == null || this.level.isClientSide()) {
             return;
+        }
 
-        Optional<RegistryKey<DimensionType>> dimensionKeyOptional = world.getDimensionEntry().getKey();
-        if (dimensionKeyOptional.isPresent()) {
-            RegistryKey<DimensionType> dimensionKey = dimensionKeyOptional.get();
+        boolean inOverworld = level.dimension() == Level.OVERWORLD;
+        boolean inRaftDim = level.dimension() == ModDimensions.RAFTDIM_LEVEL_KEY;
+        boolean skyVisible = level.canSeeSky(pos.above());
 
-            // Check if the dimension is either Overworld or your custom dimension
-            if ((dimensionKey.equals(DimensionTypes.OVERWORLD) && world.isSkyVisible(pos.up()) && world.isDay()
-                    || dimensionKey.equals(ModDimensions.RAFT_DIM_TYPE)) && world.isSkyVisible(pos.up())) {
-                if (energyStorage.amount < energyStorage.getCapacity()) {
-                    energyStorage.amount = MathHelper.clamp(energyStorage.amount + 10, 0, energyStorage.getCapacity());
-                    update();
-                }
+        // The overworld only gives energy during the day; the raft dimension is always sunny.
+        if (skyVisible && ((inOverworld && level.isBrightOutside()) || inRaftDim)) {
+            if (energyStorage.amount < energyStorage.getCapacity()) {
+                energyStorage.amount = Mth.clamp(energyStorage.amount + 10, 0, energyStorage.getCapacity());
+                update();
             }
         }
 
         for (Direction direction : Direction.values()) {
-            EnergyStorage storage = EnergyStorage.SIDED.find(this.world, this.pos.offset(direction), direction.getOpposite());
-            if(storage != null && storage.supportsInsertion()) {
-                try(Transaction transaction = Transaction.openOuter()) {
+            EnergyStorage storage = EnergyStorage.SIDED.find(this.level, this.worldPosition.relative(direction), direction.getOpposite());
+            if (storage != null && storage.supportsInsertion()) {
+                try (Transaction transaction = Transaction.openOuter()) {
                     long insertable;
                     try (Transaction simulateTransaction = transaction.openNested()) {
                         insertable = storage.insert(Long.MAX_VALUE, simulateTransaction);
@@ -83,23 +79,22 @@ public class MakeshiftSolarPanelBlockEntity extends BlockEntity {
     }
 
     private void update() {
-        markDirty();
-        if(world != null)
-            world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_ALL);
-    }
-
-    @Override
-    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.readNbt(nbt, registryLookup);
-        if(nbt.contains("Energy", NbtElement.LONG_TYPE)) {
-            energyStorage.amount = nbt.getLong("Energy");
+        setChanged();
+        if (level instanceof ServerLevel serverLevel) {
+            serverLevel.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
         }
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.writeNbt(nbt, registryLookup);
-        nbt.putLong("Energy", this.energyStorage.amount);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        energyStorage.amount = input.getLongOr("Energy", 0L);
+    }
+
+    @Override
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putLong("Energy", this.energyStorage.amount);
     }
 
     public SimpleEnergyStorage getEnergyStorage() {
@@ -110,17 +105,14 @@ public class MakeshiftSolarPanelBlockEntity extends BlockEntity {
         return this.energyStorage;
     }
 
-
     @Nullable
     @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        var nbt = super.toInitialChunkDataNbt(registryLookup);
-        writeNbt(nbt, registryLookup);
-        return nbt;
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return saveWithoutMetadata(registries);
     }
 }

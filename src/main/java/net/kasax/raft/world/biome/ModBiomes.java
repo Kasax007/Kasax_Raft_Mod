@@ -1,78 +1,67 @@
 package net.kasax.raft.world.biome;
 
 import net.kasax.raft.Raft;
-import net.minecraft.registry.Registerable;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.sound.MusicSound;
-import net.minecraft.sound.MusicType;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeEffects;
-import net.minecraft.world.biome.GenerationSettings;
-import net.minecraft.world.biome.SpawnSettings;
-import net.minecraft.world.gen.feature.DefaultBiomeFeatures;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BiomeDefaultFeatures;
+import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.data.worldgen.Carvers;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.ARGB;
+import net.minecraft.world.attribute.BackgroundMusic;
+import net.minecraft.world.attribute.EnvironmentAttributes;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeGenerationSettings;
+import net.minecraft.world.level.biome.BiomeSpecialEffects;
+import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.world.level.levelgen.carver.WorldCarver;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 public class ModBiomes {
-    public static final RegistryKey<Biome> RAFT_OCEAN_BIOME = RegistryKey.of(RegistryKeys.BIOME,
-            Identifier.of(Raft.MOD_ID, "raft_ocean_biome"));
+    public static final ResourceKey<Biome> RAFT_OCEAN_BIOME = ResourceKey.create(Registries.BIOME, Raft.id("raft_ocean_biome"));
 
-    public static void bootstrap(Registerable<Biome> context) {
+    public static void bootstrap(BootstrapContext<Biome> context) {
         context.register(RAFT_OCEAN_BIOME, raftOceanBiome(context));
     }
 
-    public static void globalOverworldGeneration(GenerationSettings.LookupBackedBuilder builder) {
-        DefaultBiomeFeatures.addLandCarvers(builder);
-        DefaultBiomeFeatures.addDungeons(builder);
-        DefaultBiomeFeatures.addMineables(builder);
-        DefaultBiomeFeatures.addAmethystGeodes(builder);
+    public static void globalOverworldGeneration(BiomeGenerationSettings.Builder builder) {
+        builder.addCarver(Carvers.CAVE);
+        builder.addCarver(Carvers.CAVE_EXTRA_UNDERGROUND);
+        builder.addCarver(Carvers.CANYON);
+        BiomeDefaultFeatures.addDefaultMonsterRoom(builder);
+        BiomeDefaultFeatures.addDefaultUndergroundVariety(builder);
+        BiomeDefaultFeatures.addDefaultCrystalFormations(builder);
     }
 
-    public static Biome raftOceanBiome(Registerable<Biome> context) {
-        SpawnSettings.Builder spawnBuilder = new SpawnSettings.Builder();
+    public static Biome raftOceanBiome(BootstrapContext<Biome> context) {
+        MobSpawnSettings.Builder spawns = new MobSpawnSettings.Builder();
+        // squid, tropical fish, dolphins, drowned and the usual night monsters and cave mobs
+        BiomeDefaultFeatures.warmOceanSpawns(spawns, 1, 3);
 
-        MusicSound musicSound1;
-        MusicSound musicSound2;
-        musicSound1 = MusicType.createIngameMusic(SoundEvents.MUSIC_OVERWORLD_LUSH_CAVES);
-        musicSound2 = MusicType.createIngameMusic(SoundEvents.MUSIC_OVERWORLD_CHERRY_GROVE);
-
-        //DefaultBiomeFeatures.addFarmAnimals(spawnBuilder);
-        DefaultBiomeFeatures.addBatsAndMonsters(spawnBuilder);
-        //DefaultBiomeFeatures.addOceanMobs(spawnBuilder, 1, 3, 1);
-        DefaultBiomeFeatures.addWarmOceanMobs(spawnBuilder, 1, 3);
-        DefaultBiomeFeatures.addCaveMobs(spawnBuilder);
-
-
-        GenerationSettings.LookupBackedBuilder biomeBuilder =
-                new GenerationSettings.LookupBackedBuilder(context.getRegistryLookup(RegistryKeys.PLACED_FEATURE),
-                        context.getRegistryLookup(RegistryKeys.CONFIGURED_CARVER));
+        HolderGetter<PlacedFeature> placedFeatures = context.lookup(Registries.PLACED_FEATURE);
+        HolderGetter<WorldCarver> carvers = context.lookup(Registries.CARVER);
+        BiomeGenerationSettings.Builder biomeBuilder = new BiomeGenerationSettings.Builder(placedFeatures, carvers);
 
         globalOverworldGeneration(biomeBuilder);
-        DefaultBiomeFeatures.addDefaultOres(biomeBuilder);
-        //DefaultBiomeFeatures.addExtraGoldOre(biomeBuilder);
-        //DefaultBiomeFeatures.addEmeraldOre(biomeBuilder);
-        DefaultBiomeFeatures.addDesertVegetation(biomeBuilder);
-        DefaultBiomeFeatures.addDesertFeatures(biomeBuilder);
-        DefaultBiomeFeatures.addKelp(biomeBuilder);
-        //DefaultBiomeFeatures.addSeagrassOnStone(biomeBuilder);
-        //biomeBuilder.feature(GenerationStep.Feature.SURFACE_STRUCTURES, (RegistryEntry<PlacedFeature>) StructureKeys.SHIPWRECK);
-        //biomeBuilder.addFeature(1, (RegistryEntry<PlacedFeature>) StructureKeys.SHIPWRECK);
+        BiomeDefaultFeatures.addDefaultOres(biomeBuilder);
+        BiomeDefaultFeatures.addDesertVegetation(biomeBuilder);
+        BiomeDefaultFeatures.addDesertExtraDecoration(biomeBuilder);
+        BiomeDefaultFeatures.addLukeWarmKelp(biomeBuilder);
 
-
-        return new Biome.Builder()
-                .precipitation(true)
+        return new Biome.BiomeBuilder()
+                .hasPrecipitation(true)
                 .downfall(0.4f)
                 .temperature(0.7f)
-                .spawnSettings(spawnBuilder.build())
+                .mobSpawnSettings(spawns.build())
                 .generationSettings(biomeBuilder.build())
-                .effects((new BiomeEffects.Builder())
+                .setAttribute(EnvironmentAttributes.SKY_COLOR, ARGB.vector3fFromRGB24(0x6cbaea))
+                .setAttribute(EnvironmentAttributes.FOG_COLOR, ARGB.vector3fFromRGB24(0x22a1e6))
+                .setAttribute(EnvironmentAttributes.WATER_FOG_COLOR, ARGB.vector3fFromRGB24(0x1833aa))
+                .setAttribute(EnvironmentAttributes.BACKGROUND_MUSIC, new BackgroundMusic(SoundEvents.MUSIC_BIOME_CHERRY_GROVE))
+                .specialEffects(new BiomeSpecialEffects.Builder()
                         .waterColor(0x2faee9)
-                        .waterFogColor(0x1833aa)
-                        .skyColor(0x6cbaea)
-                        .fogColor(0x22a1e6)
-                        .music(musicSound1)
-                        .music(musicSound2)
                         .build())
                 .build();
     }

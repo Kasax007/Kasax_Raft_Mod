@@ -1,82 +1,90 @@
 package net.kasax.raft.item.custom;
 
 import net.kasax.raft.block.ModBlocks;
-import net.minecraft.block.BlockState;
+import net.kasax.raft.world.portal.RaftPortalShape;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+import java.util.Optional;
+import java.util.function.Consumer;
 
-import java.util.List;
-
-import static net.minecraft.sound.SoundEvents.ITEM_LODESTONE_COMPASS_LOCK;
-
+/**
+ * The energy staff lights a rectangular driftwood portal frame (at least 2x3 inside) and
+ * opens the portal to the raft dimension. It only works in the overworld.
+ */
 public class EnergyStaffItem extends Item {
-    public EnergyStaffItem(Settings settings) {
-        super(settings);
+    public EnergyStaffItem(Properties properties) {
+        super(properties);
     }
 
     @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        World world = context.getWorld();
-        PlayerEntity user = context.getPlayer();
-        Hand hand = context.getHand();
-        BlockPos pos = context.getBlockPos();
-        BlockState state = world.getBlockState(pos);
+    public InteractionResult useOn(UseOnContext context) {
+        Level level = context.getLevel();
+        Player user = context.getPlayer();
+        BlockPos pos = context.getClickedPos();
+        BlockState state = level.getBlockState(pos);
 
-        if (state.isOf(ModBlocks.DRIFTWOOD_PORTAL_FRAME)) {
-            // Perform your custom logic for the custom portal block
-            if (!world.isClient() && hand == Hand.MAIN_HAND) {
-                assert user != null;
-                user.getItemCooldownManager().set(this, 20);
-                world.playSound(null, user.getX(), user.getY(), user.getZ(),
-                        ITEM_LODESTONE_COMPASS_LOCK, SoundCategory.NEUTRAL, 20F,
-                        1F / (world.getRandom().nextFloat() * 0.4F + 0.8F));
-                //damageItem((ServerPlayerEntity) user, 1);
-                context.getStack().damage(1, (ServerWorld) world, (ServerPlayerEntity) user, item -> context.getPlayer().sendEquipmentBreakStatus(item, EquipmentSlot.MAINHAND));
+        if (state.is(ModBlocks.DRIFTWOOD_PORTAL_FRAME)) {
+            if (level.dimension() != Level.OVERWORLD) {
+                if (!level.isClientSide() && user != null) {
+                    user.sendOverlayMessage(Component.translatable("chat.raft.energy_staff.overworld_only").withStyle(ChatFormatting.BLUE));
+                }
+                return InteractionResult.FAIL;
             }
-            return ActionResult.PASS;
+
+            // Look for an empty frame next to the clicked frame block: clicking any side of the frame works.
+            Optional<RaftPortalShape> shape = Optional.empty();
+            Direction clickedFace = context.getClickedFace();
+            Direction[] order = {clickedFace, Direction.UP, Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
+            for (Direction dir : order) {
+                if (dir == Direction.DOWN) continue;
+                BlockPos inside = pos.relative(dir);
+                shape = RaftPortalShape.findEmptyPortalShape(level, inside, Direction.Axis.X);
+                if (shape.isPresent()) break;
+            }
+
+            if (shape.isPresent()) {
+                if (!level.isClientSide()) {
+                    shape.get().createPortalBlocks(level);
+                    level.playSound(null, pos, SoundEvents.LODESTONE_COMPASS_LOCK, SoundSource.NEUTRAL, 1.0F,
+                            1F / (level.getRandom().nextFloat() * 0.4F + 0.8F));
+                    if (user != null) {
+                        user.getCooldowns().addCooldown(context.getItemInHand(), 20);
+                        context.getItemInHand().hurtAndBreak(1, user, context.getHand());
+                    }
+                }
+                return InteractionResult.SUCCESS;
+            }
+
+            if (!level.isClientSide() && user != null) {
+                user.sendOverlayMessage(Component.translatable("chat.raft.energy_staff.no_portal").withStyle(ChatFormatting.BLUE));
+            }
+            return InteractionResult.FAIL;
         } else {
-            // Display a message in the chat for other blocks
-            if (!world.isClient() && user != null) {
-                user.sendMessage(Text.translatable("chat.raft.energy_staff.invalid_target").formatted(Formatting.BLUE), true);
+            // Display a message for other blocks
+            if (!level.isClientSide() && user != null) {
+                user.sendOverlayMessage(Component.translatable("chat.raft.energy_staff.invalid_target").withStyle(ChatFormatting.BLUE));
             }
-            return ActionResult.FAIL;
+            return InteractionResult.FAIL;
         }
     }
 
-
     @Override
-    public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
-        tooltip.add(Text.translatable("tooltip.raft.energy_staff.tooltip").formatted(Formatting.AQUA));
-        super.appendTooltip(stack, context, tooltip, options);
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag flag) {
+        builder.accept(Component.translatable("tooltip.raft.energy_staff.tooltip").withStyle(ChatFormatting.AQUA));
+        super.appendHoverText(stack, context, display, builder, flag);
     }
-
-    // Custom method to handle item damage
-    //private void damageItem(ServerPlayerEntity player, int amount) {
-    //    ItemStack stack = player.getMainHandStack();
-    //    if (!player.isCreative()) {
-    //        if (stack.isDamageable()) {
-    //            stack.damage(amount, player, (entity) -> entity.sendEquipmentBreakStatus(player.getActiveHand()));
-    //            if (stack.isEmpty()) {
-    //                player.sendEquipmentBreakStatus(player.getActiveHand());
-    //                player.setStackInHand(player.getActiveHand(), ItemStack.EMPTY);
-    //            }
-    //        }
-    //    }
-    //}
 }

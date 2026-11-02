@@ -1,26 +1,23 @@
 package net.kasax.raft.util;
 
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.kasax.raft.Raft;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-public record EnergySyncPayload(BlockPos pos, long energy, long maxEnergy) implements CustomPayload {
-    public static final CustomPayload.Id<EnergySyncPayload> ID = new CustomPayload.Id<>(Raft.id("energy_sync"));
-    public static final PacketCodec<RegistryByteBuf, EnergySyncPayload> CODEC = PacketCodec.tuple(
-            BlockPos.PACKET_CODEC, EnergySyncPayload::pos,
-            PacketCodecs.VAR_LONG, EnergySyncPayload::energy,
-            PacketCodecs.VAR_LONG, EnergySyncPayload::maxEnergy,
+public record EnergySyncPayload(BlockPos pos, long energy, long maxEnergy) implements CustomPacketPayload {
+    public static final CustomPacketPayload.Type<EnergySyncPayload> ID = new CustomPacketPayload.Type<>(Raft.id("energy_sync"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, EnergySyncPayload> CODEC = StreamCodec.composite(
+            BlockPos.STREAM_CODEC, EnergySyncPayload::pos,
+            ByteBufCodecs.VAR_LONG, EnergySyncPayload::energy,
+            ByteBufCodecs.VAR_LONG, EnergySyncPayload::maxEnergy,
             EnergySyncPayload::new
     );
 
     @Override
-    public CustomPayload.Id<? extends CustomPayload> getId() {
+    public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
         return ID;
     }
 }

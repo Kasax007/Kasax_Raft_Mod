@@ -1,13 +1,8 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
-    "#": {
-      "item": "minecraft:stick"
-    },
-    "W": {
-      "item": "raft:palm_planks"
-    }
+    "#": "minecraft:stick",
+    "W": "raft:palm_planks"
   },
   "pattern": [
     "W#W",

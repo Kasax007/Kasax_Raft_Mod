@@ -1,177 +1,173 @@
 package net.kasax.raft.block;
 
-
 import net.kasax.raft.Raft;
 import net.kasax.raft.block.cable.RaftCable;
 import net.kasax.raft.block.custom.*;
-import net.kasax.raft.world.gen.ModConfiguredFeatures;
+import net.kasax.raft.item.custom.TooltipBlockItem;
+import net.kasax.raft.world.gen.ModTreeGrowers;
 import net.kasax.raft.world.tree.DriftwoodSaplingBlock;
 import net.kasax.raft.world.tree.PalmSaplingBlock;
-import net.minecraft.block.*;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.util.Identifier;
-import org.apache.commons.lang3.Validate;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.sounds.AmbientLeavesBlockSoundPlayer;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
+import net.minecraft.world.level.block.state.properties.WoodType;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.function.Function;
 
 public class ModBlocks {
 
-    public static final Block DRIFTWOOD_PORTAL_FRAME = registerBlock("driftwood_portal_frame",
-            new DriftwoodPortalFrameBlock(AbstractBlock.Settings.copy(Blocks.STONE).sounds(BlockSoundGroup.WOOD)));
+    public static final Block DRIFTWOOD_PORTAL_FRAME = register("driftwood_portal_frame",
+            DriftwoodPortalFrameBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).sound(SoundType.WOOD),
+            "tooltip.raft.driftwood_portal_frame.tooltip");
 
-    public static final Block DRIFTWOOD_LOG = registerBlock("driftwood_log",
-            new PillarBlock(AbstractBlock.Settings.copy(Blocks.OAK_LOG)));
-    public static final Block DRIFTWOOD_WOOD = registerBlock("driftwood_wood",
-            new PillarBlock(AbstractBlock.Settings.copy(Blocks.OAK_WOOD)));
-    public static final Block STRIPPED_DRIFTWOOD_LOG = registerBlock("stripped_driftwood_log",
-            new PillarBlock(AbstractBlock.Settings.copy(Blocks.STRIPPED_OAK_LOG)));
-    public static final Block STRIPPED_DRIFTWOOD_WOOD = registerBlock("stripped_driftwood_wood",
-            new PillarBlock(AbstractBlock.Settings.copy(Blocks.STRIPPED_OAK_WOOD)));
+    public static final Block RAFT_PORTAL = registerBlockOnly("raft_portal",
+            RaftPortalBlock::new, BlockBehaviour.Properties.of()
+                    .noCollision().noOcclusion().strength(-1.0F).sound(SoundType.GLASS)
+                    .lightLevel(state -> 11).pushReaction(net.minecraft.world.level.material.PushReaction.IMMOVEABLE)
+                    .noLootTable());
 
-    public static final Block DRIFTWOOD_PLANKS = registerBlock("driftwood_planks",
-            new Block(AbstractBlock.Settings.copy(Blocks.OAK_PLANKS)));
+    public static final Block DRIFTWOOD_LOG = register("driftwood_log",
+            RotatedPillarBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LOG));
+    public static final Block DRIFTWOOD_WOOD = register("driftwood_wood",
+            RotatedPillarBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_WOOD));
+    public static final Block STRIPPED_DRIFTWOOD_LOG = register("stripped_driftwood_log",
+            RotatedPillarBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.STRIPPED_OAK_LOG));
+    public static final Block STRIPPED_DRIFTWOOD_WOOD = register("stripped_driftwood_wood",
+            RotatedPillarBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.STRIPPED_OAK_WOOD));
+    public static final Block DRIFTWOOD_PLANKS = register("driftwood_planks",
+            Block::new, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS));
 
-    public static final Block PALM_LOG = registerBlock("palm_log",
-            new PillarBlock(AbstractBlock.Settings.copy(Blocks.OAK_LOG)));
-    public static final Block PALM_WOOD = registerBlock("palm_wood",
-            new PillarBlock(AbstractBlock.Settings.copy(Blocks.OAK_WOOD)));
-    public static final Block STRIPPED_PALM_LOG = registerBlock("stripped_palm_log",
-            new PillarBlock(AbstractBlock.Settings.copy(Blocks.STRIPPED_OAK_LOG)));
-    public static final Block STRIPPED_PALM_WOOD = registerBlock("stripped_palm_wood",
-            new PillarBlock(AbstractBlock.Settings.copy(Blocks.STRIPPED_OAK_WOOD)));
-    public static final Block PALM_PLANKS = registerBlock("palm_planks",
-            new Block(AbstractBlock.Settings.copy(Blocks.OAK_PLANKS)));
+    public static final Block PALM_LOG = register("palm_log",
+            RotatedPillarBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LOG));
+    public static final Block PALM_WOOD = register("palm_wood",
+            RotatedPillarBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_WOOD));
+    public static final Block STRIPPED_PALM_LOG = register("stripped_palm_log",
+            RotatedPillarBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.STRIPPED_OAK_LOG));
+    public static final Block STRIPPED_PALM_WOOD = register("stripped_palm_wood",
+            RotatedPillarBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.STRIPPED_OAK_WOOD));
+    public static final Block PALM_PLANKS = register("palm_planks",
+            Block::new, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS));
 
-    public static final Block PALM_SAPLING = registerBlock("palm_sapling",
-            new PalmSaplingBlock(new SaplingGenerator(
-                    Raft.MOD_ID,
-                    0.1F,
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.of(ModConfiguredFeatures.PALMWOOD_KEY),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty()
-            ), AbstractBlock.Settings.copy(Blocks.OAK_SAPLING)));
-    public static final Block PALM_LEAVES = registerBlock("palm_leaves",
-            new PalmLeaves(AbstractBlock.Settings.copy(Blocks.OAK_LEAVES).nonOpaque()));
+    public static final Block PALM_SAPLING = register("palm_sapling",
+            p -> new PalmSaplingBlock(ModTreeGrowers.PALM, p), BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SAPLING));
+    public static final Block PALM_LEAVES = register("palm_leaves",
+            PalmLeaves::new, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LEAVES).noOcclusion());
+    public static final Block PALM_COCONUT_LEAVES = register("palm_coconut_leaves",
+            PalmCoconutLeaves::new, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LEAVES).noOcclusion());
 
-    public static final Block PALM_COCONUT_LEAVES = registerBlock("palm_coconut_leaves",
-            new PalmCoconutLeaves(AbstractBlock.Settings.copy(Blocks.OAK_LEAVES).nonOpaque()));
+    public static final Block DRIFTWOOD_STAIRS = register("driftwood_stairs",
+            p -> new StairBlock(ModBlocks.DRIFTWOOD_PLANKS.defaultBlockState(), p), BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS));
+    public static final Block DRIFTWOOD_SLAB = register("driftwood_slab",
+            SlabBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SLAB));
+    public static final Block DRIFTWOOD_BUTTON = register("driftwood_button",
+            p -> new ButtonBlock(BlockSetType.OAK, 30, p), BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_BUTTON));
+    public static final Block DRIFTWOOD_PRESSURE_PLATE = register("driftwood_pressure_plate",
+            p -> new PressurePlateBlock(BlockSetType.OAK, p), BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PRESSURE_PLATE));
+    public static final Block DRIFTWOOD_FENCE = register("driftwood_fence",
+            FenceBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_FENCE));
+    public static final Block DRIFTWOOD_FENCE_GATE = register("driftwood_fence_gate",
+            p -> new FenceGateBlock(WoodType.OAK, p), BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_FENCE_GATE));
+    public static final Block DRIFTWOOD_DOOR = register("driftwood_door",
+            p -> new DoorBlock(BlockSetType.OAK, p), BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_DOOR));
+    public static final Block DRIFTWOOD_TRAPDOOR = register("driftwood_trapdoor",
+            p -> new TrapDoorBlock(BlockSetType.OAK, p), BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_TRAPDOOR));
 
-    public static final Block DRIFTWOOD_STAIRS = registerBlock("driftwood_stairs",
-            new StairsBlock(ModBlocks.DRIFTWOOD_PLANKS.getDefaultState(), AbstractBlock.Settings.copy(Blocks.OAK_WOOD)));
+    public static final Block PALM_STAIRS = register("palm_stairs",
+            p -> new StairBlock(ModBlocks.PALM_PLANKS.defaultBlockState(), p), BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS));
+    public static final Block PALM_SLAB = register("palm_slab",
+            SlabBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SLAB));
+    public static final Block PALM_BUTTON = register("palm_button",
+            p -> new ButtonBlock(BlockSetType.OAK, 30, p), BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_BUTTON));
+    public static final Block PALM_PRESSURE_PLATE = register("palm_pressure_plate",
+            p -> new PressurePlateBlock(BlockSetType.OAK, p), BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PRESSURE_PLATE));
+    public static final Block PALM_FENCE = register("palm_fence",
+            FenceBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_FENCE));
+    public static final Block PALM_FENCE_GATE = register("palm_fence_gate",
+            p -> new FenceGateBlock(WoodType.OAK, p), BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_FENCE_GATE));
+    public static final Block PALM_DOOR = register("palm_door",
+            p -> new DoorBlock(BlockSetType.OAK, p), BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_DOOR));
+    public static final Block PALM_TRAPDOOR = register("palm_trapdoor",
+            p -> new TrapDoorBlock(BlockSetType.OAK, p), BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_TRAPDOOR));
 
-    public static final Block DRIFTWOOD_SLAB = registerBlock("driftwood_slab",
-            new SlabBlock(AbstractBlock.Settings.copy(Blocks.OAK_WOOD)));
+    public static final Block DRIFTWOOD_LEAVES = register("driftwood_leaves",
+            p -> new LeavesBlock(AmbientLeavesBlockSoundPlayer.noAmbientSound(), p),
+            BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LEAVES).noOcclusion());
+    public static final Block DRIFTWOOD_SAPLING = register("driftwood_sapling",
+            p -> new DriftwoodSaplingBlock(ModTreeGrowers.DRIFTWOOD, p), BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SAPLING));
 
-    public static final Block DRIFTWOOD_BUTTON = registerBlock("driftwood_button",
-            new ButtonBlock(BlockSetType.OAK, 10, AbstractBlock.Settings.copy(Blocks.OAK_WOOD).noCollision()));
+    public static final Block TITANIUM_ORE = register("titanium_ore",
+            Block::new, BlockBehaviour.Properties.ofFullCopy(Blocks.DIAMOND_ORE).strength(4f));
+    public static final Block DEEPSLATE_TITANIUM_ORE = register("deepslate_titanium_ore",
+            Block::new, BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_DIAMOND_ORE).strength(4f));
+    public static final Block RAW_TITANIUM_BLOCK = register("raw_titanium_block",
+            Block::new, BlockBehaviour.Properties.ofFullCopy(Blocks.DIAMOND_BLOCK).strength(4f));
+    public static final Block TITANIUM_BLOCK = register("titanium_block",
+            Block::new, BlockBehaviour.Properties.ofFullCopy(Blocks.NETHERITE_BLOCK).strength(4f));
 
-    public static final Block DRIFTWOOD_PRESSURE_PLATE = registerBlock("driftwood_pressure_plate",
-            new PressurePlateBlock(BlockSetType.OAK, AbstractBlock.Settings.copy(Blocks.OAK_WOOD)));
+    public static final Block ITEM_CATCHER = register("item_catcher",
+            ItemCatcher::new, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).noOcclusion());
 
-    public static final Block DRIFTWOOD_FENCE = registerBlock("driftwood_fence",
-            new FenceBlock(AbstractBlock.Settings.copy(Blocks.OAK_WOOD)));
-
-    public static final Block DRIFTWOOD_FENCE_GATE = registerBlock("driftwood_fence_gate",
-            new FenceGateBlock(WoodType.OAK, AbstractBlock.Settings.copy(Blocks.OAK_WOOD)));
-
-    public static final Block DRIFTWOOD_DOOR = registerBlock("driftwood_door",
-            new DoorBlock(BlockSetType.OAK, AbstractBlock.Settings.copy(Blocks.OAK_PLANKS).nonOpaque()));
-
-    public static final Block DRIFTWOOD_TRAPDOOR = registerBlock("driftwood_trapdoor",
-            new TrapdoorBlock(BlockSetType.OAK, AbstractBlock.Settings.copy(Blocks.OAK_PLANKS).nonOpaque()));
-
-    public static final Block PALM_STAIRS = registerBlock("palm_stairs",
-            new StairsBlock(ModBlocks.DRIFTWOOD_PLANKS.getDefaultState(), AbstractBlock.Settings.copy(Blocks.OAK_WOOD)));
-
-    public static final Block PALM_SLAB = registerBlock("palm_slab",
-            new SlabBlock(AbstractBlock.Settings.copy(Blocks.OAK_WOOD)));
-
-    public static final Block PALM_BUTTON = registerBlock("palm_button",
-            new ButtonBlock(BlockSetType.OAK, 10, AbstractBlock.Settings.copy(Blocks.OAK_WOOD).noCollision()));
-
-    public static final Block PALM_PRESSURE_PLATE = registerBlock("palm_pressure_plate",
-            new PressurePlateBlock(BlockSetType.OAK, AbstractBlock.Settings.copy(Blocks.OAK_WOOD)));
-
-    public static final Block PALM_FENCE = registerBlock("palm_fence",
-            new FenceBlock(AbstractBlock.Settings.copy(Blocks.OAK_WOOD)));
-
-    public static final Block PALM_FENCE_GATE = registerBlock("palm_fence_gate",
-            new FenceGateBlock(WoodType.OAK, AbstractBlock.Settings.copy(Blocks.OAK_WOOD)));
-
-    public static final Block PALM_DOOR = registerBlock("palm_door",
-            new DoorBlock(BlockSetType.OAK, AbstractBlock.Settings.copy(Blocks.OAK_PLANKS).nonOpaque()));
-
-    public static final Block PALM_TRAPDOOR = registerBlock("palm_trapdoor",
-            new TrapdoorBlock(BlockSetType.OAK, AbstractBlock.Settings.copy(Blocks.OAK_PLANKS).nonOpaque()));
-    public static final Block DRIFTWOOD_LEAVES = registerBlock("driftwood_leaves",
-            new LeavesBlock(AbstractBlock.Settings.copy(Blocks.OAK_LEAVES).nonOpaque()));
-
-    public static final Block DRIFTWOOD_SAPLING = registerBlock("driftwood_sapling",
-            new DriftwoodSaplingBlock (new SaplingGenerator(
-                    Raft.MOD_ID,
-                    0.1F,
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.of(ModConfiguredFeatures.DRIFTWOOD_KEY),
-                    Optional.empty(),
-                    Optional.empty(),
-                    Optional.empty()
-            ), AbstractBlock.Settings.copy(Blocks.OAK_SAPLING)));
-
-
-    public static final Block TITANIUM_ORE = registerBlock("titanium_ore",
-            new Block(AbstractBlock.Settings.copy(Blocks.DIAMOND_ORE).strength(4f)));
-    public static final Block DEEPSLATE_TITANIUM_ORE = registerBlock("deepslate_titanium_ore",
-            new Block(AbstractBlock.Settings.copy(Blocks.DEEPSLATE_DIAMOND_ORE).strength(4f)));
-
-    public static final Block RAW_TITANIUM_BLOCK = registerBlock("raw_titanium_block",
-            new Block(AbstractBlock.Settings.copy(Blocks.DIAMOND_BLOCK).strength(4f)));
-
-    public static final Block TITANIUM_BLOCK = registerBlock("titanium_block",
-            new Block(AbstractBlock.Settings.copy(Blocks.NETHERITE_BLOCK).strength(4f)));
-
-    public static final Block ITEM_CATCHER = registerBlock("item_catcher",
-            new ItemCatcher(AbstractBlock.Settings.copy(Blocks.OAK_PLANKS).nonOpaque()));
-
-    public static final Block MAKESHIFT_SOLAR_PANEL = registerBlock("makeshift_solar_panel",
-            new MakeshiftSolarPanelBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)));
-
-    public static final Block MAKESHIFT_BATTERY = registerBlock("makeshift_battery",
-            new MakeshiftBatteryBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)));
-
-    public static final Block QUARRY = registerBlock("quarry",
-            new QuarryBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)));
-
-    public static final Block CHUNK_DESTROYER = registerBlock("chunk_destroyer",
-            new ChunkDestroyer(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK)));
-
-    public static final Block TITANIUM_GRATES = registerBlock("titanium_grates",
-            new TitaniumGrates(AbstractBlock.Settings.copy(Blocks.COPPER_BLOCK).nonOpaque().strength(4f)));
+    public static final Block MAKESHIFT_SOLAR_PANEL = register("makeshift_solar_panel",
+            MakeshiftSolarPanelBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK),
+            "tooltip.raft.makeshift_solar_panel.tooltip");
+    public static final Block MAKESHIFT_BATTERY = register("makeshift_battery",
+            MakeshiftBatteryBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK),
+            "tooltip.raft.makeshift_battery.tooltip1", "tooltip.raft.makeshift_battery.tooltip2");
+    public static final Block QUARRY = register("quarry",
+            QuarryBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK),
+            "tooltip.raft.quarry.tooltip1", "tooltip.raft.quarry.tooltip2");
+    public static final Block CHUNK_DESTROYER = register("chunk_destroyer",
+            ChunkDestroyer::new, BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK),
+            "tooltip.raft.chunk_destroyer.tooltip1", "tooltip.raft.chunk_destroyer.tooltip2");
+    public static final Block TITANIUM_GRATES = register("titanium_grates",
+            TitaniumGrates::new, BlockBehaviour.Properties.ofFullCopy(Blocks.COPPER_BLOCK.weathering().unaffected()).noOcclusion().strength(4f));
 
     public static void registerCables() {
-        Arrays.stream(RaftCable.Cables.values()).forEach(value -> {
-            // Register the cable block with its name
-            registerBlock(value.name, value.block);
+        Arrays.stream(RaftCable.Cables.values()).forEach(cable -> {
+            ResourceKey<Block> blockKey = ResourceKey.create(Registries.BLOCK, Raft.id(cable.name));
+            Registry.register(BuiltInRegistries.BLOCK, blockKey, cable.block);
+            ResourceKey<Item> itemKey = ResourceKey.create(Registries.ITEM, Raft.id(cable.name));
+            Registry.register(BuiltInRegistries.ITEM, itemKey, new TooltipBlockItem(cable.block,
+                    new Item.Properties().setId(itemKey).useBlockDescriptionPrefix(),
+                    Component.translatable("tooltip.raft.cable.max_input", cable.tier.getMaxInput()).withStyle(ChatFormatting.AQUA)));
         });
     }
 
-    private static Block registerBlock(String name, Block block) {
-        registerBlockItem(name, block);
-        return Registry.register(Registries.BLOCK, Identifier.of(Raft.MOD_ID, name), block);
+    /** Registers a block together with its block item. */
+    public static Block register(String name, Function<BlockBehaviour.Properties, Block> factory,
+                                 BlockBehaviour.Properties properties, String... tooltips) {
+        Block block = registerBlockOnly(name, factory, properties);
+        registerBlockItem(name, block, tooltips);
+        return block;
     }
 
-    private static Item registerBlockItem(String name, Block block) {
-        return Registry.register(Registries.ITEM, Identifier.of(Raft.MOD_ID, name),
-                new BlockItem(block, new Item.Settings()));
+    /** Registers a block without an item (portal block, wall variants, ...). */
+    public static Block registerBlockOnly(String name, Function<BlockBehaviour.Properties, Block> factory,
+                                          BlockBehaviour.Properties properties) {
+        ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, Raft.id(name));
+        Block block = factory.apply(properties.setId(key));
+        return Registry.register(BuiltInRegistries.BLOCK, key, block);
+    }
+
+    public static Item registerBlockItem(String name, Block block, String... tooltips) {
+        return registerBlockItem(name, block, new Item.Properties(), tooltips);
+    }
+
+    public static Item registerBlockItem(String name, Block block, Item.Properties properties, String... tooltips) {
+        ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Raft.id(name));
+        properties = properties.setId(key).useBlockDescriptionPrefix();
+        Item item = tooltips.length == 0 ? new BlockItem(block, properties) : new TooltipBlockItem(block, properties, tooltips);
+        return Registry.register(BuiltInRegistries.ITEM, key, item);
     }
 
     public static void registerModBlocks() {

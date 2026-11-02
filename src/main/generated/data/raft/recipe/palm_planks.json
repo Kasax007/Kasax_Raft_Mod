@@ -3,9 +3,7 @@
   "category": "building",
   "group": "planks",
   "ingredients": [
-    {
-      "tag": "raft:driftwood_logs"
-    }
+    "#raft:palm_logs"
   ],
   "result": {
     "count": 4,

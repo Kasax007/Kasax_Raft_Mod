@@ -1,56 +1,59 @@
 package net.kasax.raft.item.custom;
 
-
 import net.kasax.raft.block.ModBlocks;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class MetalDetector extends Item {
-    public MetalDetector(Settings settings) {
-        super(settings);
+    public MetalDetector(Properties properties) {
+        super(properties);
     }
+
     @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        if(!context.getWorld().isClient()) {
-            BlockPos positionClicked = context.getBlockPos();
-            PlayerEntity player = context.getPlayer();
+    public InteractionResult useOn(UseOnContext context) {
+        Player player = context.getPlayer();
+        if (player == null) {
+            return InteractionResult.PASS;
+        }
+        if (!context.getLevel().isClientSide()) {
+            BlockPos positionClicked = context.getClickedPos();
             boolean foundBlock = false;
 
-            for(int i = 0; i <= positionClicked.getY() + 128; i++) {
-                BlockState state = context.getWorld().getBlockState(positionClicked.down(i));
+            int minY = context.getLevel().getMinY();
+            for (int i = 0; positionClicked.getY() - i >= minY; i++) {
+                BlockState state = context.getLevel().getBlockState(positionClicked.below(i));
 
-                if(isValuableBlock(state)) {
-                    outputValuableCoordinates(positionClicked.down(i), player, state.getBlock());
+                if (isValuableBlock(state)) {
+                    outputValuableCoordinates(positionClicked.below(i), player, state.getBlock());
                     foundBlock = true;
 
                     break;
                 }
             }
 
-            if(!foundBlock) {
-                player.sendMessage(Text.literal("No Valuables Found!"));
+            if (!foundBlock) {
+                player.sendSystemMessage(Component.literal("No Valuables Found!"));
             }
+
+            player.getCooldowns().addCooldown(context.getItemInHand(), 20);
+            context.getItemInHand().hurtAndBreak(1, player, context.getHand());
         }
 
-        context.getStack().damage(1, context.getPlayer(), context.getPlayer().getPreferredEquipmentSlot(this.getDefaultStack()));
-        PlayerEntity player = context.getPlayer();
-        player.getItemCooldownManager().set(this, 20);
-        return ActionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
-    private void outputValuableCoordinates(BlockPos blockPos, PlayerEntity player, Block block) {
-        player.sendMessage(Text.literal("Found " + block.asItem().getName().getString() + " at " +
-                "Y-Level " + blockPos.getY()), false);
+    private void outputValuableCoordinates(BlockPos blockPos, Player player, Block block) {
+        player.sendSystemMessage(Component.literal("Found " + block.getName().getString() + " at " +
+                "Y-Level " + blockPos.getY()));
     }
 
     private boolean isValuableBlock(BlockState state) {
-        return state.isOf(ModBlocks.TITANIUM_ORE) || state.isOf(ModBlocks.DEEPSLATE_TITANIUM_ORE);
+        return state.is(ModBlocks.TITANIUM_ORE) || state.is(ModBlocks.DEEPSLATE_TITANIUM_ORE);
     }
 }

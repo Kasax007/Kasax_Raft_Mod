@@ -1,16 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
-    "B": {
-      "item": "minecraft:bowl"
-    },
-    "C": {
-      "item": "raft:coconut"
-    },
-    "S": {
-      "item": "minecraft:sugar"
-    }
+    "B": "minecraft:bowl",
+    "C": "raft:coconut",
+    "S": "minecraft:sugar"
   },
   "pattern": [
     " S ",
@@ -18,7 +11,6 @@
     " B "
   ],
   "result": {
-    "count": 1,
     "id": "raft:pina_colada"
   }
 }

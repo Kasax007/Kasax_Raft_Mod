@@ -33,7 +33,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "raft:brick_furnace"
+        "recipes": "raft:brick_furnace"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

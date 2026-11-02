@@ -1,133 +1,153 @@
 package net.kasax.raft.datagen;
 
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.kasax.raft.block.ModBlocks;
 import net.kasax.raft.block.cable.RaftCable;
 import net.kasax.raft.util.FurnaceBlocks;
 import net.kasax.raft.util.ModTags;
-import net.minecraft.block.Block;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.registry.tag.ItemTags;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.BlockItemTags;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.block.Block;
 
 import java.util.concurrent.CompletableFuture;
 
-public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
-    public ModBlockTagProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
-        super(output, registriesFuture);
+public class ModBlockTagProvider extends FabricTagsProvider<Block> {
+    public ModBlockTagProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+        super(output, Registries.BLOCK, registriesFuture);
+    }
+
+    public static ResourceKey<Block> key(Block block) {
+        return BuiltInRegistries.BLOCK.getResourceKey(block).orElseThrow();
+    }
+
+    private void addAll(TagKey<Block> tag, Block... blocks) {
+        for (Block block : blocks) {
+            tag(tag).add(key(block));
+        }
     }
 
     @Override
-    protected void configure(RegistryWrapper.WrapperLookup arg) {
-        getOrCreateTagBuilder(ModTags.Blocks.RAFT_MOD_BLOCK)
-                .add(ModBlocks.DRIFTWOOD_PORTAL_FRAME)
-                .add(ModBlocks.DRIFTWOOD_LEAVES)
-                .add(ModBlocks.DRIFTWOOD_LOG)
-                .add(ModBlocks.DRIFTWOOD_WOOD)
-                .add(ModBlocks.DRIFTWOOD_PLANKS)
-                .add(ModBlocks.DRIFTWOOD_STAIRS)
-                .add(ModBlocks.DRIFTWOOD_SLAB)
-                .add(ModBlocks.DRIFTWOOD_BUTTON)
-                .add(ModBlocks.DRIFTWOOD_PRESSURE_PLATE)
-                .add(ModBlocks.DRIFTWOOD_FENCE)
-                .add(ModBlocks.DRIFTWOOD_FENCE_GATE)
-                .add(ModBlocks.DRIFTWOOD_DOOR)
-                .add(ModBlocks.DRIFTWOOD_TRAPDOOR)
-                .add(ModBlocks.PALM_STAIRS)
-                .add(ModBlocks.PALM_SLAB)
-                .add(ModBlocks.PALM_BUTTON)
-                .add(ModBlocks.PALM_PRESSURE_PLATE)
-                .add(ModBlocks.PALM_FENCE)
-                .add(ModBlocks.PALM_FENCE_GATE)
-                .add(ModBlocks.PALM_DOOR)
-                .add(ModBlocks.PALM_TRAPDOOR)
-                .add(ModBlocks.STRIPPED_DRIFTWOOD_LOG)
-                .add(ModBlocks.STRIPPED_DRIFTWOOD_WOOD)
-                .add(ModBlocks.TITANIUM_BLOCK)
-                .add(ModBlocks.RAW_TITANIUM_BLOCK)
-                .add(ModBlocks.TITANIUM_ORE)
-                .add(ModBlocks.DEEPSLATE_TITANIUM_ORE)
-                .add(ModBlocks.TITANIUM_GRATES)
-                .add(ModBlocks.ITEM_CATCHER)
-                .add(ModBlocks.MAKESHIFT_SOLAR_PANEL)
-                .add(ModBlocks.MAKESHIFT_BATTERY)
-                .add(ModBlocks.QUARRY);
+    protected void addTags(HolderLookup.Provider registries) {
+        addAll(ModTags.Blocks.RAFT_MOD_BLOCK,
+                ModBlocks.DRIFTWOOD_PORTAL_FRAME,
+                ModBlocks.DRIFTWOOD_LEAVES,
+                ModBlocks.DRIFTWOOD_LOG,
+                ModBlocks.DRIFTWOOD_WOOD,
+                ModBlocks.DRIFTWOOD_PLANKS,
+                ModBlocks.DRIFTWOOD_STAIRS,
+                ModBlocks.DRIFTWOOD_SLAB,
+                ModBlocks.DRIFTWOOD_BUTTON,
+                ModBlocks.DRIFTWOOD_PRESSURE_PLATE,
+                ModBlocks.DRIFTWOOD_FENCE,
+                ModBlocks.DRIFTWOOD_FENCE_GATE,
+                ModBlocks.DRIFTWOOD_DOOR,
+                ModBlocks.DRIFTWOOD_TRAPDOOR,
+                ModBlocks.PALM_STAIRS,
+                ModBlocks.PALM_SLAB,
+                ModBlocks.PALM_BUTTON,
+                ModBlocks.PALM_PRESSURE_PLATE,
+                ModBlocks.PALM_FENCE,
+                ModBlocks.PALM_FENCE_GATE,
+                ModBlocks.PALM_DOOR,
+                ModBlocks.PALM_TRAPDOOR,
+                ModBlocks.STRIPPED_DRIFTWOOD_LOG,
+                ModBlocks.STRIPPED_DRIFTWOOD_WOOD,
+                ModBlocks.TITANIUM_BLOCK,
+                ModBlocks.RAW_TITANIUM_BLOCK,
+                ModBlocks.TITANIUM_ORE,
+                ModBlocks.DEEPSLATE_TITANIUM_ORE,
+                ModBlocks.TITANIUM_GRATES,
+                ModBlocks.ITEM_CATCHER,
+                ModBlocks.MAKESHIFT_SOLAR_PANEL,
+                ModBlocks.MAKESHIFT_BATTERY,
+                ModBlocks.QUARRY);
 
         // Add all furnaces to the RAFT_MOD_BLOCK tag
-        FurnaceBlocks.getFurnaces().forEach(furnace ->
-                getOrCreateTagBuilder(ModTags.Blocks.RAFT_MOD_BLOCK).add(furnace)
-        );
+        FurnaceBlocks.getFurnaces().forEach(furnace -> addAll(ModTags.Blocks.RAFT_MOD_BLOCK, furnace));
 
         for (RaftCable.Cables cable : RaftCable.Cables.values()) {
-            getOrCreateTagBuilder(ModTags.Blocks.RAFT_MOD_BLOCK).add(cable.block);
+            addAll(ModTags.Blocks.RAFT_MOD_BLOCK, cable.block);
         }
 
-        getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
-                .add(ModBlocks.DRIFTWOOD_PORTAL_FRAME);
+        addAll(BlockTags.MINEABLE_WITH_AXE, ModBlocks.DRIFTWOOD_PORTAL_FRAME);
 
-        getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
-                .add(ModBlocks.RAW_TITANIUM_BLOCK)
-                .add(ModBlocks.TITANIUM_ORE)
-                .add(ModBlocks.TITANIUM_BLOCK)
-                .add(ModBlocks.DEEPSLATE_TITANIUM_ORE)
-                .add(ModBlocks.TITANIUM_GRATES)
-                .add(ModBlocks.MAKESHIFT_SOLAR_PANEL)
-                .add(ModBlocks.QUARRY)
-                .add(ModBlocks.CHUNK_DESTROYER)
-                .add(ModBlocks.MAKESHIFT_BATTERY);
+        addAll(BlockTags.MINEABLE_WITH_PICKAXE,
+                ModBlocks.RAW_TITANIUM_BLOCK,
+                ModBlocks.TITANIUM_ORE,
+                ModBlocks.TITANIUM_BLOCK,
+                ModBlocks.DEEPSLATE_TITANIUM_ORE,
+                ModBlocks.TITANIUM_GRATES,
+                ModBlocks.MAKESHIFT_SOLAR_PANEL,
+                ModBlocks.QUARRY,
+                ModBlocks.CHUNK_DESTROYER,
+                ModBlocks.MAKESHIFT_BATTERY);
 
-        // Add all furnaces to the PICKAXE_MINEBALE tag
-        FurnaceBlocks.getFurnaces().forEach(furnace ->
-                getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE).add(furnace)
-        );
-
+        // Add all furnaces and cables to the pickaxe tag
+        FurnaceBlocks.getFurnaces().forEach(furnace -> addAll(BlockTags.MINEABLE_WITH_PICKAXE, furnace));
         for (RaftCable.Cables cable : RaftCable.Cables.values()) {
-            getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE).add(cable.block);
+            addAll(BlockTags.MINEABLE_WITH_PICKAXE, cable.block);
         }
 
-        getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL)
-                .add(ModBlocks.DRIFTWOOD_PORTAL_FRAME)
-                .add(ModBlocks.MAKESHIFT_SOLAR_PANEL)
-                .add(ModBlocks.QUARRY)
-                .add(ModBlocks.CHUNK_DESTROYER)
-                .add(ModBlocks.MAKESHIFT_BATTERY);
+        addAll(BlockTags.NEEDS_IRON_TOOL,
+                ModBlocks.DRIFTWOOD_PORTAL_FRAME,
+                ModBlocks.MAKESHIFT_SOLAR_PANEL,
+                ModBlocks.QUARRY,
+                ModBlocks.CHUNK_DESTROYER,
+                ModBlocks.MAKESHIFT_BATTERY);
 
-        // Add all furnaces to the NEEDS_IRON_TOOL tag
-        FurnaceBlocks.getFurnaces().forEach(furnace ->
-                getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL).add(furnace)
-        );
-
+        FurnaceBlocks.getFurnaces().forEach(furnace -> addAll(BlockTags.NEEDS_IRON_TOOL, furnace));
         for (RaftCable.Cables cable : RaftCable.Cables.values()) {
-            getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL).add(cable.block);
+            addAll(BlockTags.NEEDS_IRON_TOOL, cable.block);
         }
 
-        getOrCreateTagBuilder(BlockTags.NEEDS_DIAMOND_TOOL)
-                .add(ModBlocks.RAW_TITANIUM_BLOCK)
-                .add(ModBlocks.TITANIUM_ORE)
-                .add(ModBlocks.DEEPSLATE_TITANIUM_ORE)
-                .add(ModBlocks.TITANIUM_BLOCK)
-                .add(ModBlocks.TITANIUM_GRATES);
+        addAll(BlockTags.NEEDS_DIAMOND_TOOL,
+                ModBlocks.RAW_TITANIUM_BLOCK,
+                ModBlocks.TITANIUM_ORE,
+                ModBlocks.DEEPSLATE_TITANIUM_ORE,
+                ModBlocks.TITANIUM_BLOCK,
+                ModBlocks.TITANIUM_GRATES);
 
-        getOrCreateTagBuilder(BlockTags.LOGS_THAT_BURN)
-                .add(ModBlocks.DRIFTWOOD_LOG)
-                .add(ModBlocks.DRIFTWOOD_WOOD)
-                .add(ModBlocks.STRIPPED_DRIFTWOOD_WOOD)
-                .add(ModBlocks.STRIPPED_DRIFTWOOD_LOG);
+        addAll(BlockItemTags.LOGS_THAT_BURN.block(),
+                ModBlocks.DRIFTWOOD_LOG,
+                ModBlocks.DRIFTWOOD_WOOD,
+                ModBlocks.STRIPPED_DRIFTWOOD_WOOD,
+                ModBlocks.STRIPPED_DRIFTWOOD_LOG,
+                ModBlocks.PALM_LOG,
+                ModBlocks.PALM_WOOD,
+                ModBlocks.STRIPPED_PALM_WOOD,
+                ModBlocks.STRIPPED_PALM_LOG);
 
-        getOrCreateTagBuilder(BlockTags.LOGS_THAT_BURN)
-                .add(ModBlocks.PALM_LOG)
-                .add(ModBlocks.PALM_WOOD)
-                .add(ModBlocks.STRIPPED_PALM_WOOD)
-                .add(ModBlocks.STRIPPED_PALM_LOG);
+        addAll(BlockTags.FENCES, ModBlocks.DRIFTWOOD_FENCE, ModBlocks.PALM_FENCE);
+        addAll(BlockTags.FENCE_GATES, ModBlocks.DRIFTWOOD_FENCE_GATE, ModBlocks.PALM_FENCE_GATE);
 
-        getOrCreateTagBuilder(BlockTags.FENCES)
-                .add(ModBlocks.DRIFTWOOD_FENCE);
-        getOrCreateTagBuilder(BlockTags.FENCE_GATES)
-                .add(ModBlocks.DRIFTWOOD_FENCE_GATE);
-        getOrCreateTagBuilder(BlockTags.FENCES)
-                .add(ModBlocks.PALM_FENCE);
-        getOrCreateTagBuilder(BlockTags.FENCE_GATES)
-                .add(ModBlocks.PALM_FENCE_GATE);
+        addAll(BlockTags.PORTALS, ModBlocks.RAFT_PORTAL);
+
+        // Wood set blocks belong to the vanilla wood tags too, so redstone, villagers and recipes treat them as wood.
+        addAll(BlockTags.PLANKS, ModBlocks.DRIFTWOOD_PLANKS, ModBlocks.PALM_PLANKS);
+        addAll(BlockTags.WOODEN_STAIRS, ModBlocks.DRIFTWOOD_STAIRS, ModBlocks.PALM_STAIRS);
+        addAll(BlockTags.WOODEN_SLABS, ModBlocks.DRIFTWOOD_SLAB, ModBlocks.PALM_SLAB);
+        addAll(BlockTags.WOODEN_DOORS, ModBlocks.DRIFTWOOD_DOOR, ModBlocks.PALM_DOOR);
+        addAll(BlockTags.WOODEN_TRAPDOORS, ModBlocks.DRIFTWOOD_TRAPDOOR, ModBlocks.PALM_TRAPDOOR);
+        addAll(BlockTags.WOODEN_BUTTONS, ModBlocks.DRIFTWOOD_BUTTON, ModBlocks.PALM_BUTTON);
+        addAll(BlockTags.WOODEN_PRESSURE_PLATES, ModBlocks.DRIFTWOOD_PRESSURE_PLATE, ModBlocks.PALM_PRESSURE_PLATE);
+        addAll(BlockTags.WOODEN_FENCES, ModBlocks.DRIFTWOOD_FENCE, ModBlocks.PALM_FENCE);
+        addAll(BlockTags.LEAVES, ModBlocks.DRIFTWOOD_LEAVES, ModBlocks.PALM_LEAVES, ModBlocks.PALM_COCONUT_LEAVES);
+        addAll(BlockTags.SAPLINGS, ModBlocks.DRIFTWOOD_SAPLING, ModBlocks.PALM_SAPLING);
+        addAll(BlockTags.MINEABLE_WITH_AXE,
+                ModBlocks.DRIFTWOOD_LOG, ModBlocks.DRIFTWOOD_WOOD, ModBlocks.STRIPPED_DRIFTWOOD_LOG, ModBlocks.STRIPPED_DRIFTWOOD_WOOD,
+                ModBlocks.DRIFTWOOD_PLANKS, ModBlocks.DRIFTWOOD_STAIRS, ModBlocks.DRIFTWOOD_SLAB, ModBlocks.DRIFTWOOD_FENCE,
+                ModBlocks.DRIFTWOOD_FENCE_GATE, ModBlocks.DRIFTWOOD_DOOR, ModBlocks.DRIFTWOOD_TRAPDOOR, ModBlocks.DRIFTWOOD_BUTTON,
+                ModBlocks.DRIFTWOOD_PRESSURE_PLATE,
+                ModBlocks.PALM_LOG, ModBlocks.PALM_WOOD, ModBlocks.STRIPPED_PALM_LOG, ModBlocks.STRIPPED_PALM_WOOD,
+                ModBlocks.PALM_PLANKS, ModBlocks.PALM_STAIRS, ModBlocks.PALM_SLAB, ModBlocks.PALM_FENCE,
+                ModBlocks.PALM_FENCE_GATE, ModBlocks.PALM_DOOR, ModBlocks.PALM_TRAPDOOR, ModBlocks.PALM_BUTTON,
+                ModBlocks.PALM_PRESSURE_PLATE, ModBlocks.ITEM_CATCHER);
+        addAll(BlockTags.MINEABLE_WITH_HOE, ModBlocks.DRIFTWOOD_LEAVES, ModBlocks.PALM_LEAVES, ModBlocks.PALM_COCONUT_LEAVES);
     }
 }

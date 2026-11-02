@@ -1,13 +1,8 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
-    "R": {
-      "item": "raft:driftwood_log"
-    },
-    "S": {
-      "item": "raft:ancient_energy"
-    }
+    "R": "raft:driftwood_log",
+    "S": "raft:ancient_energy"
   },
   "pattern": [
     " S ",
@@ -15,7 +10,6 @@
     " S "
   ],
   "result": {
-    "count": 1,
     "id": "raft:driftwood_portal_frame"
   }
 }

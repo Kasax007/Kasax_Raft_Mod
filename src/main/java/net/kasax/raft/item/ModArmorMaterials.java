@@ -1,64 +1,28 @@
 package net.kasax.raft.item;
 
 import net.kasax.raft.Raft;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ArmorMaterial;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Identifier;
+import net.kasax.raft.util.ModTags;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.equipment.ArmorMaterial;
+import net.minecraft.world.item.equipment.ArmorType;
+import net.minecraft.world.item.equipment.EquipmentAsset;
+import net.minecraft.world.item.equipment.EquipmentAssets;
 
-import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
-public enum ModArmorMaterials {
-    TITANIUM("titanium", 25, new int[] {3, 8, 6, 3}, 19,
-            SoundEvents.ITEM_ARMOR_EQUIP_NETHERITE, 2f, 0.1f, () -> Ingredient.ofItems(ModItems.TITANIUM_INGOT));
+public class ModArmorMaterials {
+    public static final ResourceKey<EquipmentAsset> TITANIUM_ASSET =
+            ResourceKey.create(EquipmentAssets.ROOT_ID, Raft.id("titanium"));
 
-    private final String name;
-    private final int durabilityMultiplier;
-    private final Map<ArmorItem.Type, Integer> protectionAmounts;
-    private final int enchantability;
-    private final RegistryEntry<SoundEvent> equipSound;
-    private final float toughness;
-    private final float knockbackResistence;
-    private final Supplier<Ingredient> repairIngredient;
-
-    private static final int[] BASE_DURABILITY = {11, 16, 15, 13};
-
-    ModArmorMaterials(String name, int durabilityMultiplier, int[] protectionAmountsArray, int enchantability,
-                      RegistryEntry<SoundEvent> equipSound, float toughness, float knockbackResistence,
-                      Supplier<Ingredient> repairIngredient) {
-        this.name = name;
-        this.durabilityMultiplier = durabilityMultiplier;
-        this.protectionAmounts = new EnumMap<>(ArmorItem.Type.class);
-        this.protectionAmounts.put(ArmorItem.Type.HELMET, protectionAmountsArray[0]);
-        this.protectionAmounts.put(ArmorItem.Type.CHESTPLATE, protectionAmountsArray[1]);
-        this.protectionAmounts.put(ArmorItem.Type.LEGGINGS, protectionAmountsArray[2]);
-        this.protectionAmounts.put(ArmorItem.Type.BOOTS, protectionAmountsArray[3]);
-        this.enchantability = enchantability;
-        this.equipSound = equipSound;
-        this.toughness = toughness;
-        this.knockbackResistence = knockbackResistence;
-        this.repairIngredient = repairIngredient;
-    }
-
-    public RegistryEntry<ArmorMaterial> toArmorMaterial() {
-        List<ArmorMaterial.Layer> layers = List.of(
-                new ArmorMaterial.Layer(Identifier.of(ModArmorMaterials.TITANIUM.getName()))
-        );
-        var material = new ArmorMaterial(protectionAmounts, enchantability, equipSound, repairIngredient, layers, toughness, knockbackResistence);
-        material = Registry.register(Registries.ARMOR_MATERIAL, Raft.MOD_ID, material);
-        return RegistryEntry.of(material);
-    }
-
-
-    public String getName() {
-        return Raft.MOD_ID + ":" + this.name;
-    }
+    /** Durability factor 25 (same as before), protection 3/8/6/3, toughness 2, knockback resistance 0.1. */
+    public static final ArmorMaterial TITANIUM = new ArmorMaterial(
+            25,
+            Map.of(ArmorType.HELMET, 3, ArmorType.CHESTPLATE, 8, ArmorType.LEGGINGS, 6, ArmorType.BOOTS, 3),
+            19,
+            SoundEvents.ARMOR_EQUIP_NETHERITE,
+            2f,
+            0.1f,
+            ModTags.Items.TITANIUM_ARMOR_REPAIR,
+            TITANIUM_ASSET);
 }

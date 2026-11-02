@@ -38,10 +38,6 @@ public class FurnaceData {
         return String.format("%s_furnace", name);
     }
 
-    public String getID() {
-        return String.format("%s:%s_furnace", Raft.MOD_ID, name);
-    }
-
     public double getSpeedModifier() {
         return speedModifier;
     }

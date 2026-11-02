@@ -1,52 +1,41 @@
 package net.kasax.raft.screen;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.kasax.raft.Raft;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.player.Inventory;
 
-public class ItemCollectorScreen extends HandledScreen<ItemCollectorScreenHandler> {
-    private static final Identifier TEXTURE = Identifier.of(Raft.MOD_ID, "textures/gui/item_collector_gui.png");
+public class ItemCollectorScreen extends AbstractContainerScreen<ItemCollectorScreenHandler> {
+    private static final Identifier TEXTURE = Raft.id("textures/gui/item_collector_gui.png");
 
-    public ItemCollectorScreen(ItemCollectorScreenHandler handler, PlayerInventory inventory, Text title) {
+    public ItemCollectorScreen(ItemCollectorScreenHandler handler, Inventory inventory, Component title) {
         super(handler, inventory, title);
     }
 
     @Override
     protected void init() {
         super.init();
-        titleY = 1000;
-        playerInventoryTitleY = 1000;
+        titleLabelY = 1000;
+        inventoryLabelY = 1000;
     }
 
     @Override
-    protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-        RenderSystem.setShaderTexture(0, TEXTURE);
-        int x = (width - backgroundWidth) / 2;
-        int y = (height - backgroundHeight) / 2;
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+        super.extractBackground(graphics, mouseX, mouseY, delta);
+        int x = (width - imageWidth) / 2;
+        int y = (height - imageHeight) / 2;
 
-        context.drawTexture(TEXTURE, x, y, 0, 0, backgroundWidth, backgroundHeight);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
 
-        renderProgressArrow(context, x, y);
-
+        renderProgressArrow(graphics, x, y);
     }
 
-    private void renderProgressArrow(DrawContext context, int x, int y) {
-        if (handler.isCrafting()) {
-            context.drawTexture(TEXTURE, x + 85, y + 30, 176, 0 ,8, handler.getScaledProgress());
+    private void renderProgressArrow(GuiGraphicsExtractor graphics, int x, int y) {
+        if (menu.isCrafting()) {
+            graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x + 85, y + 30, 176, 0, 8, menu.getScaledProgress(), 256, 256);
         }
-    }
-
-    @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        renderBackground(context, mouseX, mouseY, delta); //expected more arguments according to tutorial
-        super.render(context, mouseX, mouseY, delta);
-        drawMouseoverTooltip(context, mouseX, mouseY);
     }
 }

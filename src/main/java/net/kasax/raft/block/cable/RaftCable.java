@@ -21,17 +21,17 @@ package net.kasax.raft.block.cable;
  * SOFTWARE.
  */
 import net.kasax.raft.Raft;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 
 import java.util.HashMap;
 import java.util.Locale;
 
 public class RaftCable {
-    public enum Cables implements ItemConvertible {
+    public enum Cables implements ItemLike {
         COPPER_CABLE(128, 12.0, true, RaftEnergyTier.MEDIUM),
         TITANIUM_CABLE(512, 12.0, true, RaftEnergyTier.HIGH);
 
@@ -68,7 +68,7 @@ public class RaftCable {
         }
     }
     public static <B extends Block> B setup(B block, String name) {
-        registerIdent(block, Identifier.of(Raft.MOD_ID, name));
+        registerIdent(block, Raft.id(name));
         return block;
     }
     public static void registerIdent(Object object, Identifier identifier){

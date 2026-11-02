@@ -1,34 +1,36 @@
 package net.kasax.raft.screen;
 
 import net.kasax.raft.Raft;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Inventory;
 
-public class MakeshiftBatteryScreen extends HandledScreen<MakeshiftBatteryScreenHandler> {
+public class MakeshiftBatteryScreen extends AbstractContainerScreen<MakeshiftBatteryScreenHandler> {
     private static final Identifier TEXTURE = Raft.id("textures/gui/makeshift_battery_screen.png");
-    public MakeshiftBatteryScreen(MakeshiftBatteryScreenHandler handler, PlayerInventory inventory, Text title) {
-            super(handler, inventory, title);
-        }
 
-        @Override
-        protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
-            context.drawTexture(TEXTURE, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+    public MakeshiftBatteryScreen(MakeshiftBatteryScreenHandler handler, Inventory inventory, Component title) {
+        super(handler, inventory, title);
+    }
 
-            int energyBarSize = MathHelper.ceil(this.handler.getEnergyPercent() * 66);
-            context.fill(this.x + 144, this.y + 10 + 66 - energyBarSize, this.x + 144 + 20, this.y + 10 + 66, 0xFFD4AF37);
-        }
+    @Override
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+        super.extractBackground(graphics, mouseX, mouseY, delta);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
 
-        @Override
-        public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-            super.render(context, mouseX, mouseY, delta);
-            drawMouseoverTooltip(context, mouseX, mouseY);
+        int energyBarSize = Mth.ceil(this.menu.getEnergyPercent() * 66);
+        graphics.fill(this.leftPos + 144, this.topPos + 10 + 66 - energyBarSize, this.leftPos + 144 + 20, this.topPos + 10 + 66, 0xFFD4AF37);
+    }
 
-            if (isPointWithinBounds(144, 10, 20, 66, mouseX, mouseY)) {
-                context.drawTooltip(this.textRenderer, Text.literal(this.handler.getEnergy() + " / " + this.handler.getMaxEnergy() + " FE"), mouseX, mouseY);
-            }
+    @Override
+    protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        super.extractTooltip(graphics, mouseX, mouseY);
+        if (isHovering(144, 10, 20, 66, mouseX, mouseY)) {
+            graphics.setTooltipForNextFrame(this.font,
+                    Component.literal(this.menu.getEnergy() + " / " + this.menu.getMaxEnergy() + " FE"), mouseX, mouseY);
         }
     }
+}

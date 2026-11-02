@@ -5,21 +5,21 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.kasax.raft.util.TickableBlockEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.loot.context.LootContextParameterSet;
-import net.minecraft.loot.context.LootContextParameters;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Containers;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import team.reborn.energy.api.base.SimpleEnergyStorage;
 
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class ChunkDestroyerBlockEntity extends BlockEntity implements TickableBl
     @Override
     public void tick() {
         if (!finished) {
-            if (this.world == null || this.world.isClient) {
+            if (this.level == null || this.level.isClientSide()) {
                 return;
             }
 
@@ -74,23 +74,23 @@ public class ChunkDestroyerBlockEntity extends BlockEntity implements TickableBl
 
     private void mineColumn() {
         List<ItemStack> drops = new ArrayList<>();
-        BlockPos.Mutable currentPos = new BlockPos.Mutable();
+        BlockPos.MutableBlockPos currentPos = new BlockPos.MutableBlockPos();
 
-        for (int y = this.miningPos.getY(); y >= this.world.getBottomY(); y--) {
+        for (int y = this.miningPos.getY(); y >= this.level.getMinY(); y--) {
             currentPos.set(this.miningPos.getX(), y, this.miningPos.getZ());
 
-            BlockState state = this.world.getBlockState(currentPos);
-            if (state.isAir() || state.getBlock() == Blocks.WATER || state.getBlock() == Blocks.LAVA || state.getHardness(this.world, this.miningPos) < 0) {
+            BlockState state = this.level.getBlockState(currentPos);
+            if (state.isAir() || state.is(Blocks.WATER) || state.is(Blocks.LAVA) || state.getDestroySpeed(this.level, currentPos) < 0) {
                 continue;
             }
 
-            List<ItemStack> blockDrops = new ArrayList<>(state.getDroppedStacks(
-                    new LootContextParameterSet.Builder((ServerWorld) this.world)
-                            .add(LootContextParameters.TOOL, Items.DIAMOND_PICKAXE.getDefaultStack())
-                            .add(LootContextParameters.ORIGIN, currentPos.toCenterPos())
-                            .addOptional(LootContextParameters.BLOCK_ENTITY, this)));
+            List<ItemStack> blockDrops = new ArrayList<>(state.getDrops(
+                    new LootParams.Builder((ServerLevel) this.level)
+                            .withParameter(LootContextParams.TOOL, Items.DIAMOND_PICKAXE.getDefaultInstance())
+                            .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(currentPos))
+                            .withOptionalParameter(LootContextParams.BLOCK_ENTITY, this)));
 
-            this.world.breakBlock(currentPos, false);
+            this.level.destroyBlock(currentPos, false);
             drops.addAll(blockDrops);
         }
 
@@ -98,19 +98,19 @@ public class ChunkDestroyerBlockEntity extends BlockEntity implements TickableBl
         this.energyStorage.amount -= 100_000;
 
         // Handle drops
-        Storage<ItemVariant> aboveStorage = findItemStorage((ServerWorld) this.world, this.pos.up());
+        Storage<ItemVariant> aboveStorage = findItemStorage((ServerLevel) this.level, this.worldPosition.above());
         if (aboveStorage != null && aboveStorage.supportsInsertion()) {
             insertDrops(drops, aboveStorage);
         }
         if (!drops.isEmpty()) {
-            spawnDrops(drops, (ServerWorld) this.world, this.pos);
+            spawnDrops(drops, (ServerLevel) this.level, this.worldPosition);
         }
 
         moveToNextColumn();
     }
 
     private void moveToNextColumn() {
-        miningPos = miningPos.add(1, 0, 0);
+        miningPos = miningPos.offset(1, 0, 0);
 
         // Move to the next column when reaching the chunk border
         if (miningPos.getX() >= (chunkX << 4) + 16) {
@@ -123,13 +123,13 @@ public class ChunkDestroyerBlockEntity extends BlockEntity implements TickableBl
         }
 
         // Reset Y position to the top for the next column
-        miningPos = new BlockPos(miningPos.getX(), this.pos.getY() - 1, miningPos.getZ());
+        miningPos = new BlockPos(miningPos.getX(), this.worldPosition.getY() - 1, miningPos.getZ());
     }
 
     private void update() {
-        markDirty();
-        if(world != null)
-            world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_ALL);
+        setChanged();
+        if(level != null)
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
     }
 
     public SimpleEnergyStorage getEnergyStorage() {
@@ -143,17 +143,17 @@ public class ChunkDestroyerBlockEntity extends BlockEntity implements TickableBl
 
     // Replaces any water or lava blocks inside the mined chunk area with air
     private void replaceWaterInMinedArea() {
-        BlockPos.Mutable mutablePos = new BlockPos.Mutable();
+        BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
 
         // Iterate over all X and Z coordinates within the chunk, and from current Y down to bottom
         for (int x = (chunkX << 4); x < (chunkX << 4) + 16; x++) {
             for (int z = (chunkZ << 4); z < (chunkZ << 4) + 16; z++) {
-                for (int y = this.pos.getY(); y >= this.world.getBottomY(); y--) { // Loop from current Y to bottom
+                for (int y = this.worldPosition.getY(); y >= this.level.getMinY(); y--) { // Loop from current Y to bottom
                     mutablePos.set(x, y, z); // Set the current block position
 
-                    BlockState blockState = this.world.getBlockState(mutablePos);
-                    if (blockState.getBlock() == Blocks.WATER || blockState.getBlock() == Blocks.LAVA) {
-                        this.world.setBlockState(mutablePos, Blocks.AIR.getDefaultState()); // Replace with air
+                    BlockState blockState = this.level.getBlockState(mutablePos);
+                    if (blockState.is(Blocks.WATER) || blockState.is(Blocks.LAVA)) {
+                        this.level.setBlock(mutablePos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL); // Replace with air
                     }
                 }
             }
@@ -162,7 +162,7 @@ public class ChunkDestroyerBlockEntity extends BlockEntity implements TickableBl
 
     // Replaces water/lava blocks just outside the mined chunk area with glass, forming a border
     private void replaceWaterOnWalls() {
-        BlockPos.Mutable mutablePos = new BlockPos.Mutable();
+        BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
 
         // Define the area just outside the chunk (the border/walls)
         for (int x = (chunkX << 4) - 1; x <= (chunkX << 4) + 16; x++) {
@@ -173,12 +173,12 @@ public class ChunkDestroyerBlockEntity extends BlockEntity implements TickableBl
                 }
 
                 // Iterate from the current Y position down to the world's bottom
-                for (int y = this.pos.getY(); y >= this.world.getBottomY(); y--) {
+                for (int y = this.worldPosition.getY(); y >= this.level.getMinY(); y--) {
                     mutablePos.set(x, y, z); // Set the current block position
 
-                    BlockState blockState = this.world.getBlockState(mutablePos);
-                    if (blockState.getBlock() == Blocks.WATER || blockState.getBlock() == Blocks.LAVA) {
-                        this.world.setBlockState(mutablePos, Blocks.GLASS.getDefaultState()); // Replace with glass
+                    BlockState blockState = this.level.getBlockState(mutablePos);
+                    if (blockState.is(Blocks.WATER) || blockState.is(Blocks.LAVA)) {
+                        this.level.setBlock(mutablePos, Blocks.GLASS.defaultBlockState(), Block.UPDATE_ALL); // Replace with glass
                     }
                 }
             }
@@ -186,7 +186,7 @@ public class ChunkDestroyerBlockEntity extends BlockEntity implements TickableBl
     }
 
 
-    private static Storage<ItemVariant> findItemStorage(ServerWorld world, BlockPos pos) {
+    private static Storage<ItemVariant> findItemStorage(ServerLevel world, BlockPos pos) {
         return ItemStorage.SIDED.find(world, pos, Direction.DOWN);
     }
 
@@ -195,7 +195,7 @@ public class ChunkDestroyerBlockEntity extends BlockEntity implements TickableBl
             try (Transaction transaction = Transaction.openOuter()) {
                 long inserted = aboveStorage.insert(ItemVariant.of(drop), drop.getCount(), transaction);
                 if (inserted > 0) {
-                    drop.decrement((int) inserted);
+                    drop.shrink((int) inserted);
                     transaction.commit();
                 }
             }
@@ -204,40 +204,32 @@ public class ChunkDestroyerBlockEntity extends BlockEntity implements TickableBl
         drops.removeIf(ItemStack::isEmpty);
     }
 
-    private static void spawnDrops(List<ItemStack> drops, ServerWorld world, BlockPos pos) {
+    private static void spawnDrops(List<ItemStack> drops, ServerLevel world, BlockPos pos) {
         for (ItemStack drop : drops) {
-            ItemScatterer.spawn(world, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 1.0D, drop);
+            Containers.dropItemStack(world, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, drop);
         }
     }
 
     @Override
-    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.readNbt(nbt, registryLookup);
-        this.ticks = nbt.getInt("Ticks");
-        this.miningPos = BlockPos.fromLong(nbt.getLong("MiningPos"));
-        if (nbt.contains("Energy", NbtElement.LONG_TYPE)) {
-            this.energyStorage.amount = nbt.getLong("Energy");
-        }
-        if (nbt.contains("ChunkX")) {
-            this.chunkX = nbt.getInt("ChunkX");
-        }
-        if (nbt.contains("ChunkZ")) {
-            this.chunkZ = nbt.getInt("ChunkZ");
-        }
-        if (nbt.contains("finished")) {
-            this.finished = nbt.getBoolean("finished");
-        }
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        this.ticks = input.getIntOr("Ticks", 0);
+        input.getLong("MiningPos").ifPresent(l -> this.miningPos = BlockPos.of(l));
+        this.energyStorage.amount = input.getLongOr("Energy", 0L);
+        this.chunkX = input.getIntOr("ChunkX", this.chunkX);
+        this.chunkZ = input.getIntOr("ChunkZ", this.chunkZ);
+        this.finished = input.getBooleanOr("finished", false);
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.writeNbt(nbt, registryLookup);
-        nbt.putInt("Ticks", this.ticks);
-        nbt.putLong("MiningPos", this.miningPos.asLong());
-        nbt.putLong("Energy", this.energyStorage.amount);
-        nbt.putInt("ChunkX", this.chunkX);
-        nbt.putInt("ChunkZ", this.chunkZ);
-        nbt.putBoolean("finished", this.finished);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putInt("Ticks", this.ticks);
+        output.putLong("MiningPos", this.miningPos.asLong());
+        output.putLong("Energy", this.energyStorage.amount);
+        output.putInt("ChunkX", this.chunkX);
+        output.putInt("ChunkZ", this.chunkZ);
+        output.putBoolean("finished", this.finished);
     }
 
     public BlockPos getMiningPos() {

@@ -1,15 +1,12 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
+  "category": "redstone",
   "key": {
-    "S": {
-      "item": "raft:palm_planks"
-    }
+    "#": "raft:palm_planks"
   },
   "pattern": [
-    "   ",
-    "SSS",
-    "SSS"
+    "###",
+    "###"
   ],
   "result": {
     "count": 2,

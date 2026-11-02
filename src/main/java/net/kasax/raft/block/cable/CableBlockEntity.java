@@ -24,18 +24,20 @@ package net.kasax.raft.block.cable;
 
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache;
 import net.kasax.raft.block.entity.ModBlockEntities;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import org.jspecify.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 import team.reborn.energy.api.base.SimpleSidedEnergyContainer;
 
@@ -96,10 +98,10 @@ public class CableBlockEntity extends BlockEntity
         if (cableType != null) {
             return cableType;
         }
-        if (world == null) {
+        if (level == null) {
             return RaftCable.Cables.COPPER_CABLE;
         }
-        Block block = world.getBlockState(pos).getBlock();
+        Block block = level.getBlockState(worldPosition).getBlock();
         if (block instanceof CableBlock) {
             return ((CableBlock) block).type;
         }
@@ -128,10 +130,10 @@ public class CableBlockEntity extends BlockEntity
     }
 
     private BlockApiCache<EnergyStorage, Direction> getAdjacentCache(Direction direction) {
-        if (adjacentCaches[direction.getId()] == null) {
-            adjacentCaches[direction.getId()] = BlockApiCache.create(EnergyStorage.SIDED, (ServerWorld) world, pos.offset(direction));
+        if (adjacentCaches[direction.get3DDataValue()] == null) {
+            adjacentCaches[direction.get3DDataValue()] = BlockApiCache.create(EnergyStorage.SIDED, (ServerLevel) level, worldPosition.relative(direction));
         }
-        return adjacentCaches[direction.getId()];
+        return adjacentCaches[direction.get3DDataValue()];
     }
 
     @Nullable
@@ -140,14 +142,14 @@ public class CableBlockEntity extends BlockEntity
     }
 
     void appendTargets(List<OfferedEnergyStorage> targetStorages) {
-        ServerWorld serverWorld = (ServerWorld) world;
+        ServerLevel serverWorld = (ServerLevel) level;
         if (serverWorld == null) {
             return;
         }
 
         // Update our targets if necessary.
         if (targets == null) {
-            BlockState newBlockState = getCachedState();
+            BlockState newBlockState = getBlockState();
 
             targets = new ArrayList<>();
             for (Direction direction : Direction.values()) {
@@ -165,10 +167,10 @@ public class CableBlockEntity extends BlockEntity
                     targets.add(new CableTarget(direction, adjCache));
                 }
 
-                newBlockState = newBlockState.with(CableBlock.PROPERTY_MAP.get(direction), foundSomething);
+                newBlockState = newBlockState.setValue(CableBlock.PROPERTY_MAP.get(direction), foundSomething);
             }
 
-            serverWorld.setBlockState(getPos(), newBlockState);
+            serverWorld.setBlock(getBlockPos(), newBlockState, Block.UPDATE_ALL);
         }
 
         // Fill the list.
@@ -190,29 +192,25 @@ public class CableBlockEntity extends BlockEntity
 
     // BlockEntity
     @Override
-    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        return createNbt(registryLookup);
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return saveWithoutMetadata(registries);
     }
 
     @Override
-    public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        NbtCompound nbtTag = new NbtCompound();
-        // writeNbt(nbtTag);
-        return BlockEntityUpdateS2CPacket.create(this);
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public void readNbt(NbtCompound compound, RegistryWrapper.WrapperLookup registryLookup) {
-        super.readNbt(compound, registryLookup);
-        if (compound.contains("energy")) {
-            energyContainer.amount = compound.getLong("energy");
-        }
+    public void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        energyContainer.amount = input.getLongOr("energy", 0L);
     }
 
     @Override
-    public void writeNbt(NbtCompound compound, RegistryWrapper.WrapperLookup registryLookup) {
-        super.writeNbt(compound, registryLookup);
-        compound.putLong("energy", energyContainer.amount);
+    public void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putLong("energy", energyContainer.amount);
     }
 
     public void neighborUpdate() {
@@ -221,8 +219,8 @@ public class CableBlockEntity extends BlockEntity
 
     // BlockEntityTicker
     @Override
-    public void tick(World world, BlockPos pos, BlockState state, CableBlockEntity blockEntity2) {
-        if (world == null || world.isClient) {
+    public void tick(Level level, BlockPos pos, BlockState state, CableBlockEntity blockEntity2) {
+        if (level == null || level.isClientSide()) {
             return;
         }
 

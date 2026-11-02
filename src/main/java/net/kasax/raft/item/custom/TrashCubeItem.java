@@ -1,44 +1,47 @@
 package net.kasax.raft.item.custom;
 
 import net.kasax.raft.item.ModItems;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.Vec3;
 
-import java.util.*;
-
-import static net.minecraft.sound.SoundEvents.BLOCK_SNIFFER_EGG_CRACK;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.function.Consumer;
 
 public class TrashCubeItem extends Item {
     private static final Random RANDOM = new Random();
 
-    public TrashCubeItem(Settings settings) {
-        super(settings);
+    public TrashCubeItem(Properties properties) {
+        super(properties);
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
-        tooltip.add(Text.translatable("tooltip.raft.trash_cube.tooltip").formatted(Formatting.AQUA));
-        super.appendTooltip(stack, context, tooltip, options);
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag flag) {
+        builder.accept(Component.translatable("tooltip.raft.trash_cube.tooltip").withStyle(ChatFormatting.AQUA));
+        super.appendHoverText(stack, context, display, builder, flag);
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-        if (!world.isClient) {
-            // Define possible drops with their maximum amounts
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        if (!level.isClientSide()) {
+            // Define possible drops with their weights
             Map<ItemStack, Integer> possibleDrops = new HashMap<>();
             possibleDrops.put(new ItemStack(ModItems.PLASTIC, 1), 5); // rare
             possibleDrops.put(new ItemStack(ModItems.TITANIUM_NUGGET, RANDOM.nextInt(3) + 1), 10); // rare
@@ -53,11 +56,10 @@ public class TrashCubeItem extends Item {
             possibleDrops.put(new ItemStack(Items.TROPICAL_FISH, RANDOM.nextInt(3) + 1), 10); // common
             possibleDrops.put(new ItemStack(Items.COD, RANDOM.nextInt(3) + 1), 10); // common
             possibleDrops.put(new ItemStack(Items.SALMON, RANDOM.nextInt(3) + 1), 10); // common
-            possibleDrops.put(new ItemStack(Items.PUFFERFISH, RANDOM.nextInt(1) + 1), 5); // common
-            possibleDrops.put(new ItemStack(Items.BUCKET, RANDOM.nextInt(1) + 1), 3); // rare
-            possibleDrops.put(new ItemStack(Items.PUFFERFISH_BUCKET, RANDOM.nextInt(1) + 1), 1); // very rare
+            possibleDrops.put(new ItemStack(Items.PUFFERFISH, 1), 5); // common
+            possibleDrops.put(new ItemStack(Items.BUCKET, 1), 3); // rare
+            possibleDrops.put(new ItemStack(Items.PUFFERFISH_BUCKET, 1), 1); // very rare
             possibleDrops.put(new ItemStack(Items.OAK_SAPLING, 1), 5); // rare
-            // You can add more saplings or other items as needed
 
             // Get a random number of drops (between 1 and 3)
             int totalItemCount = RANDOM.nextInt(3) + 1;
@@ -68,7 +70,7 @@ public class TrashCubeItem extends Item {
             // Select items until the total item count is reached
             int itemCount = 0;
             while (itemCount < totalItemCount) {
-                ItemStack selectedDrop = getRandomDrop(possibleDrops);
+                ItemStack selectedDrop = getRandomDrop(possibleDrops).copy();
                 int remainingItems = totalItemCount - itemCount;
 
                 // Adjust drop count to not exceed the total item count
@@ -82,22 +84,21 @@ public class TrashCubeItem extends Item {
 
             // Spawn the selected items around the player
             for (ItemStack drop : selectedDrops) {
-                Vec3d spawnPos = player.getPos().add(RANDOM.nextDouble() * 2 - 1, 0.5, RANDOM.nextDouble() * 2 - 1);
-                ItemEntity itemEntity = new ItemEntity(world, spawnPos.x, spawnPos.y, spawnPos.z, drop);
-                world.spawnEntity(itemEntity);
+                Vec3 spawnPos = player.position().add(RANDOM.nextDouble() * 2 - 1, 0.5, RANDOM.nextDouble() * 2 - 1);
+                level.addFreshEntity(new ItemEntity(level, spawnPos.x, spawnPos.y, spawnPos.z, drop));
             }
 
             // Trigger a game event for the action
-            world.emitGameEvent(player, GameEvent.ENTITY_PLACE, player.getBlockPos());
-            world.playSound(null, player.getX(), player.getY(), player.getZ(),
-                    BLOCK_SNIFFER_EGG_CRACK, SoundCategory.NEUTRAL, 20F,
-                    1F / (world.getRandom().nextFloat() * 0.4F + 0.8F));
+            level.gameEvent(player, GameEvent.ENTITY_PLACE, player.blockPosition());
+            level.playSound(null, player.getX(), player.getY(), player.getZ(),
+                    SoundEvents.SNIFFER_EGG_CRACK, SoundSource.NEUTRAL, 20F,
+                    1F / (level.getRandom().nextFloat() * 0.4F + 0.8F));
 
-            // Consume one TrashCube item from the player's hand
-            player.getStackInHand(hand).decrement(1);
+            // Consume one trash cube from the player's hand
+            player.getItemInHand(hand).consume(1, player);
         }
 
-        return TypedActionResult.success(player.getStackInHand(hand));
+        return InteractionResult.SUCCESS;
     }
 
     private ItemStack getRandomDrop(Map<ItemStack, Integer> possibleDrops) {
@@ -120,11 +121,5 @@ public class TrashCubeItem extends Item {
         }
 
         return ItemStack.EMPTY; // Fallback in case of an error
-    }
-
-    private int getRandomEnchantmentLevel(RegistryEntry<Enchantment> enchantment) {
-        Enchantment enchantmentInstance = enchantment.value(); // Retrieve the actual Enchantment object
-        int maxLevel = enchantmentInstance.getMaxLevel(); // Get the max level from the Enchantment
-        return RANDOM.nextInt(maxLevel + 1); // Random level from 0 to maxLevel (inclusive)
     }
 }

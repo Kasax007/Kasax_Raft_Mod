@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "raft:driftwood_wood"
+        "recipes": "raft:driftwood_wood"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

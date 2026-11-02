@@ -1,7 +1,7 @@
 {
   "variants": {
     "axis=x": {
-      "model": "raft:block/palm_log_horizontal",
+      "model": "raft:block/palm_log",
       "x": 90,
       "y": 90
     },
@@ -9,7 +9,7 @@
       "model": "raft:block/palm_log"
     },
     "axis=z": {
-      "model": "raft:block/palm_log_horizontal",
+      "model": "raft:block/palm_log",
       "x": 90
     }
   }

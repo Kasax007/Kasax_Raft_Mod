@@ -1,7 +1,7 @@
 {
   "variants": {
     "axis=x": {
-      "model": "raft:block/stripped_driftwood_log_horizontal",
+      "model": "raft:block/stripped_driftwood_log",
       "x": 90,
       "y": 90
     },
@@ -9,7 +9,7 @@
       "model": "raft:block/stripped_driftwood_log"
     },
     "axis=z": {
-      "model": "raft:block/stripped_driftwood_log_horizontal",
+      "model": "raft:block/stripped_driftwood_log",
       "x": 90
     }
   }

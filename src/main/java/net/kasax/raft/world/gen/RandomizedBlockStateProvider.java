@@ -3,43 +3,31 @@ package net.kasax.raft.world.gen;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.kasax.raft.Raft;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.gen.stateprovider.BlockStateProvider;
-import net.minecraft.world.gen.stateprovider.BlockStateProviderType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public class RandomizedBlockStateProvider extends BlockStateProvider {
-    public static final MapCodec<RandomizedBlockStateProvider> CODEC = RecordCodecBuilder.mapCodec((instance) -> {
-        return instance.group(
-                BlockStateProvider.TYPE_CODEC.fieldOf("primary").forGetter((provider) -> provider.primary),
-                BlockStateProvider.TYPE_CODEC.fieldOf("secondary").forGetter((provider) -> provider.secondary),
-                Codec.FLOAT.fieldOf("secondary_chance").forGetter((provider) -> provider.secondaryChance)
-        ).apply(instance, RandomizedBlockStateProvider::new);
-    });
-    private final BlockStateProvider primary;
-    private final BlockStateProvider secondary;
-    private final float secondaryChance;
+/** Picks the secondary provider with the given chance, otherwise the primary one. */
+public record RandomizedBlockStateProvider(BlockStateProvider primary, BlockStateProvider secondary, float secondaryChance) implements BlockStateProvider {
+    public static final MapCodec<RandomizedBlockStateProvider> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            BlockStateProvider.DIRECT_CODEC.fieldOf("primary").forGetter(RandomizedBlockStateProvider::primary),
+            BlockStateProvider.DIRECT_CODEC.fieldOf("secondary").forGetter(RandomizedBlockStateProvider::secondary),
+            Codec.FLOAT.fieldOf("secondary_chance").forGetter(RandomizedBlockStateProvider::secondaryChance)
+    ).apply(instance, RandomizedBlockStateProvider::new));
 
-    public RandomizedBlockStateProvider(BlockStateProvider primary, BlockStateProvider secondary, float secondaryChance) {
-        this.primary = primary;
-        this.secondary = secondary;
-        this.secondaryChance = secondaryChance;
+    @Override
+    public MapCodec<? extends BlockStateProvider> codec() {
+        return CODEC;
     }
 
     @Override
-    protected BlockStateProviderType<?> getType() {
-        return Raft.RANDOMIZED_BLOCK_STATE_PROVIDER;
-    }
-
-    @Override
-    public BlockState get(Random random, BlockPos pos) {
+    public BlockState getState(LevelAccessor level, RandomSource random, BlockPos pos) {
         if (random.nextFloat() < this.secondaryChance) {
-            return this.secondary.get(random, pos);
+            return this.secondary.getState(level, random, pos);
         } else {
-            return this.primary.get(random, pos);
+            return this.primary.getState(level, random, pos);
         }
     }
 }
-

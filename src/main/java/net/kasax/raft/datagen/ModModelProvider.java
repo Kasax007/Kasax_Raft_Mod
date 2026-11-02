@@ -1,52 +1,48 @@
 package net.kasax.raft.datagen;
 
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
+import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.kasax.raft.block.ModBlocks;
+import net.kasax.raft.block.cable.RaftCable;
 import net.kasax.raft.item.ModItems;
 import net.kasax.raft.util.FurnaceBlocks;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.data.client.*;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
-
-import static net.minecraft.data.client.TextureMap.getSubId;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.client.data.models.model.ModelTemplates;
+import net.minecraft.client.data.models.model.TexturedModel;
 
 public class ModModelProvider extends FabricModelProvider {
-    public ModModelProvider(FabricDataOutput output) {
+    public ModModelProvider(FabricPackOutput output) {
         super(output);
     }
 
     @Override
-    public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
-        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.DRIFTWOOD_PORTAL_FRAME);
+    public void generateBlockStateModels(BlockModelGenerators generators) {
+        generators.createTrivialCube(ModBlocks.DRIFTWOOD_PORTAL_FRAME);
 
-        blockStateModelGenerator.registerLog(ModBlocks.DRIFTWOOD_LOG).log(ModBlocks.DRIFTWOOD_LOG).wood(ModBlocks.DRIFTWOOD_WOOD);
-        blockStateModelGenerator.registerLog(ModBlocks.STRIPPED_DRIFTWOOD_LOG).log(ModBlocks.STRIPPED_DRIFTWOOD_LOG).wood(ModBlocks.STRIPPED_DRIFTWOOD_WOOD);
-        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.DRIFTWOOD_LEAVES);
-        BlockStateModelGenerator.BlockTexturePool driftwoodPool = blockStateModelGenerator.registerCubeAllModelTexturePool(ModBlocks.DRIFTWOOD_PLANKS);
+        generators.woodProvider(ModBlocks.DRIFTWOOD_LOG).log(ModBlocks.DRIFTWOOD_LOG).wood(ModBlocks.DRIFTWOOD_WOOD);
+        generators.woodProvider(ModBlocks.STRIPPED_DRIFTWOOD_LOG).log(ModBlocks.STRIPPED_DRIFTWOOD_LOG).wood(ModBlocks.STRIPPED_DRIFTWOOD_WOOD);
+        generators.createTrivialBlock(ModBlocks.DRIFTWOOD_LEAVES, TexturedModel.LEAVES);
+        BlockModelGenerators.BlockFamilyProvider driftwoodPool = generators.family(ModBlocks.DRIFTWOOD_PLANKS);
 
+        generators.woodProvider(ModBlocks.PALM_LOG).log(ModBlocks.PALM_LOG).wood(ModBlocks.PALM_WOOD);
+        generators.woodProvider(ModBlocks.STRIPPED_PALM_LOG).log(ModBlocks.STRIPPED_PALM_LOG).wood(ModBlocks.STRIPPED_PALM_WOOD);
+        generators.createTrivialBlock(ModBlocks.PALM_LEAVES, TexturedModel.LEAVES);
+        generators.createTrivialBlock(ModBlocks.PALM_COCONUT_LEAVES, TexturedModel.LEAVES);
+        BlockModelGenerators.BlockFamilyProvider palmwoodPool = generators.family(ModBlocks.PALM_PLANKS);
 
-        blockStateModelGenerator.registerLog(ModBlocks.PALM_LOG).log(ModBlocks.PALM_LOG).wood(ModBlocks.PALM_WOOD);
-        blockStateModelGenerator.registerLog(ModBlocks.STRIPPED_PALM_LOG).log(ModBlocks.STRIPPED_PALM_LOG).wood(ModBlocks.STRIPPED_PALM_WOOD);
-        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.PALM_LEAVES);
-        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.PALM_COCONUT_LEAVES);
-        BlockStateModelGenerator.BlockTexturePool palmwoodPool = blockStateModelGenerator.registerCubeAllModelTexturePool(ModBlocks.PALM_PLANKS);
+        generators.createTrivialBlock(ModBlocks.MAKESHIFT_BATTERY, TexturedModel.CUBE_BOTTOM_TOP);
+        generators.createTrivialBlock(ModBlocks.MAKESHIFT_SOLAR_PANEL, TexturedModel.CUBE_BOTTOM_TOP);
+        generators.createHorizontallyRotatedBlock(ModBlocks.QUARRY, TexturedModel.ORIENTABLE);
+        generators.createHorizontallyRotatedBlock(ModBlocks.CHUNK_DESTROYER, TexturedModel.ORIENTABLE);
 
-        blockStateModelGenerator.registerSingleton(ModBlocks.MAKESHIFT_BATTERY, TexturedModel.CUBE_BOTTOM_TOP);
-        blockStateModelGenerator.registerSingleton(ModBlocks.MAKESHIFT_SOLAR_PANEL, TexturedModel.CUBE_BOTTOM_TOP);
-        blockStateModelGenerator.registerNorthDefaultHorizontalRotated(ModBlocks.QUARRY, TexturedModel.ORIENTABLE_WITH_BOTTOM);
-        blockStateModelGenerator.registerNorthDefaultHorizontalRotated(ModBlocks.CHUNK_DESTROYER, TexturedModel.ORIENTABLE_WITH_BOTTOM);
-
-        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.TITANIUM_BLOCK);
-        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.TITANIUM_ORE);
-        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.DEEPSLATE_TITANIUM_ORE);
-        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.RAW_TITANIUM_BLOCK);
-        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.TITANIUM_GRATES);
-        blockStateModelGenerator.registerTintableCross(ModBlocks.DRIFTWOOD_SAPLING, BlockStateModelGenerator.TintType.NOT_TINTED);
-        blockStateModelGenerator.registerTintableCross(ModBlocks.PALM_SAPLING, BlockStateModelGenerator.TintType.NOT_TINTED);
+        generators.createTrivialCube(ModBlocks.TITANIUM_BLOCK);
+        generators.createTrivialCube(ModBlocks.TITANIUM_ORE);
+        generators.createTrivialCube(ModBlocks.DEEPSLATE_TITANIUM_ORE);
+        generators.createTrivialCube(ModBlocks.RAW_TITANIUM_BLOCK);
+        generators.createTrivialCube(ModBlocks.TITANIUM_GRATES);
+        generators.createCrossBlockWithDefaultItem(ModBlocks.DRIFTWOOD_SAPLING, BlockModelGenerators.PlantType.NOT_TINTED);
+        generators.createCrossBlockWithDefaultItem(ModBlocks.PALM_SAPLING, BlockModelGenerators.PlantType.NOT_TINTED);
 
         driftwoodPool.stairs(ModBlocks.DRIFTWOOD_STAIRS);
         driftwoodPool.slab(ModBlocks.DRIFTWOOD_SLAB);
@@ -55,8 +51,8 @@ public class ModModelProvider extends FabricModelProvider {
         driftwoodPool.fence(ModBlocks.DRIFTWOOD_FENCE);
         driftwoodPool.fenceGate(ModBlocks.DRIFTWOOD_FENCE_GATE);
 
-        blockStateModelGenerator.registerDoor(ModBlocks.DRIFTWOOD_DOOR);
-        blockStateModelGenerator.registerTrapdoor(ModBlocks.DRIFTWOOD_TRAPDOOR);
+        generators.createDoor(ModBlocks.DRIFTWOOD_DOOR);
+        generators.createTrapdoor(ModBlocks.DRIFTWOOD_TRAPDOOR);
 
         palmwoodPool.stairs(ModBlocks.PALM_STAIRS);
         palmwoodPool.slab(ModBlocks.PALM_SLAB);
@@ -65,44 +61,54 @@ public class ModModelProvider extends FabricModelProvider {
         palmwoodPool.fence(ModBlocks.PALM_FENCE);
         palmwoodPool.fenceGate(ModBlocks.PALM_FENCE_GATE);
 
-        blockStateModelGenerator.registerDoor(ModBlocks.PALM_DOOR);
-        blockStateModelGenerator.registerTrapdoor(ModBlocks.PALM_TRAPDOOR);
+        generators.createDoor(ModBlocks.PALM_DOOR);
+        generators.createTrapdoor(ModBlocks.PALM_TRAPDOOR);
 
-        // Register models for all custom furnaces
+        // Models for all custom furnaces
         FurnaceBlocks.getFurnaces().forEach(furnace ->
-                blockStateModelGenerator.registerCooker(furnace, TexturedModel.ORIENTABLE)
-        );
+                generators.createFurnace(furnace, TexturedModel.ORIENTABLE_ONLY_TOP));
     }
 
     @Override
-    public void generateItemModels(ItemModelGenerator itemModelGenerator) {
-        itemModelGenerator.register(ModItems.ANCIENT_BROKEN_RING, Models.GENERATED);
-        itemModelGenerator.register(ModItems.ANCIENT_ENERGY, Models.GENERATED);
-        itemModelGenerator.register(ModItems.ANCIENT_CRYSTAL, Models.GENERATED);
-        itemModelGenerator.register(ModItems.PLASTIC, Models.GENERATED);
-        itemModelGenerator.register(ModItems.CIRCUIT_BOARD, Models.GENERATED);
-        itemModelGenerator.register(ModItems.TRASH_CUBE, Models.GENERATED);
-        itemModelGenerator.register(ModItems.UNREFINED_OCEAN_GARBAGE, Models.GENERATED);
-        itemModelGenerator.register(ModItems.COCONUT, Models.GENERATED);
-        itemModelGenerator.register(ModItems.PINA_COLADA, Models.GENERATED);
+    public void generateItemModels(ItemModelGenerators generators) {
+        generators.generateFlatItem(ModItems.ANCIENT_BROKEN_RING, ModelTemplates.FLAT_ITEM);
+        generators.generateFlatItem(ModItems.ANCIENT_ENERGY, ModelTemplates.FLAT_ITEM);
+        generators.generateFlatItem(ModItems.ANCIENT_CRYSTAL, ModelTemplates.FLAT_ITEM);
+        generators.generateFlatItem(ModItems.PLASTIC, ModelTemplates.FLAT_ITEM);
+        generators.generateFlatItem(ModItems.CIRCUIT_BOARD, ModelTemplates.FLAT_ITEM);
+        generators.generateFlatItem(ModItems.TRASH_CUBE, ModelTemplates.FLAT_ITEM);
+        generators.generateFlatItem(ModItems.UNREFINED_OCEAN_GARBAGE, ModelTemplates.FLAT_ITEM);
+        generators.generateFlatItem(ModItems.COCONUT, ModelTemplates.FLAT_ITEM);
+        generators.generateFlatItem(ModItems.PINA_COLADA, ModelTemplates.FLAT_ITEM);
 
-        itemModelGenerator.register(ModItems.RAW_TITANIUM, Models.GENERATED);
-        itemModelGenerator.register(ModItems.TITANIUM_INGOT, Models.GENERATED);
-        itemModelGenerator.register(ModItems.TITANIUM_NUGGET, Models.GENERATED);
+        generators.generateFlatItem(ModItems.RAW_TITANIUM, ModelTemplates.FLAT_ITEM);
+        generators.generateFlatItem(ModItems.TITANIUM_INGOT, ModelTemplates.FLAT_ITEM);
+        generators.generateFlatItem(ModItems.TITANIUM_NUGGET, ModelTemplates.FLAT_ITEM);
 
-        itemModelGenerator.register(ModItems.LOFI_BEAT_MUSIC_DISC, Models.GENERATED);
-        itemModelGenerator.register(ModItems.CRYSTAL_CASTLES_MUSIC_DISC, Models.GENERATED);
-        itemModelGenerator.register(ModItems.SOME_GAME_MUSIC_MUSIC_DISC, Models.GENERATED);
+        generators.generateFlatItem(ModItems.LOFI_BEAT_MUSIC_DISC, ModelTemplates.FLAT_ITEM);
+        generators.generateFlatItem(ModItems.CRYSTAL_CASTLES_MUSIC_DISC, ModelTemplates.FLAT_ITEM);
+        generators.generateFlatItem(ModItems.SOME_GAME_MUSIC_MUSIC_DISC, ModelTemplates.FLAT_ITEM);
 
-        itemModelGenerator.register(ModItems.NET, Models.GENERATED);
+        generators.generateFlatItem(ModItems.NET, ModelTemplates.FLAT_ITEM);
 
-        itemModelGenerator.registerArmor(((ArmorItem) ModItems.TITANIUM_HELMET));
-        itemModelGenerator.registerArmor(((ArmorItem) ModItems.TITANIUM_CHESTPLATE));
-        itemModelGenerator.registerArmor(((ArmorItem) ModItems.TITANIUM_LEGGINGS));
-        itemModelGenerator.registerArmor(((ArmorItem) ModItems.TITANIUM_BOOTS));
+        generators.generateFlatItem(ModItems.TITANIUM_HELMET, ModelTemplates.FLAT_ITEM);
+        generators.generateFlatItem(ModItems.TITANIUM_CHESTPLATE, ModelTemplates.FLAT_ITEM);
+        generators.generateFlatItem(ModItems.TITANIUM_LEGGINGS, ModelTemplates.FLAT_ITEM);
+        generators.generateFlatItem(ModItems.TITANIUM_BOOTS, ModelTemplates.FLAT_ITEM);
 
+        // These items have hand written (Blockbench) models under resources/assets/raft/models/item.
+        generators.declareCustomModelItem(ModItems.METAL_DETECTOR);
+        generators.declareCustomModelItem(ModItems.RAFT_TELEPORTER);
+        generators.declareCustomModelItem(ModBlocks.ITEM_CATCHER.asItem());
+        for (RaftCable.Cables cable : RaftCable.Cables.values()) {
+            generators.declareCustomModelItem(cable.asItem());
+        }
+        // The energy staff has a 3D model in the hand and a flat sprite in the GUI:
+        // resources/assets/raft/items/energy_staff.json (select on display_context).
     }
-    public static TextureMap registerSolarPanel(Block block) {
-        return (new TextureMap()).put(TextureKey.PARTICLE, getSubId(ModBlocks.MAKESHIFT_SOLAR_PANEL, "_side")).put(TextureKey.BOTTOM, getSubId(ModBlocks.MAKESHIFT_SOLAR_PANEL, "_bottom")).put(TextureKey.TOP, getSubId(ModBlocks.MAKESHIFT_SOLAR_PANEL, "_top")).put(TextureKey.SIDE, getSubId(ModBlocks.MAKESHIFT_SOLAR_PANEL, "_side"));
+
+    @Override
+    public String getName() {
+        return "Raft Model Definitions";
     }
 }

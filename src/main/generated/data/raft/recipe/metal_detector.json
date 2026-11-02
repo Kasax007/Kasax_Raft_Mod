@@ -1,13 +1,8 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
-    "B": {
-      "item": "raft:circuit_board"
-    },
-    "S": {
-      "item": "raft:titanium_ingot"
-    }
+    "B": "raft:circuit_board",
+    "S": "raft:titanium_ingot"
   },
   "pattern": [
     "SBS",
@@ -15,7 +10,6 @@
     "SSS"
   ],
   "result": {
-    "count": 1,
     "id": "raft:metal_detector"
   }
 }

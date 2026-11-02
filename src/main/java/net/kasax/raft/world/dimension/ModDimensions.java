@@ -1,43 +1,66 @@
 package net.kasax.raft.world.dimension;
 
 import net.kasax.raft.Raft;
-import net.minecraft.registry.Registerable;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.intprovider.UniformIntProvider;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionOptions;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.dimension.DimensionTypes;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.util.ARGB;
+import net.minecraft.util.valueproviders.ConstantInt;
+import net.minecraft.world.attribute.AmbientSounds;
+import net.minecraft.world.attribute.BackgroundMusic;
+import net.minecraft.world.attribute.BedRule;
+import net.minecraft.world.attribute.EnvironmentAttributeMap;
+import net.minecraft.world.attribute.EnvironmentAttributes;
+import net.minecraft.world.level.CardinalLighting;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.dimension.LevelStem;
 
-import java.util.OptionalLong;
+import java.util.Optional;
 
 public class ModDimensions {
-    public static final RegistryKey<DimensionOptions> RAFTDIM_KEY = RegistryKey.of(RegistryKeys.DIMENSION,
-            Identifier.of(Raft.MOD_ID, "raftdim"));
-    public static final RegistryKey<World> RAFTDIM_LEVEL_KEY = RegistryKey.of(RegistryKeys.WORLD,
-            Identifier.of(Raft.MOD_ID, "raftdim"));
-    public static final RegistryKey<DimensionType> RAFT_DIM_TYPE = RegistryKey.of(RegistryKeys.DIMENSION_TYPE,
-            Identifier.of(Raft.MOD_ID, "raftdim_type"));
+    public static final ResourceKey<LevelStem> RAFTDIM_KEY = ResourceKey.create(Registries.LEVEL_STEM, Raft.id("raftdim"));
+    public static final ResourceKey<Level> RAFTDIM_LEVEL_KEY = ResourceKey.create(Registries.DIMENSION, Raft.id("raftdim"));
+    public static final ResourceKey<DimensionType> RAFT_DIM_TYPE = ResourceKey.create(Registries.DIMENSION_TYPE, Raft.id("raftdim_type"));
 
-    public static void bootstrapType(Registerable<DimensionType> context) {
+    public static void bootstrapType(BootstrapContext<DimensionType> context) {
+        HolderGetter<Block> blocks = context.lookup(Registries.BLOCK);
+
+        // Endless bright day: no time of day (so no timelines and no clock), full sky light.
+        EnvironmentAttributeMap attributes = EnvironmentAttributeMap.builder()
+                .set(EnvironmentAttributes.SKY_COLOR, ARGB.vector3fFromRGB24(0x6cbaea))
+                .set(EnvironmentAttributes.FOG_COLOR, ARGB.vector3fFromRGB24(0x22a1e6))
+                .set(EnvironmentAttributes.AMBIENT_LIGHT_COLOR, ARGB.vector3fFromRGB24(0xFFFFFF))
+                .set(EnvironmentAttributes.CLOUD_COLOR, ARGB.vector4fFromARGB32(ARGB.white(0.8F)))
+                .set(EnvironmentAttributes.CLOUD_HEIGHT, 192.33F)
+                .set(EnvironmentAttributes.BACKGROUND_MUSIC, BackgroundMusic.OVERWORLD)
+                .set(EnvironmentAttributes.BED_RULE, BedRule.CAN_SLEEP_WHEN_DARK)
+                .set(EnvironmentAttributes.STRAW_BED_RULE, BedRule.DESTROY_ON_LEAVE)
+                .set(EnvironmentAttributes.RESPAWN_ANCHOR_WORKS, false)
+                .set(EnvironmentAttributes.AMBIENT_SOUNDS, AmbientSounds.LEGACY_CAVE_SETTINGS)
+                .build();
+
         context.register(RAFT_DIM_TYPE, new DimensionType(
-                OptionalLong.of(12000), // fixedTime
-                true, // hasSkylight
+                true, // hasFixedTime
+                true, // hasSkyLight
                 false, // hasCeiling
-                false, // ultraWarm
-                true, // natural
+                false, // hasEnderDragonFight
                 1.0, // coordinateScale
-                true, // bedWorks
-                false, // respawnAnchorWorks
                 -64, // minY
                 320, // height
                 256, // logicalHeight
-                BlockTags.INFINIBURN_OVERWORLD, // infiniburn
-                DimensionTypes.OVERWORLD_ID, // effectsLocation
+                blocks.getOrThrow(BlockTags.INFINIBURN_OVERWORLD), // infiniburn
                 1.0f, // ambientLight
-                new DimensionType.MonsterSettings(false, false, UniformIntProvider.create(0, 0), 0)));
-        }
+                new DimensionType.MonsterSettings(ConstantInt.of(0), 0),
+                DimensionType.Skybox.OVERWORLD,
+                CardinalLighting.Type.DEFAULT,
+                attributes,
+                HolderSet.empty(), // timelines
+                Optional.empty())); // default clock
+    }
 }

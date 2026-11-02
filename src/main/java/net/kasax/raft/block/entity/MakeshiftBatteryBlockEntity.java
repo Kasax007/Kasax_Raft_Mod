@@ -1,41 +1,41 @@
 package net.kasax.raft.block.entity;
 
+import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.kasax.raft.Raft;
 import net.kasax.raft.screen.MakeshiftBatteryScreenHandler;
 import net.kasax.raft.util.BlockPosPayload;
 import net.kasax.raft.util.EnergySyncPayload;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import org.jspecify.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 import team.reborn.energy.api.base.SimpleEnergyStorage;
 
-public class MakeshiftBatteryBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory<BlockPosPayload> {
+public class MakeshiftBatteryBlockEntity extends BlockEntity implements ExtendedMenuProvider<BlockPosPayload> {
 
-    public static final Text TITLE = Text.translatable("container.raft.makeshift_battery");
+    public static final Component TITLE = Component.translatable("container.raft.makeshift_battery");
 
     public MakeshiftBatteryBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.MAKESHIT_BATTERY_BLOCK_ENTITY, pos, state);
+        super(ModBlockEntities.MAKESHIFT_BATTERY_BLOCK_ENTITY, pos, state);
     }
 
     private final SimpleEnergyStorage energyStorage = new SimpleEnergyStorage(1_000_000, 10_000, 10_000) {
@@ -48,24 +48,20 @@ public class MakeshiftBatteryBlockEntity extends BlockEntity implements Extended
     };
 
     @Override
-    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.readNbt(nbt, registryLookup);
-        if (nbt.contains("Energy", NbtElement.LONG_TYPE)) {
-            this.energyStorage.amount = nbt.getLong("Energy");
-        }
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        this.energyStorage.amount = input.getLongOr("Energy", 0L);
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.writeNbt(nbt, registryLookup);
-        nbt.putLong("Energy", this.energyStorage.amount);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putLong("Energy", this.energyStorage.amount);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        var nbt = super.toInitialChunkDataNbt(registryLookup);
-        writeNbt(nbt, registryLookup);
-        return nbt;
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return saveWithoutMetadata(registries);
     }
 
     public SimpleEnergyStorage getEnergyStorage() {
@@ -77,31 +73,31 @@ public class MakeshiftBatteryBlockEntity extends BlockEntity implements Extended
     }
 
     @Override
-    public BlockPosPayload getScreenOpeningData(ServerPlayerEntity player) {
-        return new BlockPosPayload(this.pos);
+    public BlockPosPayload getScreenOpeningData(ServerPlayer player) {
+        return new BlockPosPayload(this.worldPosition);
     }
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
+    public AbstractContainerMenu createMenu(int syncId, Inventory playerInventory, Player player) {
         return new MakeshiftBatteryScreenHandler(syncId, playerInventory, this);
     }
 
     @Override
-    public Text getDisplayName() {
+    public Component getDisplayName() {
         return TITLE;
     }
 
-
-    public void tick(World world, BlockPos pos, BlockState state) {
-        if(this.world == null || this.world.isClient)
+    public void tick(Level level, BlockPos pos, BlockState state) {
+        if (this.level == null || this.level.isClientSide()) {
             return;
+        }
         update();
 
         for (Direction direction : Direction.values()) {
-            EnergyStorage storage = EnergyStorage.SIDED.find(this.world, this.pos.offset(direction), direction.getOpposite());
-            if(storage != null && storage.supportsInsertion()) {
-                try(Transaction transaction = Transaction.openOuter()) {
+            EnergyStorage storage = EnergyStorage.SIDED.find(this.level, this.worldPosition.relative(direction), direction.getOpposite());
+            if (storage != null && storage.supportsInsertion()) {
+                try (Transaction transaction = Transaction.openOuter()) {
                     long insertable;
                     try (Transaction simulateTransaction = transaction.openNested()) {
                         insertable = storage.insert(Long.MAX_VALUE, simulateTransaction);
@@ -114,21 +110,27 @@ public class MakeshiftBatteryBlockEntity extends BlockEntity implements Extended
                 }
             }
         }
-
     }
 
     private void update() {
-        markDirty();
-        if(world != null)
-            world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_ALL);
-        sendEnergySync((ServerWorld) this.world, this.pos, this.energyStorage.amount, this.energyStorage.getCapacity());
+        setChanged();
+        if (level instanceof ServerLevel serverLevel) {
+            serverLevel.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+            sendEnergySync(serverLevel, this.worldPosition, this.energyStorage.amount, this.energyStorage.getCapacity());
+        }
     }
 
-    public static void sendEnergySync(ServerWorld world, BlockPos pos, long energy, long maxEnergy) {
+    public static void sendEnergySync(ServerLevel level, BlockPos pos, long energy, long maxEnergy) {
         EnergySyncPayload payload = new EnergySyncPayload(pos, energy, maxEnergy);
         // Send the packet to all players tracking this block position
-        for (ServerPlayerEntity player : PlayerLookup.tracking(world, pos)) {
+        for (ServerPlayer player : PlayerLookup.tracking(level, pos)) {
             ServerPlayNetworking.send(player, payload);
         }
+    }
+
+    @Nullable
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 }

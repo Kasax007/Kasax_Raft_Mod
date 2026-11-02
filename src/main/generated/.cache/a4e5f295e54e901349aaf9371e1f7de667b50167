@@ -1,8 +1,8 @@
-// 1.21.1	2024-12-08T15:14:20.4196581	Raft/World Gen
-4a7c69df8feb657fb5a8d11add22418037e82747 data\raft\worldgen\configured_feature\palmwood.json
-233674869296ddc31613ddad2caccefee10c0d60 data\raft\worldgen\biome\raft_ocean_biome.json
-10bd418b4ec21386cae8b5d2f9953efde7676325 data\raft\worldgen\placed_feature\titanium_ore_placed.json
-2c5da76e67ddaf03fd11f90776c36758ff580a6b data\raft\worldgen\configured_feature\driftwood.json
-2cd5eb913515e7a4f446322a2574b5220a3ce073 data\raft\worldgen\configured_feature\titanium_ore.json
-48e8392d7954665c78f41e77203a523046fdd4dd data\raft\dimension_type\raftdim_type.json
-3067b0d0ab0f1da743d02d46374e7a3e34f745c6 data\raft\worldgen\placed_feature\palm_placed.json
+// 26.3	-999999999-01-01T00:00:00	Raft/World Gen
+41aca7a300f89e1bbe5a38795a1e70d97c9c7174 data/raft/dimension_type/raftdim_type.json
+3422bafeaa286ebb740a21fa609182b75e28940e data/raft/worldgen/biome/raft_ocean_biome.json
+a711f0b3b1389801d9850241fa12bc97c5513c60 data/raft/worldgen/feature/driftwood.json
+f9c86d11b23b692332196ab85c78a462799d5faa data/raft/worldgen/feature/palmwood.json
+beb0d935bb57d280d131ea95aa03cbd57cddd32c data/raft/worldgen/feature/titanium_ore.json
+7299f08ca59f834cce179cd31f4966e66b34935d data/raft/worldgen/placed_feature/palm_placed.json
+10bd418b4ec21386cae8b5d2f9953efde7676325 data/raft/worldgen/placed_feature/titanium_ore_placed.json

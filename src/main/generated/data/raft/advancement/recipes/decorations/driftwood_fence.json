@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:driftwood_fence"
+        "recipes": "raft:driftwood_fence"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:driftwood_fence"
+      "raft:driftwood_fence"
     ]
   }
 }

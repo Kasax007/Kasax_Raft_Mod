@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "raft:block/raft_portal_ew"
+    },
+    "axis=z": {
+      "model": "raft:block/raft_portal_ns"
+    }
+  }
+}

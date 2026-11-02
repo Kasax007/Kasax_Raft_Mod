@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "redstone",
   "key": {
-    "#": {
-      "item": "raft:driftwood_planks"
-    }
+    "#": "raft:driftwood_planks"
   },
   "pattern": [
     "##",
