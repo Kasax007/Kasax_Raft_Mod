@@ -13,6 +13,7 @@ public final class ModContent {
             new net.kasax.raft.content.shore.ShoreModule(),
             new net.kasax.raft.content.marine.MarineModule(),
             new net.kasax.raft.content.voyage.VoyageModule(),
+            new net.kasax.raft.content.diving.DivingModule(),
             new net.kasax.raft.content.story.StoryModule(),
             new net.kasax.raft.content.boss.BossModule());
 
