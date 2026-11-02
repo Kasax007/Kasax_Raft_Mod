@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "S": "raft:scrap_metal"
+  },
+  "pattern": [
+    "III",
+    "ISI"
+  ],
+  "result": {
+    "count": 2,
+    "id": "raft:metal_hatch"
+  }
+}

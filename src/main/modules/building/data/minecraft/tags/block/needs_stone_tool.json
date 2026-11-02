@@ -1,0 +1,25 @@
+{
+  "values": [
+    "raft:riveted_hull",
+    "raft:rusty_hull",
+    "raft:corrugated_metal",
+    "raft:corrugated_metal_stairs",
+    "raft:corrugated_metal_slab",
+    "raft:rusted_plate",
+    "raft:steel_beam",
+    "raft:catwalk",
+    "raft:steel_railing",
+    "raft:porthole",
+    "raft:bulkhead_door",
+    "raft:metal_hatch",
+    "raft:rusty_pipe",
+    "raft:rusty_pipe_valve",
+    "raft:shipping_container_red",
+    "raft:shipping_container_blue",
+    "raft:shipping_container_green",
+    "raft:control_panel",
+    "raft:server_rack",
+    "raft:satellite_dish",
+    "raft:wind_turbine"
+  ]
+}

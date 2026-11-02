@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:jigsaw",
+  "biomes": "#raft:has_structure/saltmere_village",
+  "max_distance_from_center": 80,
+  "size": 6,
+  "spawn_overrides": {},
+  "start_height": {
+    "absolute": 73
+  },
+  "start_pool": "raft:saltmere_village/plaza",
+  "step": "surface_structures",
+  "terrain_adaptation": "none",
+  "use_expansion_hack": false
+}

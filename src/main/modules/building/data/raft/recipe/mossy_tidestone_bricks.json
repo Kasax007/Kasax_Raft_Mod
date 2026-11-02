@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    "raft:tidestone_bricks",
+    [
+      "minecraft:kelp",
+      "minecraft:vine",
+      "minecraft:moss_block"
+    ]
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:mossy_tidestone_bricks"
+  }
+}

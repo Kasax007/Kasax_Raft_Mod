@@ -1,0 +1,16 @@
+{
+  "values": [
+    "raft:weathered_planks",
+    "raft:weathered_stairs",
+    "raft:weathered_slab",
+    "raft:weathered_fence",
+    "raft:weathered_fence_gate",
+    "raft:teak_planks",
+    "raft:teak_stairs",
+    "raft:teak_slab",
+    "raft:teak_fence",
+    "raft:teak_fence_gate",
+    "raft:teak_door",
+    "raft:teak_trapdoor"
+  ]
+}

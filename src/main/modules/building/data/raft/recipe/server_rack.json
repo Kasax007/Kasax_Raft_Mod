@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "decorations",
+  "key": {
+    "S": "raft:scrap_metal",
+    "C": "raft:circuit_board",
+    "R": "minecraft:redstone"
+  },
+  "pattern": [
+    "SCS",
+    "SRS",
+    "SCS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:server_rack"
+  }
+}

@@ -2,7 +2,10 @@ package net.kasax.raft.content.shore;
 
 import net.kasax.raft.content.ContentModule;
 
-/** Beach Craft 3 module "shore". See docs/design/beachcraft3.md. */
+/**
+ * Beach Craft 3 module "shore": crabs, ember crabs, seagulls, penguins, sea otters and the drowned corsairs,
+ * plus their items (crab claws, ember shell, cutlass, spawn eggs). See docs/design/beachcraft3.md, section 7.1.
+ */
 public class ShoreModule implements ContentModule {
     @Override
     public String name() {
@@ -11,6 +14,9 @@ public class ShoreModule implements ContentModule {
 
     @Override
     public void init() {
+        ShoreSounds.register();
+        ShoreEntities.register();
+        ShoreItems.register();
     }
 
     @Override

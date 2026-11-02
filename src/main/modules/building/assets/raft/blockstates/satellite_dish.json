@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "raft:block/satellite_dish"
+    },
+    "facing=east": {
+      "model": "raft:block/satellite_dish",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "raft:block/satellite_dish",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "raft:block/satellite_dish",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "elements": [
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "raft:saltmere_village/hut_fisher",
+        "processors": "raft:saltmere_wear",
+        "projection": "rigid"
+      },
+      "weight": 2
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "raft:saltmere_village/hut_netmaker",
+        "processors": "raft:saltmere_wear",
+        "projection": "rigid"
+      },
+      "weight": 1
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "raft:saltmere_village/hut_cookhouse",
+        "processors": "raft:saltmere_wear",
+        "projection": "rigid"
+      },
+      "weight": 1
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "raft:saltmere_village/hut_house_a",
+        "processors": "raft:saltmere_wear",
+        "projection": "rigid"
+      },
+      "weight": 2
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "raft:saltmere_village/hut_house_b",
+        "processors": "raft:saltmere_wear",
+        "projection": "rigid"
+      },
+      "weight": 2
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "raft:saltmere_village/hut_house_c",
+        "processors": "raft:saltmere_wear",
+        "projection": "rigid"
+      },
+      "weight": 2
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "raft:saltmere_village/hut_market",
+        "processors": "raft:saltmere_wear",
+        "projection": "rigid"
+      },
+      "weight": 1
+    }
+  ],
+  "fallback": "raft:saltmere_village/ends"
+}

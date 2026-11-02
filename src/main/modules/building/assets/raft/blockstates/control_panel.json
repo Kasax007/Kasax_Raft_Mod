@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "raft:block/control_panel"
+    },
+    "facing=east": {
+      "model": "raft:block/control_panel",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "raft:block/control_panel",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "raft:block/control_panel",
+      "y": 270
+    }
+  }
+}

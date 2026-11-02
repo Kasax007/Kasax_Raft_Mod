@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:cache",
+  "input": {
+    "type": "minecraft:add",
+    "left": "raft:raftdim/continents_base",
+    "right": {
+      "type": "minecraft:spline",
+      "spline": {
+        "coordinate": "raft:raftdim/temperature",
+        "points": [
+          {
+            "derivative": 0.0,
+            "location": -0.43,
+            "value": -0.6
+          },
+          {
+            "derivative": 0.0,
+            "location": -0.31,
+            "value": 0.0
+          }
+        ]
+      }
+    }
+  }
+}

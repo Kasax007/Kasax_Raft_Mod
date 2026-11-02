@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:cache",
+  "input": {
+    "type": "minecraft:add",
+    "left": "raft:raftdim/height",
+    "right": {
+      "type": "minecraft:mul",
+      "left": "raft:raftdim/relief_amplitude",
+      "right": {
+        "type": "minecraft:noise",
+        "noise": "raft:raftdim/relief",
+        "xz_scale": 1.0,
+        "y_scale": 0.0
+      }
+    }
+  }
+}

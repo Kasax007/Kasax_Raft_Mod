@@ -1,0 +1,16 @@
+{
+  "values": [
+    "raft:raft_ocean_biome",
+    "raft:kelp_forest",
+    "raft:coral_shallows",
+    "raft:glowing_lagoon",
+    "raft:drowned_shelf",
+    "raft:abyssal_trench",
+    "raft:wreck_graveyard",
+    "raft:frost_floes",
+    "raft:palm_isle",
+    "raft:jungle_isle",
+    "raft:mangrove_isle",
+    "raft:volcanic_isle"
+  ]
+}

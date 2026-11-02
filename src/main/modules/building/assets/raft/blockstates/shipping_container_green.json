@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "axis=z": {
+      "model": "raft:block/shipping_container_green"
+    },
+    "axis=x": {
+      "model": "raft:block/shipping_container_green",
+      "y": 90
+    }
+  }
+}

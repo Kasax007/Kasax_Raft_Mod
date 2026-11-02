@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "raft:block/corrugated_metal_slab"
+    },
+    "type=top": {
+      "model": "raft:block/corrugated_metal_slab_top"
+    },
+    "type=double": {
+      "model": "raft:block/corrugated_metal"
+    }
+  }
+}

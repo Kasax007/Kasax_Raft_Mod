@@ -1,0 +1,23 @@
+{
+  "elements": [
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "raft:saltmere_village/junction_t",
+        "processors": "raft:saltmere_wear",
+        "projection": "rigid"
+      },
+      "weight": 2
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "raft:saltmere_village/junction_l",
+        "processors": "raft:saltmere_wear",
+        "projection": "rigid"
+      },
+      "weight": 2
+    }
+  ],
+  "fallback": "raft:saltmere_village/ends"
+}

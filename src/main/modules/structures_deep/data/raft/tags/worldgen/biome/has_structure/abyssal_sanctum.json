@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "raft:abyssal_trench",
+      "required": false
+    },
+    {
+      "id": "raft:raft_ocean_biome",
+      "required": false
+    }
+  ]
+}

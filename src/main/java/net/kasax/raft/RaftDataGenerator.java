@@ -3,7 +3,6 @@ package net.kasax.raft;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.kasax.raft.datagen.*;
-import net.kasax.raft.world.biome.ModBiomes;
 import net.kasax.raft.world.dimension.ModDimensions;
 import net.kasax.raft.world.gen.ModConfiguredFeatures;
 import net.kasax.raft.world.gen.ModPlacedFeatures;
@@ -31,6 +30,6 @@ public class RaftDataGenerator implements DataGeneratorEntrypoint {
 		registryBuilder.add(Registries.FEATURE, ModConfiguredFeatures::bootstrap);
 		registryBuilder.add(Registries.PLACED_FEATURE, ModPlacedFeatures::bootstrap);
 		registryBuilder.add(Registries.DIMENSION_TYPE, ModDimensions::bootstrapType);
-		registryBuilder.add(Registries.BIOME, ModBiomes::bootstrap);
+		// Biomes of the raft dimension are data files (tools/content/world, module "world"), not datagen.
 	}
 }

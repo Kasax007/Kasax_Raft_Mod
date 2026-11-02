@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "decorations",
+  "key": {
+    "G": "minecraft:glass_pane",
+    "R": "minecraft:redstone",
+    "C": "raft:circuit_board",
+    "S": "raft:scrap_metal"
+  },
+  "pattern": [
+    " G ",
+    "RCR",
+    "SSS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:control_panel"
+  }
+}

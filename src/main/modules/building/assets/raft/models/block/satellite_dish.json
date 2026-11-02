@@ -1,0 +1,430 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "raft:block/satellite_dish_mount",
+    "mount": "raft:block/satellite_dish_mount",
+    "dish": "raft:block/satellite_dish",
+    "back": "raft:block/satellite_dish_back",
+    "horn": "raft:block/control_panel_side"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        3
+      ],
+      "to": [
+        13,
+        2,
+        13
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            3,
+            3,
+            13,
+            13
+          ],
+          "texture": "#mount",
+          "cullface": "down"
+        },
+        "up": {
+          "uv": [
+            3,
+            3,
+            13,
+            13
+          ],
+          "texture": "#mount"
+        },
+        "north": {
+          "uv": [
+            3,
+            14,
+            13,
+            16
+          ],
+          "texture": "#mount"
+        },
+        "south": {
+          "uv": [
+            3,
+            14,
+            13,
+            16
+          ],
+          "texture": "#mount"
+        },
+        "west": {
+          "uv": [
+            3,
+            14,
+            13,
+            16
+          ],
+          "texture": "#mount"
+        },
+        "east": {
+          "uv": [
+            3,
+            14,
+            13,
+            16
+          ],
+          "texture": "#mount"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        2,
+        6.5
+      ],
+      "to": [
+        9.5,
+        7,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            6.5,
+            9,
+            9.5,
+            14
+          ],
+          "texture": "#mount"
+        },
+        "south": {
+          "uv": [
+            6.5,
+            9,
+            9.5,
+            14
+          ],
+          "texture": "#mount"
+        },
+        "west": {
+          "uv": [
+            6.5,
+            9,
+            9.5,
+            14
+          ],
+          "texture": "#mount"
+        },
+        "east": {
+          "uv": [
+            6.5,
+            9,
+            9.5,
+            14
+          ],
+          "texture": "#mount"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        6,
+        7
+      ],
+      "to": [
+        11,
+        9,
+        9.5
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            5,
+            6.5,
+            11,
+            9
+          ],
+          "texture": "#mount"
+        },
+        "up": {
+          "uv": [
+            5,
+            7,
+            11,
+            9.5
+          ],
+          "texture": "#mount"
+        },
+        "north": {
+          "uv": [
+            5,
+            7,
+            11,
+            10
+          ],
+          "texture": "#mount"
+        },
+        "south": {
+          "uv": [
+            5,
+            7,
+            11,
+            10
+          ],
+          "texture": "#mount"
+        },
+        "west": {
+          "uv": [
+            7,
+            7,
+            9.5,
+            10
+          ],
+          "texture": "#mount"
+        },
+        "east": {
+          "uv": [
+            6.5,
+            7,
+            9,
+            10
+          ],
+          "texture": "#mount"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        3,
+        8
+      ],
+      "to": [
+        15,
+        17,
+        9
+      ],
+      "rotation": {
+        "origin": [
+          8,
+          10,
+          8
+        ],
+        "axis": "x",
+        "angle": 45
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#dish"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#back"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            1,
+            14
+          ],
+          "texture": "#mount"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            1,
+            14
+          ],
+          "texture": "#mount"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            14,
+            1
+          ],
+          "texture": "#mount"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            14,
+            1
+          ],
+          "texture": "#mount"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        9.5,
+        2.5
+      ],
+      "to": [
+        8.5,
+        10.5,
+        8
+      ],
+      "rotation": {
+        "origin": [
+          8,
+          10,
+          8
+        ],
+        "axis": "x",
+        "angle": 45
+      },
+      "faces": {
+        "down": {
+          "uv": [
+            7.5,
+            8,
+            8.5,
+            13.5
+          ],
+          "texture": "#mount"
+        },
+        "up": {
+          "uv": [
+            7.5,
+            2.5,
+            8.5,
+            8
+          ],
+          "texture": "#mount"
+        },
+        "north": {
+          "uv": [
+            7.5,
+            5.5,
+            8.5,
+            6.5
+          ],
+          "texture": "#mount"
+        },
+        "south": {
+          "uv": [
+            7.5,
+            5.5,
+            8.5,
+            6.5
+          ],
+          "texture": "#mount"
+        },
+        "west": {
+          "uv": [
+            2.5,
+            5.5,
+            8,
+            6.5
+          ],
+          "texture": "#mount"
+        },
+        "east": {
+          "uv": [
+            8,
+            5.5,
+            13.5,
+            6.5
+          ],
+          "texture": "#mount"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        9,
+        1.5
+      ],
+      "to": [
+        9,
+        11,
+        2.5
+      ],
+      "rotation": {
+        "origin": [
+          8,
+          10,
+          8
+        ],
+        "axis": "x",
+        "angle": 45
+      },
+      "faces": {
+        "down": {
+          "uv": [
+            7,
+            13.5,
+            9,
+            14.5
+          ],
+          "texture": "#horn"
+        },
+        "up": {
+          "uv": [
+            7,
+            1.5,
+            9,
+            2.5
+          ],
+          "texture": "#horn"
+        },
+        "north": {
+          "uv": [
+            7,
+            5,
+            9,
+            7
+          ],
+          "texture": "#horn"
+        },
+        "south": {
+          "uv": [
+            7,
+            5,
+            9,
+            7
+          ],
+          "texture": "#horn"
+        },
+        "west": {
+          "uv": [
+            1.5,
+            5,
+            2.5,
+            7
+          ],
+          "texture": "#horn"
+        },
+        "east": {
+          "uv": [
+            13.5,
+            5,
+            14.5,
+            7
+          ],
+          "texture": "#horn"
+        }
+      }
+    }
+  ]
+}

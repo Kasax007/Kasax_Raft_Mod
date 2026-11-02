@@ -1,0 +1,32 @@
+{
+  "elements": [
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "raft:saltmere_village/walk_straight",
+        "processors": "raft:saltmere_wear",
+        "projection": "rigid"
+      },
+      "weight": 3
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "raft:saltmere_village/walk_bridge",
+        "processors": "raft:saltmere_wear",
+        "projection": "rigid"
+      },
+      "weight": 2
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "raft:saltmere_village/walk_long",
+        "processors": "raft:saltmere_wear",
+        "projection": "rigid"
+      },
+      "weight": 1
+    }
+  ],
+  "fallback": "raft:saltmere_village/ends"
+}

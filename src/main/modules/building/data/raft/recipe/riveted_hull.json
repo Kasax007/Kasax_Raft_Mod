@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "S": "raft:scrap_metal",
+    "I": "minecraft:iron_ingot"
+  },
+  "pattern": [
+    " S ",
+    "SIS",
+    " S "
+  ],
+  "result": {
+    "count": 4,
+    "id": "raft:riveted_hull"
+  }
+}

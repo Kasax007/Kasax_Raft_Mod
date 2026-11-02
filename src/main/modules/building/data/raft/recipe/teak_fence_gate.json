@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "P": "raft:teak_planks",
+    "#": "minecraft:stick"
+  },
+  "pattern": [
+    "#P#",
+    "#P#"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:teak_fence_gate"
+  },
+  "group": "wooden_fence_gate"
+}

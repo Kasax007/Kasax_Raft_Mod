@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": "raft:tidestone",
+  "result": {
+    "count": 1,
+    "id": "raft:tidestone_pillar"
+  }
+}

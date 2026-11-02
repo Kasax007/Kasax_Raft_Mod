@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "P": [
+      "raft:driftwood_planks",
+      "raft:palm_planks"
+    ],
+    "B": "minecraft:bone_meal"
+  },
+  "pattern": [
+    " P ",
+    "PBP",
+    " P "
+  ],
+  "result": {
+    "count": 4,
+    "id": "raft:weathered_planks"
+  },
+  "group": "planks"
+}

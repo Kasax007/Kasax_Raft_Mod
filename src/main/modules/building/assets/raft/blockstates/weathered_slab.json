@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "raft:block/weathered_slab"
+    },
+    "type=top": {
+      "model": "raft:block/weathered_slab_top"
+    },
+    "type=double": {
+      "model": "raft:block/weathered_planks"
+    }
+  }
+}

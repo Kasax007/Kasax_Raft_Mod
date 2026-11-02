@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "axis=z": {
+      "model": "raft:block/asphalt_line"
+    },
+    "axis=x": {
+      "model": "raft:block/asphalt_line",
+      "y": 90
+    }
+  }
+}

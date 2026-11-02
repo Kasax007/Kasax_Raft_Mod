@@ -24,7 +24,7 @@ public class ModEntities {
 
     public static void register() {
         FabricDefaultAttributeRegistry.register(SHARK, SharkEntity.createAttributes());
-        SpawnPlacements.register(SHARK, SpawnPlacementTypes.IN_WATER, Heightmap.Types.OCEAN_FLOOR, SharkEntity::checkSharkSpawnRules);
+        SpawnPlacements.register(SHARK, SpawnPlacementTypes.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SharkEntity::checkSharkSpawnRules);
         Raft.LOGGER.info("Registering entities for " + Raft.MOD_ID);
     }
 }

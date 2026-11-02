@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "raft:block/tidestone_pillar"
+    },
+    "axis=z": {
+      "model": "raft:block/tidestone_pillar_horizontal",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "raft:block/tidestone_pillar_horizontal",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

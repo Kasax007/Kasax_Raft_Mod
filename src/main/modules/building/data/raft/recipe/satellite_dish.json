@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "decorations",
+  "key": {
+    "S": "raft:scrap_metal",
+    "C": "raft:circuit_board",
+    "I": "minecraft:iron_ingot"
+  },
+  "pattern": [
+    "S S",
+    " C ",
+    "SIS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:satellite_dish"
+  }
+}

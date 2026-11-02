@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "raft:block/shipping_container_green_side",
+    "north": "raft:block/shipping_container_green_end",
+    "south": "raft:block/shipping_container_green_end",
+    "east": "raft:block/shipping_container_green_side",
+    "west": "raft:block/shipping_container_green_side",
+    "up": "raft:block/shipping_container_green_top",
+    "down": "raft:block/shipping_container_green_top"
+  }
+}

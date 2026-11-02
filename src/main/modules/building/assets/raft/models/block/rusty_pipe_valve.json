@@ -1,0 +1,395 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "raft:block/rusty_pipe",
+    "pipe": "raft:block/rusty_pipe",
+    "end": "raft:block/rusty_pipe_end",
+    "wheel": "raft:block/rusty_pipe_valve_wheel",
+    "stem": "raft:block/steel_beam_end"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        2,
+        4
+      ],
+      "to": [
+        12,
+        14,
+        12
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            4,
+            2,
+            12,
+            14
+          ],
+          "texture": "#pipe"
+        },
+        "south": {
+          "uv": [
+            4,
+            2,
+            12,
+            14
+          ],
+          "texture": "#pipe"
+        },
+        "west": {
+          "uv": [
+            4,
+            2,
+            12,
+            14
+          ],
+          "texture": "#pipe"
+        },
+        "east": {
+          "uv": [
+            4,
+            2,
+            12,
+            14
+          ],
+          "texture": "#pipe"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        0,
+        3
+      ],
+      "to": [
+        13,
+        2,
+        13
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            3,
+            3,
+            13,
+            13
+          ],
+          "texture": "#end",
+          "cullface": "down"
+        },
+        "up": {
+          "uv": [
+            3,
+            3,
+            13,
+            13
+          ],
+          "texture": "#end"
+        },
+        "north": {
+          "uv": [
+            3,
+            0,
+            13,
+            2
+          ],
+          "texture": "#pipe"
+        },
+        "south": {
+          "uv": [
+            3,
+            0,
+            13,
+            2
+          ],
+          "texture": "#pipe"
+        },
+        "west": {
+          "uv": [
+            3,
+            0,
+            13,
+            2
+          ],
+          "texture": "#pipe"
+        },
+        "east": {
+          "uv": [
+            3,
+            0,
+            13,
+            2
+          ],
+          "texture": "#pipe"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        14,
+        3
+      ],
+      "to": [
+        13,
+        16,
+        13
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            3,
+            3,
+            13,
+            13
+          ],
+          "texture": "#end"
+        },
+        "up": {
+          "uv": [
+            3,
+            3,
+            13,
+            13
+          ],
+          "texture": "#end",
+          "cullface": "up"
+        },
+        "north": {
+          "uv": [
+            3,
+            0,
+            13,
+            2
+          ],
+          "texture": "#pipe"
+        },
+        "south": {
+          "uv": [
+            3,
+            0,
+            13,
+            2
+          ],
+          "texture": "#pipe"
+        },
+        "west": {
+          "uv": [
+            3,
+            0,
+            13,
+            2
+          ],
+          "texture": "#pipe"
+        },
+        "east": {
+          "uv": [
+            3,
+            0,
+            13,
+            2
+          ],
+          "texture": "#pipe"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        5,
+        3.5
+      ],
+      "to": [
+        12.5,
+        11,
+        12.5
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            3.5,
+            3.5,
+            12.5,
+            12.5
+          ],
+          "texture": "#end"
+        },
+        "up": {
+          "uv": [
+            3.5,
+            3.5,
+            12.5,
+            12.5
+          ],
+          "texture": "#end"
+        },
+        "north": {
+          "uv": [
+            3.5,
+            5,
+            12.5,
+            11
+          ],
+          "texture": "#pipe"
+        },
+        "south": {
+          "uv": [
+            3.5,
+            5,
+            12.5,
+            11
+          ],
+          "texture": "#pipe"
+        },
+        "west": {
+          "uv": [
+            3.5,
+            5,
+            12.5,
+            11
+          ],
+          "texture": "#pipe"
+        },
+        "east": {
+          "uv": [
+            3.5,
+            5,
+            12.5,
+            11
+          ],
+          "texture": "#pipe"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        7,
+        12.5
+      ],
+      "to": [
+        9,
+        9,
+        14.5
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            7,
+            1.5,
+            9,
+            3.5
+          ],
+          "texture": "#stem"
+        },
+        "up": {
+          "uv": [
+            7,
+            12.5,
+            9,
+            14.5
+          ],
+          "texture": "#stem"
+        },
+        "south": {
+          "uv": [
+            7,
+            7,
+            9,
+            9
+          ],
+          "texture": "#stem"
+        },
+        "west": {
+          "uv": [
+            12.5,
+            7,
+            14.5,
+            9
+          ],
+          "texture": "#stem"
+        },
+        "east": {
+          "uv": [
+            1.5,
+            7,
+            3.5,
+            9
+          ],
+          "texture": "#stem"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        4,
+        14.5
+      ],
+      "to": [
+        12,
+        12,
+        15.5
+      ],
+      "faces": {
+        "south": {
+          "uv": [
+            4,
+            4,
+            12,
+            12
+          ],
+          "texture": "#wheel"
+        },
+        "north": {
+          "uv": [
+            12,
+            4,
+            4,
+            12
+          ],
+          "texture": "#wheel"
+        },
+        "west": {
+          "uv": [
+            7,
+            5,
+            8,
+            6
+          ],
+          "texture": "#wheel"
+        },
+        "east": {
+          "uv": [
+            7,
+            5,
+            8,
+            6
+          ],
+          "texture": "#wheel"
+        },
+        "up": {
+          "uv": [
+            7,
+            5,
+            8,
+            6
+          ],
+          "texture": "#wheel"
+        },
+        "down": {
+          "uv": [
+            7,
+            5,
+            8,
+            6
+          ],
+          "texture": "#wheel"
+        }
+      }
+    }
+  ]
+}

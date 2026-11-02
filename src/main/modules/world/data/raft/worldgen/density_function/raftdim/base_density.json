@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:add",
+  "left": {
+    "type": "minecraft:mul",
+    "left": {
+      "type": "minecraft:add",
+      "left": "raft:raftdim/surface",
+      "right": {
+        "type": "minecraft:mul",
+        "left": "minecraft:y",
+        "right": -1.0
+      }
+    },
+    "right": 0.125
+  },
+  "right": {
+    "type": "minecraft:mul",
+    "left": "raft:raftdim/detail_amplitude",
+    "right": {
+      "type": "minecraft:noise",
+      "noise": "raft:raftdim/detail",
+      "xz_scale": 1.0,
+      "y_scale": 1.0
+    }
+  }
+}

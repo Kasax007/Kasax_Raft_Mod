@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    "raft:rusty_pipe",
+    "minecraft:iron_ingot",
+    "minecraft:red_dye"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:rusty_pipe_valve"
+  }
+}

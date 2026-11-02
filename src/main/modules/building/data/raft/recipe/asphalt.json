@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "G": "minecraft:gravel",
+    "S": "#minecraft:sand",
+    "C": [
+      "minecraft:coal",
+      "minecraft:charcoal"
+    ]
+  },
+  "pattern": [
+    "GSG",
+    "SCS",
+    "GSG"
+  ],
+  "result": {
+    "count": 8,
+    "id": "raft:asphalt"
+  }
+}

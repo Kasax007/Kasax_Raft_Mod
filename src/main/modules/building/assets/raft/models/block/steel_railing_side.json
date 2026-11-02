@@ -1,0 +1,134 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "raft:block/steel_railing",
+    "r": "raft:block/steel_railing"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        13,
+        0
+      ],
+      "to": [
+        9,
+        16,
+        7
+      ],
+      "faces": {
+        "west": {
+          "uv": [
+            0,
+            0,
+            7,
+            3
+          ],
+          "texture": "#r"
+        },
+        "east": {
+          "uv": [
+            9,
+            0,
+            16,
+            3
+          ],
+          "texture": "#r"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            7,
+            2
+          ],
+          "texture": "#r",
+          "rotation": 90
+        },
+        "down": {
+          "uv": [
+            0,
+            1,
+            7,
+            3
+          ],
+          "texture": "#r",
+          "rotation": 90
+        },
+        "north": {
+          "uv": [
+            7,
+            0,
+            9,
+            3
+          ],
+          "texture": "#r",
+          "cullface": "north"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        7,
+        0
+      ],
+      "to": [
+        9,
+        9,
+        7
+      ],
+      "faces": {
+        "west": {
+          "uv": [
+            0,
+            7,
+            7,
+            9
+          ],
+          "texture": "#r"
+        },
+        "east": {
+          "uv": [
+            9,
+            7,
+            16,
+            9
+          ],
+          "texture": "#r"
+        },
+        "up": {
+          "uv": [
+            0,
+            7,
+            7,
+            9
+          ],
+          "texture": "#r",
+          "rotation": 90
+        },
+        "down": {
+          "uv": [
+            0,
+            7,
+            7,
+            9
+          ],
+          "texture": "#r",
+          "rotation": 90
+        },
+        "north": {
+          "uv": [
+            7,
+            7,
+            9,
+            9
+          ],
+          "texture": "#r",
+          "cullface": "north"
+        }
+      }
+    }
+  ]
+}

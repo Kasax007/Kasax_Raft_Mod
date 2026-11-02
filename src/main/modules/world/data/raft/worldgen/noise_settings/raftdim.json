@@ -1,0 +1,76 @@
+{
+  "debug_functions": [
+    {
+      "function": "raft:raftdim/final_density",
+      "label": "N"
+    },
+    {
+      "function": "raft:raftdim/continents",
+      "label": "C"
+    },
+    {
+      "function": "raft:raftdim/erosion",
+      "label": "E"
+    },
+    {
+      "function": "raft:raftdim/ridges",
+      "label": "W"
+    },
+    {
+      "function": "raft:raftdim/temperature",
+      "label": "T"
+    },
+    {
+      "function": "raft:raftdim/vegetation",
+      "label": "V"
+    },
+    {
+      "function": "raft:raftdim/surface",
+      "label": "S"
+    }
+  ],
+  "default_block": "minecraft:stone",
+  "default_fluid": "minecraft:water",
+  "disable_mob_generation": false,
+  "legacy_random_source": false,
+  "material_rule": "raft:raftdim",
+  "noise": {
+    "height": 384,
+    "min_y": -64
+  },
+  "noise_router": {
+    "chunk_surface_level": "raft:raftdim/chunk_surface_level",
+    "continents": "raft:raftdim/continents",
+    "depth": 0.0,
+    "erosion": "raft:raftdim/erosion",
+    "final_density": "raft:raftdim/final_density",
+    "ridges": "raft:raftdim/ridges",
+    "temperature": "raft:raftdim/temperature",
+    "vegetation": "raft:raftdim/vegetation"
+  },
+  "sea_level": 100,
+  "spawn_target": [
+    {
+      "raft:raftdim/continents": [
+        0.39,
+        2.0
+      ],
+      "raft:raftdim/erosion": [
+        -2.0,
+        2.0
+      ],
+      "raft:raftdim/ridges": [
+        -2.0,
+        2.0
+      ],
+      "raft:raftdim/temperature": [
+        -2.0,
+        2.0
+      ],
+      "raft:raftdim/vegetation": [
+        -2.0,
+        2.0
+      ]
+    }
+  ]
+}

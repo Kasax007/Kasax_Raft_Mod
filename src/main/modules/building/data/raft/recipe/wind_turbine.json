@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "S": "raft:scrap_metal",
+    "C": "raft:circuit_board",
+    "I": "minecraft:iron_ingot"
+  },
+  "pattern": [
+    " S ",
+    "SCS",
+    " I "
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:wind_turbine"
+  }
+}

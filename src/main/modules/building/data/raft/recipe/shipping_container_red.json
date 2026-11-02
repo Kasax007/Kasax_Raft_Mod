@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "S": "raft:scrap_metal",
+    "I": "minecraft:iron_ingot",
+    "D": "minecraft:red_dye"
+  },
+  "pattern": [
+    "SIS",
+    "IDI",
+    "SIS"
+  ],
+  "result": {
+    "count": 8,
+    "id": "raft:shipping_container_red"
+  }
+}

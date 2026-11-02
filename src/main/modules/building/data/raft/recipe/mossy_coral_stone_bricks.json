@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    "raft:coral_stone_bricks",
+    [
+      "minecraft:kelp",
+      "minecraft:vine",
+      "minecraft:moss_block"
+    ]
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:mossy_coral_stone_bricks"
+  }
+}

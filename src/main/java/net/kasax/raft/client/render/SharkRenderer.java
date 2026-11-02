@@ -3,30 +3,49 @@ package net.kasax.raft.client.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.kasax.raft.Raft;
 import net.kasax.raft.entity.SharkEntity;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.resources.Identifier;
 
-public class SharkRenderer extends MobRenderer<SharkEntity, LivingEntityRenderState, SharkModel> {
+/** Renderer of the shark "Bruce"; the hammerhead uses it too with its own layer, texture and size. */
+public class SharkRenderer extends MobRenderer<SharkEntity, SharkRenderState, SharkModel> {
     private static final Identifier TEXTURE = Raft.id("textures/entity/shark.png");
 
+    private final Identifier texture;
+    private final float modelScale;
+
     public SharkRenderer(EntityRendererProvider.Context context) {
-        super(context, new SharkModel(context.bakeLayer(SharkModel.LAYER)), 0.8F);
+        this(context, SharkModel.LAYER, TEXTURE, 1.0F, 0.8F);
+    }
+
+    public SharkRenderer(EntityRendererProvider.Context context, ModelLayerLocation layer, Identifier texture, float modelScale,
+                         float shadow) {
+        super(context, new SharkModel(context.bakeLayer(layer)), shadow);
+        this.texture = texture;
+        this.modelScale = modelScale;
     }
 
     @Override
-    public Identifier getTextureLocation(LivingEntityRenderState state) {
-        return TEXTURE;
+    public Identifier getTextureLocation(SharkRenderState state) {
+        return this.texture;
     }
 
     @Override
-    public LivingEntityRenderState createRenderState() {
-        return new LivingEntityRenderState();
+    public SharkRenderState createRenderState() {
+        return new SharkRenderState();
     }
 
     @Override
-    protected void scale(LivingEntityRenderState state, PoseStack poseStack) {
-        poseStack.scale(1.5F, 1.5F, 1.5F);
+    public void extractRenderState(SharkEntity entity, SharkRenderState state, float partialTicks) {
+        super.extractRenderState(entity, state, partialTicks);
+        state.bite = entity.getBiteAmount(partialTicks);
+    }
+
+    @Override
+    protected void scale(SharkRenderState state, PoseStack poseStack) {
+        if (this.modelScale != 1.0F) {
+            poseStack.scale(this.modelScale, this.modelScale, this.modelScale);
+        }
     }
 }

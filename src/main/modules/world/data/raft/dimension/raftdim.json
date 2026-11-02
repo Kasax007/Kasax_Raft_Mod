@@ -1,0 +1,579 @@
+{
+  "type": "raft:raftdim_type",
+  "generator": {
+    "type": "minecraft:noise",
+    "settings": "raft:raftdim",
+    "biome_source": {
+      "type": "minecraft:multi_noise",
+      "biomes": [
+        {
+          "biome": "raft:volcanic_isle",
+          "parameters": {
+            "temperature": [
+              -2.0,
+              2.0
+            ],
+            "humidity": [
+              -2.0,
+              -0.42
+            ],
+            "continentalness": [
+              0.34,
+              2.0
+            ],
+            "erosion": [
+              -2.0,
+              2.0
+            ],
+            "weirdness": [
+              -2.0,
+              2.0
+            ],
+            "depth": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "raft:mangrove_isle",
+          "parameters": {
+            "temperature": [
+              -2.0,
+              2.0
+            ],
+            "humidity": [
+              -0.42,
+              2.0
+            ],
+            "continentalness": [
+              0.34,
+              2.0
+            ],
+            "erosion": [
+              0.32,
+              2.0
+            ],
+            "weirdness": [
+              -2.0,
+              2.0
+            ],
+            "depth": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "raft:jungle_isle",
+          "parameters": {
+            "temperature": [
+              -2.0,
+              2.0
+            ],
+            "humidity": [
+              0.15,
+              2.0
+            ],
+            "continentalness": [
+              0.34,
+              2.0
+            ],
+            "erosion": [
+              -2.0,
+              0.32
+            ],
+            "weirdness": [
+              -2.0,
+              2.0
+            ],
+            "depth": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "raft:palm_isle",
+          "parameters": {
+            "temperature": [
+              -2.0,
+              2.0
+            ],
+            "humidity": [
+              -0.42,
+              0.15
+            ],
+            "continentalness": [
+              0.34,
+              2.0
+            ],
+            "erosion": [
+              -2.0,
+              0.32
+            ],
+            "weirdness": [
+              -2.0,
+              2.0
+            ],
+            "depth": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "raft:glowing_lagoon",
+          "parameters": {
+            "temperature": [
+              -2.0,
+              2.0
+            ],
+            "humidity": [
+              -2.0,
+              2.0
+            ],
+            "continentalness": [
+              0.205,
+              0.34
+            ],
+            "erosion": [
+              -2.0,
+              2.0
+            ],
+            "weirdness": [
+              0.38,
+              2.0
+            ],
+            "depth": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "raft:coral_shallows",
+          "parameters": {
+            "temperature": [
+              -2.0,
+              2.0
+            ],
+            "humidity": [
+              -2.0,
+              2.0
+            ],
+            "continentalness": [
+              0.205,
+              0.34
+            ],
+            "erosion": [
+              -2.0,
+              2.0
+            ],
+            "weirdness": [
+              -2.0,
+              0.38
+            ],
+            "depth": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "raft:frost_floes",
+          "parameters": {
+            "temperature": [
+              -2.0,
+              -0.37
+            ],
+            "humidity": [
+              -2.0,
+              2.0
+            ],
+            "continentalness": [
+              0.05,
+              0.205
+            ],
+            "erosion": [
+              -2.0,
+              2.0
+            ],
+            "weirdness": [
+              -2.0,
+              2.0
+            ],
+            "depth": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "raft:kelp_forest",
+          "parameters": {
+            "temperature": [
+              -0.37,
+              2.0
+            ],
+            "humidity": [
+              -2.0,
+              2.0
+            ],
+            "continentalness": [
+              0.05,
+              0.205
+            ],
+            "erosion": [
+              -2.0,
+              2.0
+            ],
+            "weirdness": [
+              -2.0,
+              2.0
+            ],
+            "depth": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "raft:abyssal_trench",
+          "parameters": {
+            "temperature": [
+              -2.0,
+              2.0
+            ],
+            "humidity": [
+              -2.0,
+              2.0
+            ],
+            "continentalness": [
+              -2.0,
+              -0.02
+            ],
+            "erosion": [
+              -2.0,
+              0.32
+            ],
+            "weirdness": [
+              -0.075,
+              0.075
+            ],
+            "depth": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "raft:frost_floes",
+          "parameters": {
+            "temperature": [
+              -2.0,
+              -0.37
+            ],
+            "humidity": [
+              -2.0,
+              2.0
+            ],
+            "continentalness": [
+              -0.02,
+              0.05
+            ],
+            "erosion": [
+              -2.0,
+              2.0
+            ],
+            "weirdness": [
+              -2.0,
+              2.0
+            ],
+            "depth": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "raft:drowned_shelf",
+          "parameters": {
+            "temperature": [
+              -0.37,
+              2.0
+            ],
+            "humidity": [
+              -2.0,
+              2.0
+            ],
+            "continentalness": [
+              -0.02,
+              0.05
+            ],
+            "erosion": [
+              0.32,
+              2.0
+            ],
+            "weirdness": [
+              -2.0,
+              2.0
+            ],
+            "depth": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "raft:wreck_graveyard",
+          "parameters": {
+            "temperature": [
+              0.4,
+              2.0
+            ],
+            "humidity": [
+              -2.0,
+              2.0
+            ],
+            "continentalness": [
+              -0.02,
+              0.05
+            ],
+            "erosion": [
+              -2.0,
+              0.32
+            ],
+            "weirdness": [
+              -2.0,
+              2.0
+            ],
+            "depth": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "raft:raft_ocean_biome",
+          "parameters": {
+            "temperature": [
+              -0.37,
+              0.4
+            ],
+            "humidity": [
+              -2.0,
+              2.0
+            ],
+            "continentalness": [
+              -0.02,
+              0.05
+            ],
+            "erosion": [
+              -2.0,
+              0.32
+            ],
+            "weirdness": [
+              -2.0,
+              2.0
+            ],
+            "depth": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "raft:frost_floes",
+          "parameters": {
+            "temperature": [
+              -2.0,
+              -0.37
+            ],
+            "humidity": [
+              -2.0,
+              2.0
+            ],
+            "continentalness": [
+              -2.0,
+              -0.02
+            ],
+            "erosion": [
+              0.32,
+              2.0
+            ],
+            "weirdness": [
+              -2.0,
+              2.0
+            ],
+            "depth": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "raft:drowned_shelf",
+          "parameters": {
+            "temperature": [
+              -0.37,
+              2.0
+            ],
+            "humidity": [
+              -2.0,
+              2.0
+            ],
+            "continentalness": [
+              -2.0,
+              -0.02
+            ],
+            "erosion": [
+              0.32,
+              2.0
+            ],
+            "weirdness": [
+              -2.0,
+              2.0
+            ],
+            "depth": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "raft:frost_floes",
+          "parameters": {
+            "temperature": [
+              -2.0,
+              -0.37
+            ],
+            "humidity": [
+              -2.0,
+              2.0
+            ],
+            "continentalness": [
+              -2.0,
+              -0.02
+            ],
+            "erosion": [
+              -2.0,
+              0.32
+            ],
+            "weirdness": [
+              -2.0,
+              -0.075
+            ],
+            "depth": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "raft:wreck_graveyard",
+          "parameters": {
+            "temperature": [
+              0.4,
+              2.0
+            ],
+            "humidity": [
+              -2.0,
+              2.0
+            ],
+            "continentalness": [
+              -2.0,
+              -0.02
+            ],
+            "erosion": [
+              -2.0,
+              0.32
+            ],
+            "weirdness": [
+              -2.0,
+              -0.075
+            ],
+            "depth": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "raft:raft_ocean_biome",
+          "parameters": {
+            "temperature": [
+              -0.37,
+              0.4
+            ],
+            "humidity": [
+              -2.0,
+              2.0
+            ],
+            "continentalness": [
+              -2.0,
+              -0.02
+            ],
+            "erosion": [
+              -2.0,
+              0.32
+            ],
+            "weirdness": [
+              -2.0,
+              -0.075
+            ],
+            "depth": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "raft:frost_floes",
+          "parameters": {
+            "temperature": [
+              -2.0,
+              -0.37
+            ],
+            "humidity": [
+              -2.0,
+              2.0
+            ],
+            "continentalness": [
+              -2.0,
+              -0.02
+            ],
+            "erosion": [
+              -2.0,
+              0.32
+            ],
+            "weirdness": [
+              0.075,
+              2.0
+            ],
+            "depth": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "raft:wreck_graveyard",
+          "parameters": {
+            "temperature": [
+              0.4,
+              2.0
+            ],
+            "humidity": [
+              -2.0,
+              2.0
+            ],
+            "continentalness": [
+              -2.0,
+              -0.02
+            ],
+            "erosion": [
+              -2.0,
+              0.32
+            ],
+            "weirdness": [
+              0.075,
+              2.0
+            ],
+            "depth": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "raft:raft_ocean_biome",
+          "parameters": {
+            "temperature": [
+              -0.37,
+              0.4
+            ],
+            "humidity": [
+              -2.0,
+              2.0
+            ],
+            "continentalness": [
+              -2.0,
+              -0.02
+            ],
+            "erosion": [
+              -2.0,
+              0.32
+            ],
+            "weirdness": [
+              0.075,
+              2.0
+            ],
+            "depth": 0.0,
+            "offset": 0.0
+          }
+        }
+      ]
+    }
+  }
+}

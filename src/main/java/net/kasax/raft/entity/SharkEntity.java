@@ -1,5 +1,7 @@
 package net.kasax.raft.entity;
 
+import net.kasax.raft.content.marine.entity.AbstractMarineMonster;
+import net.kasax.raft.content.marine.entity.SharkRaftGoal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -10,40 +12,32 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.control.SmoothSwimmingLookControl;
-import net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RandomSwimmingGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.pathfinder.PathType;
-import net.minecraft.world.phys.Vec3;
 
 /**
- * "Bruce", a hostile shark of the raft dimension. It swims, hunts players that are in the water,
- * and dries out when it is on land.
+ * "Bruce", the shark of the raft dimension. It hunts players that are in the water, dries out on land and – the
+ * classic raft threat – circles rafts that a player stands on and now and then bites an edge
+ * {@code raft:raft_foundation} until it breaks ({@link SharkRaftGoal}, game rule {@code raft:shark_bites}).
+ * Reinforced foundations are immune. Hitting a biting shark scares it away for a while.
  */
-public class SharkEntity extends Monster {
+public class SharkEntity extends AbstractMarineMonster {
+    protected SharkRaftGoal raftGoal;
+
     public SharkEntity(EntityType<? extends SharkEntity> type, Level level) {
-        super(type, level);
+        super(type, level, 85, 10);
         this.xpReward = 8;
-        this.setPathfindingMalus(PathType.WATER, 0.0F);
-        this.moveControl = new SmoothSwimmingMoveControl<>(this, 85, 10, 0.02F, 0.1F, true);
-        this.lookControl = new SmoothSwimmingLookControl(this, 10);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -57,7 +51,9 @@ public class SharkEntity extends Monster {
 
     @Override
     protected void registerGoals() {
+        this.raftGoal = new SharkRaftGoal(this);
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2, true));
+        this.goalSelector.addGoal(3, this.raftGoal);
         this.goalSelector.addGoal(4, new RandomSwimmingGoal(this, 1.0, 10));
         this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
@@ -67,92 +63,26 @@ public class SharkEntity extends Monster {
                 (target, level) -> target.isInWater() && !target.isSpectator()));
     }
 
-    /**
-     * Monster rates a spot by darkness, and with the raft sky's full light every spot gets a negative value, which also
-     * fails the natural spawn check (Mob.checkSpawnRules). A shark rates water instead, like a dolphin.
-     */
     @Override
-    public float getWalkTargetValue(net.minecraft.core.BlockPos pos, net.minecraft.world.level.LevelReader level) {
-        return level.getFluidState(pos).is(net.minecraft.tags.FluidTags.WATER) ? 10.0F : 0.0F;
-    }
-
-    /** Monster ages twice as fast in bright light (it would despawn in seconds under the raft sky): a shark does not. */
-    @Override
-    protected void updateNoActionTime() {
-    }
-
-    @Override
-    protected void customServerAiStep(net.minecraft.server.level.ServerLevel level) {
+    protected void customServerAiStep(ServerLevel level) {
         super.customServerAiStep(level);
-        // Sharks only hunt swimmers: a player who climbs back onto the raft is safe again.
-        if (this.getTarget() instanceof Player player && !player.isInWater() && this.getLastHurtByMob() != player) {
+        // Sharks only hunt swimmers: a player who climbs back onto the raft is safe again (a shark hit from the
+        // raft flees instead, see SharkRaftGoal#onHurt).
+        if (this.getTarget() instanceof Player player && !player.isInWater()
+                && (this.getLastHurtByMob() != player || SharkRaftGoal.isOnRaft(player))) {
             this.setTarget(null);
         }
     }
 
     @Override
-    protected PathNavigation createNavigation(Level level) {
-        return new WaterBoundPathNavigation(this, level);
-    }
-
-    @Override
-    protected void travelInWater(Vec3 input, double baseGravity, boolean isFalling, double oldY) {
-        this.moveRelative(this.getSpeed(), input);
-        this.move(MoverType.SELF, this.getDeltaMovement());
-        this.setDeltaMovement(this.getDeltaMovement().scale(0.9));
-        if (this.getTarget() == null) {
-            this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.005, 0.0));
+    public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
+        boolean hurt = super.hurtServer(level, source, damage);
+        if (hurt && this.raftGoal != null) {
+            this.raftGoal.onHurt(source);
         }
+        return hurt;
     }
 
-    @Override
-    public boolean checkSpawnObstruction(LevelReader level) {
-        return level.isUnobstructed(this);
-    }
-
-    @Override
-    public boolean isPushedByFluid() {
-        return false;
-    }
-
-    @Override
-    public boolean canBeLeashed() {
-        return false;
-    }
-
-    @Override
-    public int getAmbientSoundInterval() {
-        return 120;
-    }
-
-    @Override
-    public void baseTick() {
-        int air = this.getAirSupply();
-        super.baseTick();
-        if (this.level() instanceof ServerLevel serverLevel) {
-            // like a fish: no air problems in water, drying out on land
-            if (this.isAlive() && !this.isInWater()) {
-                this.setAirSupply(air - 1);
-                if (this.shouldTakeDrowningDamage()) {
-                    this.setAirSupply(0);
-                    this.hurtServer(serverLevel, this.damageSources().drown(), 2.0F);
-                }
-            } else {
-                this.setAirSupply(300);
-            }
-        }
-    }
-
-    @Override
-    public void aiStep() {
-        if (!this.isInWater() && this.onGround() && this.verticalCollision) {
-            this.setDeltaMovement(this.getDeltaMovement().add((this.random.nextFloat() * 2.0F - 1.0F) * 0.05F, 0.4F, (this.random.nextFloat() * 2.0F - 1.0F) * 0.05F));
-            this.setOnGround(false);
-            this.needsSync = true;
-            this.playSound(SoundEvents.COD_FLOP, this.getSoundVolume(), this.getVoicePitch());
-        }
-        super.aiStep();
-    }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
@@ -166,7 +96,7 @@ public class SharkEntity extends Monster {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return isInWater() ? SoundEvents.DOLPHIN_AMBIENT_WATER : null;
+        return this.isInWater() ? SoundEvents.DOLPHIN_AMBIENT_WATER : null;
     }
 
     @Override
@@ -175,11 +105,17 @@ public class SharkEntity extends Monster {
     }
 
     @Override
-    protected void playStepSound(BlockPos pos, net.minecraft.world.level.block.state.BlockState state) {
+    public float getVoicePitch() {
+        return super.getVoicePitch() * 0.7F;
+    }
+
+    @Override
+    public void playAttackSound() {
+        this.playSound(SoundEvents.EVOKER_FANGS_ATTACK, 0.8F, 1.3F + this.random.nextFloat() * 0.2F);
     }
 
     /** Natural spawning: in the water in the upper part of the ocean, never in peaceful. */
-    public static boolean checkSharkSpawnRules(EntityType<SharkEntity> type, ServerLevelAccessor level, EntitySpawnReason reason,
+    public static boolean checkSharkSpawnRules(EntityType<? extends SharkEntity> type, ServerLevelAccessor level, EntitySpawnReason reason,
                                                BlockPos pos, RandomSource random) {
         if (level.getDifficulty() == Difficulty.PEACEFUL) {
             return false;

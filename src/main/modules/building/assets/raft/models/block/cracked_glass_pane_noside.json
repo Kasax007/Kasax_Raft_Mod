@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_glass_pane_noside",
+  "textures": {
+    "pane": "raft:block/cracked_glass",
+    "edge": "raft:block/cracked_glass_pane_top"
+  }
+}

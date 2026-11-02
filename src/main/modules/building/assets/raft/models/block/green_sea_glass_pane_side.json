@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_glass_pane_side",
+  "textures": {
+    "pane": "raft:block/green_sea_glass",
+    "edge": "raft:block/green_sea_glass_pane_top"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "raft:block/steel_beam"
+    },
+    "axis=z": {
+      "model": "raft:block/steel_beam",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "raft:block/steel_beam",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

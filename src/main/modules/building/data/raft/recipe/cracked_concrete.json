@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "C": "#minecraft:concrete",
+    "G": "minecraft:gravel"
+  },
+  "pattern": [
+    "CG",
+    "GC"
+  ],
+  "result": {
+    "count": 4,
+    "id": "raft:cracked_concrete"
+  }
+}
