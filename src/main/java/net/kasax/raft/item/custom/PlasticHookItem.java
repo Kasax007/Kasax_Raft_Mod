@@ -21,7 +21,7 @@ public class PlasticHookItem extends TooltipItem {
     public static final double RANGE = 12.0;
     /** Cosine of the half angle of the pulling cone (about 30 degrees). */
     private static final double CONE = 0.866;
-    private static final double PULL = 0.3;
+    private static final double PULL = 0.5;
 
     public PlasticHookItem(Properties properties) {
         super(properties, "tooltip.raft.plastic_hook");
@@ -56,12 +56,12 @@ public class PlasticHookItem extends TooltipItem {
         Vec3 target = user.position().add(0.0, 0.4, 0.0);
         for (ItemEntity item : items) {
             Vec3 toPlayer = target.subtract(item.position());
-            if (toPlayer.lengthSqr() < 0.25) {
-                continue;
-            }
-            Vec3 velocity = item.getDeltaMovement().scale(0.6).add(toPlayer.normalize().scale(PULL));
-            item.setDeltaMovement(velocity);
-            item.setNoGravity(true);
+            double distance = toPlayer.length();
+            // fast from afar, slowing down so that the item stops at the feet of the player
+            double speed = Math.min(PULL, distance * 0.25);
+            Vec3 wanted = distance < 1.0E-4 ? Vec3.ZERO : toPlayer.scale(speed / distance);
+            // the small upward push cancels gravity, so the item does not sink while it is pulled
+            item.setDeltaMovement(item.getDeltaMovement().scale(0.4).add(wanted.scale(0.6)).add(0.0, 0.04, 0.0));
             item.needsSync = true;
         }
         if (!items.isEmpty() && remainingUseTicks % 20 == 0) {

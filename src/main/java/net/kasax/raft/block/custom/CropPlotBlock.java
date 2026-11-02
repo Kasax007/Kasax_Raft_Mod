@@ -20,7 +20,7 @@ import org.jspecify.annotations.Nullable;
  */
 public class CropPlotBlock extends FarmlandBlock {
     /** Chance (1 in N) per random tick that the crop above gets one extra growth tick. */
-    public static final int EXTRA_GROWTH_ONE_IN = 3;
+    public static final int EXTRA_GROWTH_ONE_IN = 2;
 
     public CropPlotBlock(Properties properties) {
         super(Blocks.DIRT, properties);
