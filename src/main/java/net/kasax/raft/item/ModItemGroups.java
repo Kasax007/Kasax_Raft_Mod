@@ -99,6 +99,41 @@ public class ModItemGroups {
                         entries.accept(ModBlocks.ITEM_CATCHER);
                         entries.accept(ModItems.NET);
 
+                        // decoration
+                        entries.accept(ModBlocks.PALM_THATCH);
+                        entries.accept(ModBlocks.PALM_THATCH_STAIRS);
+                        entries.accept(ModBlocks.PALM_THATCH_SLAB);
+                        entries.accept(ModBlocks.RAFT_FOUNDATION);
+                        entries.accept(ModBlocks.REINFORCED_FOUNDATION);
+                        entries.accept(ModBlocks.SCRAP_METAL_BLOCK);
+                        entries.accept(ModBlocks.PLASTIC_BLOCK);
+                        entries.accept(ModBlocks.ROPE_LADDER);
+                        entries.accept(ModBlocks.ROPE_COIL);
+                        entries.accept(ModBlocks.SAIL_CANVAS);
+                        entries.accept(ModBlocks.SAIL_CANVAS_RED_STRIPED);
+                        entries.accept(ModBlocks.SHIP_WHEEL);
+                        entries.accept(ModBlocks.SHARK_JAW_TROPHY);
+                        entries.accept(ModBlocks.RAFT_FLAG);
+                        entries.accept(ModBlocks.COCONUT_LANTERN);
+
+                        // survival on the raft
+                        entries.accept(ModBlocks.CROP_PLOT);
+                        entries.accept(ModBlocks.SIMPLE_GRILL);
+                        entries.accept(ModBlocks.WATER_PURIFIER);
+                        entries.accept(ModBlocks.SCARECROW);
+                        entries.accept(ModItems.ROPE);
+                        entries.accept(ModItems.SCRAP_METAL);
+                        entries.accept(ModItems.FRESH_WATER);
+                        entries.accept(ModItems.COCONUT_MILK);
+                        entries.accept(ModItems.RECEIVER);
+                        entries.accept(ModItems.PLASTIC_HOOK);
+                        entries.accept(ModItems.PADDLE);
+
+                        entries.accept(ModItems.SHARK_TOOTH);
+                        entries.accept(ModItems.SHARK_MEAT);
+                        entries.accept(ModItems.COOKED_SHARK_MEAT);
+                        entries.accept(ModItems.SHARK_SPAWN_EGG);
+
                         // Add custom furnaces to the group
                         for (Block furnace : FurnaceBlocks.getFurnaces()) {
                             entries.accept(new ItemStack(furnace));

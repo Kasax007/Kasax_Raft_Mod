@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.item.v1.BlockTransformerHelper;
 import net.kasax.raft.block.ModBlocks;
 import net.kasax.raft.block.cable.CableBlockEntity;
 import net.kasax.raft.block.entity.*;
+import net.kasax.raft.entity.ModEntities;
 import net.kasax.raft.item.ModItemGroups;
 import net.kasax.raft.item.ModItems;
 import net.kasax.raft.recipe.ModRecipes;
@@ -71,12 +72,24 @@ public class Raft implements ModInitializer {
 		FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.PALM_LEAVES, 30, 60);
 		FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.PALM_COCONUT_LEAVES, 30, 60);
 
+		FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.PALM_THATCH, 60, 80);
+		FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.PALM_THATCH_STAIRS, 60, 80);
+		FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.PALM_THATCH_SLAB, 60, 80);
+		FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.RAFT_FOUNDATION, 5, 20);
+		FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.ROPE_LADDER, 15, 30);
+		FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.ROPE_COIL, 30, 60);
+		FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.SAIL_CANVAS, 30, 60);
+		FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.SAIL_CANVAS_RED_STRIPED, 30, 60);
+		FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.RAFT_FLAG, 30, 60);
+		FlammableBlockRegistry.getDefaultInstance().add(ModBlocks.SCARECROW, 30, 60);
+
 		ModLootTableModifiers.modifyLootTables();
 		ModWorldGeneration.generateModWorldGen();
 		ModSounds.registerSounds();
 
 		ModRecipes.registerRecipes();
 
+		ModEntities.register();
 		ModBlockEntities.registerBlockEntities();
 		ModScreenHandlers.registerScreenHandlers();
 		ModPoiTypes.register();

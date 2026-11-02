@@ -31,6 +31,12 @@ public class ModBlockEntities {
     public static final BlockEntityType<ChunkDestroyerBlockEntity> CHUNK_DESTROYER_BLOCK_ENTITY =
             register("chunk_destroyer_be", ChunkDestroyerBlockEntity::new, ModBlocks.CHUNK_DESTROYER);
 
+    public static final BlockEntityType<SimpleGrillBlockEntity> SIMPLE_GRILL_BLOCK_ENTITY =
+            register("simple_grill_be", SimpleGrillBlockEntity::new, ModBlocks.SIMPLE_GRILL);
+
+    public static final BlockEntityType<WaterPurifierBlockEntity> WATER_PURIFIER_BLOCK_ENTITY =
+            register("water_purifier_be", WaterPurifierBlockEntity::new, ModBlocks.WATER_PURIFIER);
+
     public static final BlockEntityType<CableBlockEntity> CABLE_BLOCK_ENTITY =
             Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Raft.id("cable_block_entity"),
                     new BlockEntityType<>(CableBlockEntity::new,

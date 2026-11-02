@@ -17,6 +17,10 @@ public class ModScreenHandlers {
             Registry.register(BuiltInRegistries.MENU, Raft.id("makeshift_battery"),
                     new ExtendedMenuType<>(MakeshiftBatteryScreenHandler::new, BlockPosPayload.PACKET_CODEC));
 
+    public static final MenuType<WaterPurifierMenu> WATER_PURIFIER_MENU =
+            Registry.register(BuiltInRegistries.MENU, Raft.id("water_purifier"),
+                    new MenuType<>(WaterPurifierMenu::new, FeatureFlags.VANILLA_SET));
+
     public static void registerScreenHandlers() {
         Raft.LOGGER.info("Registering Screen Handlers for " + Raft.MOD_ID);
     }
