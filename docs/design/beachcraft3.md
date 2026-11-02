@@ -634,3 +634,18 @@ server start (dedicated) without client classes loading.
 ## 14. Deviations
 
 (Builders: note any change to IDs/states/contracts here, one line each, with your module name.)
+- building: wood family ids follow the vanilla naming (no `_planks` in the derived ids): `weathered_stairs`, `weathered_slab`, `weathered_fence`, `weathered_fence_gate`, `teak_stairs`, `teak_slab`, `teak_fence`, `teak_fence_gate` (+ `teak_door`, `teak_trapdoor`); coral bricks: `coral_stone_brick_stairs`, `coral_stone_brick_slab`, `coral_stone_brick_wall`.
+- building: `steel_beam` is a real I-beam shape (not a full cube) and has `waterlogged` besides `axis` (so it looks right under water; the game waterlogs it when a template is placed in water).
+
+## 15. Guide book (module `guide`, built after the other modules are integrated)
+
+`raft:seafarers_almanac` – the in-game guide of Beach Craft, in the spirit of the Tamagotchi mod's Tamacon
+(`/home/user/tamagotchi/src/main/java/net/kasax/tamagotchi/client/screen/TamaconScreen.java`): a custom screen styled
+as a weathered, waterproof leather logbook with a contents page, chapters with item icons, creature portraits
+(rendered entities), paged text from lang keys `almanac.raft.<chapter>.title/.text`. Chapters: Welcome, The Portal,
+Survival on the Raft (water, food, debris, hooks, nets), Building (foundations, sets, decor highlights), Technology
+(energy, machines, wind turbine), Sailing (boats, expedition raft and upgrades), Diving (gear, air, compressor, harpoon,
+scooter), The Sea's Biomes, Islands and Wrecks (side places), Creatures (one page per creature), The Story (spoiler-free:
+how the journal and maps guide you), The Leviathan (only after the boss is defeated or with a warning), Titanium & Tools,
+Tips. Craftable early (book + kelp or + driftwood), given in the castaway chest and when a player first enters the raft
+dimension.
