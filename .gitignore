@@ -38,3 +38,17 @@ hs_err_*.log
 replay_*.log
 *.hprof
 *.jfr
+/.junie/
+/.aiassistant/
+/.ai/
+/.claude/
+/CLAUDE.md
+
+# Fabric Loom remapped-sources output
+/remappedSrc/
+/graphify-out/
+/DESCRIPTION_MOD.md
+/DESCRIPTION_MODPACK.md
+/REDDIT_DRAFTS.md
+/PLAN_ROADMAP.md
+/ROADMAP_STATUS.md
