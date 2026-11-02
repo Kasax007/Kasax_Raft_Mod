@@ -35,5 +35,8 @@ public class RaftClient implements ClientModInitializer {
 
         ModelLayerRegistry.registerModelLayer(SharkModel.LAYER, SharkModel::createBodyLayer);
         EntityRendererRegistry.register(ModEntities.SHARK, SharkRenderer::new);
+
+        // Beach Craft 3 content modules
+        net.kasax.raft.content.ModContent.initClient();
     }
 }

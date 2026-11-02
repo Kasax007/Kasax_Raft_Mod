@@ -115,6 +115,10 @@ public class Raft implements ModInitializer {
 
 		ModBlocks.registerCables();
 
+		// Beach Craft 3 content modules (world, building, decor, creatures, voyage, story, boss)
+		net.kasax.raft.content.ModContent.init();
+		net.kasax.raft.content.BcTabs.register();
+
 		LOGGER.info("Raft mod initialized!");
 	}
 }
