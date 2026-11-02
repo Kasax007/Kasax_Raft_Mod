@@ -18,6 +18,7 @@ A bugfix release. Every feature was filmed for a review, and everything that did
 - **Tooltips**: furnace stats, cable rate and battery capacity show real numbers instead of '%d'.
 - **Raft sky**: the moon is no longer drawn on top of the sun; undead burn in the endless daylight.
 - **Raft Portal**: the frame drops with any tool; a broken raft-side portal can be relit with the Energy Staff; the overworld exit portal looks for a free spot nearby instead of cutting into builds and trees.
+- **Paddle**: the push actually moves the boat now (the rider's game steers boats, and the push only reached the server).
 - **Raft Teleporter**: lands within 5 blocks in every direction, never in a cave under lava, without a 1-block drop, and other players see the stone block it places.
 - **Music discs**: one disc per shipwreck chest (not up to five), and the jukebox stops when the song ends.
 - **Titanium ore** drops experience; titanium blocks resist explosions like iron blocks; the full armor set effects end a few seconds after a piece comes off.
