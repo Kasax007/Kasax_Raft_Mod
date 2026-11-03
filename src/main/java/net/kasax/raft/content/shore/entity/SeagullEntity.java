@@ -91,7 +91,9 @@ public class SeagullEntity extends Animal {
     private int flightLimit = 400;
     private int restTicks;
     private int peckCooldown = 200;
-    private int stealCooldown = 100;
+    private int stealCooldown = 40;
+    /** The food item this gull is diving for (so the rest of the flock picks other items). */
+    private @Nullable ItemEntity stealTarget;
     /** Gulls spot food lying in the open from far away (blocks, each direction). */
     private static final double STEAL_RANGE = 22.0;
     /** Distance (blocks) from which a flying gull dives straight at food instead of following a path. */
@@ -668,11 +670,18 @@ public class SeagullEntity extends Animal {
             }
             List<ItemEntity> items = gull.level().getEntitiesOfClass(ItemEntity.class, gull.getBoundingBox().inflate(STEAL_RANGE, STEAL_RANGE, STEAL_RANGE),
                     e -> e.isAlive() && e.getItem().has(DataComponents.FOOD) && !e.isInWater());
+            if (items.isEmpty()) {
+                return false;
+            }
+            List<SeagullEntity> rivals = gull.level().getEntitiesOfClass(SeagullEntity.class,
+                    gull.getBoundingBox().inflate(STEAL_RANGE * 2.0), g -> g != gull && g.stealTarget != null);
             ItemEntity best = null;
             double bestDist = Double.MAX_VALUE;
             for (ItemEntity item : items) {
                 double d = item.distanceToSqr(gull);
-                if (d < bestDist) {
+                // another gull already dives for this one (unless it is a whole stack: enough for two)
+                boolean taken = item.getItem().getCount() < 2 && rivals.stream().anyMatch(g -> g.stealTarget == item);
+                if (d < bestDist && !taken) {
                     bestDist = d;
                     best = item;
                 }
@@ -689,6 +698,7 @@ public class SeagullEntity extends Animal {
         @Override
         public void start() {
             this.ticks = 0;
+            SeagullEntity.this.stealTarget = this.target;
             if (this.target != null) {
                 SeagullEntity.this.flyTo(this.target.position().add(0.0, 0.2, 0.0), 1.4);
             }
@@ -754,11 +764,12 @@ public class SeagullEntity extends Animal {
 
         @Override
         public void stop() {
-            if (this.target != null) {
+            if (this.target != null && this.ticks >= 300) {
                 // gave up (could not reach it in time)
                 SeagullEntity.this.stealCooldown = Math.max(SeagullEntity.this.stealCooldown, 200);
             }
             this.target = null;
+            SeagullEntity.this.stealTarget = null;
         }
     }
 
