@@ -35,7 +35,8 @@
 		"raft-voyage.mixins.json",
 		"raft-diving.mixins.json",
 		"raft-story.mixins.json",
-		"raft-boss.mixins.json"
+		"raft-boss.mixins.json",
+		"raft-guide.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.19.5",

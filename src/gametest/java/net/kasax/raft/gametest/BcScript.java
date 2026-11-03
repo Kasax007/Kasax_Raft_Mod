@@ -83,6 +83,7 @@ public class BcScript implements FabricClientGameTest {
                     case "pcmd" -> need(sp).getServer().runCommand("execute as @p at @p run " + arg);
                     case "wait" -> ctx.waitTicks(Integer.parseInt(arg));
                     case "settle" -> {
+                        long t0 = System.currentTimeMillis();
                         if (sp != null) {
                             ctx.waitTicks(20);
                             try {
@@ -92,6 +93,7 @@ public class BcScript implements FabricClientGameTest {
                             }
                         }
                         settle(ctx, arg.isEmpty() ? 40 : Integer.parseInt(arg));
+                        LOG.info("[bctest] settle took {} s", (System.currentTimeMillis() - t0) / 1000);
                     }
                     case "shot" -> ctx.takeScreenshot(TestScreenshotOptions.of(arg).disableCounterPrefix().withDestinationDir(out));
                     case "size" -> {
@@ -121,6 +123,22 @@ public class BcScript implements FabricClientGameTest {
                         }
                     }
                     case "log" -> LOG.info("[bctest] LOG {}", arg);
+                    case "count" -> {
+                        // count <dimension>: entities per type loaded in that dimension (written to the log)
+                        String dim = arg.isEmpty() ? "raft:raftdim" : arg;
+                        String res = need(sp).getServer().computeOnServer(server -> {
+                            var key = net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.DIMENSION,
+                                    net.minecraft.resources.Identifier.parse(dim));
+                            var level = server.getLevel(key);
+                            if (level == null) return "no level " + dim;
+                            java.util.Map<String, Integer> counts = new java.util.TreeMap<>();
+                            for (var e : level.getAllEntities()) {
+                                counts.merge(net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()).toString(), 1, Integer::sum);
+                            }
+                            return counts.toString();
+                        });
+                        LOG.info("[bctest] COUNT {} {}", dim, res);
+                    }
                     default -> LOG.warn("[bctest] unknown command '{}' in line {}", cmd, n);
                 }
             }

@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "net.kasax.raft.content.guide.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "AbstractBoatAccessor"
+  ],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

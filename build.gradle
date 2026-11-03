@@ -38,6 +38,7 @@ loom {
 			vmArg "-Xmx${project.findProperty('xmx') ?: '3G'}"
 			if (project.hasProperty('bcScript')) vmArg "-Dbc.script=${project.property('bcScript')}"
 			if (project.hasProperty('bcOut')) vmArg "-Dbc.out=${project.property('bcOut')}"
+			if (project.hasProperty('bcJfr')) vmArg "-XX:StartFlightRecording=filename=${project.property('bcJfr')},settings=profile"
 		}
 	}
 }

@@ -15,7 +15,8 @@ public final class ModContent {
             new net.kasax.raft.content.voyage.VoyageModule(),
             new net.kasax.raft.content.diving.DivingModule(),
             new net.kasax.raft.content.story.StoryModule(),
-            new net.kasax.raft.content.boss.BossModule());
+            new net.kasax.raft.content.boss.BossModule(),
+            new net.kasax.raft.content.guide.GuideModule());
 
     private ModContent() {
     }
