@@ -37,6 +37,8 @@ def test_copy(s, path):
             t.blocks[pos] = (MISSING_PROXY[name], {}, None)
         else:
             t.blocks[pos] = (name, props, nbt)
+    if not used:
+        return used
     t.entities = list(s.entities)
     t.save(MODULE, path)
     return used
