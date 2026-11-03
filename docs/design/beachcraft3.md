@@ -368,8 +368,8 @@ crafted from 9 `gold_coin`; coins come from loot), seat entity `raft:seat`.
 All creatures: entity type, attributes, AI goals, spawn placement + natural spawn via biome JSON (4.2), Java model
 (`LayerDefinition`) with animation, renderer, texture, spawn egg (creative tab CREATURES), loot table, sounds (vanilla
 sound events are fine, custom ones welcome), lang. Water creatures use `MobCategory.WATER_CREATURE` or
-`WATER_AMBIENT`; land animals `CREATURE`; hostiles `MONSTER` (beware: the raft dimension is always bright – override
-spawn rules like the shark does). They must not despawn too eagerly (whales/mantas persist while near players).
+`WATER_AMBIENT`; land animals `CREATURE`; hostiles `MONSTER`. Since 3.0 integration the raft dimension has overworld-like
+lighting (ambient light 0, fixed noon): the surface is bright, deep water, the trench and interiors are dark. They must not despawn too eagerly (whales/mantas persist while near players).
 
 ### 7.1 Module `shore` (land/surface creatures and the corsairs)
 
@@ -648,6 +648,12 @@ server start (dedicated) without client classes loading.
 - story: `tidewarden_altar` also has `waterlogged` (the Coral Temple is flooded; the template sets it to true, so the altar no longer sits in a dry air cell). The castaway chest also gives `raft:seafarers_almanac` (spec 15), through an optional tag entry like the other cross-module items.
 - structures_deep: the four `treasure_chest`s in the sanctum's reward room use `raft:chests/coral_temple_offering` (Tidewarden offerings) instead of being empty decoration; `sanctum_reward` stays the main chest. Eight sea lanterns are set flush into the floor at the pool's rim (light where the Leviathan surfaces; the dimension has no ambient light).
 - structures_side: `pirate_cove` uses `terrain_adaptation: none` (beard_box cut straight-walled rectangular moats into neighbouring islands); its hill stands on a 10-block rock root (template from world y 78) and the sea channel in front of the arch is explicit water/air. Fixed `start_height`s are written one higher than the template's base y (a jigsaw start piece sits its ground level delta, 1, below `start_height`), so the abandoned raft decks, buoys, iceberg floe, rig decks and the cove lagoon sit at the heights their generators intend.
+- lead (integration): the raft dimension type uses ambient_light 0.0 and ambient light colour #0a0a0a like the overworld (was 1.0/#ffffff, everything was always fully lit).
+- world (integration): new feature raft:gravity_support (top_layer_modification, all raft biomes) turns unsupported sand/gravel/shell sand/black sand/volcanic ash into a stable block, so no falling blocks appear after generation; deep water fog colours are red-free so vanilla's water-vision brightening keeps them dark.
+- world (integration): CraterLavaFeature keeps crater floors dry in chunks that hold or border raft:ashen_forge.
+- guide: raft:seafarers_almanac recipe = book + kelp / dried kelp / driftwood log / driftwood planks (shapeless); given once on first entry into raft:raftdim (player attachment raft:almanac_given) and in the castaway chest; item custom_data {almanac:"<chapter>[/<section>][+N]"} opens a page (for quests).
+- boss (integration): at most 5 tidelings alive at once.
+- structures_side (integration): wreck sails and rugs are wool, not carpet (carpets wash away under water).
 
 ## 15. Guide book (module `guide`, built after the other modules are integrated)
 
