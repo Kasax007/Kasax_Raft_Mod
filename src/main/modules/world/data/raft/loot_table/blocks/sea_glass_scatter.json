@@ -1,0 +1,42 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "modifier": [
+            {
+              "type": "minecraft:set_count",
+              "condition": {
+                "type": "minecraft:match_block",
+                "blocks": "raft:sea_glass_scatter",
+                "state": {
+                  "pebbles": "2"
+                }
+              },
+              "count": 2
+            },
+            {
+              "type": "minecraft:set_count",
+              "condition": {
+                "type": "minecraft:match_block",
+                "blocks": "raft:sea_glass_scatter",
+                "state": {
+                  "pebbles": "3"
+                }
+              },
+              "count": 3
+            },
+            {
+              "type": "minecraft:explosion_decay"
+            }
+          ],
+          "name": "raft:sea_glass_shard"
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "raft:blocks/sea_glass_scatter"
+}

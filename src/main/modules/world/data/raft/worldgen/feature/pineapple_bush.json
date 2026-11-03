@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:simple_block",
+  "to_place": {
+    "type": "minecraft:randomized_int",
+    "property": "age",
+    "source": {
+      "id": "raft:pineapple_bush",
+      "properties": {
+        "age": "3"
+      }
+    },
+    "values": {
+      "type": "minecraft:uniform",
+      "max_inclusive": 3,
+      "min_inclusive": 1
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "parent": "raft:adventure/ghost_ship",
+  "criteria": {
+    "visit": {
+      "conditions": {
+        "player": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:location": {
+              "structures": "#raft:on_pirate_maps"
+            }
+          }
+        }
+      },
+      "trigger": "minecraft:location"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.raft.adventure.saltjaws_gold.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "id": "minecraft:gold_ingot"
+    },
+    "title": {
+      "translate": "advancements.raft.adventure.saltjaws_gold.title"
+    }
+  },
+  "requirements": [
+    [
+      "visit"
+    ]
+  ],
+  "rewards": {
+    "experience": 50
+  }
+}

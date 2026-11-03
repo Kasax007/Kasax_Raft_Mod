@@ -6,11 +6,16 @@ import net.kasax.raft.world.dimension.ModDimensions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.BlockUtil;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.ai.village.poi.PoiRecord;
+import net.minecraft.world.RandomizableContainer;
+import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -29,6 +34,9 @@ public final class RaftPortalForcer {
     public static final int RAFT_MIN_Y = 200;
     public static final int RAFT_MAX_Y = 220;
     private static final int SEARCH_RADIUS = 128;
+    /** Loot of the castaway chest on every new arrival platform in the raft dimension (story chapter 1). */
+    public static final ResourceKey<LootTable> CASTAWAY_LOOT = ResourceKey.create(Registries.LOOT_TABLE,
+            net.kasax.raft.Raft.id("chests/story/castaway"));
 
     private RaftPortalForcer() {}
 
@@ -103,7 +111,21 @@ public final class RaftPortalForcer {
         }
 
         RaftPortalShape.findEmptyPortalShape(level, base, axis).ifPresent(shape -> shape.createPortalBlocks(level));
+        if (raftDim) {
+            placeCastawayChest(level, base, direction, side);
+        }
         return Optional.of(new BlockUtil.FoundRectangle(base.immutable(), 2, 3));
+    }
+
+    /**
+     * The castaway chest (Captain Marlow's note, the Expedition Journal, a chart and a basic kit) in the far corner of a
+     * new arrival platform, its front turned towards the portal. Placed once, when the platform is built.
+     */
+    private static void placeCastawayChest(ServerLevel level, BlockPos base, Direction direction, Direction side) {
+        BlockPos pos = base.offset(3 * direction.getStepX() + side.getStepX(), 0, 3 * direction.getStepZ() + side.getStepZ());
+        BlockState chest = Blocks.CHEST.defaultBlockState().setValue(ChestBlock.FACING, direction.getOpposite());
+        level.setBlock(pos, chest, 18);
+        RandomizableContainer.setBlockEntityLootTable(level, level.getRandom(), pos, CASTAWAY_LOOT);
     }
 
     /**

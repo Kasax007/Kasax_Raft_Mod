@@ -54,7 +54,9 @@ LOOK = {
 }
 
 # --------------------------------------------------------------------------------------------- spawns
-# (category, entity, weight, min, max); categories match the MobCategory of the entity types (shore/marine)
+# (category, entity, weight, min, max) as in the spec. Only vanilla mobs and the 2.0 shark go into the biome JSON: the
+# creatures of the other 3.0 modules are added at runtime by content/world/WorldSpawns.java (looked up by id, so a
+# missing creature cannot break the biome registry). Keep both tables in sync.
 SPAWNS = {
     'raft_ocean_biome': [('water_creature', 'raft:shark', 3, 1, 1), ('water_creature', 'raft:whale', 1, 1, 1),
                          ('water_ambient', 'raft:jellyfish', 4, 2, 4), ('water_creature', 'raft:hammerhead_shark', 1, 1, 1),
@@ -105,7 +107,8 @@ FEATURES = {
     1: [('minecraft:lake_lava_surface', ['volcanic_isle'])],
     2: [('minecraft:iceberg_packed', ['frost_floes']), ('minecraft:iceberg_blue', ['frost_floes']),
         ('raft:crater_lava', ['volcanic_isle']),
-        ('raft:boulder_stone', ['palm_isle', 'jungle_isle']), ('raft:boulder_pumice', ['volcanic_isle'])],
+        ('raft:boulder_andesite', ['palm_isle']), ('raft:boulder_mossy', ['jungle_isle']),
+        ('raft:boulder_pumice', ['volcanic_isle'])],
     4: [('minecraft:blue_ice', ['frost_floes']),
         ('minecraft:small_basalt_columns', ['volcanic_isle']), ('minecraft:large_basalt_columns', ['volcanic_isle']),
         ('raft:ice_floe', ['frost_floes'])],
@@ -143,11 +146,11 @@ FEATURES = {
         ('minecraft:patch_melon', ['jungle_isle']),
         ('minecraft:vines', ['jungle_isle']),
         ('minecraft:patch_waterlily', ['mangrove_isle']),
-        ('raft:patch_seashells', ['palm_isle', 'jungle_isle', 'mangrove_isle', 'coral_shallows', 'glowing_lagoon']),
-        ('raft:patch_sea_glass', ['palm_isle', 'jungle_isle', 'volcanic_isle', 'coral_shallows']),
+        ('raft:patch_seashells', ['palm_isle', 'jungle_isle', 'mangrove_isle']),
+        ('raft:patch_sea_glass', ['palm_isle', 'jungle_isle', 'volcanic_isle']),
         ('raft:patch_volcanic_ash_dunes', ['volcanic_isle']),
         # sea floor: reefs, kelp, then small plants
-        ('minecraft:warm_ocean_vegetation', ['coral_shallows']),
+        ('raft:coral_reef', ['coral_shallows']),
         ('raft:rare_tube_coral', ['raft_ocean_biome']),
         ('raft:tall_kelp', ['kelp_forest']),
         ('minecraft:kelp_warm', ['raft_ocean_biome', 'wreck_graveyard', 'glowing_lagoon']),
@@ -155,8 +158,10 @@ FEATURES = {
         ('raft:glow_kelp_patch', ['kelp_forest', 'glowing_lagoon']),
         ('raft:concrete_rubble', ['drowned_shelf']),
         ('raft:wreck_debris', ['wreck_graveyard']),
-        ('raft:bubble_vents', ['raft_ocean_biome', 'glowing_lagoon', 'abyssal_trench']),
-        ('raft:tube_worms', ['abyssal_trench', 'glowing_lagoon']),
+        ('raft:bubble_vents', ['glowing_lagoon', 'abyssal_trench']),
+        ('raft:bubble_vents_sparse', ['raft_ocean_biome']),
+        ('raft:tube_worms', ['abyssal_trench']),
+        ('raft:tube_worms_sparse', ['glowing_lagoon']),
         ('raft:anemones', ['coral_shallows']),
         ('raft:glow_anemones', ['glowing_lagoon']),
         ('raft:glow_anemones_sparse', ['abyssal_trench']),
@@ -164,6 +169,8 @@ FEATURES = {
         ('raft:starfish', ['coral_shallows', 'glowing_lagoon', 'kelp_forest']),
         ('raft:sea_urchins', ['coral_shallows', 'kelp_forest']),
         ('raft:barnacles', ['kelp_forest', 'drowned_shelf', 'wreck_graveyard', 'raft_ocean_biome']),
+        ('raft:seashells_reef', ['coral_shallows', 'glowing_lagoon']),
+        ('raft:sea_glass_reef', ['coral_shallows']),
         ('minecraft:sea_pickle', ['coral_shallows']),
         ('minecraft:seagrass_warm', ['coral_shallows', 'glowing_lagoon']),
         ('minecraft:seagrass_deep_warm', ['raft_ocean_biome', 'kelp_forest']),
@@ -185,9 +192,14 @@ def features_of(biome, available=None):
     return steps
 
 
+JSON_SPAWNS = {'raft:shark'}
+
+
 def spawns_of(biome, available=None):
     by = OrderedDict()
     for cat, ent, w, lo, hi in SPAWNS[biome]:
+        if not (ent.startswith('minecraft:') or ent in JSON_SPAWNS):
+            continue
         if available is not None and not available(ent):
             continue
         e = OrderedDict(type=ent, count=(lo if lo == hi else OrderedDict(type='minecraft:uniform', max_inclusive=hi,

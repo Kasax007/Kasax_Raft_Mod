@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "raft:oxygen_tank",
+      "required": false
+    },
+    {
+      "id": "raft:titanium_oxygen_tank",
+      "required": false
+    }
+  ]
+}

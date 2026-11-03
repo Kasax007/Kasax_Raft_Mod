@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/crop",
+  "textures": {
+    "crop": "raft:block/pineapple_crop_stage7"
+  }
+}

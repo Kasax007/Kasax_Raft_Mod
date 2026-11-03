@@ -1,0 +1,29 @@
+{
+  "criteria": {
+    "enter": {
+      "conditions": {
+        "to": "raft:raftdim"
+      },
+      "trigger": "minecraft:changed_dimension"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "background": "raft:gui/advancements/backgrounds/adventure",
+    "description": {
+      "translate": "advancements.raft.adventure.root.description"
+    },
+    "icon": {
+      "id": "raft:paddle"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancements.raft.adventure.root.title"
+    }
+  },
+  "requirements": [
+    [
+      "enter"
+    ]
+  ]
+}

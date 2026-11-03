@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "R": "raft:rope",
+    "P": "raft:paddle",
+    "F": "raft:raft_foundation"
+  },
+  "pattern": [
+    "RPR",
+    "FFF",
+    "FFF"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:expedition_raft"
+  }
+}

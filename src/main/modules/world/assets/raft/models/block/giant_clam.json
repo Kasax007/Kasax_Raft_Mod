@@ -1,0 +1,149 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "shell": "raft:block/giant_clam_shell",
+    "lip": "raft:block/giant_clam_lip",
+    "mantle": "raft:block/giant_clam_mantle",
+    "pearl": "raft:block/giant_clam_pearl",
+    "particle": "raft:block/giant_clam_shell"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        4,
+        15
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "texture": "#shell",
+          "cullface": "down"
+        },
+        "up": {
+          "uv": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "texture": "#mantle"
+        },
+        "north": {
+          "uv": [
+            1,
+            12,
+            15,
+            16
+          ],
+          "texture": "#lip"
+        },
+        "south": {
+          "uv": [
+            1,
+            12,
+            15,
+            16
+          ],
+          "texture": "#lip"
+        },
+        "west": {
+          "uv": [
+            1,
+            12,
+            15,
+            16
+          ],
+          "texture": "#lip"
+        },
+        "east": {
+          "uv": [
+            1,
+            12,
+            15,
+            16
+          ],
+          "texture": "#lip"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        4,
+        1
+      ],
+      "to": [
+        15,
+        7,
+        15
+      ],
+      "faces": {
+        "up": {
+          "uv": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "texture": "#shell"
+        },
+        "down": {
+          "uv": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "texture": "#shell"
+        },
+        "north": {
+          "uv": [
+            1,
+            8,
+            15,
+            11
+          ],
+          "texture": "#lip"
+        },
+        "south": {
+          "uv": [
+            1,
+            8,
+            15,
+            11
+          ],
+          "texture": "#lip"
+        },
+        "west": {
+          "uv": [
+            1,
+            8,
+            15,
+            11
+          ],
+          "texture": "#lip"
+        },
+        "east": {
+          "uv": [
+            1,
+            8,
+            15,
+            11
+          ],
+          "texture": "#lip"
+        }
+      }
+    }
+  ]
+}

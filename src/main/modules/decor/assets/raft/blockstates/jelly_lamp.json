@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "hanging=false": {
+      "model": "raft:block/jelly_lamp"
+    },
+    "hanging=true": {
+      "model": "raft:block/jelly_lamp_hanging"
+    }
+  }
+}

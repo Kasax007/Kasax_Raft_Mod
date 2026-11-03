@@ -3,6 +3,7 @@ package net.kasax.raft.world;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.kasax.raft.Raft;
 import net.kasax.raft.block.ModBlocks;
+import net.kasax.raft.content.story.StoryContent;
 import net.kasax.raft.item.ModItems;
 import net.kasax.raft.world.dimension.ModDimensions;
 import net.minecraft.core.BlockPos;
@@ -48,6 +49,9 @@ public class OceanDebris {
     public static final double DESPAWN_DISTANCE = 128.0;
     /** Chance for a barrel loot item instead of a plain material. */
     public static final float BARREL_CHANCE = 0.06f;
+    /** Rare story debris: a message in a bottle (a lore letter) and a floating supply barrel. */
+    public static final float BOTTLE_CHANCE = 0.015f;
+    public static final float SUPPLY_BARREL_CHANCE = 0.02f;
 
     public static void register() {
         ServerTickEvents.END_LEVEL_TICK.register(OceanDebris::tick);
@@ -145,6 +149,12 @@ public class OceanDebris {
     }
 
     public static ItemStack randomDebris(ServerLevel level, RandomSource random) {
+        float story = random.nextFloat();
+        if (story < BOTTLE_CHANCE) {
+            return new ItemStack(StoryContent.MESSAGE_IN_A_BOTTLE);
+        } else if (story < BOTTLE_CHANCE + SUPPLY_BARREL_CHANCE) {
+            return new ItemStack(StoryContent.SUPPLY_BARREL);
+        }
         if (random.nextFloat() < BARREL_CHANCE) {
             LootTable table = level.getServer().reloadableRegistries().getLootTable(BARREL_LOOT);
             List<ItemStack> loot = table.getRandomItems(new LootParams.Builder(level).create(LootContextParamSets.EMPTY));

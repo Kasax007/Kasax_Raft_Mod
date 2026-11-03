@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "L": "minecraft:leather",
+    "K": "minecraft:dried_kelp"
+  },
+  "pattern": [
+    "LKL",
+    "K K",
+    "L L"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:wetsuit"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "G": "minecraft:glass",
+    "F": "minecraft:tropical_fish",
+    "P": "#minecraft:planks",
+    "S": "minecraft:sand"
+  },
+  "pattern": [
+    "GGG",
+    "GFG",
+    "PSP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:aquarium"
+  }
+}

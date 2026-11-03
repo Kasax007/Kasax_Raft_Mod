@@ -1,0 +1,35 @@
+{
+  "parent": "raft:story/port_solace",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": "raft:storm_sigil"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.raft.story.storm_sigil.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "id": "raft:storm_sigil"
+    },
+    "title": {
+      "translate": "advancements.raft.story.storm_sigil.title"
+    }
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "rewards": {
+    "experience": 50
+  }
+}

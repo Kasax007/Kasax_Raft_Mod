@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "P": "minecraft:glass_pane",
+    "L": "minecraft:glowstone_dust",
+    "D": "minecraft:pink_dye"
+  },
+  "pattern": [
+    " P ",
+    "DLD",
+    " P "
+  ],
+  "result": {
+    "count": 4,
+    "id": "raft:neon_tube_pink"
+  },
+  "group": "neon_tube"
+}

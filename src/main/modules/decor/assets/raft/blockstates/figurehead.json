@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "raft:block/figurehead"
+    },
+    "facing=east": {
+      "model": "raft:block/figurehead",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "raft:block/figurehead",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "raft:block/figurehead",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "S": "raft:scrap_metal",
+    "G": "minecraft:glass_pane",
+    "C": "raft:circuit_board",
+    "R": "minecraft:redstone"
+  },
+  "pattern": [
+    "SGS",
+    "SCS",
+    "SRS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:research_terminal"
+  }
+}

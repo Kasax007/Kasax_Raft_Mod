@@ -1,0 +1,8 @@
+{
+  "values": [
+    {
+      "id": "raft:old_lighthouse",
+      "required": false
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "R": "raft:rope",
+    "S": "minecraft:stick",
+    "B": "minecraft:black_wool",
+    "W": "minecraft:bone"
+  },
+  "pattern": [
+    "RSR",
+    "BWB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:jolly_roger"
+  }
+}

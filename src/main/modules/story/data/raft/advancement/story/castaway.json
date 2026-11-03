@@ -1,0 +1,31 @@
+{
+  "parent": "raft:story/root",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": "raft:expedition_journal"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.raft.story.castaway.description"
+    },
+    "icon": {
+      "id": "raft:expedition_journal"
+    },
+    "title": {
+      "translate": "advancements.raft.story.castaway.title"
+    }
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ]
+}

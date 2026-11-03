@@ -1,0 +1,40 @@
+{
+  "parent": "raft:adventure/root",
+  "criteria": {
+    "wear": {
+      "conditions": {
+        "player": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:equipment": {
+              "head": {
+                "items": "#raft:adv/diving_helmets"
+              },
+              "chest": {
+                "items": "#raft:adv/oxygen_tanks"
+              }
+            }
+          }
+        }
+      },
+      "trigger": "minecraft:tick"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.raft.adventure.deep_breath.description"
+    },
+    "icon": {
+      "id": "minecraft:turtle_helmet"
+    },
+    "title": {
+      "translate": "advancements.raft.adventure.deep_breath.title"
+    }
+  },
+  "requirements": [
+    [
+      "wear"
+    ]
+  ]
+}

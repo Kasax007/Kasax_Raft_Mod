@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "raft:block/beach_umbrella_red_lower"
+    },
+    "half=upper": {
+      "model": "raft:block/beach_umbrella_red_upper"
+    }
+  }
+}

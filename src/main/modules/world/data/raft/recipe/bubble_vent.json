@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "B": "minecraft:basalt",
+    "S": "minecraft:soul_sand"
+  },
+  "pattern": [
+    " B ",
+    "BSB",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:bubble_vent"
+  }
+}

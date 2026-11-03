@@ -1,0 +1,17 @@
+{
+  "values": [
+    "#minecraft:aquatic",
+    "minecraft:drowned",
+    "raft:shark",
+    "raft:leviathan",
+    "raft:tideling",
+    {
+      "id": "#raft:sea_creatures",
+      "required": false
+    },
+    {
+      "id": "raft:drowned_corsair",
+      "required": false
+    }
+  ]
+}

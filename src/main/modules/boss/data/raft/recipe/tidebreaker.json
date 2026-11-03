@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "S": "raft:leviathan_scale",
+    "I": "raft:titanium_ingot",
+    "T": "minecraft:trident"
+  },
+  "pattern": [
+    "SIS",
+    "STS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:tidebreaker"
+  }
+}

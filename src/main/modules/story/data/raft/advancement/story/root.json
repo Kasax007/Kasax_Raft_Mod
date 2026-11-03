@@ -1,0 +1,29 @@
+{
+  "criteria": {
+    "enter": {
+      "conditions": {
+        "to": "raft:raftdim"
+      },
+      "trigger": "minecraft:changed_dimension"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "background": "raft:gui/advancements/backgrounds/story",
+    "description": {
+      "translate": "advancements.raft.story.root.description"
+    },
+    "icon": {
+      "id": "raft:message_in_a_bottle"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancements.raft.story.root.title"
+    }
+  },
+  "requirements": [
+    [
+      "enter"
+    ]
+  ]
+}

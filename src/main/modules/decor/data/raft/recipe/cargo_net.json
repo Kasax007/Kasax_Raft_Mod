@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "R": "raft:rope"
+  },
+  "pattern": [
+    "R R",
+    " R ",
+    "R R"
+  ],
+  "result": {
+    "count": 3,
+    "id": "raft:cargo_net"
+  }
+}

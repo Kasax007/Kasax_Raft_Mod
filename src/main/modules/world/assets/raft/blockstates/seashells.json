@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "shells=1": {
+      "model": "raft:block/seashells_1"
+    },
+    "shells=2": {
+      "model": "raft:block/seashells_2"
+    },
+    "shells=3": {
+      "model": "raft:block/seashells_3"
+    },
+    "shells=4": {
+      "model": "raft:block/seashells_4"
+    }
+  }
+}

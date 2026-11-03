@@ -16,22 +16,6 @@
       "argument": {
         "spawn_costs": {},
         "spawns_by_category": {
-          "water_creature": [
-            {
-              "type": "raft:jellyfish",
-              "count": {
-                "type": "minecraft:uniform",
-                "max_inclusive": 5,
-                "min_inclusive": 2
-              },
-              "weight": 6
-            },
-            {
-              "type": "raft:manta_ray",
-              "count": 1,
-              "weight": 1
-            }
-          ],
           "underground_water_creature": [
             {
               "type": "minecraft:glow_squid",
@@ -112,6 +96,13 @@
     [],
     [
       "minecraft:kelp_warm",
+      "raft:glow_kelp_patch",
+      "raft:bubble_vents",
+      "raft:tube_worms_sparse",
+      "raft:glow_anemones",
+      "raft:giant_clams",
+      "raft:starfish",
+      "raft:seashells_reef",
       "minecraft:seagrass_warm"
     ]
   ],

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "S": "raft:scrap_metal",
+    "W": "raft:driftwood_planks"
+  },
+  "pattern": [
+    "III",
+    "WSW"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:ship_cannon"
+  }
+}

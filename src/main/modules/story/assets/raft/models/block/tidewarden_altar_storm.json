@@ -1,0 +1,79 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "gem": "raft:block/tidewarden_altar_gems",
+    "particle": "raft:block/tidewarden_altar_gems"
+  },
+  "elements": [
+    {
+      "from": [
+        10.5,
+        13,
+        10.5
+      ],
+      "to": [
+        12.5,
+        15.5,
+        12.5
+      ],
+      "light_emission": 15,
+      "faces": {
+        "down": {
+          "uv": [
+            8,
+            0,
+            10,
+            2
+          ],
+          "texture": "#gem"
+        },
+        "up": {
+          "uv": [
+            8,
+            0,
+            10,
+            2
+          ],
+          "texture": "#gem"
+        },
+        "north": {
+          "uv": [
+            8,
+            4,
+            10,
+            6.5
+          ],
+          "texture": "#gem"
+        },
+        "south": {
+          "uv": [
+            8,
+            4,
+            10,
+            6.5
+          ],
+          "texture": "#gem"
+        },
+        "west": {
+          "uv": [
+            8,
+            4,
+            10,
+            6.5
+          ],
+          "texture": "#gem"
+        },
+        "east": {
+          "uv": [
+            8,
+            4,
+            10,
+            6.5
+          ],
+          "texture": "#gem"
+        }
+      }
+    }
+  ]
+}

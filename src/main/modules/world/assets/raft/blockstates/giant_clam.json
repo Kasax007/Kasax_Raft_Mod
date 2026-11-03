@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "facing=north,open=false,pearl=false": {
+      "model": "raft:block/giant_clam"
+    },
+    "facing=north,open=false,pearl=true": {
+      "model": "raft:block/giant_clam"
+    },
+    "facing=north,open=true,pearl=false": {
+      "model": "raft:block/giant_clam_open"
+    },
+    "facing=north,open=true,pearl=true": {
+      "model": "raft:block/giant_clam_open_pearl"
+    },
+    "facing=east,open=false,pearl=false": {
+      "model": "raft:block/giant_clam",
+      "y": 90
+    },
+    "facing=east,open=false,pearl=true": {
+      "model": "raft:block/giant_clam",
+      "y": 90
+    },
+    "facing=east,open=true,pearl=false": {
+      "model": "raft:block/giant_clam_open",
+      "y": 90
+    },
+    "facing=east,open=true,pearl=true": {
+      "model": "raft:block/giant_clam_open_pearl",
+      "y": 90
+    },
+    "facing=south,open=false,pearl=false": {
+      "model": "raft:block/giant_clam",
+      "y": 180
+    },
+    "facing=south,open=false,pearl=true": {
+      "model": "raft:block/giant_clam",
+      "y": 180
+    },
+    "facing=south,open=true,pearl=false": {
+      "model": "raft:block/giant_clam_open",
+      "y": 180
+    },
+    "facing=south,open=true,pearl=true": {
+      "model": "raft:block/giant_clam_open_pearl",
+      "y": 180
+    },
+    "facing=west,open=false,pearl=false": {
+      "model": "raft:block/giant_clam",
+      "y": 270
+    },
+    "facing=west,open=false,pearl=true": {
+      "model": "raft:block/giant_clam",
+      "y": 270
+    },
+    "facing=west,open=true,pearl=false": {
+      "model": "raft:block/giant_clam_open",
+      "y": 270
+    },
+    "facing=west,open=true,pearl=true": {
+      "model": "raft:block/giant_clam_open_pearl",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "raft:block/pineapple_bush_stage3"
+  }
+}

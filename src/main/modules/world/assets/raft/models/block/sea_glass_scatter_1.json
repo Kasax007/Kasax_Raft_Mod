@@ -1,0 +1,79 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "glass": "raft:block/sea_glass_scatter",
+    "particle": "raft:block/sea_glass_scatter"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        0,
+        7
+      ],
+      "to": [
+        9,
+        1,
+        10
+      ],
+      "faces": {
+        "up": {
+          "uv": [
+            0,
+            0,
+            4,
+            4
+          ],
+          "texture": "#glass"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            4,
+            4
+          ],
+          "texture": "#glass",
+          "cullface": "down"
+        },
+        "north": {
+          "uv": [
+            0,
+            5,
+            4,
+            6
+          ],
+          "texture": "#glass"
+        },
+        "south": {
+          "uv": [
+            0,
+            5,
+            4,
+            6
+          ],
+          "texture": "#glass"
+        },
+        "west": {
+          "uv": [
+            0,
+            5,
+            4,
+            6
+          ],
+          "texture": "#glass"
+        },
+        "east": {
+          "uv": [
+            0,
+            5,
+            4,
+            6
+          ],
+          "texture": "#glass"
+        }
+      }
+    }
+  ]
+}

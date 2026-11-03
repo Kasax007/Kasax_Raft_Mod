@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "R": "raft:rope",
+    "I": "minecraft:iron_ingot"
+  },
+  "pattern": [
+    " R ",
+    " I ",
+    "III"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:raft_anchor"
+  }
+}

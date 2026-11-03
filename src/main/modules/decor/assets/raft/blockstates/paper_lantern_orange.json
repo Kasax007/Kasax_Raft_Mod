@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "hanging=false": {
+      "model": "raft:block/paper_lantern_orange"
+    },
+    "hanging=true": {
+      "model": "raft:block/paper_lantern_orange_hanging"
+    }
+  }
+}

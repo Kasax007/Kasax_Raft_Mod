@@ -1,0 +1,287 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "side": "raft:block/treasure_chest_side",
+    "front": "raft:block/treasure_chest_front",
+    "top": "raft:block/treasure_chest_top",
+    "inside": "raft:block/treasure_chest_inside",
+    "lid": "raft:block/treasure_chest_lid_inside",
+    "gold": "raft:block/decor_brass",
+    "particle": "raft:block/treasure_chest_side"
+  },
+  "elements": [
+    {
+      "from": [
+        1.0,
+        0.0,
+        1.0
+      ],
+      "to": [
+        15.0,
+        9.0,
+        15.0
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            1.0,
+            1.0,
+            15.0,
+            15.0
+          ],
+          "texture": "#top"
+        },
+        "up": {
+          "uv": [
+            1.0,
+            1.0,
+            15.0,
+            15.0
+          ],
+          "texture": "#top"
+        },
+        "north": {
+          "uv": [
+            1.0,
+            7.0,
+            15.0,
+            16.0
+          ],
+          "texture": "#front"
+        },
+        "south": {
+          "uv": [
+            1.0,
+            7.0,
+            15.0,
+            16.0
+          ],
+          "texture": "#side"
+        },
+        "west": {
+          "uv": [
+            1.0,
+            7.0,
+            15.0,
+            16.0
+          ],
+          "texture": "#side"
+        },
+        "east": {
+          "uv": [
+            1.0,
+            7.0,
+            15.0,
+            16.0
+          ],
+          "texture": "#side"
+        }
+      }
+    },
+    {
+      "from": [
+        1.0,
+        9.0,
+        1.0
+      ],
+      "to": [
+        15.0,
+        14.0,
+        15.0
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            1.0,
+            1.0,
+            15.0,
+            15.0
+          ],
+          "texture": "#lid"
+        },
+        "up": {
+          "uv": [
+            1.0,
+            1.0,
+            15.0,
+            15.0
+          ],
+          "texture": "#top"
+        },
+        "north": {
+          "uv": [
+            1.0,
+            2.0,
+            15.0,
+            7.0
+          ],
+          "texture": "#front"
+        },
+        "south": {
+          "uv": [
+            1.0,
+            2.0,
+            15.0,
+            7.0
+          ],
+          "texture": "#side"
+        },
+        "west": {
+          "uv": [
+            1.0,
+            2.0,
+            15.0,
+            7.0
+          ],
+          "texture": "#side"
+        },
+        "east": {
+          "uv": [
+            1.0,
+            2.0,
+            15.0,
+            7.0
+          ],
+          "texture": "#side"
+        }
+      }
+    },
+    {
+      "from": [
+        2.0,
+        14.0,
+        2.0
+      ],
+      "to": [
+        14.0,
+        15.0,
+        14.0
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            2.0,
+            2.0,
+            14.0,
+            14.0
+          ],
+          "texture": "#top"
+        },
+        "up": {
+          "uv": [
+            2.0,
+            2.0,
+            14.0,
+            14.0
+          ],
+          "texture": "#top"
+        },
+        "north": {
+          "uv": [
+            2.0,
+            1.0,
+            14.0,
+            2.0
+          ],
+          "texture": "#side"
+        },
+        "south": {
+          "uv": [
+            2.0,
+            1.0,
+            14.0,
+            2.0
+          ],
+          "texture": "#side"
+        },
+        "west": {
+          "uv": [
+            2.0,
+            1.0,
+            14.0,
+            2.0
+          ],
+          "texture": "#side"
+        },
+        "east": {
+          "uv": [
+            2.0,
+            1.0,
+            14.0,
+            2.0
+          ],
+          "texture": "#side"
+        }
+      }
+    },
+    {
+      "from": [
+        7.0,
+        7.0,
+        0.0
+      ],
+      "to": [
+        9.0,
+        11.0,
+        1.0
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            7.0,
+            15.0,
+            9.0,
+            16.0
+          ],
+          "texture": "#gold"
+        },
+        "up": {
+          "uv": [
+            7.0,
+            0.0,
+            9.0,
+            1.0
+          ],
+          "texture": "#gold"
+        },
+        "north": {
+          "uv": [
+            7.0,
+            5.0,
+            9.0,
+            9.0
+          ],
+          "texture": "#gold"
+        },
+        "south": {
+          "uv": [
+            7.0,
+            5.0,
+            9.0,
+            9.0
+          ],
+          "texture": "#gold"
+        },
+        "west": {
+          "uv": [
+            0.0,
+            5.0,
+            1.0,
+            9.0
+          ],
+          "texture": "#gold"
+        },
+        "east": {
+          "uv": [
+            15.0,
+            5.0,
+            16.0,
+            9.0
+          ],
+          "texture": "#gold"
+        }
+      }
+    }
+  ]
+}

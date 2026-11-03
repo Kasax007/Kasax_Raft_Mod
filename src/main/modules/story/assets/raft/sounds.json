@@ -1,0 +1,10 @@
+{
+  "radio_static": {
+    "sounds": [
+      "raft:story/radio_static1",
+      "raft:story/radio_static2",
+      "raft:story/radio_static3"
+    ],
+    "subtitle": "subtitles.raft.radio_static"
+  }
+}

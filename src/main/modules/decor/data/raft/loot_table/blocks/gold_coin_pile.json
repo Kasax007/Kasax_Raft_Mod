@@ -1,0 +1,97 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "raft:gold_coin_pile",
+          "modifier": [
+            {
+              "type": "minecraft:set_count",
+              "condition": {
+                "type": "minecraft:match_block",
+                "blocks": "raft:gold_coin_pile",
+                "state": {
+                  "layers": "2"
+                }
+              },
+              "count": 2
+            },
+            {
+              "type": "minecraft:set_count",
+              "condition": {
+                "type": "minecraft:match_block",
+                "blocks": "raft:gold_coin_pile",
+                "state": {
+                  "layers": "3"
+                }
+              },
+              "count": 3
+            },
+            {
+              "type": "minecraft:set_count",
+              "condition": {
+                "type": "minecraft:match_block",
+                "blocks": "raft:gold_coin_pile",
+                "state": {
+                  "layers": "4"
+                }
+              },
+              "count": 4
+            },
+            {
+              "type": "minecraft:set_count",
+              "condition": {
+                "type": "minecraft:match_block",
+                "blocks": "raft:gold_coin_pile",
+                "state": {
+                  "layers": "5"
+                }
+              },
+              "count": 5
+            },
+            {
+              "type": "minecraft:set_count",
+              "condition": {
+                "type": "minecraft:match_block",
+                "blocks": "raft:gold_coin_pile",
+                "state": {
+                  "layers": "6"
+                }
+              },
+              "count": 6
+            },
+            {
+              "type": "minecraft:set_count",
+              "condition": {
+                "type": "minecraft:match_block",
+                "blocks": "raft:gold_coin_pile",
+                "state": {
+                  "layers": "7"
+                }
+              },
+              "count": 7
+            },
+            {
+              "type": "minecraft:set_count",
+              "condition": {
+                "type": "minecraft:match_block",
+                "blocks": "raft:gold_coin_pile",
+                "state": {
+                  "layers": "8"
+                }
+              },
+              "count": 8
+            },
+            {
+              "type": "minecraft:explosion_decay"
+            }
+          ]
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "raft:blocks/gold_coin_pile"
+}

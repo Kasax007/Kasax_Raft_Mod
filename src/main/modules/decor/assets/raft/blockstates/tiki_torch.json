@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "half=lower,lit=false": {
+      "model": "raft:block/tiki_torch_lower"
+    },
+    "half=lower,lit=true": {
+      "model": "raft:block/tiki_torch_lower"
+    },
+    "half=upper,lit=false": {
+      "model": "raft:block/tiki_torch_upper"
+    },
+    "half=upper,lit=true": {
+      "model": "raft:block/tiki_torch_upper_lit"
+    }
+  }
+}

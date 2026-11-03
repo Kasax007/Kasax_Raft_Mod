@@ -16,22 +16,6 @@
       "argument": {
         "spawn_costs": {},
         "spawns_by_category": {
-          "water_creature": [
-            {
-              "type": "raft:manta_ray",
-              "count": {
-                "type": "minecraft:uniform",
-                "max_inclusive": 2,
-                "min_inclusive": 1
-              },
-              "weight": 3
-            },
-            {
-              "type": "raft:moray_eel",
-              "count": 1,
-              "weight": 2
-            }
-          ],
           "creature": [
             {
               "type": "minecraft:turtle",
@@ -115,7 +99,13 @@
     [],
     [],
     [
-      "minecraft:warm_ocean_vegetation",
+      "raft:coral_reef",
+      "raft:anemones",
+      "raft:giant_clams",
+      "raft:starfish",
+      "raft:sea_urchins",
+      "raft:seashells_reef",
+      "raft:sea_glass_reef",
       "minecraft:sea_pickle",
       "minecraft:seagrass_warm"
     ]

@@ -16,23 +16,7 @@
       "argument": {
         "spawn_costs": {},
         "spawns_by_category": {
-          "water_creature": [
-            {
-              "type": "raft:moray_eel",
-              "count": 1,
-              "weight": 2
-            }
-          ],
           "monster": [
-            {
-              "type": "raft:drowned_corsair",
-              "count": {
-                "type": "minecraft:uniform",
-                "max_inclusive": 2,
-                "min_inclusive": 1
-              },
-              "weight": 1
-            },
             {
               "type": "minecraft:drowned",
               "count": {
@@ -111,6 +95,8 @@
     [],
     [],
     [
+      "raft:concrete_rubble",
+      "raft:barnacles",
       "minecraft:seagrass_normal"
     ]
   ],

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "C": "#minecraft:coals",
+    "R": "raft:rope",
+    "B": "minecraft:bamboo"
+  },
+  "pattern": [
+    "C",
+    "R",
+    "B"
+  ],
+  "result": {
+    "count": 2,
+    "id": "raft:tiki_torch"
+  }
+}

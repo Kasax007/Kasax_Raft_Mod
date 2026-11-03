@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "waterlogged=false": {
+      "model": "raft:block/heart_of_the_tide"
+    },
+    "waterlogged=true": {
+      "model": "raft:block/heart_of_the_tide"
+    }
+  }
+}

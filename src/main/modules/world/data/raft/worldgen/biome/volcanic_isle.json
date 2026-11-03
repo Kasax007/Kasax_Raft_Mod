@@ -15,30 +15,7 @@
     "minecraft:gameplay/natural_mob_spawns": {
       "argument": {
         "spawn_costs": {},
-        "spawns_by_category": {
-          "monster": [
-            {
-              "type": "raft:ember_crab",
-              "count": {
-                "type": "minecraft:uniform",
-                "max_inclusive": 3,
-                "min_inclusive": 1
-              },
-              "weight": 5
-            }
-          ],
-          "creature": [
-            {
-              "type": "raft:seagull",
-              "count": {
-                "type": "minecraft:uniform",
-                "max_inclusive": 2,
-                "min_inclusive": 1
-              },
-              "weight": 1
-            }
-          ]
-        }
+        "spawns_by_category": {}
       },
       "modifier": "overlay"
     },
@@ -71,7 +48,10 @@
     [
       "minecraft:lake_lava_surface"
     ],
-    [],
+    [
+      "raft:crater_lava",
+      "raft:boulder_pumice"
+    ],
     [],
     [
       "minecraft:small_basalt_columns",
@@ -113,6 +93,10 @@
     ],
     [
       "minecraft:spring_lava"
+    ],
+    [
+      "raft:patch_sea_glass",
+      "raft:patch_volcanic_ash_dunes"
     ]
   ],
   "has_precipitation": false,

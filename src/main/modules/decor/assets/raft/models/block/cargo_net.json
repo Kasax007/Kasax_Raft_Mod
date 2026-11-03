@@ -1,0 +1,116 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "net": "raft:block/cargo_net",
+    "rope": "raft:block/decor_rope",
+    "particle": "#net"
+  },
+  "elements": [
+    {
+      "from": [
+        0.0,
+        0.0,
+        15.2
+      ],
+      "to": [
+        16.0,
+        16.0,
+        15.2
+      ],
+      "shade_direction_override": "up",
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#net"
+        },
+        "south": {
+          "uv": [
+            16,
+            0,
+            0,
+            16
+          ],
+          "texture": "#net"
+        }
+      }
+    },
+    {
+      "from": [
+        0.0,
+        14.5,
+        14.5
+      ],
+      "to": [
+        16.0,
+        16.0,
+        16.0
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            1.5
+          ],
+          "texture": "#rope"
+        },
+        "up": {
+          "uv": [
+            0.0,
+            14.5,
+            16.0,
+            16.0
+          ],
+          "texture": "#rope",
+          "cullface": "up"
+        },
+        "north": {
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            1.5
+          ],
+          "texture": "#rope"
+        },
+        "south": {
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            1.5
+          ],
+          "texture": "#rope",
+          "cullface": "south"
+        },
+        "west": {
+          "uv": [
+            14.5,
+            0.0,
+            16.0,
+            1.5
+          ],
+          "texture": "#rope",
+          "cullface": "west"
+        },
+        "east": {
+          "uv": [
+            0.0,
+            0.0,
+            1.5,
+            1.5
+          ],
+          "texture": "#rope",
+          "cullface": "east"
+        }
+      }
+    }
+  ]
+}

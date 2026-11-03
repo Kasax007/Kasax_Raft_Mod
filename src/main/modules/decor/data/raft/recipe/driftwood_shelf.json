@@ -1,0 +1,26 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:registry_contains",
+      "registry": "minecraft:item",
+      "values": [
+        "raft:sea_glass_shard"
+      ]
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "B": "minecraft:glass_bottle",
+    "G": "raft:sea_glass_shard",
+    "P": "raft:driftwood_planks"
+  },
+  "pattern": [
+    "BGB",
+    "PPP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:driftwood_shelf"
+  }
+}

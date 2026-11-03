@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "raft:gold_coin",
+    "raft:gold_coin",
+    "raft:gold_coin",
+    "raft:gold_coin",
+    "raft:gold_coin",
+    "raft:gold_coin",
+    "raft:gold_coin",
+    "raft:gold_coin",
+    "raft:gold_coin"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:gold_coin_pile"
+  }
+}

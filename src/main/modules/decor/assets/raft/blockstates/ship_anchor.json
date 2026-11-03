@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "raft:block/ship_anchor"
+    },
+    "facing=east": {
+      "model": "raft:block/ship_anchor",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "raft:block/ship_anchor",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "raft:block/ship_anchor",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,151 @@
+{
+  "item.armor.equip_diving_gear": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/turtle/armor"
+      },
+      {
+        "name": "minecraft:item/armor/equip_iron1"
+      }
+    ],
+    "subtitle": "subtitles.raft.item.armor.equip_diving_gear"
+  },
+  "item.harpoon_gun.fire": {
+    "sounds": [
+      {
+        "name": "minecraft:item/crossbow/shoot1",
+        "pitch": 0.72
+      },
+      {
+        "name": "minecraft:item/crossbow/shoot2",
+        "pitch": 0.72
+      },
+      {
+        "name": "minecraft:item/crossbow/shoot3",
+        "pitch": 0.72
+      }
+    ],
+    "subtitle": "subtitles.raft.item.harpoon_gun.fire"
+  },
+  "item.harpoon_gun.reload": {
+    "sounds": [
+      {
+        "name": "minecraft:item/crossbow/loading_end",
+        "pitch": 1.25,
+        "volume": 0.8
+      }
+    ],
+    "subtitle": "subtitles.raft.item.harpoon_gun.reload"
+  },
+  "entity.harpoon.hit": {
+    "sounds": [
+      {
+        "name": "minecraft:item/trident/pierce1",
+        "pitch": 1.1
+      },
+      {
+        "name": "minecraft:item/trident/pierce2",
+        "pitch": 1.1
+      },
+      {
+        "name": "minecraft:item/trident/pierce3",
+        "pitch": 1.1
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.harpoon.hit"
+  },
+  "entity.harpoon.hit_ground": {
+    "sounds": [
+      {
+        "name": "minecraft:item/trident/ground_impact1",
+        "pitch": 1.15
+      },
+      {
+        "name": "minecraft:item/trident/ground_impact2",
+        "pitch": 1.15
+      },
+      {
+        "name": "minecraft:item/trident/ground_impact3",
+        "pitch": 1.15
+      },
+      {
+        "name": "minecraft:item/trident/ground_impact4",
+        "pitch": 1.15
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.harpoon.hit_ground"
+  },
+  "block.air_compressor.crank": {
+    "sounds": [
+      {
+        "name": "minecraft:block/grindstone/grindstone1",
+        "pitch": 1.5,
+        "volume": 0.7
+      },
+      {
+        "name": "minecraft:block/grindstone/grindstone2",
+        "pitch": 1.5,
+        "volume": 0.7
+      },
+      {
+        "name": "minecraft:block/grindstone/grindstone3",
+        "pitch": 1.5,
+        "volume": 0.7
+      }
+    ],
+    "subtitle": "subtitles.raft.block.air_compressor.crank"
+  },
+  "block.air_compressor.fill": {
+    "sounds": [
+      {
+        "name": "minecraft:random/fizz",
+        "pitch": 1.7,
+        "volume": 0.5
+      }
+    ],
+    "subtitle": "subtitles.raft.block.air_compressor.fill"
+  },
+  "item.sea_scooter.run": {
+    "sounds": [
+      {
+        "name": "minecraft:block/beehive/work1",
+        "pitch": 0.55
+      },
+      {
+        "name": "minecraft:block/beehive/work2",
+        "pitch": 0.55
+      },
+      {
+        "name": "minecraft:block/beehive/work3",
+        "pitch": 0.55
+      },
+      {
+        "name": "minecraft:block/beehive/work4",
+        "pitch": 0.55
+      }
+    ],
+    "subtitle": "subtitles.raft.item.sea_scooter.run"
+  },
+  "item.oxygen_tank.refill": {
+    "sounds": [
+      {
+        "name": "minecraft:block/bubble_column/upwards_ambient1",
+        "pitch": 1.4
+      },
+      {
+        "name": "minecraft:block/bubble_column/upwards_ambient2",
+        "pitch": 1.4
+      }
+    ],
+    "subtitle": "subtitles.raft.item.oxygen_tank.refill"
+  },
+  "item.oxygen_tank.low": {
+    "sounds": [
+      {
+        "name": "minecraft:note/bit",
+        "volume": 0.7
+      }
+    ],
+    "subtitle": "subtitles.raft.item.oxygen_tank.low"
+  }
+}

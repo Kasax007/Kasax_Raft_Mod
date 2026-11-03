@@ -1,0 +1,31 @@
+{
+  "parent": "raft:adventure/root",
+  "criteria": {
+    "bitten": {
+      "conditions": {
+        "damage": {
+          "source_entity": {
+            "minecraft:entity_type": "#raft:adv/sharks"
+          }
+        }
+      },
+      "trigger": "minecraft:entity_hurt_player"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.raft.adventure.shark_bait.description"
+    },
+    "icon": {
+      "id": "raft:shark_tooth"
+    },
+    "title": {
+      "translate": "advancements.raft.adventure.shark_bait.title"
+    }
+  },
+  "requirements": [
+    [
+      "bitten"
+    ]
+  ]
+}

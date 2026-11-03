@@ -24,33 +24,44 @@ def _concrete_base(seed):
 
 
 def cracked_concrete():
+    """Weathered cast concrete: a branching diagonal crack, a hairline, faint water stains and a spalled pit."""
     p = CONCRETE
     img = _concrete_base(101)
-    crack(img, [(3, 0), (3, 1), (4, 2), (4, 3), (5, 4), (5, 5), (4, 6), (4, 7), (5, 8)], p[1], p[5])
-    crack(img, [(5, 4), (6, 4), (7, 5), (8, 5), (9, 6)], p[1], p[5])
-    crack(img, [(11, 9), (12, 10), (12, 11), (13, 12), (13, 13), (14, 14), (14, 15)], p[1], p[5])
-    crack(img, [(12, 11), (11, 12), (10, 12)], p[1], p[5])
-    # water stain streaks running down from the cracks
-    for (x, y0, y1) in [(5, 9, 12), (9, 7, 9), (13, 0, 2)]:
+    crack(img, [(1, 4), (2, 5), (3, 5), (4, 6), (5, 7), (6, 7), (7, 8), (8, 9), (8, 10), (9, 11)], p[1], p[5])
+    crack(img, [(5, 7), (5, 8), (4, 9), (4, 10)], p[1], p[5])
+    crack(img, [(8, 9), (9, 9), (10, 8)], p[1])
+    crack(img, [(12, 1), (13, 2), (13, 3), (14, 4)], p[2])
+    # water stains running down from the cracks (blended, not painted)
+    for (x, y0, y1) in [(4, 11, 14), (9, 12, 15), (14, 5, 7)]:
         for y in range(y0, y1 + 1):
-            put(img, x, y, p[2])
+            put(img, x, y, lerp(get(img, x, y), p[2], 0.45 if y < y1 else 0.25))
     # a spalled pit
-    for (x, y, c) in [(9, 12, 1), (10, 12, 2), (9, 13, 2), (10, 13, 3), (8, 12, 5)]:
+    for (x, y, c) in [(11, 13, 1), (12, 13, 2), (11, 14, 2), (12, 14, 3), (10, 13, 5)]:
         put(img, x, y, p[c])
     return img
 
 
 def mossy_concrete():
+    """Cracked concrete with algae growing out of the cracks and up from the water line (bottom)."""
     img = cracked_concrete()
-    m = blotch_mask(0.36, 103, cell=4)
+    n = noise(103, 4, 2)
+    crackpx = {(x, y) for y in range(16) for x in range(16) if get(img, x, y) == CONCRETE[1]}
+    score = {}
     for y in range(16):
         for x in range(16):
-            if m(x, y):
-                c = img.getpixel((x, y))
-                lum = sum(c[:3]) / 3
-                img.putpixel((x, y), ALGAE[1] if lum < 110 else ALGAE[2] if lum < 140 else ALGAE[3])
-    for (x, y) in [(4, 3), (4, 4), (12, 10), (13, 11)]:  # moss growing out of the cracks
-        put(img, x, y, ALGAE[2])
+            s = n[y][x] + max(0, y - 9) * 0.05
+            if any(((x + dx) % 16, (y + dy) % 16) in crackpx for dx in (-1, 0, 1) for dy in (-1, 0, 1)):
+                s += 0.22
+            score[(x, y)] = s
+    thr = sorted(score.values())[int(256 * 0.70)]
+    moss = {k for k, v in score.items() if v >= thr}
+    for (x, y) in moss:
+        if (x, y) in crackpx:
+            put(img, x, y, ALGAE[0])
+        elif (x, (y - 1) % 16) not in moss:
+            put(img, x, y, ALGAE[3])
+        else:
+            put(img, x, y, ALGAE[2] if (x * 3 + y) % 4 else ALGAE[1])
     return img
 
 
@@ -58,29 +69,28 @@ REBAR = pal('#3a1a10', '#5e2c18', '#87431f', '#a85e2e', '#c47d43')
 
 
 def rebar_concrete():
-    """Concrete with a broken corner where two rusty rebars show."""
+    """Concrete whose upper-right corner has broken off: a rough, shadowed core of aggregate with two ribbed, rusty
+    rebars running through it, and rust stains bleeding down the intact face."""
     p = CONCRETE
     img = _concrete_base(105)
-    # broken-off upper-right corner: rough darker core
-    broken = [(x, y) for y in range(0, 9) for x in range(16) if x + (y * 1.3) > 12 + (y % 2)]
-    for (x, y) in broken:
-        put(img, x, y, p[2] if (x * 7 + y * 3) % 5 else p[1])
-    edge = {}
-    for (x, y) in broken:
-        edge[y] = min(edge.get(y, 99), x)
-    for y, x in edge.items():  # lit break edge
-        put(img, x, y, p[5])
-        put(img, x - 1, y, p[4])
-    # two ribbed rebars across the break
-    for y in (2, 6):
-        for x in range(9, 16):
-            if (x, y) in broken or x > 12:
-                put(img, x, y, REBAR[3] if x % 2 else REBAR[2])
-                put(img, x, y + 1, REBAR[1])
-    # rust stains running down
-    for (x, y0, y1) in [(12, 8, 13), (14, 9, 11), (13, 9, 15)]:
+    rnd = random.Random(106)
+    edge = {y: 7 + (y * 5) // 8 + (1 if y in (3, 6) else 0) for y in range(0, 11)}  # broken edge x per row
+    for y, x0 in edge.items():
+        for x in range(x0, 16):
+            r = rnd.random()
+            put(img, x, y, p[0] if r < 0.12 else p[1] if r < 0.55 else p[2])
+        put(img, x0, y, p[5])  # lit fracture rim
+        if x0 - 1 >= 0:
+            put(img, x0 - 1, y, p[4])
+    for x in range(edge[10], 16):  # shadow under the break
+        put(img, x, 11, lerp(get(img, x, 11), p[1], 0.5))
+    for y in (2, 7):  # two ribbed rebars, rust with a dark underside
+        for x in range(edge[y] - 1, 16):
+            put(img, x, y, REBAR[3] if x % 2 else REBAR[4])
+            put(img, x, y + 1, REBAR[1] if x % 2 else REBAR[2])
+    for (x, y0, y1) in [(9, 9, 14), (12, 12, 15), (13, 12, 13)]:  # rust stains
         for y in range(y0, y1 + 1):
-            put(img, x, y, lerp(img.getpixel((x, y)), REBAR[2], 0.45))
+            put(img, x, y, lerp(get(img, x, y), REBAR[1], 0.38 if y < y1 else 0.2))
     return img
 
 
@@ -206,7 +216,7 @@ def rusty_hull():
     p = NAVY
     img = _plates(p, 122, p[5], p[0])
     rust_colours = [RUST[1], RUST[2], RUST[3], RUST[4], RUST[5]]
-    blotches(img, rust_colours, 0.55, 123, cell=4, octaves=3)
+    blotches(img, rust_colours, 0.45, 124, cell=4, octaves=2)
     for (x, y0, y1) in [(3, 6, 12), (11, 0, 6), (14, 8, 15)]:  # streaks
         for y in range(y0, y1 + 1):
             put(img, x, y, RUST[2] if y % 3 else RUST[3])
@@ -240,21 +250,30 @@ def corrugated_metal():
 
 
 def rusted_plate():
-    """Diamond-plate steel floor, heavily rusted."""
+    """Diamond-plate steel floor: raised lozenges in staggered rows, rust eating in from patches; the lozenges stay
+    visible through the rust (they are drawn after it, tinted)."""
     p = STEEL
     img = new()
-    shade_fill(img, p, 2, 3, 141, cell=8, contrast=0.8)
+    shade_fill(img, p, 2, 3, 141, cell=8, contrast=0.6)
+    rust = blotch_mask(0.34, 147, cell=4, octaves=2)
+    deep = blotch_mask(0.12, 147, cell=4, octaves=2)
+    for y in range(16):
+        for x in range(16):
+            if deep(x, y):
+                put(img, x, y, RUST[2] if (x + y) % 4 else RUST[1])
+            elif rust(x, y):
+                put(img, x, y, RUST[3] if (x * 5 + y * 3) % 7 else RUST[4])
     for gy in range(4):
         for gx in range(4):
             ox = gx * 4 + (2 if gy % 2 else 0)
             oy = gy * 4 + 1
-            # raised lozenge: 3 px diagonal, lit top-left
-            put(img, ox, oy + 1, p[5])
-            put(img, ox + 1, oy, p[5])
-            put(img, ox + 1, oy + 1, p[4])
-            put(img, ox + 2, oy + 1, p[1])
-            put(img, ox + 1, oy + 2, p[1])
-    blotches(img, [RUST[1], RUST[2], RUST[3], RUST[4]], 0.45, 143, cell=4, octaves=3)
+            rusty = rust(ox + 1, oy + 1)
+            hi, mid, lo = (RUST[5], RUST[4], RUST[1]) if rusty else (p[5], p[4], p[1])
+            put(img, ox, oy + 1, hi)  # raised lozenge, lit top-left
+            put(img, ox + 1, oy, hi)
+            put(img, ox + 1, oy + 1, mid)
+            put(img, ox + 2, oy + 1, lo)
+            put(img, ox + 1, oy + 2, lo)
     return img
 
 

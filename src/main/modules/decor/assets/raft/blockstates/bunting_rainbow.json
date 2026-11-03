@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "raft:block/bunting_rainbow"
+    },
+    "facing=east": {
+      "model": "raft:block/bunting_rainbow",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "raft:block/bunting_rainbow",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "raft:block/bunting_rainbow",
+      "y": 270
+    }
+  }
+}

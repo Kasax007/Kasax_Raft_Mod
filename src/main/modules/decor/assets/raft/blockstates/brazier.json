@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "raft:block/brazier"
+    },
+    "lit=true": {
+      "model": "raft:block/brazier_lit"
+    }
+  }
+}

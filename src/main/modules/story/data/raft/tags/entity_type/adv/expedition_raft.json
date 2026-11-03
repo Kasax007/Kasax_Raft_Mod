@@ -1,0 +1,8 @@
+{
+  "values": [
+    {
+      "id": "raft:expedition_raft",
+      "required": false
+    }
+  ]
+}

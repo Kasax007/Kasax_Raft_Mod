@@ -1,0 +1,40 @@
+{
+  "parent": "raft:adventure/root",
+  "criteria": {
+    "spot": {
+      "conditions": {
+        "item": {
+          "items": "minecraft:spyglass"
+        },
+        "player": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:type_specific/player": {
+              "looking_at": {
+                "minecraft:entity_type": "#raft:adv/whale"
+              }
+            }
+          }
+        }
+      },
+      "trigger": "minecraft:using_item"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.raft.adventure.whale_watcher.description"
+    },
+    "icon": {
+      "id": "minecraft:spyglass"
+    },
+    "title": {
+      "translate": "advancements.raft.adventure.whale_watcher.title"
+    }
+  },
+  "requirements": [
+    [
+      "spot"
+    ]
+  ]
+}

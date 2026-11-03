@@ -1,0 +1,8 @@
+{
+  "values": [
+    {
+      "id": "raft:port_solace",
+      "required": false
+    }
+  ]
+}

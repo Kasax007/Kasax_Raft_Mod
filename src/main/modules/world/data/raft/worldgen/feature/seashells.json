@@ -1,0 +1,46 @@
+{
+  "type": "minecraft:simple_block",
+  "to_place": {
+    "type": "minecraft:rule_based",
+    "fallback": {
+      "type": "minecraft:randomized_int",
+      "property": "shells",
+      "source": {
+        "id": "raft:seashells",
+        "properties": {
+          "shells": "1",
+          "waterlogged": "false"
+        }
+      },
+      "values": {
+        "type": "minecraft:uniform",
+        "max_inclusive": 4,
+        "min_inclusive": 1
+      }
+    },
+    "rules": [
+      {
+        "if_true": {
+          "type": "minecraft:matching_fluids",
+          "fluids": "minecraft:water"
+        },
+        "then": {
+          "type": "minecraft:randomized_int",
+          "property": "shells",
+          "source": {
+            "id": "raft:seashells",
+            "properties": {
+              "shells": "1",
+              "waterlogged": "true"
+            }
+          },
+          "values": {
+            "type": "minecraft:uniform",
+            "max_inclusive": 4,
+            "min_inclusive": 1
+          }
+        }
+      }
+    ]
+  }
+}

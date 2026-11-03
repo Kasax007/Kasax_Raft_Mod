@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "S": "minecraft:stick",
+    "R": "raft:rope"
+  },
+  "pattern": [
+    "SRS",
+    "SRS"
+  ],
+  "result": {
+    "count": 4,
+    "id": "raft:rope_railing"
+  }
+}

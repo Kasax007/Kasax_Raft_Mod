@@ -1,0 +1,82 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "raft:tidewarden_altar"
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "raft:tidewarden_altar",
+        "state": {
+          "coral": "true"
+        }
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "raft:coral_sigil"
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "raft:tidewarden_altar",
+        "state": {
+          "pearl": "true"
+        }
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "raft:pearl_sigil"
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "raft:tidewarden_altar",
+        "state": {
+          "storm": "true"
+        }
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "raft:storm_sigil"
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "raft:tidewarden_altar",
+        "state": {
+          "ember": "true"
+        }
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "raft:ember_sigil"
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "raft:blocks/tidewarden_altar"
+}

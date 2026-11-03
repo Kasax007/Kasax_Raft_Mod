@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "R": "raft:rope",
+    "F": "#minecraft:small_flowers",
+    "D": "minecraft:dirt",
+    "B": "minecraft:bamboo"
+  },
+  "pattern": [
+    " R ",
+    "FDF",
+    "BBB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:hanging_planter"
+  }
+}

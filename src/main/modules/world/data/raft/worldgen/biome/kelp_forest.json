@@ -16,31 +16,6 @@
       "argument": {
         "spawn_costs": {},
         "spawns_by_category": {
-          "water_creature": [
-            {
-              "type": "raft:sea_otter",
-              "count": {
-                "type": "minecraft:uniform",
-                "max_inclusive": 3,
-                "min_inclusive": 1
-              },
-              "weight": 4
-            },
-            {
-              "type": "raft:jellyfish",
-              "count": {
-                "type": "minecraft:uniform",
-                "max_inclusive": 3,
-                "min_inclusive": 1
-              },
-              "weight": 2
-            },
-            {
-              "type": "raft:moray_eel",
-              "count": 1,
-              "weight": 1
-            }
-          ],
           "water_ambient": [
             {
               "type": "minecraft:cod",
@@ -122,6 +97,11 @@
     [],
     [],
     [
+      "raft:tall_kelp",
+      "raft:glow_kelp_patch",
+      "raft:starfish",
+      "raft:sea_urchins",
+      "raft:barnacles",
       "minecraft:seagrass_deep_warm"
     ]
   ],

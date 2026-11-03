@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "S": "minecraft:string",
+    "R": "minecraft:red_wool",
+    "W": "minecraft:white_wool"
+  },
+  "pattern": [
+    "SSS",
+    "RWR"
+  ],
+  "result": {
+    "count": 3,
+    "id": "raft:bunting_red_white"
+  }
+}

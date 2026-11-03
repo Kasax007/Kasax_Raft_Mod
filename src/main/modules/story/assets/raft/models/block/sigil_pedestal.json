@@ -1,0 +1,215 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "side": "raft:block/sigil_pedestal_side",
+    "top": "raft:block/sigil_pedestal_top",
+    "particle": "raft:block/sigil_pedestal_side"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        3,
+        14
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            2,
+            2,
+            14,
+            14
+          ],
+          "texture": "#top",
+          "cullface": "down"
+        },
+        "up": {
+          "uv": [
+            2,
+            2,
+            14,
+            14
+          ],
+          "texture": "#top"
+        },
+        "north": {
+          "uv": [
+            2,
+            13,
+            14,
+            16
+          ],
+          "texture": "#side"
+        },
+        "south": {
+          "uv": [
+            2,
+            13,
+            14,
+            16
+          ],
+          "texture": "#side"
+        },
+        "west": {
+          "uv": [
+            2,
+            13,
+            14,
+            16
+          ],
+          "texture": "#side"
+        },
+        "east": {
+          "uv": [
+            2,
+            13,
+            14,
+            16
+          ],
+          "texture": "#side"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        3,
+        4
+      ],
+      "to": [
+        12,
+        12,
+        12
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            4,
+            4,
+            12,
+            12
+          ],
+          "texture": "#side"
+        },
+        "up": {
+          "uv": [
+            4,
+            4,
+            12,
+            12
+          ],
+          "texture": "#side"
+        },
+        "north": {
+          "uv": [
+            4,
+            4,
+            12,
+            13
+          ],
+          "texture": "#side"
+        },
+        "south": {
+          "uv": [
+            4,
+            4,
+            12,
+            13
+          ],
+          "texture": "#side"
+        },
+        "west": {
+          "uv": [
+            4,
+            4,
+            12,
+            13
+          ],
+          "texture": "#side"
+        },
+        "east": {
+          "uv": [
+            4,
+            4,
+            12,
+            13
+          ],
+          "texture": "#side"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        12,
+        2
+      ],
+      "to": [
+        14,
+        15,
+        14
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            2,
+            2,
+            14,
+            14
+          ],
+          "texture": "#top"
+        },
+        "up": {
+          "uv": [
+            2,
+            2,
+            14,
+            14
+          ],
+          "texture": "#top"
+        },
+        "north": {
+          "uv": [
+            2,
+            1,
+            14,
+            4
+          ],
+          "texture": "#side"
+        },
+        "south": {
+          "uv": [
+            2,
+            1,
+            14,
+            4
+          ],
+          "texture": "#side"
+        },
+        "west": {
+          "uv": [
+            2,
+            1,
+            14,
+            4
+          ],
+          "texture": "#side"
+        },
+        "east": {
+          "uv": [
+            2,
+            1,
+            14,
+            4
+          ],
+          "texture": "#side"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "G": "minecraft:spyglass",
+    "S": "minecraft:stick"
+  },
+  "pattern": [
+    " G ",
+    " S ",
+    "S S"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:spyglass_stand"
+  }
+}

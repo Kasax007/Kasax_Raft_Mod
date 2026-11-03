@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "P": "minecraft:paper",
+    "T": "minecraft:torch",
+    "L": "raft:stripped_driftwood_log"
+  },
+  "pattern": [
+    "PPP",
+    "PTP",
+    " L "
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:driftwood_lamp"
+  }
+}

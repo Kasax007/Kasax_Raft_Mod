@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "raft:block/leviathan_trophy"
+    },
+    "facing=east": {
+      "model": "raft:block/leviathan_trophy",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "raft:block/leviathan_trophy",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "raft:block/leviathan_trophy",
+      "y": 270
+    }
+  }
+}

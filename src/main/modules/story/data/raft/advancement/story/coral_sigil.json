@@ -1,0 +1,35 @@
+{
+  "parent": "raft:story/saltmere",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": "raft:coral_sigil"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.raft.story.coral_sigil.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "id": "raft:coral_sigil"
+    },
+    "title": {
+      "translate": "advancements.raft.story.coral_sigil.title"
+    }
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "rewards": {
+    "experience": 50
+  }
+}

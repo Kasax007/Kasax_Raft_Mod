@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "P": "raft:driftwood_planks",
+    "S": "minecraft:stick"
+  },
+  "pattern": [
+    "S  ",
+    "PPP",
+    "S S"
+  ],
+  "result": {
+    "count": 2,
+    "id": "raft:driftwood_chair"
+  },
+  "group": "decor_chair"
+}

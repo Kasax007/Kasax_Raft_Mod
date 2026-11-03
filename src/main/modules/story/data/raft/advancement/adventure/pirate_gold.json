@@ -1,0 +1,31 @@
+{
+  "parent": "raft:adventure/root",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#raft:adv/gold_coins"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.raft.adventure.pirate_gold.description"
+    },
+    "icon": {
+      "id": "minecraft:gold_nugget"
+    },
+    "title": {
+      "translate": "advancements.raft.adventure.pirate_gold.title"
+    }
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ]
+}

@@ -1,0 +1,225 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "core": "raft:block/sea_urchin",
+    "spines": "raft:block/sea_urchin_spines",
+    "particle": "raft:block/sea_urchin"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        4
+      ],
+      "to": [
+        12,
+        6,
+        12
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            4,
+            4,
+            12,
+            12
+          ],
+          "texture": "#core",
+          "cullface": "down"
+        },
+        "up": {
+          "uv": [
+            4,
+            4,
+            12,
+            12
+          ],
+          "texture": "#core"
+        },
+        "north": {
+          "uv": [
+            4,
+            10,
+            12,
+            16
+          ],
+          "texture": "#core"
+        },
+        "south": {
+          "uv": [
+            4,
+            10,
+            12,
+            16
+          ],
+          "texture": "#core"
+        },
+        "west": {
+          "uv": [
+            4,
+            10,
+            12,
+            16
+          ],
+          "texture": "#core"
+        },
+        "east": {
+          "uv": [
+            4,
+            10,
+            12,
+            16
+          ],
+          "texture": "#core"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        6,
+        5
+      ],
+      "to": [
+        11,
+        7,
+        11
+      ],
+      "faces": {
+        "up": {
+          "uv": [
+            5,
+            5,
+            11,
+            11
+          ],
+          "texture": "#core"
+        },
+        "north": {
+          "uv": [
+            5,
+            9,
+            11,
+            10
+          ],
+          "texture": "#core"
+        },
+        "south": {
+          "uv": [
+            5,
+            9,
+            11,
+            10
+          ],
+          "texture": "#core"
+        },
+        "west": {
+          "uv": [
+            5,
+            9,
+            11,
+            10
+          ],
+          "texture": "#core"
+        },
+        "east": {
+          "uv": [
+            5,
+            9,
+            11,
+            10
+          ],
+          "texture": "#core"
+        }
+      }
+    },
+    {
+      "from": [
+        0.8,
+        0,
+        8
+      ],
+      "to": [
+        15.2,
+        8.1,
+        8
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            7,
+            16,
+            16
+          ],
+          "texture": "#spines"
+        },
+        "south": {
+          "uv": [
+            16,
+            7,
+            0,
+            16
+          ],
+          "texture": "#spines"
+        }
+      },
+      "shade": false,
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "rescale": true
+      }
+    },
+    {
+      "from": [
+        8,
+        0,
+        0.8
+      ],
+      "to": [
+        8,
+        8.1,
+        15.2
+      ],
+      "faces": {
+        "west": {
+          "uv": [
+            0,
+            7,
+            16,
+            16
+          ],
+          "texture": "#spines"
+        },
+        "east": {
+          "uv": [
+            16,
+            7,
+            0,
+            16
+          ],
+          "texture": "#spines"
+        }
+      },
+      "shade": false,
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "rescale": true
+      }
+    }
+  ]
+}

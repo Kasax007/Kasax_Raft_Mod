@@ -1,0 +1,37 @@
+{
+  "parent": "raft:story/abyssal_sanctum",
+  "criteria": {
+    "kill": {
+      "conditions": {
+        "entity": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:entity_type": "#raft:adv/leviathan"
+          }
+        }
+      },
+      "trigger": "minecraft:player_killed_entity"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.raft.story.leviathan.description"
+    },
+    "frame": "challenge",
+    "icon": {
+      "id": "minecraft:heart_of_the_sea"
+    },
+    "title": {
+      "translate": "advancements.raft.story.leviathan.title"
+    }
+  },
+  "requirements": [
+    [
+      "kill"
+    ]
+  ],
+  "rewards": {
+    "experience": 250
+  }
+}

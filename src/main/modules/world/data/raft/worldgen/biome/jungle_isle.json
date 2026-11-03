@@ -34,24 +34,6 @@
                 "min_inclusive": 1
               },
               "weight": 2
-            },
-            {
-              "type": "raft:seagull",
-              "count": {
-                "type": "minecraft:uniform",
-                "max_inclusive": 3,
-                "min_inclusive": 1
-              },
-              "weight": 2
-            },
-            {
-              "type": "raft:crab",
-              "count": {
-                "type": "minecraft:uniform",
-                "max_inclusive": 3,
-                "min_inclusive": 1
-              },
-              "weight": 3
             }
           ]
         }
@@ -72,7 +54,9 @@
   "features": [
     [],
     [],
-    [],
+    [
+      "raft:boulder_mossy"
+    ],
     [],
     [],
     [],
@@ -111,11 +95,21 @@
     ],
     [
       "raft:palm_placed",
+      "raft:palm_trees_sparse",
       "minecraft:bamboo_light",
       "minecraft:trees_jungle",
+      "raft:fallen_driftwood",
       "minecraft:patch_grass_jungle",
+      "raft:patch_beach_grass",
+      "raft:patch_sea_oats",
+      "raft:patch_hibiscus",
+      "raft:patch_bird_of_paradise",
+      "raft:patch_tropical_fern",
+      "raft:patch_pineapple_bush",
       "minecraft:patch_melon",
-      "minecraft:vines"
+      "minecraft:vines",
+      "raft:patch_seashells",
+      "raft:patch_sea_glass"
     ]
   ],
   "has_precipitation": false,

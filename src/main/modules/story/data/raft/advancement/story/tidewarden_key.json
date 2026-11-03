@@ -1,0 +1,35 @@
+{
+  "parent": "raft:story/coral_temple",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": "raft:tidewarden_key"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.raft.story.tidewarden_key.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "id": "raft:tidewarden_key"
+    },
+    "title": {
+      "translate": "advancements.raft.story.tidewarden_key.title"
+    }
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "rewards": {
+    "experience": 100
+  }
+}

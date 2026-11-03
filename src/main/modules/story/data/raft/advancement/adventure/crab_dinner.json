@@ -1,0 +1,29 @@
+{
+  "parent": "raft:adventure/root",
+  "criteria": {
+    "eat": {
+      "conditions": {
+        "item": {
+          "items": "#raft:adv/cooked_crab"
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.raft.adventure.crab_dinner.description"
+    },
+    "icon": {
+      "id": "minecraft:cooked_cod"
+    },
+    "title": {
+      "translate": "advancements.raft.adventure.crab_dinner.title"
+    }
+  },
+  "requirements": [
+    [
+      "eat"
+    ]
+  ]
+}

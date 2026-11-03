@@ -23,25 +23,6 @@
               "weight": 3
             },
             {
-              "type": "raft:whale",
-              "count": 1,
-              "weight": 1
-            },
-            {
-              "type": "raft:jellyfish",
-              "count": {
-                "type": "minecraft:uniform",
-                "max_inclusive": 4,
-                "min_inclusive": 2
-              },
-              "weight": 4
-            },
-            {
-              "type": "raft:hammerhead_shark",
-              "count": 1,
-              "weight": 1
-            },
-            {
               "type": "minecraft:squid",
               "count": {
                 "type": "minecraft:uniform",
@@ -129,7 +110,10 @@
     [],
     [
       "raft:palm_placed",
+      "raft:rare_tube_coral",
       "minecraft:kelp_warm",
+      "raft:bubble_vents_sparse",
+      "raft:barnacles",
       "minecraft:seagrass_deep_warm"
     ]
   ],

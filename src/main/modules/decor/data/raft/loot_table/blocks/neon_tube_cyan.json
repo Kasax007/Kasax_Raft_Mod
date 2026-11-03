@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "raft:neon_tube_cyan"
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "raft:blocks/neon_tube_cyan"
+}

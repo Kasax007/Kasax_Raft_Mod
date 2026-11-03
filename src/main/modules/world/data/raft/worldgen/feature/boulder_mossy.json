@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:block_blob",
+  "can_place_on": {
+    "type": "minecraft:matching_blocks",
+    "blocks": [
+      "minecraft:sand",
+      "raft:shell_sand",
+      "minecraft:grass_block",
+      "minecraft:coarse_dirt",
+      "minecraft:podzol",
+      "minecraft:dirt",
+      "minecraft:moss_block"
+    ]
+  },
+  "state": {
+    "id": "minecraft:mossy_cobblestone"
+  }
+}

@@ -1,0 +1,223 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "side": "raft:block/treasure_chest_side",
+    "front": "raft:block/treasure_chest_front",
+    "top": "raft:block/treasure_chest_top",
+    "inside": "raft:block/treasure_chest_inside",
+    "lid": "raft:block/treasure_chest_lid_inside",
+    "gold": "raft:block/decor_brass",
+    "particle": "raft:block/treasure_chest_side"
+  },
+  "elements": [
+    {
+      "from": [
+        1.0,
+        0.0,
+        1.0
+      ],
+      "to": [
+        15.0,
+        9.0,
+        15.0
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            1.0,
+            1.0,
+            15.0,
+            15.0
+          ],
+          "texture": "#top"
+        },
+        "up": {
+          "uv": [
+            1.0,
+            1.0,
+            15.0,
+            15.0
+          ],
+          "texture": "#inside"
+        },
+        "north": {
+          "uv": [
+            1.0,
+            7.0,
+            15.0,
+            16.0
+          ],
+          "texture": "#front"
+        },
+        "south": {
+          "uv": [
+            1.0,
+            7.0,
+            15.0,
+            16.0
+          ],
+          "texture": "#side"
+        },
+        "west": {
+          "uv": [
+            1.0,
+            7.0,
+            15.0,
+            16.0
+          ],
+          "texture": "#side"
+        },
+        "east": {
+          "uv": [
+            1.0,
+            7.0,
+            15.0,
+            16.0
+          ],
+          "texture": "#side"
+        }
+      }
+    },
+    {
+      "from": [
+        1.0,
+        9.0,
+        15.0
+      ],
+      "to": [
+        15.0,
+        23.0,
+        20.0
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            1,
+            2,
+            15,
+            7
+          ],
+          "texture": "#side"
+        },
+        "up": {
+          "uv": [
+            1,
+            2,
+            15,
+            7
+          ],
+          "texture": "#front",
+          "rotation": 180
+        },
+        "north": {
+          "uv": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "texture": "#lid"
+        },
+        "south": {
+          "uv": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "texture": "#top",
+          "rotation": 180
+        },
+        "west": {
+          "uv": [
+            2,
+            1,
+            7,
+            15
+          ],
+          "texture": "#side",
+          "rotation": 90
+        },
+        "east": {
+          "uv": [
+            2,
+            1,
+            7,
+            15
+          ],
+          "texture": "#side",
+          "rotation": 270
+        }
+      }
+    },
+    {
+      "from": [
+        7.0,
+        21.0,
+        14.0
+      ],
+      "to": [
+        9.0,
+        23.0,
+        15.0
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            7.0,
+            1.0,
+            9.0,
+            2.0
+          ],
+          "texture": "#gold"
+        },
+        "up": {
+          "uv": [
+            7.0,
+            14.0,
+            9.0,
+            15.0
+          ],
+          "texture": "#gold"
+        },
+        "north": {
+          "uv": [
+            7.0,
+            9.0,
+            9.0,
+            11.0
+          ],
+          "texture": "#gold"
+        },
+        "south": {
+          "uv": [
+            7.0,
+            9.0,
+            9.0,
+            11.0
+          ],
+          "texture": "#gold"
+        },
+        "west": {
+          "uv": [
+            14.0,
+            9.0,
+            15.0,
+            11.0
+          ],
+          "texture": "#gold"
+        },
+        "east": {
+          "uv": [
+            1.0,
+            9.0,
+            2.0,
+            11.0
+          ],
+          "texture": "#gold"
+        }
+      }
+    }
+  ]
+}

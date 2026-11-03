@@ -1,0 +1,8 @@
+{
+  "feature": "raft:crater_lava",
+  "placement": [
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

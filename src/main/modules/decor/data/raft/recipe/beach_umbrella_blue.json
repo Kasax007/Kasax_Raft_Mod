@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "W": "minecraft:blue_wool",
+    "S": "minecraft:stick"
+  },
+  "pattern": [
+    "WWW",
+    " S ",
+    " S "
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:beach_umbrella_blue"
+  },
+  "group": "beach_umbrella"
+}

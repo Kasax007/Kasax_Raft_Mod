@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "raft:block/sea_oats_bottom"
+    },
+    "half=upper": {
+      "model": "raft:block/sea_oats_top"
+    }
+  }
+}

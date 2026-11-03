@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "L": "minecraft:glowstone_dust",
+    "P": "raft:plastic",
+    "D": "minecraft:red_dye"
+  },
+  "pattern": [
+    " L ",
+    "PDP",
+    "PPP"
+  ],
+  "result": {
+    "count": 2,
+    "id": "raft:buoy_red"
+  },
+  "group": "buoy"
+}

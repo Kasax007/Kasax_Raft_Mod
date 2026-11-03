@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:disk",
+  "half_height": 1,
+  "radius": {
+    "type": "minecraft:uniform",
+    "max_inclusive": 5,
+    "min_inclusive": 2
+  },
+  "state_provider": {
+    "id": "raft:volcanic_ash"
+  },
+  "target": {
+    "type": "minecraft:matching_blocks",
+    "blocks": [
+      "raft:black_sand",
+      "minecraft:basalt",
+      "minecraft:blackstone",
+      "minecraft:smooth_basalt"
+    ]
+  }
+}

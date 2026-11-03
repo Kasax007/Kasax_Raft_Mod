@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "raft:block/spyglass_stand"
+    },
+    "facing=east": {
+      "model": "raft:block/spyglass_stand",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "raft:block/spyglass_stand",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "raft:block/spyglass_stand",
+      "y": 270
+    }
+  }
+}

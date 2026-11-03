@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "W": "minecraft:yellow_wool",
+    "F": "minecraft:feather"
+  },
+  "pattern": [
+    "WFW"
+  ],
+  "result": {
+    "count": 2,
+    "id": "raft:cushion_yellow"
+  },
+  "group": "cushion"
+}

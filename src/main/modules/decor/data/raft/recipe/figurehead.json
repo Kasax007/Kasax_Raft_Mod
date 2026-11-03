@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "Y": "minecraft:yellow_dye",
+    "L": "raft:stripped_driftwood_log",
+    "C": "minecraft:cyan_dye"
+  },
+  "pattern": [
+    " Y ",
+    "LLL",
+    " C "
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:figurehead"
+  }
+}

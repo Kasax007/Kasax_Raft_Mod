@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "raft:block/driftwood_shelf"
+    },
+    "facing=east": {
+      "model": "raft:block/driftwood_shelf",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "raft:block/driftwood_shelf",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "raft:block/driftwood_shelf",
+      "y": 270
+    }
+  }
+}

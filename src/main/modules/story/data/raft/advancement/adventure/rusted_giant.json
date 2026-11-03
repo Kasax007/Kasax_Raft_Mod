@@ -1,0 +1,35 @@
+{
+  "parent": "raft:adventure/root",
+  "criteria": {
+    "visit": {
+      "conditions": {
+        "player": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:location": {
+              "structures": "#raft:visit/rusted_rig"
+            }
+          }
+        }
+      },
+      "trigger": "minecraft:location"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.raft.adventure.rusted_giant.description"
+    },
+    "icon": {
+      "id": "raft:scrap_metal"
+    },
+    "title": {
+      "translate": "advancements.raft.adventure.rusted_giant.title"
+    }
+  },
+  "requirements": [
+    [
+      "visit"
+    ]
+  ]
+}

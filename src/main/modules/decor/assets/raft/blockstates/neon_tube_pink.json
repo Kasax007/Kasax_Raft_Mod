@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "raft:block/neon_tube_pink"
+    },
+    "axis=z": {
+      "model": "raft:block/neon_tube_pink",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "raft:block/neon_tube_pink",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

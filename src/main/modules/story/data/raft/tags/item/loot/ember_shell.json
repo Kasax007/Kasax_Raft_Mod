@@ -1,0 +1,8 @@
+{
+  "values": [
+    {
+      "id": "raft:ember_shell",
+      "required": false
+    }
+  ]
+}

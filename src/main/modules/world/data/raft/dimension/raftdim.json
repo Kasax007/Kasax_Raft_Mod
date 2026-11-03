@@ -173,7 +173,7 @@
           "parameters": {
             "temperature": [
               -2.0,
-              -0.37
+              -0.46
             ],
             "humidity": [
               -2.0,
@@ -199,7 +199,7 @@
           "biome": "raft:kelp_forest",
           "parameters": {
             "temperature": [
-              -0.37,
+              -0.46,
               2.0
             ],
             "humidity": [
@@ -254,7 +254,7 @@
           "parameters": {
             "temperature": [
               -2.0,
-              -0.37
+              -0.46
             ],
             "humidity": [
               -2.0,
@@ -280,7 +280,7 @@
           "biome": "raft:drowned_shelf",
           "parameters": {
             "temperature": [
-              -0.37,
+              -0.46,
               2.0
             ],
             "humidity": [
@@ -307,7 +307,7 @@
           "biome": "raft:wreck_graveyard",
           "parameters": {
             "temperature": [
-              0.4,
+              0.3,
               2.0
             ],
             "humidity": [
@@ -334,8 +334,8 @@
           "biome": "raft:raft_ocean_biome",
           "parameters": {
             "temperature": [
-              -0.37,
-              0.4
+              -0.46,
+              0.3
             ],
             "humidity": [
               -2.0,
@@ -362,7 +362,7 @@
           "parameters": {
             "temperature": [
               -2.0,
-              -0.37
+              -0.46
             ],
             "humidity": [
               -2.0,
@@ -388,7 +388,7 @@
           "biome": "raft:drowned_shelf",
           "parameters": {
             "temperature": [
-              -0.37,
+              -0.46,
               2.0
             ],
             "humidity": [
@@ -416,7 +416,7 @@
           "parameters": {
             "temperature": [
               -2.0,
-              -0.37
+              -0.46
             ],
             "humidity": [
               -2.0,
@@ -442,7 +442,7 @@
           "biome": "raft:wreck_graveyard",
           "parameters": {
             "temperature": [
-              0.4,
+              0.3,
               2.0
             ],
             "humidity": [
@@ -469,8 +469,8 @@
           "biome": "raft:raft_ocean_biome",
           "parameters": {
             "temperature": [
-              -0.37,
-              0.4
+              -0.46,
+              0.3
             ],
             "humidity": [
               -2.0,
@@ -497,7 +497,7 @@
           "parameters": {
             "temperature": [
               -2.0,
-              -0.37
+              -0.46
             ],
             "humidity": [
               -2.0,
@@ -523,7 +523,7 @@
           "biome": "raft:wreck_graveyard",
           "parameters": {
             "temperature": [
-              0.4,
+              0.3,
               2.0
             ],
             "humidity": [
@@ -550,8 +550,8 @@
           "biome": "raft:raft_ocean_biome",
           "parameters": {
             "temperature": [
-              -0.37,
-              0.4
+              -0.46,
+              0.3
             ],
             "humidity": [
               -2.0,

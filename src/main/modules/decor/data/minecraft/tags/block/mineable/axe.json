@@ -1,0 +1,26 @@
+{
+  "values": [
+    "raft:tiki_torch",
+    "raft:driftwood_lamp",
+    "raft:treasure_chest",
+    "raft:rope_railing",
+    "raft:cargo_net",
+    "raft:powder_keg",
+    "raft:wooden_crate",
+    "raft:chart_table",
+    "raft:spyglass_stand",
+    "raft:figurehead",
+    "raft:hammock",
+    "raft:deck_chair",
+    "raft:beach_umbrella_red",
+    "raft:beach_umbrella_blue",
+    "raft:beach_umbrella_yellow",
+    "raft:driftwood_table",
+    "raft:palm_table",
+    "raft:driftwood_chair",
+    "raft:palm_chair",
+    "raft:driftwood_shelf",
+    "raft:wind_chime",
+    "raft:hanging_planter"
+  ]
+}

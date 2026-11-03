@@ -1,0 +1,383 @@
+{
+  "entity.leviathan.ambient": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/guardian/elder_idle1",
+        "pitch": 0.5,
+        "attenuation_distance": 48
+      },
+      {
+        "name": "minecraft:mob/guardian/elder_idle2",
+        "pitch": 0.5,
+        "attenuation_distance": 48
+      },
+      {
+        "name": "minecraft:mob/guardian/elder_idle3",
+        "pitch": 0.5,
+        "attenuation_distance": 48
+      },
+      {
+        "name": "minecraft:mob/enderdragon/growl1",
+        "pitch": 0.55,
+        "volume": 0.6,
+        "attenuation_distance": 48
+      },
+      {
+        "name": "minecraft:mob/enderdragon/growl2",
+        "pitch": 0.55,
+        "volume": 0.6,
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.leviathan.ambient"
+  },
+  "entity.leviathan.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/guardian/elder_hit1",
+        "pitch": 0.6,
+        "attenuation_distance": 40
+      },
+      {
+        "name": "minecraft:mob/guardian/elder_hit2",
+        "pitch": 0.6,
+        "attenuation_distance": 40
+      },
+      {
+        "name": "minecraft:mob/guardian/elder_hit3",
+        "pitch": 0.6,
+        "attenuation_distance": 40
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.leviathan.hurt"
+  },
+  "entity.leviathan.death": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/guardian/elder_death",
+        "pitch": 0.5,
+        "attenuation_distance": 64
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.leviathan.death"
+  },
+  "entity.leviathan.roar": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/warden/roar_1",
+        "pitch": 0.75,
+        "attenuation_distance": 64
+      },
+      {
+        "name": "minecraft:mob/warden/roar_2",
+        "pitch": 0.75,
+        "attenuation_distance": 64
+      },
+      {
+        "name": "minecraft:mob/warden/roar_3",
+        "pitch": 0.75,
+        "attenuation_distance": 64
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.leviathan.roar"
+  },
+  "entity.leviathan.charge": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/warden/sonic_charge1",
+        "volume": 0.8,
+        "attenuation_distance": 40
+      },
+      {
+        "name": "minecraft:mob/warden/sonic_charge2",
+        "volume": 0.8,
+        "attenuation_distance": 40
+      },
+      {
+        "name": "minecraft:mob/warden/sonic_charge3",
+        "volume": 0.8,
+        "attenuation_distance": 40
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.leviathan.charge"
+  },
+  "entity.leviathan.spit": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/llama/spit1",
+        "pitch": 0.5,
+        "attenuation_distance": 40
+      },
+      {
+        "name": "minecraft:mob/llama/spit2",
+        "pitch": 0.5,
+        "attenuation_distance": 40
+      },
+      {
+        "name": "minecraft:mob/glow_squid/squirt1",
+        "pitch": 0.6,
+        "attenuation_distance": 40
+      },
+      {
+        "name": "minecraft:mob/glow_squid/squirt2",
+        "pitch": 0.6,
+        "attenuation_distance": 40
+      },
+      {
+        "name": "minecraft:mob/glow_squid/squirt3",
+        "pitch": 0.6,
+        "attenuation_distance": 40
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.leviathan.spit"
+  },
+  "entity.leviathan.emerge": {
+    "sounds": [
+      {
+        "name": "minecraft:liquid/heavy_splash",
+        "pitch": 0.6,
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.leviathan.emerge"
+  },
+  "entity.leviathan.dive": {
+    "sounds": [
+      {
+        "name": "minecraft:liquid/heavy_splash",
+        "pitch": 0.75,
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.leviathan.dive"
+  },
+  "entity.leviathan.slam": {
+    "sounds": [
+      {
+        "name": "minecraft:item/mace/smash_ground_heavy",
+        "pitch": 0.7,
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.leviathan.slam"
+  },
+  "entity.leviathan.flop": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/guardian/flop1",
+        "pitch": 0.45,
+        "attenuation_distance": 32
+      },
+      {
+        "name": "minecraft:mob/guardian/flop2",
+        "pitch": 0.45,
+        "attenuation_distance": 32
+      },
+      {
+        "name": "minecraft:mob/guardian/flop3",
+        "pitch": 0.45,
+        "attenuation_distance": 32
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.leviathan.flop"
+  },
+  "entity.leviathan.whirlpool": {
+    "sounds": [
+      {
+        "name": "minecraft:block/bubble_column/whirlpool_inside",
+        "pitch": 0.6,
+        "attenuation_distance": 48
+      },
+      {
+        "name": "minecraft:block/bubble_column/whirlpool_ambient1",
+        "pitch": 0.5,
+        "attenuation_distance": 48
+      },
+      {
+        "name": "minecraft:block/bubble_column/whirlpool_ambient2",
+        "pitch": 0.5,
+        "attenuation_distance": 48
+      },
+      {
+        "name": "minecraft:block/bubble_column/whirlpool_ambient3",
+        "pitch": 0.5,
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.leviathan.whirlpool"
+  },
+  "entity.leviathan.deflect": {
+    "sounds": [
+      {
+        "name": "minecraft:item/shield/block1",
+        "pitch": 0.55,
+        "attenuation_distance": 24
+      },
+      {
+        "name": "minecraft:item/shield/block2",
+        "pitch": 0.55,
+        "attenuation_distance": 24
+      },
+      {
+        "name": "minecraft:item/shield/block3",
+        "pitch": 0.55,
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.leviathan.deflect"
+  },
+  "entity.leviathan.bite": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/zoglin/attack1",
+        "pitch": 0.5,
+        "attenuation_distance": 24
+      },
+      {
+        "name": "minecraft:mob/zoglin/attack2",
+        "pitch": 0.5,
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.leviathan.bite"
+  },
+  "entity.leviathan.burst": {
+    "sounds": [
+      {
+        "name": "minecraft:block/beacon/deactivate",
+        "pitch": 0.6,
+        "attenuation_distance": 64
+      },
+      {
+        "name": "minecraft:mob/enderdragon/end",
+        "pitch": 1.4,
+        "volume": 0.7,
+        "attenuation_distance": 64
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.leviathan.burst"
+  },
+  "entity.tideling.ambient": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/drowned/water/idle1",
+        "pitch": 1.6,
+        "volume": 0.6
+      },
+      {
+        "name": "minecraft:mob/drowned/water/idle2",
+        "pitch": 1.6,
+        "volume": 0.6
+      },
+      {
+        "name": "minecraft:mob/drowned/water/idle3",
+        "pitch": 1.6,
+        "volume": 0.6
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.tideling.ambient"
+  },
+  "entity.tideling.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:entity/fish/hurt1",
+        "pitch": 0.8
+      },
+      {
+        "name": "minecraft:entity/fish/hurt2",
+        "pitch": 0.8
+      },
+      {
+        "name": "minecraft:entity/fish/hurt3",
+        "pitch": 0.8
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.tideling.hurt"
+  },
+  "entity.tideling.death": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/pufferfish/death1",
+        "pitch": 0.9
+      },
+      {
+        "name": "minecraft:mob/pufferfish/death2",
+        "pitch": 0.9
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.tideling.death"
+  },
+  "entity.tideling.flop": {
+    "sounds": [
+      {
+        "name": "minecraft:entity/fish/flop1",
+        "pitch": 0.9
+      },
+      {
+        "name": "minecraft:entity/fish/flop2",
+        "pitch": 0.9
+      },
+      {
+        "name": "minecraft:entity/fish/flop3",
+        "pitch": 0.9
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.tideling.flop"
+  },
+  "entity.tideling.bite": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/hoglin/attack1",
+        "pitch": 1.7,
+        "volume": 0.7
+      },
+      {
+        "name": "minecraft:mob/hoglin/attack2",
+        "pitch": 1.7,
+        "volume": 0.7
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.tideling.bite"
+  },
+  "entity.brine_bolt.hit": {
+    "sounds": [
+      {
+        "name": "minecraft:liquid/splash",
+        "pitch": 1.3
+      },
+      {
+        "name": "minecraft:liquid/splash2",
+        "pitch": 1.2
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.brine_bolt.hit"
+  },
+  "block.heart_of_the_tide.ambient": {
+    "sounds": [
+      {
+        "name": "minecraft:block/conduit/ambient",
+        "pitch": 1.2,
+        "volume": 0.8
+      }
+    ],
+    "subtitle": "subtitles.raft.block.heart_of_the_tide.ambient"
+  },
+  "block.heart_of_the_tide.activate": {
+    "sounds": [
+      {
+        "name": "minecraft:block/conduit/activate",
+        "pitch": 1.1
+      }
+    ],
+    "subtitle": "subtitles.raft.block.heart_of_the_tide.activate"
+  },
+  "item.tidebreaker.dash": {
+    "sounds": [
+      {
+        "name": "minecraft:item/trident/riptide3",
+        "pitch": 0.9
+      }
+    ],
+    "subtitle": "subtitles.raft.item.tidebreaker.dash"
+  }
+}

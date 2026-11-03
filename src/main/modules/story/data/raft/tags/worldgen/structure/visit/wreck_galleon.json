@@ -1,0 +1,8 @@
+{
+  "values": [
+    {
+      "id": "raft:wreck_galleon",
+      "required": false
+    }
+  ]
+}

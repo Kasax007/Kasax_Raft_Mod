@@ -1,0 +1,27 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:registry_contains",
+      "registry": "minecraft:item",
+      "values": [
+        "raft:glow_jelly"
+      ]
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "N": "minecraft:iron_nugget",
+    "G": "minecraft:glass",
+    "J": "raft:glow_jelly"
+  },
+  "pattern": [
+    " N ",
+    "GJG",
+    "GGG"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:jelly_lamp"
+  }
+}

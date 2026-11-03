@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "raft:shark",
+      "required": false
+    },
+    {
+      "id": "raft:hammerhead_shark",
+      "required": false
+    }
+  ]
+}

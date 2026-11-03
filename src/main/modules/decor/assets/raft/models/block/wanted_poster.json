@@ -1,0 +1,78 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "paper": "raft:block/wanted_poster",
+    "particle": "#paper"
+  },
+  "elements": [
+    {
+      "from": [
+        2.0,
+        1.0,
+        15.5
+      ],
+      "to": [
+        14.0,
+        15.0,
+        15.95
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            2,
+            14.5,
+            14,
+            15
+          ],
+          "texture": "#paper"
+        },
+        "up": {
+          "uv": [
+            2,
+            1,
+            14,
+            1.5
+          ],
+          "texture": "#paper"
+        },
+        "north": {
+          "uv": [
+            2,
+            1,
+            14,
+            15
+          ],
+          "texture": "#paper"
+        },
+        "south": {
+          "uv": [
+            14,
+            1,
+            2,
+            15
+          ],
+          "texture": "#paper"
+        },
+        "west": {
+          "uv": [
+            2,
+            1,
+            2.5,
+            15
+          ],
+          "texture": "#paper"
+        },
+        "east": {
+          "uv": [
+            13.5,
+            1,
+            14,
+            15
+          ],
+          "texture": "#paper"
+        }
+      }
+    }
+  ]
+}

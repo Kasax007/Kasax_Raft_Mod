@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "flag": "raft:block/bunting_rainbow",
+    "particle": "#flag"
+  },
+  "elements": [
+    {
+      "from": [
+        0.0,
+        6.0,
+        15.5
+      ],
+      "to": [
+        16.0,
+        16.0,
+        15.5
+      ],
+      "shade_direction_override": "up",
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            10
+          ],
+          "texture": "#flag"
+        },
+        "south": {
+          "uv": [
+            16,
+            0,
+            0,
+            10
+          ],
+          "texture": "#flag"
+        }
+      }
+    }
+  ]
+}

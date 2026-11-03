@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "S": "minecraft:stick",
+    "W": "#minecraft:wool"
+  },
+  "pattern": [
+    "S  ",
+    "SWW",
+    "S S"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:deck_chair"
+  }
+}

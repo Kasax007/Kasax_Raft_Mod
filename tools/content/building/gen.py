@@ -434,6 +434,8 @@ def sea_glass():
         loot_self(f'{b}_pane')
         name(f'{b}_pane', f'{lab} Sea Glass Pane')
         tag('block', 'minecraft:impermeable', b)
+        both('c:glass_blocks', b)
+        both('c:glass_panes', f'{b}_pane')
         shaped(f'{b}_pane', ['GGG', 'GGG'], {'G': b}, f'{b}_pane', 16, category='misc')
     S = 'raft:sea_glass_shard'
     shaped('aqua_sea_glass', ['SS', 'SS'], {'S': S}, 'aqua_sea_glass', 1)
@@ -568,6 +570,8 @@ def drowned_city():
     loot_silk('cracked_glass_pane')
     name('cracked_glass_pane', 'Cracked Glass Pane')
     tag('block', 'minecraft:impermeable', 'cracked_glass')
+    both('c:glass_blocks', 'cracked_glass')
+    both('c:glass_panes', 'cracked_glass_pane')
     shapeless('cracked_glass', ['minecraft:glass', 'minecraft:gravel'], 'cracked_glass')
     shaped('cracked_glass_pane', ['GGG', 'GGG'], {'G': 'cracked_glass'}, 'cracked_glass_pane', 16,
            category='misc')

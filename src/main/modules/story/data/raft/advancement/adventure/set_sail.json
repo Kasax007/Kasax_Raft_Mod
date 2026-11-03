@@ -1,0 +1,35 @@
+{
+  "parent": "raft:adventure/root",
+  "criteria": {
+    "ride": {
+      "conditions": {
+        "player": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:vehicle": {
+              "minecraft:entity_type": "#raft:adv/expedition_raft"
+            }
+          }
+        }
+      },
+      "trigger": "minecraft:started_riding"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.raft.adventure.set_sail.description"
+    },
+    "icon": {
+      "id": "raft:sail_canvas"
+    },
+    "title": {
+      "translate": "advancements.raft.adventure.set_sail.title"
+    }
+  },
+  "requirements": [
+    [
+      "ride"
+    ]
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "pebbles=1": {
+      "model": "raft:block/sea_glass_scatter_1"
+    },
+    "pebbles=2": {
+      "model": "raft:block/sea_glass_scatter_2"
+    },
+    "pebbles=3": {
+      "model": "raft:block/sea_glass_scatter_3"
+    }
+  }
+}

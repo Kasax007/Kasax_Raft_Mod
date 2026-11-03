@@ -18,15 +18,6 @@
         "spawns_by_category": {
           "creature": [
             {
-              "type": "raft:penguin",
-              "count": {
-                "type": "minecraft:uniform",
-                "max_inclusive": 5,
-                "min_inclusive": 2
-              },
-              "weight": 6
-            },
-            {
               "type": "minecraft:polar_bear",
               "count": {
                 "type": "minecraft:uniform",
@@ -45,13 +36,6 @@
                 "min_inclusive": 1
               },
               "weight": 15
-            }
-          ],
-          "water_creature": [
-            {
-              "type": "raft:whale",
-              "count": 1,
-              "weight": 1
             }
           ]
         }
@@ -78,7 +62,8 @@
     ],
     [],
     [
-      "minecraft:blue_ice"
+      "minecraft:blue_ice",
+      "raft:ice_floe"
     ],
     [],
     [

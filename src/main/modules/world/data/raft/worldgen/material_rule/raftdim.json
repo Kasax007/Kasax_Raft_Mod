@@ -55,7 +55,7 @@
                               },
                               "then_run": {
                                 "type": "minecraft:block",
-                                "result_state": "minecraft:sand"
+                                "result_state": "raft:shell_sand"
                               }
                             },
                             {
@@ -241,7 +241,7 @@
                               },
                               "then_run": {
                                 "type": "minecraft:block",
-                                "result_state": "minecraft:sand"
+                                "result_state": "raft:shell_sand"
                               }
                             },
                             {
@@ -560,7 +560,7 @@
                             },
                             {
                               "type": "minecraft:block",
-                              "result_state": "minecraft:blackstone"
+                              "result_state": "raft:black_sand"
                             }
                           ]
                         }
@@ -650,7 +650,7 @@
                               },
                               "then_run": {
                                 "type": "minecraft:block",
-                                "result_state": "minecraft:calcite"
+                                "result_state": "raft:pumice"
                               }
                             },
                             {
@@ -668,14 +668,14 @@
                             },
                             {
                               "type": "minecraft:block",
-                              "result_state": "minecraft:gray_concrete_powder"
+                              "result_state": "raft:volcanic_ash"
                             }
                           ]
                         }
                       },
                       {
                         "type": "minecraft:block",
-                        "result_state": "minecraft:blackstone"
+                        "result_state": "raft:black_sand"
                       }
                     ]
                   }
@@ -717,7 +717,7 @@
                             },
                             {
                               "type": "minecraft:block",
-                              "result_state": "minecraft:blackstone"
+                              "result_state": "raft:black_sand"
                             }
                           ]
                         }
@@ -773,7 +773,7 @@
                           },
                           {
                             "type": "minecraft:block",
-                            "result_state": "minecraft:gray_concrete_powder"
+                            "result_state": "raft:volcanic_ash"
                           }
                         ]
                       }

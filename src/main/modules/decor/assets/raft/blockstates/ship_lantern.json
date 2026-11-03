@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "hanging=false": {
+      "model": "raft:block/ship_lantern"
+    },
+    "hanging=true": {
+      "model": "raft:block/ship_lantern_hanging"
+    }
+  }
+}

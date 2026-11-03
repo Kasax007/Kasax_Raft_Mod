@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "S": "minecraft:string",
+    "G": "minecraft:glowstone_dust",
+    "P": "raft:plastic"
+  },
+  "pattern": [
+    "SSS",
+    "GPG"
+  ],
+  "result": {
+    "count": 6,
+    "id": "raft:string_lights_warm"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "parent": "raft:story/ashen_forge",
+  "criteria": {
+    "visit": {
+      "conditions": {
+        "player": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:location": {
+              "structures": "#raft:on_coral_temple_maps"
+            }
+          }
+        }
+      },
+      "trigger": "minecraft:location"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.raft.story.coral_temple.description"
+    },
+    "icon": {
+      "id": "raft:tidewarden_altar"
+    },
+    "title": {
+      "translate": "advancements.raft.story.coral_temple.title"
+    }
+  },
+  "requirements": [
+    [
+      "visit"
+    ]
+  ],
+  "rewards": {
+    "experience": 30
+  }
+}

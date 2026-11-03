@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "raft:tiki_torch",
+          "condition": {
+            "type": "minecraft:match_block",
+            "blocks": "raft:tiki_torch",
+            "state": {
+              "half": "lower"
+            }
+          }
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "raft:blocks/tiki_torch"
+}

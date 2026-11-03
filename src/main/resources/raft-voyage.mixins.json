@@ -2,7 +2,9 @@
   "required": true,
   "package": "net.kasax.raft.content.voyage.mixin",
   "compatibilityLevel": "JAVA_25",
-  "mixins": [],
+  "mixins": [
+    "AbstractBoatAccessor"
+  ],
   "client": [],
   "injectors": {
     "defaultRequire": 1

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "open=false": {
+      "model": "raft:block/tide_seal"
+    },
+    "open=true": {
+      "model": "raft:block/tide_seal_open"
+    }
+  }
+}

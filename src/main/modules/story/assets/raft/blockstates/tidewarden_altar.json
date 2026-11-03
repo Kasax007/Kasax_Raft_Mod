@@ -1,0 +1,195 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "facing": "north"
+      },
+      "apply": {
+        "model": "raft:block/tidewarden_altar"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "coral": "true"
+      },
+      "apply": {
+        "model": "raft:block/tidewarden_altar_coral"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "pearl": "true"
+      },
+      "apply": {
+        "model": "raft:block/tidewarden_altar_pearl"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "storm": "true"
+      },
+      "apply": {
+        "model": "raft:block/tidewarden_altar_storm"
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "ember": "true"
+      },
+      "apply": {
+        "model": "raft:block/tidewarden_altar_ember"
+      }
+    },
+    {
+      "when": {
+        "facing": "east"
+      },
+      "apply": {
+        "model": "raft:block/tidewarden_altar",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "coral": "true"
+      },
+      "apply": {
+        "model": "raft:block/tidewarden_altar_coral",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "pearl": "true"
+      },
+      "apply": {
+        "model": "raft:block/tidewarden_altar_pearl",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "storm": "true"
+      },
+      "apply": {
+        "model": "raft:block/tidewarden_altar_storm",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "ember": "true"
+      },
+      "apply": {
+        "model": "raft:block/tidewarden_altar_ember",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south"
+      },
+      "apply": {
+        "model": "raft:block/tidewarden_altar",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "coral": "true"
+      },
+      "apply": {
+        "model": "raft:block/tidewarden_altar_coral",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "pearl": "true"
+      },
+      "apply": {
+        "model": "raft:block/tidewarden_altar_pearl",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "storm": "true"
+      },
+      "apply": {
+        "model": "raft:block/tidewarden_altar_storm",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "ember": "true"
+      },
+      "apply": {
+        "model": "raft:block/tidewarden_altar_ember",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west"
+      },
+      "apply": {
+        "model": "raft:block/tidewarden_altar",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "coral": "true"
+      },
+      "apply": {
+        "model": "raft:block/tidewarden_altar_coral",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "pearl": "true"
+      },
+      "apply": {
+        "model": "raft:block/tidewarden_altar_pearl",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "storm": "true"
+      },
+      "apply": {
+        "model": "raft:block/tidewarden_altar_storm",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "ember": "true"
+      },
+      "apply": {
+        "model": "raft:block/tidewarden_altar_ember",
+        "y": 270
+      }
+    }
+  ]
+}

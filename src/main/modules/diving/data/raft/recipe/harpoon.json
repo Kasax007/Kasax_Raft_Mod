@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "S": "minecraft:stick",
+    "F": "minecraft:string"
+  },
+  "pattern": [
+    "I",
+    "S",
+    "F"
+  ],
+  "result": {
+    "count": 4,
+    "id": "raft:harpoon"
+  }
+}

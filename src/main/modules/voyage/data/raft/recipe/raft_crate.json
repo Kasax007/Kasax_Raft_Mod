@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": "#minecraft:planks",
+    "R": "raft:rope",
+    "C": "minecraft:chest"
+  },
+  "pattern": [
+    "PRP",
+    "PCP",
+    "PPP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:raft_crate"
+  }
+}

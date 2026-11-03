@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "S": "minecraft:string",
+    "P": "minecraft:paper",
+    "T": "minecraft:torch",
+    "D": "minecraft:white_dye"
+  },
+  "pattern": [
+    " S ",
+    "PTP",
+    " D "
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:paper_lantern_white"
+  },
+  "group": "paper_lantern"
+}

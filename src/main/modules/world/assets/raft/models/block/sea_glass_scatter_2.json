@@ -1,0 +1,148 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "glass": "raft:block/sea_glass_scatter",
+    "particle": "raft:block/sea_glass_scatter"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        0,
+        7
+      ],
+      "to": [
+        9,
+        1,
+        10
+      ],
+      "faces": {
+        "up": {
+          "uv": [
+            0,
+            0,
+            4,
+            4
+          ],
+          "texture": "#glass"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            4,
+            4
+          ],
+          "texture": "#glass",
+          "cullface": "down"
+        },
+        "north": {
+          "uv": [
+            0,
+            5,
+            4,
+            6
+          ],
+          "texture": "#glass"
+        },
+        "south": {
+          "uv": [
+            0,
+            5,
+            4,
+            6
+          ],
+          "texture": "#glass"
+        },
+        "west": {
+          "uv": [
+            0,
+            5,
+            4,
+            6
+          ],
+          "texture": "#glass"
+        },
+        "east": {
+          "uv": [
+            0,
+            5,
+            4,
+            6
+          ],
+          "texture": "#glass"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        5,
+        1,
+        5
+      ],
+      "faces": {
+        "up": {
+          "uv": [
+            5,
+            0,
+            9,
+            4
+          ],
+          "texture": "#glass"
+        },
+        "down": {
+          "uv": [
+            5,
+            0,
+            9,
+            4
+          ],
+          "texture": "#glass",
+          "cullface": "down"
+        },
+        "north": {
+          "uv": [
+            5,
+            5,
+            9,
+            6
+          ],
+          "texture": "#glass"
+        },
+        "south": {
+          "uv": [
+            5,
+            5,
+            9,
+            6
+          ],
+          "texture": "#glass"
+        },
+        "west": {
+          "uv": [
+            5,
+            5,
+            9,
+            6
+          ],
+          "texture": "#glass"
+        },
+        "east": {
+          "uv": [
+            5,
+            5,
+            9,
+            6
+          ],
+          "texture": "#glass"
+        }
+      }
+    }
+  ]
+}

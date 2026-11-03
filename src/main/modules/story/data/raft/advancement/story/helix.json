@@ -1,0 +1,38 @@
+{
+  "parent": "raft:story/saltmere",
+  "criteria": {
+    "visit": {
+      "conditions": {
+        "player": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:location": {
+              "structures": "#raft:on_helix_maps"
+            }
+          }
+        }
+      },
+      "trigger": "minecraft:location"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.raft.story.helix.description"
+    },
+    "icon": {
+      "id": "raft:research_terminal"
+    },
+    "title": {
+      "translate": "advancements.raft.story.helix.title"
+    }
+  },
+  "requirements": [
+    [
+      "visit"
+    ]
+  ],
+  "rewards": {
+    "experience": 30
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "parent": "raft:story/port_solace",
+  "criteria": {
+    "visit": {
+      "conditions": {
+        "player": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:location": {
+              "structures": "#raft:on_ashen_forge_maps"
+            }
+          }
+        }
+      },
+      "trigger": "minecraft:location"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.raft.story.ashen_forge.description"
+    },
+    "icon": {
+      "id": "minecraft:magma_block"
+    },
+    "title": {
+      "translate": "advancements.raft.story.ashen_forge.title"
+    }
+  },
+  "requirements": [
+    [
+      "visit"
+    ]
+  ],
+  "rewards": {
+    "experience": 30
+  }
+}

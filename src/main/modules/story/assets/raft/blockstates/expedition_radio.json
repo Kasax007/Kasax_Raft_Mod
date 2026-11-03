@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "raft:block/expedition_radio"
+    },
+    "facing=east": {
+      "model": "raft:block/expedition_radio",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "raft:block/expedition_radio",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "raft:block/expedition_radio",
+      "y": 270
+    }
+  }
+}

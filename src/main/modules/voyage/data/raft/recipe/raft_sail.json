@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "R": "raft:rope",
+    "C": "raft:sail_canvas",
+    "L": "raft:palm_log"
+  },
+  "pattern": [
+    "RCR",
+    "CLC",
+    " L "
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:raft_sail"
+  }
+}

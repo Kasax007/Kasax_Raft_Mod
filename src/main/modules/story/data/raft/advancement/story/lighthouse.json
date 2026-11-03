@@ -1,0 +1,38 @@
+{
+  "parent": "raft:story/castaway",
+  "criteria": {
+    "visit": {
+      "conditions": {
+        "player": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:location": {
+              "structures": "#raft:on_lighthouse_maps"
+            }
+          }
+        }
+      },
+      "trigger": "minecraft:location"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.raft.story.lighthouse.description"
+    },
+    "icon": {
+      "id": "minecraft:lantern"
+    },
+    "title": {
+      "translate": "advancements.raft.story.lighthouse.title"
+    }
+  },
+  "requirements": [
+    [
+      "visit"
+    ]
+  ],
+  "rewards": {
+    "experience": 20
+  }
+}

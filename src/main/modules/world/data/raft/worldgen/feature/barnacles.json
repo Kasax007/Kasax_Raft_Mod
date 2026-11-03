@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:multiface_growth",
+  "block": "raft:barnacles",
+  "can_be_placed_on": [
+    "minecraft:stone",
+    "minecraft:andesite",
+    "minecraft:tuff",
+    "minecraft:basalt",
+    "minecraft:smooth_basalt",
+    "minecraft:cobblestone",
+    "minecraft:mossy_cobblestone",
+    "minecraft:deepslate",
+    "minecraft:sandstone",
+    "minecraft:oak_planks",
+    "minecraft:spruce_planks",
+    "minecraft:dark_oak_planks",
+    "minecraft:oak_log",
+    "minecraft:spruce_log",
+    "minecraft:dark_oak_log",
+    "minecraft:stripped_oak_log",
+    "minecraft:stripped_spruce_log",
+    "minecraft:stripped_dark_oak_log",
+    "raft:driftwood_log",
+    "raft:driftwood_planks",
+    "raft:driftwood_wood"
+  ],
+  "can_place_on_ceiling": true,
+  "can_place_on_floor": true,
+  "can_place_on_wall": true,
+  "chance_of_spreading": 0.6,
+  "search_range": 6
+}

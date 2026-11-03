@@ -1,0 +1,79 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "shell": "raft:block/seashells",
+    "particle": "raft:block/seashells"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        0,
+        8
+      ],
+      "to": [
+        10,
+        1.5,
+        12
+      ],
+      "faces": {
+        "up": {
+          "uv": [
+            0,
+            0,
+            4,
+            4
+          ],
+          "texture": "#shell"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            4,
+            4
+          ],
+          "texture": "#shell",
+          "cullface": "down"
+        },
+        "north": {
+          "uv": [
+            0,
+            6,
+            4,
+            7
+          ],
+          "texture": "#shell"
+        },
+        "south": {
+          "uv": [
+            0,
+            6,
+            4,
+            7
+          ],
+          "texture": "#shell"
+        },
+        "west": {
+          "uv": [
+            0,
+            6,
+            4,
+            7
+          ],
+          "texture": "#shell"
+        },
+        "east": {
+          "uv": [
+            0,
+            6,
+            4,
+            7
+          ],
+          "texture": "#shell"
+        }
+      }
+    }
+  ]
+}

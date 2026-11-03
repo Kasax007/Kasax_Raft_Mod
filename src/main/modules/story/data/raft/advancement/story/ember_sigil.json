@@ -1,0 +1,35 @@
+{
+  "parent": "raft:story/ashen_forge",
+  "criteria": {
+    "obtain": {
+      "conditions": {
+        "items": [
+          {
+            "items": "raft:ember_sigil"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.raft.story.ember_sigil.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "id": "raft:ember_sigil"
+    },
+    "title": {
+      "translate": "advancements.raft.story.ember_sigil.title"
+    }
+  },
+  "requirements": [
+    [
+      "obtain"
+    ]
+  ],
+  "rewards": {
+    "experience": 50
+  }
+}

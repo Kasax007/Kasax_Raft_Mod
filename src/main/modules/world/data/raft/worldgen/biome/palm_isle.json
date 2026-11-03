@@ -15,28 +15,7 @@
     "minecraft:gameplay/natural_mob_spawns": {
       "argument": {
         "spawn_costs": {},
-        "spawns_by_category": {
-          "creature": [
-            {
-              "type": "raft:crab",
-              "count": {
-                "type": "minecraft:uniform",
-                "max_inclusive": 4,
-                "min_inclusive": 2
-              },
-              "weight": 8
-            },
-            {
-              "type": "raft:seagull",
-              "count": {
-                "type": "minecraft:uniform",
-                "max_inclusive": 5,
-                "min_inclusive": 2
-              },
-              "weight": 6
-            }
-          ]
-        }
+        "spawns_by_category": {}
       },
       "modifier": "overlay"
     },
@@ -56,7 +35,9 @@
   "features": [
     [],
     [],
-    [],
+    [
+      "raft:boulder_andesite"
+    ],
     [],
     [],
     [],
@@ -94,7 +75,17 @@
       "minecraft:spring_water"
     ],
     [
-      "raft:palm_placed"
+      "raft:palm_trees",
+      "raft:palm_placed",
+      "raft:fallen_driftwood",
+      "raft:patch_beach_grass",
+      "raft:patch_sea_oats",
+      "raft:patch_island_grass",
+      "raft:patch_hibiscus",
+      "raft:patch_bird_of_paradise",
+      "raft:patch_pineapple_bush",
+      "raft:patch_seashells",
+      "raft:patch_sea_glass"
     ]
   ],
   "has_precipitation": false,

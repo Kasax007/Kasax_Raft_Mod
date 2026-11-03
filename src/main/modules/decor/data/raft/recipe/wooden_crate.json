@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "S": "minecraft:stick",
+    "P": "raft:driftwood_planks"
+  },
+  "pattern": [
+    "SPS",
+    "P P",
+    "SPS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:wooden_crate"
+  }
+}

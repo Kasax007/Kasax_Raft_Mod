@@ -6,41 +6,42 @@ from .art import *  # noqa: F401,F403
 
 
 # ================================================================================================= wood
-def _planks(p, seed, tones, joints, nails=(), cracks=(), caulk=None, seam_drop=2, grain=(3, 9)):
-    """4 boards of 4 rows: lit top edge, two rows of long grain, darker seam row; butt joints only where
-    joints[b] is not None; nails; cracks. p: palette (7 shades). tones: base shade per board."""
+def _planks(p, seed, tones, joints, nails=(), cracks=(), caulk=None, seam_drop=2, grain=(5, 11), streaks=2):
+    """Vanilla-style planks: 4 boards of 4 rows (lit top row, two body rows with a few long, soft grain streaks,
+    darker seam row); a butt joint where joints[b] is not None; nails; cracks. p: palette (7 shades, dark -> light),
+    tones: base shade per board. Grain uses half steps of the ramp, so it reads as wood, not as noise."""
     rnd = random.Random(seed)
     img = new()
     top = len(p) - 1
     for b in range(4):
         y0, t = b * 4, tones[b]
-        for y in range(y0, y0 + 4):
-            for x in range(16):
-                put(img, x, y, p[t])
-        for x in range(16):  # lit top edge, broken now and then
-            if rnd.random() < 0.7:
-                put(img, x, y0, p[min(top, t + 1)])
-        for y in (y0 + 1, y0 + 2):  # long grain streaks
+        base = p[t]
+        hi = lerp(p[t], p[min(top, t + 1)], 0.55)
+        lo = lerp(p[t], p[max(0, t - 1)], 0.6)
+        lo2 = lerp(p[max(0, t - 1)], p[max(0, t - 2)], 0.3)
+        fill(img, 0, y0, 15, y0 + 2, base)
+        for x in range(16):  # lit top row, a little broken
+            put(img, x, y0, hi if rnd.random() < 0.85 else base)
+        for row in (y0 + 1, y0 + 2):
             x = rnd.randrange(16)
-            done = 0
-            while done < 14:
+            for _ in range(streaks):
                 ln = rnd.randrange(*grain)
-                d = -1 if rnd.random() < 0.55 else 1
+                c = lo if rnd.random() < 0.75 else hi
                 for k in range(ln):
-                    put(img, x + k, y, p[max(0, min(top, t + d))])
-                gap = rnd.randrange(2, 5)
-                x += ln + gap
-                done += ln + gap
+                    put(img, x + k, row, c)
+                if c == lo and ln > 6:  # a darker core in long streaks
+                    put(img, x + ln // 2, row, lo2)
+                x += ln + rnd.randrange(2, 5)
         for x in range(16):  # seam under the board
-            put(img, x, y0 + 3, caulk if caulk else p[max(0, t - seam_drop - (1 if rnd.random() < 0.2 else 0))])
+            put(img, x, y0 + 3, caulk if caulk else p[max(0, t - seam_drop)])
         j = joints[b]
         if j is not None:
             for y in range(y0, y0 + 3):
-                put(img, j, y, caulk if caulk else p[max(0, t - 2)])
-                put(img, j + 1, y, p[min(top, t + 1)])
-    for (x, y) in nails:  # nail head
+                put(img, j, y, caulk if caulk else p[max(0, t - seam_drop)])
+                put(img, j + 1, y, hi)
+    for (x, y) in nails:  # nail head with a rust shadow
         put(img, x, y, p[1])
-        put(img, x, y - 1, p[min(top, 5)])
+        put(img, x + 1, y, lerp(p[2], (150, 90, 60, 255), 0.25))
     for path in cracks:
         for (x, y) in path:
             put(img, x, y, p[2])
@@ -49,18 +50,18 @@ def _planks(p, seed, tones, joints, nails=(), cracks=(), caulk=None, seam_drop=2
 
 def weathered_planks():
     img = _planks(WEATHERED, 33, tones=[4, 3, 4, 3], joints=[None, 9, None, 3], seam_drop=2,
-                  nails=[(7, 6), (12, 6), (1, 14), (6, 14)],
-                  cracks=[[(1, 2), (2, 2), (3, 2), (4, 2)], [(10, 10), (11, 10), (12, 10)]])
-    for (x, y) in [(11, 1), (12, 1), (13, 1), (4, 9), (5, 9), (6, 9)]:  # sun-bleached highlights
+                  nails=[(7, 5), (12, 5), (1, 13), (6, 13)],
+                  cracks=[[(1, 2), (2, 2), (3, 2)], [(10, 10), (11, 10)]])
+    for (x, y) in [(11, 1), (12, 1), (4, 9), (5, 9)]:  # sun-bleached highlights
         put(img, x, y, WEATHERED[6])
     return img
 
 
 def teak_planks():
-    caulk = tex.rgb('#24150d')
+    caulk = lerp(TEAK[0], TEAK[1], 0.6)
     img = _planks(TEAK, 19, tones=[3, 2, 3, 2], joints=[11, None, 4, None], caulk=caulk)
-    for (x, y) in [(2, 0), (3, 0), (4, 0), (8, 4), (9, 4), (13, 8), (14, 8), (6, 12), (7, 12)]:
-        put(img, x, y, TEAK[5])
+    for (x, y) in [(2, 0), (3, 0), (8, 4), (9, 4), (13, 8), (14, 8), (6, 12), (7, 12)]:  # oiled sheen
+        put(img, x, y, lerp(TEAK[4], TEAK[5], 0.5))
     return img
 
 
@@ -285,23 +286,37 @@ def coral_stone_bricks():
     return _small_bricks(CORAL, CORAL[1], 73)
 
 
-def mossy_coral_stone_bricks():
-    img = _small_bricks(CORAL, CORAL[1], 73)
-    m = blotch_mask(0.40, 77, cell=4)
-    mortar_rows = {3, 7, 11, 15}
+def moss_over(img, mortar_rows, amount, seed, mortar_colour, cell=4):
+    """Moss that grows out of the mortar joints onto the brick faces: noise biased towards the joints, mortar pixels
+    get the deep shade, brick faces the mid shades and the top pixel of every patch a light rim."""
+    n = noise(seed, cell, 2)
+    score = {}
     for y in range(16):
         for x in range(16):
-            if m(x, y):
-                c = img.getpixel((x, y))
-                if y in mortar_rows or c == CORAL[1]:
-                    img.putpixel((x, y), ALGAE[1])
-                else:
-                    lum = sum(c[:3]) / 3
-                    img.putpixel((x, y), ALGAE[3] if lum > 190 else ALGAE[2])
-    # algae creeping in mortar lines
-    for (x, y) in [(2, 3), (3, 3), (9, 7), (10, 7), (11, 7), (5, 11), (13, 15), (14, 15)]:
-        put(img, x, y, ALGAE[2])
+            s = n[y][x]
+            if y in mortar_rows:
+                s += 0.28
+            elif (y - 1) % 16 in mortar_rows or (y + 1) % 16 in mortar_rows:
+                s += 0.12
+            if img.getpixel((x, y)) == mortar_colour:
+                s += 0.15
+            score[(x, y)] = s
+    thr = sorted(score.values())[int(256 * (1 - amount))]
+    moss = {k for k, v in score.items() if v >= thr}
+    for (x, y) in moss:
+        c = img.getpixel((x, y))
+        if y in mortar_rows or c == mortar_colour:
+            img.putpixel((x, y), ALGAE[1])
+        elif (x, (y - 1) % 16) not in moss:
+            img.putpixel((x, y), ALGAE[4] if sum(c[:3]) / 3 > 150 else ALGAE[3])
+        else:
+            img.putpixel((x, y), ALGAE[2] if (x + y) % 3 else ALGAE[3])
     return img
+
+
+def mossy_coral_stone_bricks():
+    img = _small_bricks(CORAL, CORAL[1], 73)
+    return moss_over(img, {3, 7, 11, 15}, 0.27, 77, CORAL[1])
 
 
 # ================================================================================================= tidestone
@@ -353,32 +368,24 @@ def tidestone_bricks():
 
 
 def cracked_tidestone_bricks():
+    """One long crack running through the upper block into the lower one, a short branch, a chipped corner."""
     img = _big_bricks(TIDE, 82)
     p = TIDE
-    crack(img, [(5, 0), (5, 1), (6, 2), (6, 3), (5, 4), (5, 5), (6, 6)], p[0], None)
-    crack(img, [(6, 3), (7, 3), (8, 4)], p[0])
-    crack(img, [(12, 8), (11, 9), (11, 10), (12, 11), (12, 12), (13, 13), (13, 14)], p[0])
-    crack(img, [(2, 9), (3, 10), (3, 11)], p[0])
-    for (x, y) in [(6, 1), (7, 4), (12, 9), (13, 12), (4, 10)]:  # lit edges of the cracks
-        put(img, x, y, p[5])
-    # chipped corner
-    for (x, y) in [(15, 6), (14, 6), (15, 5)]:
+    dark = lerp(p[0], p[1], 0.4)
+    crack(img, [(3, 1), (4, 2), (4, 3), (5, 4), (6, 4), (7, 5), (7, 6)], dark, p[5])
+    crack(img, [(5, 4), (4, 5), (3, 5)], dark)
+    crack(img, [(8, 8), (9, 9), (9, 10), (10, 11), (11, 11), (11, 12), (12, 13)], dark, p[5])
+    crack(img, [(14, 1), (13, 2)], p[2])
+    for (x, y) in [(15, 6), (14, 6), (15, 5)]:  # chipped corner
         put(img, x, y, p[1])
+    for (x, y) in [(1, 13), (2, 13), (1, 12)]:  # spalled pit
+        put(img, x, y, p[2])
     return img
 
 
 def mossy_tidestone_bricks():
     img = _big_bricks(TIDE, 82)
-    m = blotch_mask(0.38, 85, cell=4)
-    for y in range(16):
-        for x in range(16):
-            if m(x, y):
-                c = img.getpixel((x, y))
-                lum = sum(c[:3]) / 3
-                img.putpixel((x, y), ALGAE[1] if lum < 80 else ALGAE[2] if lum < 115 else ALGAE[3])
-    for (x, y) in [(3, 7), (4, 7), (5, 7), (7, 10), (7, 11), (12, 15), (13, 15)]:
-        put(img, x, y, ALGAE[1])
-    return img
+    return moss_over(img, {7, 15}, 0.30, 85, TIDE[1])
 
 
 EMBLEM = [  # the Tidewarden sigil, 12x12: a trident rising from a wave inside a gold ring.
