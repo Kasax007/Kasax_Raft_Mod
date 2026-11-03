@@ -129,6 +129,7 @@ A bare Expedition Raft is a little slower than a boat. With sail and engine it i
 T['diving'] = """\
 # The gear
 * Diving Helmet: see much farther under water. With a tank you breathe from the tank.
+* Helmet Lamp: craft the Diving Helmet with an Angler Lure. Under water you can then see in the dark deep sea and the trench.
 * Oxygen Tank: 2 minutes of air. The Titanium Oxygen Tank holds 6 minutes and protects like an iron chestplate.
 * Wetsuit: mine three times faster under water, and jellyfish cannot sting you.
 * Flippers: swim much faster, but walk 25% slower on land.
