@@ -40,7 +40,7 @@
     },
     "minecraft:visual/fog_color": "#9fb1c0",
     "minecraft:visual/sky_color": "#90abc4",
-    "minecraft:visual/water_fog_color": "#1d2c3c",
+    "minecraft:visual/water_fog_color": "#00405a",
     "minecraft:visual/water_fog_end_distance": {
       "argument": 0.7,
       "modifier": "multiply"
@@ -98,6 +98,9 @@
       "raft:wreck_debris",
       "raft:barnacles",
       "minecraft:seagrass_normal"
+    ],
+    [
+      "raft:gravity_support"
     ]
   ],
   "has_precipitation": false,

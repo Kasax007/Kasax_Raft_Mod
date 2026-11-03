@@ -736,7 +736,7 @@ public class SeagullEntity extends Animal {
                     gull.setYRot(yaw);
                     gull.yBodyRot = yaw;
                 }
-            } else if (gull.aiTick(10) || gull.getNavigation().isDone()) {
+            } else if (gull.aiTick(10) || gull.getNavigation().isDone() && gull.aiTick(4)) {
                 gull.flyTo(aim, distSqr < 8.0 * 8.0 ? 0.9 : 1.4);
             }
             gull.getLookControl().setLookAt(this.target);
@@ -880,7 +880,7 @@ public class SeagullEntity extends Animal {
                     gull.field = null;
                     return;
                 }
-                if (gull.getNavigation().isDone()) {
+                if (gull.getNavigation().isDone() && gull.aiTick(4)) {
                     gull.flyTo(target.add(0.0, 0.1, 0.0), 1.2);
                 }
                 return;
@@ -936,7 +936,8 @@ public class SeagullEntity extends Animal {
         public void tick() {
             SeagullEntity gull = SeagullEntity.this;
             SeagullEntity lead = gull.leader;
-            if (lead != null && (gull.aiTick(8) || gull.getNavigation().isDone())) {
+            // a new path every 8 ticks, or every 4 once the last one is used up (pathfinding in the air is costly)
+            if (lead != null && (gull.aiTick(8) || gull.getNavigation().isDone() && gull.aiTick(4))) {
                 Vec3 target = lead.position().add(gull.flockOffset).add(0.0, lead.isFlying() ? 0.5 : 3.0, 0.0);
                 gull.flyTo(target, lead.isFlying() ? 1.25 : 1.0);
             }
@@ -1002,7 +1003,7 @@ public class SeagullEntity extends Animal {
         public void tick() {
             this.time++;
             SeagullEntity gull = SeagullEntity.this;
-            if (this.spot != null && (gull.getNavigation().isDone() || this.time % 40 == 0)) {
+            if (this.spot != null && (gull.getNavigation().isDone() && this.time % 5 == 0 || this.time % 40 == 0)) {
                 gull.flyTo(this.spot, 1.0);
             }
         }

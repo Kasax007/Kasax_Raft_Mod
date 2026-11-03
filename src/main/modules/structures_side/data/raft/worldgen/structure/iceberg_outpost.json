@@ -30,7 +30,7 @@
     }
   },
   "start_height": {
-    "absolute": 89
+    "absolute": 90
   },
   "start_pool": "raft:iceberg_outpost/start",
   "step": "surface_structures",

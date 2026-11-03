@@ -30,10 +30,10 @@
     }
   },
   "start_height": {
-    "absolute": 88
+    "absolute": 79
   },
   "start_pool": "raft:pirate_cove/start",
   "step": "surface_structures",
-  "terrain_adaptation": "beard_box",
+  "terrain_adaptation": "none",
   "use_expansion_hack": false
 }

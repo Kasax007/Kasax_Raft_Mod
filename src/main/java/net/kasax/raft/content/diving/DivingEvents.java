@@ -22,6 +22,7 @@ import net.minecraft.world.level.block.Blocks;
  *   <li>breathing from the tank (called by the air mixin instead of losing air),</li>
  *   <li>refilling the worn tank at the surface and in bubble columns,</li>
  *   <li>a warning beep when the tank runs low,</li>
+ *   <li>the helmet lamp (Night Vision while the head is under water),</li>
  *   <li>the full set bonus (Dolphin's Grace while in water),</li>
  *   <li>the flippers' penalty on land.</li>
  * </ul>
@@ -35,6 +36,12 @@ public final class DivingEvents {
     /** The tank's component is written every few ticks (fewer equipment updates); the average drain is 1 per tick. */
     private static final int DRAIN_STEP = 5;
     private static final int LOW_AIR_TICKS = 300;
+    /**
+     * Night Vision of the helmet lamp: given for 13 s and topped up below 11 s, so it never reaches the last 10 s in
+     * which Night Vision flickers. Taken away again when the head leaves the water.
+     */
+    private static final int LAMP_TICKS = 260;
+    private static final int LAMP_REFRESH = 220;
 
     public static void init() {
         ServerTickEvents.END_LEVEL_TICK.register(level -> {
@@ -75,6 +82,8 @@ public final class DivingEvents {
             tickTank(level, player, tank);
         }
 
+        tickLamp(player);
+
         if (DivingGear.fullSet(player) && player.isInWater()) {
             MobEffectInstance current = player.getEffect(MobEffects.DOLPHINS_GRACE);
             if (current == null || (current.getDuration() < 20 && current.getDuration() != -1)) {
@@ -93,6 +102,19 @@ public final class DivingEvents {
             } else if (!penalty && has) {
                 speed.removeModifier(DivingGear.FLIPPERS_ON_LAND);
             }
+        }
+    }
+
+    private static void tickLamp(ServerPlayer player) {
+        MobEffectInstance current = player.getEffect(MobEffects.NIGHT_VISION);
+        boolean lampOn = DivingGear.wearsLampHelmet(player) && player.isEyeInFluid(FluidTags.WATER);
+        if (lampOn) {
+            if (current == null || (current.isAmbient() && current.getDuration() < LAMP_REFRESH)) {
+                player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, LAMP_TICKS, 0, true, false, true));
+            }
+        } else if (current != null && current.isAmbient() && current.getDuration() <= LAMP_TICKS) {
+            // the lamp's own effect (ambient, short); potions are not ambient and stay
+            player.removeEffect(MobEffects.NIGHT_VISION);
         }
     }
 

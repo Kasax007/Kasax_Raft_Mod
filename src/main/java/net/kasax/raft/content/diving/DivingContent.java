@@ -19,6 +19,7 @@ import net.minecraft.core.dispenser.ProjectileDispenseBehavior;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.util.ExtraCodecs;
+import net.minecraft.util.Unit;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.flag.FeatureFlags;
@@ -45,6 +46,16 @@ public final class DivingContent {
             Raft.id("stored_air"), DataComponentType.<Integer>builder()
                     .persistent(ExtraCodecs.NON_NEGATIVE_INT)
                     .networkSynchronized(ByteBufCodecs.VAR_INT)
+                    .build());
+
+    /**
+     * A lamp fitted to the diving helmet (crafted from the helmet and an angler lure): Night Vision while the wearer's
+     * head is under water (see DivingEvents).
+     */
+    public static final DataComponentType<Unit> DIVING_LAMP = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE,
+            Raft.id("diving_lamp"), DataComponentType.<Unit>builder()
+                    .persistent(Unit.CODEC)
+                    .networkSynchronized(Unit.STREAM_CODEC)
                     .build());
 
     static {

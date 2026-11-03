@@ -11,10 +11,18 @@ public final class StoryEvents {
     static void register() {
         // Tide Sigils and the Tidewarden Key never despawn when dropped: losing one would block the story.
         ServerEntityEvents.ENTITY_LOAD.register((entity, level) -> {
-            if (entity instanceof ItemEntity item && isRelic(item)) {
+            if (entity instanceof ItemEntity item && isRelic(item) && !isFakeCopy(item)) {
                 item.setUnlimitedLifetime();
             }
         });
+    }
+
+    /**
+     * /give spawns a display copy next to the player (ItemEntity.makeFakeItem: never picked up, age one tick before
+     * despawn) after the real item went into the inventory. It must vanish as usual, or it would float there forever.
+     */
+    private static boolean isFakeCopy(ItemEntity item) {
+        return item.getAge() >= 5999 && item.hasPickUpDelay();
     }
 
     private static boolean isRelic(ItemEntity item) {

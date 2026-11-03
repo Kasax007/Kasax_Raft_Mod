@@ -27,6 +27,7 @@ public final class DivingClient {
     public static void init() {
         ModelLayerRegistry.registerModelLayer(HarpoonModel.LAYER, HarpoonModel::createLayer);
         ModelLayerRegistry.registerModelLayer(DivingGearModels.HELMET, DivingGearModels::createHelmet);
+        ModelLayerRegistry.registerModelLayer(DivingGearModels.HELMET_LAMP, DivingGearModels::createHelmetLamp);
         ModelLayerRegistry.registerModelLayer(DivingGearModels.COLLAR, DivingGearModels::createCollar);
         ModelLayerRegistry.registerModelLayer(DivingGearModels.TANK, DivingGearModels::createTank);
         ModelLayerRegistry.registerModelLayer(DivingGearModels.FLIPPER, DivingGearModels::createFlipper);

@@ -32,7 +32,7 @@
     },
     "minecraft:visual/fog_color": "#b4aca8",
     "minecraft:visual/sky_color": "#a2b6c8",
-    "minecraft:visual/water_fog_color": "#20506e"
+    "minecraft:visual/water_fog_color": "#007ab4"
   },
   "carvers": [
     "minecraft:cave"
@@ -97,6 +97,9 @@
     [
       "raft:patch_sea_glass",
       "raft:patch_volcanic_ash_dunes"
+    ],
+    [
+      "raft:gravity_support"
     ]
   ],
   "has_precipitation": false,

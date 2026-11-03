@@ -479,7 +479,8 @@ public class SeaOtterEntity extends Animal {
                 return;
             }
             otter.getLookControl().setLookAt(this.friend, 10.0F, otter.getMaxHeadXRot());
-            if ((otter.tickCount + otter.getId()) % 10 == 0 || otter.getNavigation().isDone()) {
+            int t = otter.tickCount + otter.getId();
+            if (t % 10 == 0 || otter.getNavigation().isDone() && t % 4 == 0) {
                 double y = otter.isInWater() && this.friend.isInWater() ? this.friend.getY() : this.friend.getY();
                 otter.getNavigation().moveTo(this.friend.getX(), y, this.friend.getZ(), 1.25);
             }
@@ -549,7 +550,7 @@ public class SeaOtterEntity extends Animal {
             }
             double d = otter.distanceToSqr(Vec3.atBottomCenterOf(this.floor));
             if (this.forage == 0 && d > 2.5) {
-                if (otter.getNavigation().isDone()) {
+                if (otter.getNavigation().isDone() && this.time % 5 == 0) {
                     otter.getNavigation().moveTo(this.floor.getX() + 0.5, this.floor.getY() + 0.2, this.floor.getZ() + 0.5, 1.2);
                 }
                 otter.setDeltaMovement(otter.getDeltaMovement().add(0.0, -0.012, 0.0));

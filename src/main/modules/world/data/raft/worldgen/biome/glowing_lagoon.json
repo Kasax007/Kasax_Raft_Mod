@@ -44,7 +44,7 @@
     },
     "minecraft:visual/fog_color": "#3aa8c8",
     "minecraft:visual/sky_color": "#6cbaea",
-    "minecraft:visual/water_fog_color": "#0b4a52",
+    "minecraft:visual/water_fog_color": "#00a3ad",
     "minecraft:visual/water_fog_end_distance": {
       "argument": 0.9,
       "modifier": "multiply"
@@ -104,6 +104,9 @@
       "raft:starfish",
       "raft:seashells_reef",
       "minecraft:seagrass_warm"
+    ],
+    [
+      "raft:gravity_support"
     ]
   ],
   "has_precipitation": false,

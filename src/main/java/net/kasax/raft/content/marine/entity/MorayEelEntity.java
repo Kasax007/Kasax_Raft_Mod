@@ -26,6 +26,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
@@ -38,6 +39,8 @@ import java.util.EnumSet;
  */
 public class MorayEelEntity extends AbstractMarineMonster {
     private static final int LUNGE_RANGE = 4;
+    private static final int MAX_NEARBY = 4;
+    private static final double NEARBY_RANGE = 24.0;
     private @Nullable BlockPos home;
     private int homeSearchCooldown;
     /** Synced via entity events: client side "is lunging" for the wide-open jaw. */
@@ -237,7 +240,11 @@ public class MorayEelEntity extends AbstractMarineMonster {
         this.playSound(SoundEvents.EVOKER_FANGS_ATTACK, 0.6F, 1.8F);
     }
 
-    /** Natural spawning: water near the floor of reefs and ruins (solid block within 2 below), never in peaceful. */
+    /**
+     * Natural spawning: water near the floor of reefs and ruins (solid block within 2 below), never in peaceful. The
+     * ruins also list eels as monsters (light does not matter), so a local limit keeps them from taking the whole
+     * monster cap: no new eel while {@value #MAX_NEARBY} are within {@value #NEARBY_RANGE} blocks.
+     */
     public static boolean checkMoraySpawnRules(EntityType<MorayEelEntity> type, ServerLevelAccessor level, EntitySpawnReason reason,
                                                BlockPos pos, RandomSource random) {
         if (level.getDifficulty() == Difficulty.PEACEFUL || pos.getY() > level.getSeaLevel() - 3) {
@@ -246,7 +253,11 @@ public class MorayEelEntity extends AbstractMarineMonster {
         if (!level.getFluidState(pos).is(FluidTags.WATER) || !level.getFluidState(pos.above()).is(FluidTags.WATER)) {
             return false;
         }
-        return !level.getFluidState(pos.below()).is(FluidTags.WATER) || !level.getFluidState(pos.below(2)).is(FluidTags.WATER);
+        if (level.getFluidState(pos.below()).is(FluidTags.WATER) && level.getFluidState(pos.below(2)).is(FluidTags.WATER)) {
+            return false;
+        }
+        return EntitySpawnReason.isSpawner(reason)
+                || level.getEntitiesOfClass(MorayEelEntity.class, new AABB(pos).inflate(NEARBY_RANGE)).size() < MAX_NEARBY;
     }
 
     // ------------------------------------------------------------------------------------------------ goals
@@ -382,9 +393,11 @@ public class MorayEelEntity extends AbstractMarineMonster {
                 e.level().broadcastEntityEvent(e, EVENT_BITE);
                 e.playSound(SoundEvents.FISH_SWIM, 0.8F, 1.4F);
             } else if (e.home != null && e.position().distanceToSqr(Vec3.atCenterOf(e.home)) > 2.0) {
-                // wait at the hole, ready to strike
-                Vec3 c = Vec3.atCenterOf(e.home);
-                e.getNavigation().moveTo(c.x, c.y - 0.3, c.z, 1.0);
+                // wait at the hole, ready to strike (a new path twice a second, not every tick)
+                if (e.tickCount % 10 == 0) {
+                    Vec3 c = Vec3.atCenterOf(e.home);
+                    e.getNavigation().moveTo(c.x, c.y - 0.3, c.z, 1.0);
+                }
             } else {
                 e.getNavigation().stop();
             }

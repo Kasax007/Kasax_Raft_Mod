@@ -122,6 +122,26 @@ public class BcScript implements FabricClientGameTest {
                         ctx.getInput().releaseKey(o -> o.keyShift);
                     }
                     case "esc" -> ctx.setScreen(() -> null);
+                    case "tab" -> ctx.runOnClient(mc -> {
+                        // tab <id> [rows]: open the creative inventory on that tab (scrolled down by rows) and log its items
+                        String[] ta = arg.split("\\s+");
+                        var tab = net.minecraft.core.registries.BuiltInRegistries.CREATIVE_MODE_TAB.getValue(
+                                net.minecraft.resources.Identifier.parse(ta[0]));
+                        var screen = new net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen(
+                                mc.player, mc.player.connection.enabledFeatures(), false);
+                        mc.gui.setScreen(screen);
+                        if (tab == null) {
+                            LOG.warn("[bctest] no creative tab {}", arg);
+                            return;
+                        }
+                        ((net.fabricmc.fabric.api.client.creativetab.v1.FabricCreativeModeInventoryScreen) (Object) screen).setSelectedTab(tab);
+                        if (ta.length > 1) screen.mouseScrolled(0, 0, 0, -Double.parseDouble(ta[1]));
+                        StringBuilder ids = new StringBuilder();
+                        for (var stack : tab.getDisplayItems()) {
+                            ids.append(' ').append(net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()));
+                        }
+                        LOG.info("[bctest] TAB {} {}:{}", arg, tab.getDisplayItems().size(), ids);
+                    });
                     case "slot" -> {
                         int i = Integer.parseInt(arg) - 1;
                         ctx.getInput().pressKey(o -> o.keyHotbarSlots[i]);

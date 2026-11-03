@@ -197,6 +197,11 @@ def interior(s, rnd):
                     band = y in (4, 8)
                     s.set(x, y, z, 'raft:glowing_tidestone' if band and (x + z) % 2 == 0 else
                           ('raft:chiseled_tidestone' if band else 'raft:tidestone_bricks'))
+    # eight sea lanterns set flush into the floor at the pool's rim: they light the water surface where the
+    # Leviathan rises (the dimension has no ambient light) without blocking its lunges across the ring
+    for k in range(8):
+        a = math.radians(45 * k)
+        s.set(round(math.cos(a) * 8), FLOOR_Y, round(math.sin(a) * 8), 'minecraft:sea_lantern')
     # the sanctum stone directly under the pool lining stays (core); light sea pickles at the pool bottom
     for (x, z) in ((3, 2), (-3, -2), (2, -4), (-4, 3), (5, -1), (-1, 5)):
         s.set(x, POOL_BOTTOM + 1, z, 'minecraft:sea_pickle[pickles=4]')
@@ -524,9 +529,9 @@ def reward_room(s, rnd):
     s.chest(0, FLOOR_Y + 2, -36, 'raft:chests/sanctum_reward', facing='south')
     for (x, z, n) in ((-1, -36, 4), (1, -36, 6), (-2, -35, 2), (2, -35, 3), (-1, -35, 1)):
         s.set(x, FLOOR_Y + 2, z, f'raft:gold_coin_pile[layers={n}]')
-    # treasure along the walls (decor only, the reward is the chest)
+    # treasure along the walls: Tidewarden offerings (the main reward is the chest on the dais)
     for (x, z, f) in ((-5, -30, 'east'), (5, -30, 'west'), (-5, -34, 'east'), (5, -34, 'west')):
-        s.set(x, FLOOR_Y + 1, z, f'raft:treasure_chest[facing={f},open=false]')
+        s.chest(x, FLOOR_Y + 1, z, 'raft:chests/coral_temple_offering', facing=f, block='raft:treasure_chest')
         s.set(x, FLOOR_Y + 1, z + 1, f'raft:gold_coin_pile[layers={2 + (z % 3)}]')
     # the empty socket of the Heart of the Tide
     s.set(0, FLOOR_Y + 3, -37, 'raft:chiseled_tidestone')

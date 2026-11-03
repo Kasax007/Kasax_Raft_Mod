@@ -1,8 +1,10 @@
 """pirate_cove - Saltjaw Brannigan's hidden hideout: a hollow rock hill on a jungle/palm island with a sea cave.
 
 The template owns the whole hill (rock with a grassy, palm-crowned top) so it works wherever the island is: the
-cove is placed at a fixed height (template y=0 = world 88, the lagoon surface y=11 = world 99) and the island
-terrain is pushed out of its box (beard_box). Inside: a vine-curtained sea arch into a lagoon cavern, a plank dock
+cove is placed at a fixed height (hill base y=0 = world 88, the lagoon surface y=11 = world 99, a rock root reaches
+down to world 78 so the hill never floats over deeper water). No terrain adaptation: a box-shaped beard cut
+straight-walled moats into neighbouring islands, so the island terrain now stays and merges with the hill; the cave,
+the lagoon and the sea channel in front of the arch are explicit air/water, so terrain cannot fill them. Inside: a vine-curtained sea arch into a lagoon cavern, a plank dock
 with a small moored pirate sloop, a crew deck on the back ledge (hammocks, kegs, galley), a rope bridge high over
 the lagoon between two scaffold platforms (one with a cannon aimed at the entrance), the captain's quarters behind a
 teak facade (story chest pirate_captain, wanted poster, chart table), the gated treasure grotto with heaps of gold
@@ -16,6 +18,7 @@ from .wreck_fishing_boat import hull
 
 W0 = 88
 WL = 99 - W0           # lagoon surface (template y 11)
+ROOT = 10              # rock root below the hill base (template y -10 .. -1)
 R = 24
 PEAK = 38
 CAV = (0, WL + 5, 0, 14.0, 12.0, 13.0)     # cavity centre + radii
@@ -67,13 +70,15 @@ def hill(s, rnd):
             if h is None:
                 if v > -0.22:                       # underwater skirt and rocks at the waterline
                     top = int(WL - 1 + v * 40 + rnd.uniform(-1, 1))
-                    for y in range(0, max(0, top) + 1):
+                    for y in range(-ROOT if v > -0.1 else 0, max(0, top) + 1):
                         if not in_entrance(x, y, z):
                             s.set(x, y, z, pick(rnd, ROCK) if y < top else pick(
                                 rnd, [('minecraft:sand', 3), ('minecraft:gravel', 1), ('minecraft:stone', 2)]))
                 continue
             tops[(x, z)] = h
             steep = any(abs((height(x + dx, z + dz) or WL) - h) >= 3 for dx, dz in ((1, 0), (-1, 0), (0, 1), (0, -1)))
+            for y in range(-ROOT, 0):               # root: the hill stands on rock, also over deeper water
+                s.set(x, y, z, pick(rnd, ROCK))
             for y in range(0, h + 1):
                 cav = in_cavity(x, y, z) or in_entrance(x, y, z)
                 if cav:
@@ -111,6 +116,15 @@ def hill(s, rnd):
                     yb = (height(x + dx, z + dz) or WL) + 1
                     s.set(x + dx, yb, z + dz, pick(rnd, [('minecraft:mossy_cobblestone', 2), ('minecraft:stone', 2),
                                                           ('minecraft:andesite', 1)]))
+    # sea channel in front of the arch, out to the template's edge: explicit water and air, so a neighbouring island
+    # cannot close the entrance
+    for x in range(-3, 4):
+        for z in range(6, R + 5):
+            if height(x, z) is not None:
+                continue
+            for y in range(3, WL + 9):
+                if s.get(x, y, z) is None:
+                    s.set(x, y, z, 'minecraft:water' if y <= WL else 'minecraft:air')
     return tops
 
 
@@ -483,12 +497,12 @@ def main(preview=False):
     s = build()
     path = 'pirate_cove/cove_0'
     (_, y0, _), _ = s.bounds()
-    assert y0 == 0, y0
+    assert y0 == -ROOT, y0
     save(s, path)
     if preview:
         print('  preview', contact(s, 'pirate_cove', cuts=(WL + 3, WL + 9), scale=4, slices_y=[WL - 2, WL + 2, WL + 4, WL + 8]))
     write_structure('pirate_cove', [(path, 1)], None,
-                    step='surface_structures', terrain='beard_box', start_height=W0, heightmap=None,
+                    step='surface_structures', terrain='none', start_height=W0 - ROOT, heightmap=None,
                     biomes=['jungle_isle', 'palm_isle'], spacing=34, separation=12, salt=31415904, max_distance=64,
                     spawn_overrides={'monster': spawns([('raft:drowned_corsair', 6, 1, 2), ('minecraft:skeleton', 1, 1, 1)])})
     return [(path, s)]

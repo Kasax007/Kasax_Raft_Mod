@@ -871,6 +871,10 @@ def write_structure(sid, templates, processors=None, *, step='surface_structures
         proc_id = f'raft:{sid}'
         processor_list(proc_id, processors)
     template_pool(f'raft:{sid}/start', [(f'raft:{t}', w, proc_id) for t, w in templates])
+    if heightmap is None:
+        # a jigsaw start piece sits its ground level delta (1) below start_height: a fixed height given here is the
+        # world y of the template's y=0 (decks at the sea surface), so it is written one higher
+        start_height += 1
     structure_json(sid, f'raft:{sid}/start', step, terrain, start_height, heightmap=heightmap, size=1,
                    max_distance=max_distance, spawn_overrides=spawn_overrides, liquid=liquid)
     structure_set(sid, spacing, separation, salt)

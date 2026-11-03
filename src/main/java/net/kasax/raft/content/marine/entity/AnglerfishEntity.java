@@ -133,6 +133,8 @@ public class AnglerfishEntity extends AbstractMarineMonster {
         private int cooldown;
         private int dartTicks;
         private int backOff;
+        /** Ticks until the path is computed again (pathfinding every tick is expensive). */
+        private int repath;
 
         DartAttackGoal() {
             this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
@@ -153,6 +155,7 @@ public class AnglerfishEntity extends AbstractMarineMonster {
         public void start() {
             this.dartTicks = 0;
             this.backOff = 0;
+            this.repath = 0;
         }
 
         @Override
@@ -177,10 +180,16 @@ public class AnglerfishEntity extends AbstractMarineMonster {
             if (this.cooldown > 0) {
                 this.cooldown--;
             }
+            if (this.repath > 0) {
+                this.repath--;
+            }
             if (this.backOff > 0) {
                 this.backOff--;
-                Vec3 away = a.position().subtract(t.position()).normalize();
-                a.getNavigation().moveTo(a.getX() + away.x * 4, a.getY() + away.y * 2, a.getZ() + away.z * 4, 0.6);
+                if (this.repath <= 0) {
+                    this.repath = 10;
+                    Vec3 away = a.position().subtract(t.position()).normalize();
+                    a.getNavigation().moveTo(a.getX() + away.x * 4, a.getY() + away.y * 2, a.getZ() + away.z * 4, 0.6);
+                }
                 return;
             }
             if (this.dartTicks > 0) {
@@ -192,6 +201,7 @@ public class AnglerfishEntity extends AbstractMarineMonster {
                     this.cooldown = 30;
                     this.dartTicks = 0;
                     this.backOff = 30;
+                    this.repath = 0;
                 }
                 return;
             }
@@ -199,8 +209,9 @@ public class AnglerfishEntity extends AbstractMarineMonster {
                 this.dartTicks = 14;
                 a.playSound(SoundEvents.FISH_SWIM, 0.8F, 0.6F);
                 a.level().broadcastEntityEvent(a, EVENT_BITE);
-            } else {
-                // creep closer slowly
+            } else if (this.repath <= 0) {
+                // creep closer slowly (a new path every half second is enough at this speed)
+                this.repath = 10;
                 a.getNavigation().moveTo(t, 0.55);
             }
         }

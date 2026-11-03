@@ -5,9 +5,11 @@ import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.kasax.raft.Raft;
 import net.kasax.raft.world.biome.ModBiomes;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.biome.Biome;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,6 +51,29 @@ public final class WorldSpawns {
             new Spawn(ModBiomes.VOLCANIC_ISLE, "ember_crab", 5, 1, 3),
             new Spawn(ModBiomes.VOLCANIC_ISLE, "seagull", 1, 1, 2));
 
+    /**
+     * Spawn costs (vanilla "spawn_costs", the potential-based density limit of the Nether's soul sand valley): a mob
+     * may only spawn where charge * sum(charge_i / distance_i) of the loaded mobs with a cost stays within the budget.
+     * The deep water of the raft dimension is dark, and the monster lists of the drowned shelf, the wreck graveyard
+     * and of the drowned structures (wrecks, rig, Port Solace) hold nothing but drowned and corsairs, so without a cost
+     * the whole monster cap (70) filled up with them around a player within a minute. Their cost applies in every
+     * biome of the dimension (a {@code null} biome), because the structures stand in all the sea biomes.
+     * Ember crabs spawn in any light, so the volcanic isles need the same. Whales and manta rays are the only water
+     * creatures of the frost floes and coral shallows, so they always filled the water creature cap (5-6 whales around
+     * a player): their costs keep them some 30 (whale) or 20 (manta) blocks apart.
+     */
+    private record Cost(@Nullable ResourceKey<Biome> biome, Identifier entity, double charge, double budget) {
+    }
+
+    private static final List<Cost> COSTS = List.of(
+            new Cost(null, Identifier.withDefaultNamespace("drowned"), 0.7, 0.12),
+            new Cost(null, Raft.id("drowned_corsair"), 0.7, 0.12),
+            new Cost(ModBiomes.VOLCANIC_ISLE, Raft.id("ember_crab"), 0.7, 0.08),
+            new Cost(ModBiomes.FROST_FLOES, Raft.id("whale"), 1.0, 0.03),
+            new Cost(ModBiomes.RAFT_OCEAN_BIOME, Raft.id("whale"), 1.0, 0.03),
+            new Cost(ModBiomes.CORAL_SHALLOWS, Raft.id("manta_ray"), 1.0, 0.05),
+            new Cost(ModBiomes.GLOWING_LAGOON, Raft.id("manta_ray"), 1.0, 0.05));
+
     private WorldSpawns() {
     }
 
@@ -62,6 +87,12 @@ public final class WorldSpawns {
                         }
                         Optional<EntityType<?>> type = BuiltInRegistries.ENTITY_TYPE.getOptional(Raft.id(spawn.entity()));
                         type.ifPresent(t -> context.getMobSpawnSettings().addSpawn(t, spawn.weight(), spawn.min(), spawn.max()));
+                    }
+                    for (Cost cost : COSTS) {
+                        if (cost.biome() == null || cost.biome().equals(selection.getBiomeKey())) {
+                            BuiltInRegistries.ENTITY_TYPE.getOptional(cost.entity())
+                                    .ifPresent(t -> context.getMobSpawnSettings().addMobCharge(t, cost.charge(), cost.budget()));
+                        }
                     }
                 });
     }

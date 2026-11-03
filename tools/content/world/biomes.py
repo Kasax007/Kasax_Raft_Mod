@@ -23,32 +23,39 @@ NAMES = {
 
 # --------------------------------------------------------------------------------------------- climate / looks
 # temperature, downfall, water colour, water fog, fog, sky, extra effects/attributes
+#
+# Water fog colours all have red = 0 on purpose. The game "adapts" the eyes under water: while you stay under water it
+# scales the fog colour up until its brightest channel is 1.0 (FogRenderer, water vision), so every dark fog turns
+# into a bright one after a few seconds and the dark trench looked like a bright blue pool. That scaling is skipped
+# when one channel is exactly 0, so with red = 0 the fog keeps the colour written here: bright turquoise in the
+# shallows, deep blue in the open sea, near-black navy in the trench (where only glowing life lights the way).
+# All biomes use it, so blending at biome borders never switches between scaled and unscaled fog.
 LOOK = {
-    'raft_ocean_biome': dict(t=0.7, d=0.5, water='#2a86d8', wfog='#123f8c', fog='#22a1e6', sky='#6cbaea',
+    'raft_ocean_biome': dict(t=0.7, d=0.5, water='#2a86d8', wfog='#0052b8', fog='#22a1e6', sky='#6cbaea',
                              music='minecraft:music.overworld.cherry_grove'),
-    'kelp_forest': dict(t=0.6, d=0.6, water='#2b9a92', wfog='#14524a', fog='#2aa3d6', sky='#6cbaea', wfog_dist=0.85,
+    'kelp_forest': dict(t=0.6, d=0.6, water='#2b9a92', wfog='#00866f', fog='#2aa3d6', sky='#6cbaea', wfog_dist=0.85,
                         music='minecraft:music.overworld.lush_caves'),
-    'coral_shallows': dict(t=0.9, d=0.5, water='#3ad9e6', wfog='#1fa9c4', fog='#3ab2ea', sky='#6cc4f0', wfog_dist=1.6,
+    'coral_shallows': dict(t=0.9, d=0.5, water='#3ad9e6', wfog='#00d2f5', fog='#3ab2ea', sky='#6cc4f0', wfog_dist=1.6,
                            music='minecraft:music.overworld.flower_forest'),
-    'glowing_lagoon': dict(t=0.85, d=0.6, water='#18a7a3', wfog='#0b4a52', fog='#3aa8c8', sky='#6cbaea',
+    'glowing_lagoon': dict(t=0.85, d=0.6, water='#18a7a3', wfog='#00a3ad', fog='#3aa8c8', sky='#6cbaea',
                            wfog_dist=0.9, particles=[('minecraft:glow', 0.006)],
                            music='minecraft:music.overworld.lush_caves'),
-    'drowned_shelf': dict(t=0.6, d=0.5, water='#4e7468', wfog='#26372f', fog='#7fa6b8', sky='#7bb4dc', wfog_dist=0.6,
+    'drowned_shelf': dict(t=0.6, d=0.5, water='#4e7468', wfog='#00644f', fog='#7fa6b8', sky='#7bb4dc', wfog_dist=0.6,
                           music='minecraft:music.overworld.deep_dark'),
-    'abyssal_trench': dict(t=0.5, d=0.5, water='#12305c', wfog='#040a1a', fog='#2a7fc0', sky='#6cbaea',
+    'abyssal_trench': dict(t=0.5, d=0.5, water='#12305c', wfog='#001634', fog='#2a7fc0', sky='#6cbaea',
                            wfog_dist=0.4, music='minecraft:music.overworld.deep_dark'),
-    'wreck_graveyard': dict(t=0.6, d=0.5, water='#4a6d8e', wfog='#1d2c3c', fog='#9fb1c0', sky='#90abc4',
+    'wreck_graveyard': dict(t=0.6, d=0.5, water='#4a6d8e', wfog='#00405a', fog='#9fb1c0', sky='#90abc4',
                             wfog_dist=0.7, music='minecraft:music.overworld.old_growth_taiga'),
-    'frost_floes': dict(t=0.2, d=0.5, water='#3d8fd6', wfog='#1a4a7a', fog='#c4dcf2', sky='#9ccaee',
+    'frost_floes': dict(t=0.2, d=0.5, water='#3d8fd6', wfog='#0078c8', fog='#c4dcf2', sky='#9ccaee',
                         music='minecraft:music.overworld.frozen_peaks'),
-    'palm_isle': dict(t=0.95, d=0.5, water='#3fc8e4', wfog='#1b8fc0', fog='#22a1e6', sky='#6cbaea',
+    'palm_isle': dict(t=0.95, d=0.5, water='#3fc8e4', wfog='#00b4f0', fog='#22a1e6', sky='#6cbaea',
                       grass='#7cc45a', foliage='#5ab63c', music='minecraft:music.overworld.cherry_grove'),
-    'jungle_isle': dict(t=0.95, d=0.9, water='#2fb4cc', wfog='#177f9c', fog='#2aa4e0', sky='#6cbaea',
+    'jungle_isle': dict(t=0.95, d=0.9, water='#2fb4cc', wfog='#00aedc', fog='#2aa4e0', sky='#6cbaea',
                         music='minecraft:music.overworld.jungle'),
-    'mangrove_isle': dict(t=0.8, d=0.9, water='#3a7a6a', wfog='#4d7a60', fog='#9fc8d8', sky='#78b4e0',
+    'mangrove_isle': dict(t=0.8, d=0.9, water='#3a7a6a', wfog='#00704c', fog='#9fc8d8', sky='#78b4e0',
                           foliage='#8db127', grass_mod='swamp', wfog_dist=0.85,
                           music='minecraft:music.overworld.swamp'),
-    'volcanic_isle': dict(t=1.2, d=0.2, water='#3a8cc0', wfog='#20506e', fog='#b4aca8', sky='#a2b6c8',
+    'volcanic_isle': dict(t=1.2, d=0.2, water='#3a8cc0', wfog='#007ab4', fog='#b4aca8', sky='#a2b6c8',
                           grass='#9aa05a', foliage='#8a9a48', particles=[('minecraft:white_ash', 0.025)],
                           music='minecraft:music.overworld.badlands'),
 }
@@ -178,6 +185,8 @@ FEATURES = {
         ('minecraft:seagrass_cold', ['frost_floes']),
         ('minecraft:seagrass_swamp', ['mangrove_isle']),
     ],
+    # top_layer_modification: last, after everything else of the chunk is placed
+    10: [('raft:gravity_support', ALL)],
 }
 
 
@@ -221,6 +230,7 @@ def biome_json(b, feature_ok=None, entity_ok=None):
             argument=[OrderedDict(particle={'type': p}, probability=pr) for p, pr in L['particles']], modifier='append')
     attrs['minecraft:visual/fog_color'] = L['fog']
     attrs['minecraft:visual/sky_color'] = L['sky']
+    assert L['wfog'].startswith('#00'), b + ': water fog needs red = 0 (see LOOK)'
     attrs['minecraft:visual/water_fog_color'] = L['wfog']
     if L.get('wfog_dist'):
         attrs['minecraft:visual/water_fog_end_distance'] = OrderedDict(argument=L['wfog_dist'], modifier='multiply')

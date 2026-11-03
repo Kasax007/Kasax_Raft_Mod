@@ -29,6 +29,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathType;
+import net.minecraft.world.phys.AABB;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -38,6 +39,8 @@ import org.jspecify.annotations.Nullable;
 public class EmberCrabEntity extends Monster implements CrabAnimated {
     /** Players closer than this are attacked. */
     public static final double AGGRO_RANGE = 7.0;
+    private static final int MAX_NEARBY = 5;
+    private static final double NEARBY_RANGE = 40.0;
 
     public final AnimationState pinchAnimation = new AnimationState();
     public final AnimationState snapAnimation = new AnimationState();
@@ -149,13 +152,13 @@ public class EmberCrabEntity extends Monster implements CrabAnimated {
         return Mth.lerp(partialTicks, this.sidewaysO, this.sideways);
     }
 
-    /** Monsters rate spots by darkness; under the always-bright raft sky that would forbid every spawn. */
+    /** Monsters rate spots by darkness, which would forbid every spawn in daylight (these spawn by day too). */
     @Override
     public float getWalkTargetValue(BlockPos pos, LevelReader level) {
         return 0.0F;
     }
 
-    /** Monsters age twice as fast in bright light and would despawn in seconds under the raft sky. */
+    /** Monsters age twice as fast in bright light and would soon despawn in daylight. */
     @Override
     protected void updateNoActionTime() {
     }
@@ -190,11 +193,18 @@ public class EmberCrabEntity extends Monster implements CrabAnimated {
         return 200;
     }
 
-    /** On the ground of the volcanic isles (the biome decides where), never in peaceful. */
+    /**
+     * On the ground of the volcanic isles (the biome decides where), by day too, never in peaceful. Spawning ignores
+     * the light, so a local limit keeps the monster cap from filling up with ember crabs: no new one while
+     * {@value #MAX_NEARBY} are within {@value #NEARBY_RANGE} blocks.
+     */
     public static boolean checkEmberCrabSpawnRules(EntityType<EmberCrabEntity> type, ServerLevelAccessor level, EntitySpawnReason reason,
                                                    BlockPos pos, RandomSource random) {
-        return level.getDifficulty() != Difficulty.PEACEFUL
-                && checkMobSpawnRules(type, level, reason, pos, random)
-                && !level.getFluidState(pos).is(net.minecraft.tags.FluidTags.WATER);
+        if (level.getDifficulty() == Difficulty.PEACEFUL || !checkMobSpawnRules(type, level, reason, pos, random)
+                || level.getFluidState(pos).is(net.minecraft.tags.FluidTags.WATER)) {
+            return false;
+        }
+        return EntitySpawnReason.isSpawner(reason) || random.nextInt(4) == 0
+                && level.getEntitiesOfClass(EmberCrabEntity.class, new AABB(pos).inflate(NEARBY_RANGE)).size() < MAX_NEARBY;
     }
 }

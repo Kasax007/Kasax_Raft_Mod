@@ -42,7 +42,7 @@
     },
     "minecraft:visual/fog_color": "#2aa4e0",
     "minecraft:visual/sky_color": "#6cbaea",
-    "minecraft:visual/water_fog_color": "#177f9c"
+    "minecraft:visual/water_fog_color": "#00aedc"
   },
   "carvers": [
     "minecraft:cave"
@@ -110,6 +110,9 @@
       "minecraft:vines",
       "raft:patch_seashells",
       "raft:patch_sea_glass"
+    ],
+    [
+      "raft:gravity_support"
     ]
   ],
   "has_precipitation": false,

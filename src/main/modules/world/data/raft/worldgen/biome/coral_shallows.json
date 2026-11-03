@@ -49,7 +49,7 @@
     },
     "minecraft:visual/fog_color": "#3ab2ea",
     "minecraft:visual/sky_color": "#6cc4f0",
-    "minecraft:visual/water_fog_color": "#1fa9c4",
+    "minecraft:visual/water_fog_color": "#00d2f5",
     "minecraft:visual/water_fog_end_distance": {
       "argument": 1.6,
       "modifier": "multiply"
@@ -108,6 +108,9 @@
       "raft:sea_glass_reef",
       "minecraft:sea_pickle",
       "minecraft:seagrass_warm"
+    ],
+    [
+      "raft:gravity_support"
     ]
   ],
   "has_precipitation": false,

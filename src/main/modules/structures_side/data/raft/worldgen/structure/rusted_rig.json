@@ -30,7 +30,7 @@
     }
   },
   "start_height": {
-    "absolute": 20
+    "absolute": 21
   },
   "start_pool": "raft:rusted_rig/start",
   "step": "surface_structures",

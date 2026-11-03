@@ -229,8 +229,11 @@ def island_plants():
         placed(name, f, [rarity(rar), IN_SQUARE, water_depth(0), heightmap('MOTION_BLOCKING'), BIOME])
 
     # volcanic ash drifts over the black sand / basalt
+    # (pumice where the ash would have nothing solid below it, so it cannot fall)
+    ash_or_pumice = OrderedDict(type='minecraft:rule_based', fallback=st('volcanic_ash'), rules=[OrderedDict(
+        if_true=not_(OrderedDict(type='minecraft:solid', offset=[0, -1, 0])), then=st('pumice'))])
     f = feature('volcanic_ash_dunes', OrderedDict(
-        type='minecraft:disk', half_height=1, radius=uniform(2, 5), state_provider=st('volcanic_ash'),
+        type='minecraft:disk', half_height=1, radius=uniform(2, 5), state_provider=ash_or_pumice,
         target=blocks('raft:black_sand', 'minecraft:basalt', 'minecraft:blackstone', 'minecraft:smooth_basalt')))
     placed('patch_volcanic_ash_dunes', f, [count(2), IN_SQUARE, heightmap('WORLD_SURFACE_WG'), water_depth(0), BIOME])
 
@@ -357,6 +360,12 @@ def sea_life():
     placed('ice_floe', f, [count(uniform(0, 2)), IN_SQUARE, BIOME])
 
 
+def ground_support():
+    """Last feature of every biome: sand / gravel / ash right above a cave becomes solid (see GravitySupportFeature)."""
+    f = feature('gravity_support', OrderedDict(type='raft:gravity_support'))
+    placed('gravity_support', f, [])
+
+
 def starfish_provider():
     entries = []
     for colour in ('orange', 'purple', 'red'):
@@ -372,6 +381,7 @@ def write(module):
     trees()
     island_plants()
     sea_life()
+    ground_support()
     for name, data in FEATURES.items():
         assets.write_json(module, f'data/raft/worldgen/feature/{name}.json', data)
     for name, data in PLACED.items():

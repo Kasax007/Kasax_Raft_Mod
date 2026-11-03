@@ -21,7 +21,8 @@ paddle coconut_lantern rope_ladder rope_coil sail_canvas raft_flag some_game_mus
 crystal_castles_music_disc metal_detector titanium_block""".split()
 RAFT_3 = """pineapple pineapple_crown pearl seashell sea_glass_shard urchin_spine glow_kelp crab_claw cooked_crab_claw
 ember_shell cutlass gold_coin cannonball jelly_blob glow_jelly angler_lure eel_fillet cooked_eel_fillet diving_helmet
-oxygen_tank wetsuit flippers gold_coin_pile rum_bottles ship_lantern jelly_lamp seashell_lamp hibiscus""".split()
+oxygen_tank wetsuit flippers gold_coin_pile rum_bottles ship_lantern jelly_lamp seashell_lamp hibiscus
+seafarers_almanac""".split()
 RAFT_STORY = """expedition_journal message_in_a_bottle supply_barrel coral_sigil pearl_sigil storm_sigil ember_sigil
 tidewarden_key""".split()
 _known = None
@@ -187,7 +188,7 @@ def loot_tables():
     # ---- story chests (9.3)
     table('chests/story/castaway', [
         pool([book('marlow_note')]), pool([item('expedition_journal')]), pool([chart('lighthouse')]),
-        pool([item('bread', 3, 5)]), pool([item('raft:fresh_water', 2, 3)]), pool([item('raft:rope', 3, 6)]),
+        pool([item('raft:seafarers_almanac')]), pool([item('bread', 3, 5)]), pool([item('raft:fresh_water', 2, 3)]), pool([item('raft:rope', 3, 6)]),
         pool([item('raft:paddle')]), pool([item('raft:plastic_hook')]),
         pool([item('raft:coconut', 1, 3, weight=3), item('cooked_cod', 1, 3, weight=3),
               item('raft:palm_sapling', 1, 2, weight=1), item('string', 2, 4, weight=2)], rolls=(1, 2))])

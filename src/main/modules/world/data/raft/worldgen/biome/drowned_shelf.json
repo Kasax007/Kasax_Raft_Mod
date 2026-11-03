@@ -44,7 +44,7 @@
     },
     "minecraft:visual/fog_color": "#7fa6b8",
     "minecraft:visual/sky_color": "#7bb4dc",
-    "minecraft:visual/water_fog_color": "#26372f",
+    "minecraft:visual/water_fog_color": "#00644f",
     "minecraft:visual/water_fog_end_distance": {
       "argument": 0.6,
       "modifier": "multiply"
@@ -98,6 +98,9 @@
       "raft:concrete_rubble",
       "raft:barnacles",
       "minecraft:seagrass_normal"
+    ],
+    [
+      "raft:gravity_support"
     ]
   ],
   "has_precipitation": false,

@@ -24,14 +24,17 @@ import net.minecraft.world.entity.ai.goal.ZombieAttackGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.golem.IronGolem;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.zombie.Drowned;
 import net.minecraft.world.entity.npc.villager.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
@@ -42,6 +45,9 @@ import org.jspecify.annotations.Nullable;
 public class DrownedCorsairEntity extends Drowned {
     /** Structures where corsairs may also spawn on dry ground (pirate cove, galleon wreck). */
     public static final TagKey<Structure> HAUNTS = TagKey.create(Registries.STRUCTURE, Raft.id("corsair_haunts"));
+    /** Natural spawning stops while this many corsairs are within {@link #NEARBY_RANGE} blocks. */
+    private static final int MAX_NEARBY = 6;
+    private static final double NEARBY_RANGE = 32.0;
 
     public DrownedCorsairEntity(EntityType<? extends DrownedCorsairEntity> type, Level level) {
         super(type, level);
@@ -137,13 +143,13 @@ public class DrownedCorsairEntity extends Drowned {
         }
     }
 
-    /** Monsters rate spots by darkness; under the always-bright raft sky that would forbid every spawn. */
+    /** Monsters rate spots by darkness, which would forbid every spawn in daylight (these spawn by day too). */
     @Override
     public float getWalkTargetValue(BlockPos pos, LevelReader level) {
         return 0.0F;
     }
 
-    /** Monsters age twice as fast in bright light and would despawn in seconds under the raft sky. */
+    /** Monsters age twice as fast in bright light and would soon despawn in daylight. */
     @Override
     protected void updateNoActionTime() {
     }
@@ -159,8 +165,10 @@ public class DrownedCorsairEntity extends Drowned {
     }
 
     /**
-     * In the deep water of wreck graveyards and drowned shelves, or anywhere inside a pirate cove or galleon wreck
-     * (also on dry ground there). Never in peaceful.
+     * In the dark deep water of wreck graveyards and drowned shelves (like a drowned, but more often), or inside a
+     * pirate cove or galleon wreck, there also by day and on dry ground, but not in lit rooms. Never more than
+     * {@value #MAX_NEARBY} corsairs around one spot, so a haunt does not fill up with the whole monster cap. Never in
+     * peaceful.
      */
     public static boolean checkCorsairSpawnRules(EntityType<DrownedCorsairEntity> type, ServerLevelAccessor level,
                                                  EntitySpawnReason reason, BlockPos pos, RandomSource random) {
@@ -170,11 +178,17 @@ public class DrownedCorsairEntity extends Drowned {
         if (EntitySpawnReason.isSpawner(reason)) {
             return true;
         }
-        boolean haunt = level.getLevel().structureManager().getStructureWithPieceAt(pos, HAUNTS).isValid();
-        if (level.getFluidState(pos).is(FluidTags.WATER)) {
-            return haunt || pos.getY() < level.getSeaLevel() - 6 && random.nextInt(3) == 0;
+        boolean water = level.getFluidState(pos).is(FluidTags.WATER);
+        boolean place;
+        if (water && pos.getY() < level.getSeaLevel() - 6 && random.nextInt(12) == 0
+                && (EntitySpawnReason.ignoresLightRequirements(reason) || Monster.isDarkEnoughToSpawn(level, pos, random))) {
+            place = true;
+        } else {
+            place = random.nextInt(4) == 0 && level.getBrightness(LightLayer.BLOCK, pos) <= 8
+                    && (water || level.getBlockState(pos.below()).isValidSpawn(level, pos.below(), type)
+                    && level.getBlockState(pos).isAir() && level.getBlockState(pos.above()).isAir())
+                    && level.getLevel().structureManager().getStructureWithPieceAt(pos, HAUNTS).isValid();
         }
-        return haunt && level.getBlockState(pos.below()).isValidSpawn(level, pos.below(), type)
-                && level.getBlockState(pos).isAir() && level.getBlockState(pos.above()).isAir();
+        return place && level.getEntitiesOfClass(DrownedCorsairEntity.class, new AABB(pos).inflate(NEARBY_RANGE)).size() < MAX_NEARBY;
     }
 }

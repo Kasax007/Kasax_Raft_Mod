@@ -13,6 +13,7 @@ import net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
@@ -21,9 +22,9 @@ import net.minecraft.world.phys.Vec3;
 
 /**
  * Base class of the hostile sea creatures (shark, hammerhead, anglerfish, moray eel). It behaves like a fish that bites:
- * it breathes water, dries out and flops on land, swims with smooth steering and is not bound to darkness. The raft
- * sky is always bright, so the darkness-based rules of {@link Monster} (spawn value, faster ageing in light) are
- * replaced by water-based ones.
+ * it breathes water, dries out and flops on land, swims with smooth steering and is not bound to darkness: sharks
+ * hunt in the sunlit surface water, so the darkness-based rules of {@link Monster} (spawn value, faster ageing in
+ * light) are replaced by water-based ones.
  */
 public abstract class AbstractMarineMonster extends Monster {
     /** Entity event: the mob snaps its jaws (attack animation on the client). */
@@ -39,13 +40,13 @@ public abstract class AbstractMarineMonster extends Monster {
         this.lookControl = new SmoothSwimmingLookControl(this, 10);
     }
 
-    /** Monster rates a spot by darkness, which fails under the raft sky. Sea creatures rate water instead. */
+    /** Monster rates a spot by darkness, which fails in sunlit water. Sea creatures rate water instead. */
     @Override
     public float getWalkTargetValue(BlockPos pos, LevelReader level) {
         return level.getFluidState(pos).is(FluidTags.WATER) ? 10.0F : 0.0F;
     }
 
-    /** Monster ages twice as fast in bright light (it would despawn in seconds under the raft sky). */
+    /** Monster ages twice as fast in bright light (it would soon despawn in sunlit water). */
     @Override
     protected void updateNoActionTime() {
     }
@@ -82,6 +83,12 @@ public abstract class AbstractMarineMonster extends Monster {
 
     @Override
     public boolean canBeLeashed() {
+        return false;
+    }
+
+    /** Sea monsters cannot leave the water: a shark circling the raft must not keep the player out of the hammock. */
+    @Override
+    public boolean isPreventingPlayerRest(ServerLevel level, Player player) {
         return false;
     }
 

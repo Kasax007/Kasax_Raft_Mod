@@ -20,11 +20,17 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -40,11 +46,13 @@ import java.util.List;
  * When all four rest in it, the altar blazes up and after a few seconds forges the Tidewarden Key, which rises from
  * the light; the hollows are empty again (another key needs four new sigils). Breaking the altar gives the sigils back.
  */
-public class TidewardenAltarBlock extends HorizontalDirectionalBlock {
+public class TidewardenAltarBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock {
     public static final BooleanProperty CORAL = BooleanProperty.create("coral");
     public static final BooleanProperty PEARL = BooleanProperty.create("pearl");
     public static final BooleanProperty STORM = BooleanProperty.create("storm");
     public static final BooleanProperty EMBER = BooleanProperty.create("ember");
+    /** The Coral Temple is a flooded ruin: the altar stands in water (no dry cell around it). */
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final String[] SLOTS = {"coral", "pearl", "storm", "ember"};
     public static final int FORGE_TICKS = 60;
     private static final VoxelShape SHAPE = Shapes.or(Block.box(0, 0, 0, 16, 3, 16), Block.box(2, 3, 2, 14, 11, 14),
@@ -53,7 +61,7 @@ public class TidewardenAltarBlock extends HorizontalDirectionalBlock {
     public TidewardenAltarBlock(Properties properties) {
         super(properties);
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(CORAL, false)
-                .setValue(PEARL, false).setValue(STORM, false).setValue(EMBER, false));
+                .setValue(PEARL, false).setValue(STORM, false).setValue(EMBER, false).setValue(WATERLOGGED, false));
     }
 
     public static BooleanProperty property(String slot) {
@@ -79,12 +87,27 @@ public class TidewardenAltarBlock extends HorizontalDirectionalBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, CORAL, PEARL, STORM, EMBER);
+        builder.add(FACING, CORAL, PEARL, STORM, EMBER, WATERLOGGED);
     }
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
+        return defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite())
+                .setValue(WATERLOGGED, context.getLevel().getFluidState(context.getClickedPos()).is(Fluids.WATER));
+    }
+
+    @Override
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos,
+                                     Direction direction, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
+        if (state.getValue(WATERLOGGED)) {
+            ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+        }
+        return super.updateShape(state, level, ticks, pos, direction, neighbourPos, neighbourState, random);
+    }
+
+    @Override
+    protected FluidState getFluidState(BlockState state) {
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override

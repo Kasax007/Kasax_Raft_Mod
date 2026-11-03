@@ -92,6 +92,16 @@
     {
       "entries": [
         {
+          "type": "minecraft:tag",
+          "expand": false,
+          "items": "#raft:loot/seafarers_almanac"
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "entries": [
+        {
           "type": "minecraft:item",
           "modifier": {
             "type": "minecraft:set_count",

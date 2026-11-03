@@ -42,7 +42,7 @@
     },
     "minecraft:visual/fog_color": "#2aa3d6",
     "minecraft:visual/sky_color": "#6cbaea",
-    "minecraft:visual/water_fog_color": "#14524a",
+    "minecraft:visual/water_fog_color": "#00866f",
     "minecraft:visual/water_fog_end_distance": {
       "argument": 0.85,
       "modifier": "multiply"
@@ -103,6 +103,9 @@
       "raft:sea_urchins",
       "raft:barnacles",
       "minecraft:seagrass_deep_warm"
+    ],
+    [
+      "raft:gravity_support"
     ]
   ],
   "has_precipitation": false,

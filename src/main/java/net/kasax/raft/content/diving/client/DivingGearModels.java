@@ -17,6 +17,7 @@ public final class DivingGearModels {
     }
 
     public static final ModelLayerLocation HELMET = layer("helmet");
+    public static final ModelLayerLocation HELMET_LAMP = layer("helmet_lamp");
     public static final ModelLayerLocation COLLAR = layer("collar");
     public static final ModelLayerLocation TANK = layer("tank");
     public static final ModelLayerLocation FLIPPER = layer("flipper");
@@ -41,6 +42,14 @@ public final class DivingGearModels {
                 .addBox(-2.0F, -11.5F, -2.0F, 4.0F, 0.0F, 4.0F), PartPose.ZERO);
         root.addOrReplaceChild("inlet", CubeListBuilder.create().texOffs(44, 0)
                 .addBox(-1.5F, -5.5F, 5.0F, 3.0F, 3.0F, 2.0F), PartPose.ZERO);
+        return LayerDefinition.create(mesh, 64, 32);
+    }
+
+    /** The lamp on the right side of a helmet with a lamp fitted, lens to the front (head space, drawn full bright). */
+    public static LayerDefinition createHelmetLamp() {
+        MeshDefinition mesh = new MeshDefinition();
+        mesh.getRoot().addOrReplaceChild("lamp", CubeListBuilder.create().texOffs(0, 20)
+                .addBox(-6.5F, -8.5F, -3.5F, 2.0F, 2.0F, 3.0F), PartPose.ZERO);
         return LayerDefinition.create(mesh, 64, 32);
     }
 

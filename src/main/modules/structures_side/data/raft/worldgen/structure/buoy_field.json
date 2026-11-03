@@ -6,7 +6,7 @@
   "size": 1,
   "spawn_overrides": {},
   "start_height": {
-    "absolute": 95
+    "absolute": 96
   },
   "start_pool": "raft:buoy_field/start",
   "step": "surface_structures",

@@ -58,7 +58,7 @@
     },
     "minecraft:visual/fog_color": "#22a1e6",
     "minecraft:visual/sky_color": "#6cbaea",
-    "minecraft:visual/water_fog_color": "#123f8c"
+    "minecraft:visual/water_fog_color": "#0052b8"
   },
   "carvers": [
     "minecraft:cave"
@@ -115,6 +115,9 @@
       "raft:bubble_vents_sparse",
       "raft:barnacles",
       "minecraft:seagrass_deep_warm"
+    ],
+    [
+      "raft:gravity_support"
     ]
   ],
   "has_precipitation": false,

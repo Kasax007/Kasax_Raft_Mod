@@ -59,7 +59,8 @@ RAFT_WL = {
     'buoy_red', 'buoy_green', 'neon_tube_cyan', 'neon_tube_pink', 'driftwood_lamp', 'seashell_lamp', 'ship_cannon',
     'ship_anchor', 'treasure_chest', 'gold_coin_pile', 'jolly_roger', 'rum_bottles', 'rope_railing', 'cargo_net',
     'powder_keg', 'ship_bell', 'spyglass_stand', 'figurehead', 'life_ring', 'driftwood_table', 'palm_table',
-    'driftwood_chair', 'palm_chair', 'wind_chime', 'research_terminal', 'expedition_radio', 'sigil_pedestal'} | {
+    'driftwood_chair', 'palm_chair', 'wind_chime', 'research_terminal', 'expedition_radio', 'sigil_pedestal',
+    'tidewarden_altar'} | {
     f'paper_lantern_{c}' for c in ('white', 'red', 'orange', 'yellow', 'lime', 'cyan', 'blue', 'purple', 'pink')}
 RAFT_FULL = {
     'tidestone', 'tidestone_bricks', 'cracked_tidestone_bricks', 'mossy_tidestone_bricks', 'chiseled_tidestone',

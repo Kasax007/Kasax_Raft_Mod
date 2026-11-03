@@ -21,7 +21,7 @@
     },
     "minecraft:visual/fog_color": "#22a1e6",
     "minecraft:visual/sky_color": "#6cbaea",
-    "minecraft:visual/water_fog_color": "#1b8fc0"
+    "minecraft:visual/water_fog_color": "#00b4f0"
   },
   "carvers": [
     "minecraft:cave"
@@ -86,6 +86,9 @@
       "raft:patch_pineapple_bush",
       "raft:patch_seashells",
       "raft:patch_sea_glass"
+    ],
+    [
+      "raft:gravity_support"
     ]
   ],
   "has_precipitation": false,

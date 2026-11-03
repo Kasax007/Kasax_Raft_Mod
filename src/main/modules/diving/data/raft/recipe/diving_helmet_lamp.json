@@ -1,0 +1,21 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:registry_contains",
+      "registry": "minecraft:item",
+      "values": [
+        "raft:angler_lure"
+      ]
+    }
+  ],
+  "type": "minecraft:crafting_transmute",
+  "category": "equipment",
+  "input": "raft:diving_helmet",
+  "material": "raft:angler_lure",
+  "result": {
+    "id": "raft:diving_helmet",
+    "components": {
+      "raft:diving_lamp": {}
+    }
+  }
+}

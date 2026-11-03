@@ -40,7 +40,7 @@
     },
     "minecraft:visual/fog_color": "#9fc8d8",
     "minecraft:visual/sky_color": "#78b4e0",
-    "minecraft:visual/water_fog_color": "#4d7a60",
+    "minecraft:visual/water_fog_color": "#00704c",
     "minecraft:visual/water_fog_end_distance": {
       "argument": 0.85,
       "modifier": "multiply"
@@ -103,6 +103,9 @@
       "minecraft:patch_waterlily",
       "raft:patch_seashells",
       "minecraft:seagrass_swamp"
+    ],
+    [
+      "raft:gravity_support"
     ]
   ],
   "has_precipitation": false,

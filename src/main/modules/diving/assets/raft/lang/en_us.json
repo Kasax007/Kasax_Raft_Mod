@@ -29,6 +29,8 @@
   "tooltip.raft.air_compressor.1": "Runs on FE from a neighbour, or sneak-use with an empty hand to crank it.",
   "tooltip.raft.diving_gear.set": "Full diving set: Dolphin's Grace while swimming",
   "tooltip.raft.diving_helmet": "See farther under water. With an Oxygen Tank you breathe from the tank.",
+  "tooltip.raft.diving_helmet.lamp": "Lamp fitted: you see in the dark while under water.",
+  "tooltip.raft.diving_helmet.no_lamp": "Craft it with an Angler Lure to fit a lamp.",
   "tooltip.raft.flippers": "Swim much faster, but walk slower on land.",
   "tooltip.raft.harpoon_gun": "Shoots harpoons: 8 damage under water, 4 in the air.",
   "tooltip.raft.harpoon_gun.1": "Needs Harpoons in your inventory. Pick them up again after the hunt.",

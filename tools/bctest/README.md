@@ -20,6 +20,7 @@ Script commands (one per line, `#` comments):
 | `sneakuse` | hold sneak and press use |
 | `esc` | close the open screen |
 | `slot <1-9>` | select a hotbar slot |
+| `tab <id> [rows]` | open the creative inventory on a tab (`raft:bc_decor`, `raft:raft`, ...), scrolled down by rows, and log its items (`TAB` line) |
 | `count [dim]` | log loaded entities per type (`COUNT` line in latest.log) |
 | `log <text>` | marker in the log |
 

@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.ItemStack;
 
@@ -28,6 +29,7 @@ public class DivingGearLayer<S extends HumanoidRenderState, M extends HumanoidMo
     private static final Identifier FLIPPER_TEXTURE = Raft.id("textures/entity/diving/flippers_gear.png");
 
     private final Model.Simple helmet;
+    private final Model.Simple lamp;
     private final Model.Simple collar;
     private final Model.Simple tank;
     private final Model.Simple flipper;
@@ -35,6 +37,7 @@ public class DivingGearLayer<S extends HumanoidRenderState, M extends HumanoidMo
     public DivingGearLayer(RenderLayerParent<S, M> parent, EntityModelSet models) {
         super(parent);
         this.helmet = new Model.Simple(models.bakeLayer(DivingGearModels.HELMET), RenderTypes::armorCutoutNoCull);
+        this.lamp = new Model.Simple(models.bakeLayer(DivingGearModels.HELMET_LAMP), RenderTypes::armorCutoutNoCull);
         this.collar = new Model.Simple(models.bakeLayer(DivingGearModels.COLLAR), RenderTypes::armorCutoutNoCull);
         this.tank = new Model.Simple(models.bakeLayer(DivingGearModels.TANK), RenderTypes::armorCutoutNoCull);
         this.flipper = new Model.Simple(models.bakeLayer(DivingGearModels.FLIPPER), RenderTypes::armorCutoutNoCull);
@@ -50,6 +53,9 @@ public class DivingGearLayer<S extends HumanoidRenderState, M extends HumanoidMo
         if (state.headEquipment.is(DivingContent.DIVING_HELMET)) {
             draw(helmet, HELMET_TEXTURE, model, model.head, poseStack, collector, light, overlay, state);
             draw(collar, HELMET_TEXTURE, model, model.body, poseStack, collector, light, overlay, state);
+            if (state.headEquipment.has(DivingContent.DIVING_LAMP)) {
+                draw(lamp, HELMET_TEXTURE, model, model.head, poseStack, collector, LightCoordsUtil.FULL_BRIGHT, overlay, state);
+            }
         }
         ItemStack chest = state.chestEquipment;
         if (chest.is(DivingContent.OXYGEN_TANK) || chest.is(DivingContent.TITANIUM_OXYGEN_TANK)) {

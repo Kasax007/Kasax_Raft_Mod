@@ -64,6 +64,12 @@ public final class DivingGear {
         return entity.getItemBySlot(EquipmentSlot.HEAD).is(DivingContent.DIVING_HELMET);
     }
 
+    /** True if the entity wears a diving helmet with a lamp fitted. */
+    public static boolean wearsLampHelmet(LivingEntity entity) {
+        ItemStack head = entity.getItemBySlot(EquipmentSlot.HEAD);
+        return head.is(DivingContent.DIVING_HELMET) && head.has(DivingContent.DIVING_LAMP);
+    }
+
     /** The oxygen tank worn on the chest, or an empty stack. */
     public static ItemStack tank(LivingEntity entity) {
         ItemStack chest = entity.getItemBySlot(EquipmentSlot.CHEST);

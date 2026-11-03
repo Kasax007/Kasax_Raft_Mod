@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.world.feature.BubbleVentFeature;
 import net.kasax.raft.content.world.feature.CraterLavaFeature;
+import net.kasax.raft.content.world.feature.GravitySupportFeature;
 import net.kasax.raft.content.world.feature.IceFloeFeature;
 import net.kasax.raft.content.world.feature.RubbleFeature;
 import net.minecraft.core.Registry;
@@ -24,5 +25,6 @@ public final class WorldFeatures {
         register("bubble_vents", BubbleVentFeature.CODEC);
         register("rubble", RubbleFeature.CODEC);
         register("ice_floe", IceFloeFeature.CODEC);
+        register("gravity_support", GravitySupportFeature.CODEC);
     }
 }

@@ -160,6 +160,11 @@ def base():
                         avoid=lambda x, z: (SX0 - 1 <= x <= SX1 + 1 and SZ0 - 2 <= z <= SZ1 + 1)
                         or (20 <= x <= 24 and 21 <= z <= 25))
         tk.ceiling_lights(s, TX0, TZ0, TX1, TZ1, y + FH - 1, rnd, step=6, chance=0.5)
+    # podium halls (council chamber and archives): the city lies too deep for daylight, so they get ceiling lights
+    # too (own random source, so the rest of the building keeps its layout)
+    lrnd = random.Random(3109)
+    for k in (1, 2):
+        tk.ceiling_lights(s, 0, 4, W - 1, 32, FY + (k + 1) * FH, lrnd, step=6, chance=0.75)
     mayor_office(s, rnd)
     vault(s, rnd)
     # ---- decay

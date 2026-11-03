@@ -10,7 +10,7 @@ def outline(img, colour=None):
     return tex.outline(img, colour)
 
 
-def diving_helmet():
+def _helmet():
     img = tex.new()
     # breastplate (corselet) under the dome
     for y in range(11, 15):
@@ -30,6 +30,25 @@ def diving_helmet():
     # small top valve
     tex.px(img, 7, 1, BRASS[2]); tex.px(img, 8, 1, BRASS[3])
     tex.px(img, 6, 0, RED[3]); tex.px(img, 7, 0, RED[4]); tex.px(img, 8, 0, RED[3]); tex.px(img, 9, 0, RED[2])
+    return img
+
+
+def diving_helmet():
+    return outline(_helmet())
+
+
+def diving_helmet_lamp():
+    """The helmet with a lamp fitted (angler lure): a small steel lamp on the upper right with a warm, glowing lens."""
+    img = _helmet()
+    for x in range(11, 15):
+        for y in range(1, 4):
+            tex.px(img, x, y, DARK_STEEL[3] if y == 1 else DARK_STEEL[2] if y == 2 else DARK_STEEL[1])
+    tex.px(img, 11, 4, DARK_STEEL[0]); tex.px(img, 12, 4, DARK_STEEL[1])
+    # lens facing the viewer: warm white core, golden rim
+    tex.px(img, 12, 2, '#fffbe6'); tex.px(img, 13, 2, '#ffe9a0')
+    tex.px(img, 12, 3, '#ffd65c'); tex.px(img, 13, 3, '#f0b840')
+    # glow spilling out of the lens
+    tex.px(img, 15, 2, '#fff2b0'); tex.px(img, 15, 3, '#ffd96a')
     return outline(img)
 
 
@@ -230,6 +249,7 @@ def sea_scooter():
 def generate():
     return {
         'diving_helmet': diving_helmet(),
+        'diving_helmet_lamp': diving_helmet_lamp(),
         'oxygen_tank': oxygen_tank(),
         'titanium_oxygen_tank': titanium_oxygen_tank(),
         'wetsuit': wetsuit(),

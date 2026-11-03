@@ -248,6 +248,11 @@ def helmet_gear():
             tex.px(img, x + xx, y + 1, BRASS[2])
     x, y, w, h = f['bottom']
     art.fill(img, x, y, w, h, BRASS[0])
+    # helmet lamp 2x2x3 at (0,20): steel housing, glowing lens on the front (drawn full bright)
+    _shaded_box(img, 0, 20, 2, 2, 3, DARK_STEEL, bias=0.1)
+    x, y, w, h = art.box_faces(0, 20, 2, 2, 3)['front']
+    tex.px(img, x, y, '#fffbe6'); tex.px(img, x + 1, y, '#ffe9a0')
+    tex.px(img, x, y + 1, '#ffd65c'); tex.px(img, x + 1, y + 1, '#f0b840')
     return img
 
 

@@ -11,6 +11,8 @@ public class GuideModule implements ContentModule {
 
     @Override
     public void init() {
+        GuideContent.init();
+        GuideEvents.register();
     }
 
     @Override

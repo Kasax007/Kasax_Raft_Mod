@@ -6,7 +6,7 @@
   "size": 1,
   "spawn_overrides": {},
   "start_height": {
-    "absolute": 98
+    "absolute": 99
   },
   "start_pool": "raft:abandoned_raft/start",
   "step": "surface_structures",

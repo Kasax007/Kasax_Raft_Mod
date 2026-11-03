@@ -48,8 +48,15 @@ def textures():
 
 
 def item_models():
-    for name in ('diving_helmet', 'oxygen_tank', 'titanium_oxygen_tank', 'wetsuit', 'flippers', 'harpoon'):
+    for name in ('oxygen_tank', 'titanium_oxygen_tank', 'wetsuit', 'flippers', 'harpoon'):
         assets.flat_item(M, name)
+    # diving helmet: shows the lamp when one is fitted (component raft:diving_lamp)
+    assets.item_model(M, 'diving_helmet', textures={'layer0': 'item/diving_helmet'})
+    assets.item_model(M, 'diving_helmet_lamp', textures={'layer0': 'item/diving_helmet_lamp'})
+    assets.write_json(M, f'assets/{NS}/items/diving_helmet.json', {'model': {
+        'type': 'minecraft:condition', 'property': 'minecraft:has_component', 'component': 'raft:diving_lamp',
+        'on_true': {'type': 'minecraft:model', 'model': 'raft:item/diving_helmet_lamp'},
+        'on_false': {'type': 'minecraft:model', 'model': 'raft:item/diving_helmet'}}})
     assets.handheld_item(M, 'sea_scooter')
     # harpoon gun: the harpoon tip shows while the gun is loaded, not during the 1 s reload (cooldown)
     # held forward like a crossbow (same transforms as the vanilla crossbow model)
@@ -124,6 +131,12 @@ def recipes():
     p = L(M, 'harpoon_from_urchin_spine', ['raft:urchin_spine', 'minecraft:stick', 'minecraft:string'], 'harpoon', count=2,
           category='equipment')
     _add_condition(p, needs('urchin_spine'))
+    # helmet lamp: helmet + angler lure (marine) -> the same helmet (damage, enchantments kept) with raft:diving_lamp
+    assets.write_json(M, f'data/{NS}/recipe/diving_helmet_lamp.json', {
+        'fabric:load_conditions': needs('angler_lure'),
+        'type': 'minecraft:crafting_transmute', 'category': 'equipment',
+        'input': 'raft:diving_helmet', 'material': 'raft:angler_lure',
+        'result': {'id': 'raft:diving_helmet', 'components': {'raft:diving_lamp': {}}}})
     S(M, 'sea_scooter', ['PIP', 'RCG', 'PIP'],
       {'P': 'raft:plastic', 'I': 'minecraft:iron_ingot', 'R': 'minecraft:redstone', 'C': 'raft:circuit_board',
        'G': 'minecraft:glass_pane'}, 'sea_scooter', category='equipment')
@@ -200,6 +213,8 @@ def lang():
         'block.raft.air_compressor': 'Air Compressor',
         'entity.raft.harpoon': 'Harpoon',
         'tooltip.raft.diving_helmet': 'See farther under water. With an Oxygen Tank you breathe from the tank.',
+        'tooltip.raft.diving_helmet.lamp': 'Lamp fitted: you see in the dark while under water.',
+        'tooltip.raft.diving_helmet.no_lamp': 'Craft it with an Angler Lure to fit a lamp.',
         'tooltip.raft.oxygen_tank': 'Refills at the surface, in bubble columns or in an Air Compressor.',
         'tooltip.raft.oxygen_tank.air': 'Air: %s / %s',
         'tooltip.raft.wetsuit': 'Mine three times faster under water. Jellyfish cannot sting you.',
