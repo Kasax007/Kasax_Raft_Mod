@@ -90,7 +90,7 @@ def write(path, root, gz=True):
     buf.write(b'\x0a'); _w_payload(buf, 8, ''); _w_payload(buf, 10, root)
     data = buf.getvalue()
     with open(path, 'wb') as f:
-        f.write(gzip.compress(data) if gz else data)
+        f.write(gzip.compress(data, mtime=0) if gz else data)  # mtime 0: identical builds give identical files
 
 
 def _r(f, tag):

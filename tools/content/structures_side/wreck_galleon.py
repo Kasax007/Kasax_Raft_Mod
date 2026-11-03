@@ -163,9 +163,10 @@ def build_upright(v, rnd):
     s.set(-2, DECK + 3, zb + 1, 'raft:ship_lantern[hanging=false]')
     s.set(2, DECK + 3, zb + 1, 'minecraft:soul_lantern[hanging=false]')
     # cabin interior (z 1..8, y 10..12)
+    # the rug is woven into the deck (red wool flush with the planks): carpets would wash away under water
     for z in range(2, 8):
         for x in (-1, 0, 1):
-            s.set(x, DECK + 1, z, 'minecraft:red_carpet')
+            s.set(x, DECK, z, 'minecraft:red_wool')
     s.set(0, DECK + 1, 3, 'raft:chart_table[facing=south]')
     s.set(0, DECK + 2, 3, 'raft:rum_bottles[bottles=2,facing=east]')
     s.set(1, DECK + 1, 3, 'raft:driftwood_chair[facing=west]')
@@ -361,8 +362,9 @@ def fallen_mast(s, rnd, x, y, z0, z1, yard_z):
             s.set(x + dx, y, yard_z, 'minecraft:stripped_spruce_log[axis=x]')
     for dx in range(-3, 4):
         for dz in range(1, 5):
-            if rnd.random() < 0.7 and s.get(x + dx, y, yard_z + dz) is None:
-                s.set(x + dx, y, yard_z + dz, 'minecraft:white_carpet')
+            # torn sail cloth: wool, not carpet (carpets wash away under water and drop as items)
+            if rnd.random() < 0.5 and s.get(x + dx, y, yard_z + dz) is None:
+                s.set(x + dx, y, yard_z + dz, 'minecraft:white_wool')
     s.set(x + 1, y, z1, 'minecraft:spruce_fence')
 
 

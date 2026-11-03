@@ -62,6 +62,9 @@ import java.util.List;
  * returns at once.
  */
 public class LeviathanEntity extends Monster {
+    /** At most this many tidelings alive at once (spec 10: 3-4 per roar; more swarmed players in tests). */
+    private static final int MAX_TIDELINGS = 5;
+
     public static final int S_INTRO = 0;
     public static final int S_CIRCLE = 1;
     public static final int S_RISE_SPIT = 2;
@@ -711,7 +714,7 @@ public class LeviathanEntity extends Monster {
             weights[0] = 3;
             weights[1] = lunge != null ? 3 : 0;
             if (phase >= 2) {
-                weights[2] = this.lastAttack == S_TIDAL_ROAR || this.countTidelings(level) >= 6 ? 0 : 2;
+                weights[2] = this.lastAttack == S_TIDAL_ROAR || this.countTidelings(level) >= MAX_TIDELINGS - 1 ? 0 : 2;
                 Vec3 c = this.centre();
                 boolean near = players.stream().anyMatch(p -> p.distanceToSqr(c.x, p.getY(), c.z) < 13.0 * 13.0);
                 weights[3] = this.lastAttack == S_WHIRLPOOL || !near ? 0 : 2;
@@ -1120,7 +1123,7 @@ public class LeviathanEntity extends Monster {
     }
 
     private void summonTidelings(ServerLevel level, List<Player> players) {
-        int count = Math.min(this.getPhase() == 3 ? 4 : 3 + this.random.nextInt(2), 8 - this.countTidelings(level));
+        int count = Math.min(this.getPhase() == 3 ? 4 : 3 + this.random.nextInt(2), MAX_TIDELINGS - this.countTidelings(level));
         Vec3 c = this.centre();
         for (int i = 0; i < count; i++) {
             Player p = players.isEmpty() ? null : players.get(i % players.size());

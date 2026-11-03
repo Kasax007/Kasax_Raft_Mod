@@ -12,6 +12,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -292,12 +293,16 @@ public class AirCompressorBlockEntity extends BaseContainerBlockEntity implement
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
+        items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
+        ContainerHelper.loadAllItems(input, items);
         energy.amount = Math.min(ENERGY_CAPACITY, input.getLongOr("Energy", 0L));
     }
 
     @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
+        // the tank or scooter in the slot is kept when the chunk is saved
+        ContainerHelper.saveAllItems(output, items);
         output.putLong("Energy", energy.amount);
     }
 }

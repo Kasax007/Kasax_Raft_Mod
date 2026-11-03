@@ -184,8 +184,9 @@ def sloop(rnd):
         out.set(mx, 2, z, 'minecraft:spruce_log[axis=z]')
     for x in range(mx + 1, mx + 5):
         for z in range(z0 + 2, z0 + 9):
+            # the sail lies flat in the sand (wool flush with the floor): carpets would wash away under water
             if rnd.random() < 0.65:
-                out.set(x, 2, z, 'minecraft:white_carpet' if rnd.random() < 0.8 else 'minecraft:light_gray_carpet')
+                out.set(x, 1, z, 'minecraft:white_wool' if rnd.random() < 0.8 else 'minecraft:light_gray_wool')
     for (dx, dz) in ((-2, 3), (-3, 8), (-1, 12)):
         out.set(x0 + dx + 2, 2, z0 + dz, pick(rnd, [('raft:wooden_crate[facing=north,open=false]', 2),
                                                      ('minecraft:barrel[facing=up,open=false]', 1)]))

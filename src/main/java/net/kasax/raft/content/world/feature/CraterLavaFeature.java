@@ -5,6 +5,8 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
@@ -12,11 +14,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.structure.Structure;
 
 /**
  * Fills the flat floors of volcano craters with a lava lake. The terrain makes the floor of the big volcanoes exactly
  * flat with its top block at {@code floor_y - 1}; this feature (one call per chunk, origin = chunk corner) turns every
  * such column whose four neighbours are not lower into lava, with magma underneath, so the lake cannot spill.
+ * Craters that hold the Ashen Forge (story chapter 6) stay dry in and around the forge: no lava in a chunk that, or
+ * whose neighbour, references the structure, so players can walk up to it.
  */
 public record CraterLavaFeature(int floorY) implements Feature {
     public static final MapCodec<CraterLavaFeature> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
@@ -32,6 +37,9 @@ public record CraterLavaFeature(int floorY) implements Feature {
     public boolean place(WorldGenLevel level, ChunkGenerator generator, RandomSource random, BlockPos origin) {
         int x0 = origin.getX() & ~15;
         int z0 = origin.getZ() & ~15;
+        if (nearForge(level, x0 >> 4, z0 >> 4)) {
+            return false;
+        }
         int top = floorY - 1;
         boolean any = false;
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
@@ -64,6 +72,25 @@ public record CraterLavaFeature(int floorY) implements Feature {
             }
         }
         return any;
+    }
+
+    private static final Identifier ASHEN_FORGE = Identifier.fromNamespaceAndPath("raft", "ashen_forge");
+
+    /** True when this chunk or one of its 8 neighbours belongs to an Ashen Forge (structure references). */
+    private static boolean nearForge(WorldGenLevel level, int chunkX, int chunkZ) {
+        Structure forge = level.registryAccess().lookupOrThrow(Registries.STRUCTURE).getValue(ASHEN_FORGE);
+        if (forge == null) {
+            return false;
+        }
+        for (int ox = -1; ox <= 1; ox++) {
+            for (int oz = -1; oz <= 1; oz++) {
+                if (level.hasChunk(chunkX + ox, chunkZ + oz)
+                        && !level.getChunk(chunkX + ox, chunkZ + oz).getReferencesForStructure(forge).isEmpty()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /** y of the top solid block of the column. */
