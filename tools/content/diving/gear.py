@@ -50,12 +50,13 @@ def humanoid_helmet():
             for gx in (3, 4):
                 tex.px(img, x + gx, y + gy, GLASS[1] if gy == 4 else GLASS[2])
         tex.px(img, x + 3, y + 3, GLASS[4])
-    # back: air inlet plate with bolts
+    # back: a soldered seam down the dome, two small rivets and the brass boss the 3D air fitting screws into
     x, y, w, h = f['back']
-    tex.rect(img, x + 2, y + 2, x + 5, y + 5, COPPER[2])
-    tex.rect(img, x + 3, y + 3, x + 4, y + 4, DARK_STEEL[1])
-    for bx, by in ((2, 2), (5, 2), (2, 5), (5, 5)):
-        tex.px(img, x + bx, y + by, BRASS[5])
+    for yy in range(0, 3):
+        tex.px(img, x + 3, y + yy, BRASS[1])
+    tex.rect(img, x + 3, y + 3, x + 4, y + 5, BRASS[3])
+    for bx, by in ((1, 2), (6, 2), (1, 5), (6, 5)):
+        tex.px(img, x + bx, y + by, BRASS[3])
     return img
 
 
@@ -231,7 +232,7 @@ def helmet_gear():
     # inlet 3x3x2 at (44,0)
     _shaded_box(img, 44, 0, 3, 3, 2, COPPER)
     x, y, w, h = art.box_faces(44, 0, 3, 3, 2)['back']
-    tex.px(img, x + 1, y + 1, DARK_STEEL[0])
+    tex.px(img, x + 1, y + 1, COPPER[0])
     # collar 11x2x7 at (0,10): bolted brass plate
     f = art.box_faces(0, 10, 11, 2, 7)
     x, y, w, h = f['top']

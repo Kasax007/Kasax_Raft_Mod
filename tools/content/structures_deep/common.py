@@ -650,6 +650,9 @@ def proxy(s):
     from bclib.nbt import Structure as _S
     t = _S(s.name)
     for pos, (name, props, nbt) in s.blocks.items():
+        if preview.block_colour(name) != (255, 0, 255, 255):
+            t.blocks[pos] = (name, props, nbt)
+            continue
         p = PROXY.get(name)
         if p is None:
             base = name

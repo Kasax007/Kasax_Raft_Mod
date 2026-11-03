@@ -90,8 +90,16 @@ def _entity_table(name, pools):
     return {'type': 'minecraft:entity', 'pools': pools, 'random_sequence': f'raft:entities/{name}'}
 
 
+# items of other 3.0 modules: in 26.3 one unknown item id in a loot table stops the world from loading, so they are
+# named through one-item tags with an optional entry (same convention as the story module, spec section 14)
+FOREIGN = ('seashell', 'gold_coin')
+
+
 def _pool(item, modifiers=None, condition=None):
-    entry = {'type': 'minecraft:item', 'name': assets.rid(item)}
+    if item in FOREIGN:
+        entry = {'type': 'minecraft:tag', 'expand': False, 'items': f'#raft:loot/{item}'}
+    else:
+        entry = {'type': 'minecraft:item', 'name': assets.rid(item)}
     if modifiers:
         entry['modifier'] = modifiers if len(modifiers) > 1 else modifiers[0]
     pool = {}
@@ -141,8 +149,22 @@ def recipes():
                           kind='smoking', category='food')
     assets.recipe_cooking(MOD, 'cooked_crab_claw_from_campfire_cooking', 'crab_claw', 'cooked_crab_claw', xp=0.35,
                           time=600, kind='campfire_cooking', category='food')
-    assets.recipe_shaped(MOD, 'cutlass', ['  I', ' I ', 'T  '],
-                         {'I': '#minecraft:iron_tool_materials', 'T': 'teak_planks'}, 'cutlass', category='equipment')
+    path = assets.recipe_shaped(MOD, 'cutlass', ['  I', ' I ', 'T  '],
+                                {'I': '#minecraft:iron_tool_materials', 'T': 'teak_planks'}, 'cutlass',
+                                category='equipment')
+    # teak planks come from the building module: only load the recipe when they exist
+    _add_load_condition(path, ['raft:teak_planks'])
+
+
+def _add_load_condition(path, items):
+    import json
+    with open(path) as f:
+        d = json.load(f)
+    d['fabric:load_conditions'] = [{'condition': 'fabric:registry_contains', 'registry': 'minecraft:item',
+                                    'values': items}]
+    with open(path, 'w') as f:
+        json.dump(d, f, indent=2)
+        f.write('\n')
 
 
 def tags():
@@ -171,6 +193,8 @@ def tags():
     t(MOD, 'item', 'raft:crab_food', ['minecraft:kelp', 'minecraft:dried_kelp'])
     t(MOD, 'item', 'raft:penguin_food', ['minecraft:cod'])
     t(MOD, 'item', 'raft:sea_otter_treats', [opt('seashell')])
+    for item in FOREIGN:
+        t(MOD, 'item', f'raft:loot/{item}', [opt(item)])
     t(MOD, 'item', 'minecraft:swords', ['raft:cutlass'])
     t(MOD, 'entity_type', 'minecraft:undead', ['raft:drowned_corsair'])
     t(MOD, 'entity_type', 'minecraft:axolotl_always_hostiles', ['raft:drowned_corsair'])

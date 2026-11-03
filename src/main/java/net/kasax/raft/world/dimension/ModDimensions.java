@@ -35,7 +35,7 @@ public class ModDimensions {
         EnvironmentAttributeMap attributes = EnvironmentAttributeMap.builder()
                 .set(EnvironmentAttributes.SKY_COLOR, ARGB.vector3fFromRGB24(0x6cbaea))
                 .set(EnvironmentAttributes.FOG_COLOR, ARGB.vector3fFromRGB24(0x22a1e6))
-                .set(EnvironmentAttributes.AMBIENT_LIGHT_COLOR, ARGB.vector3fFromRGB24(0xFFFFFF))
+                .set(EnvironmentAttributes.AMBIENT_LIGHT_COLOR, ARGB.vector3fFromRGB24(0x0A0A0A))
                 .set(EnvironmentAttributes.CLOUD_COLOR, ARGB.vector4fFromARGB32(ARGB.white(0.8F)))
                 .set(EnvironmentAttributes.CLOUD_HEIGHT, 192.33F)
                 .set(EnvironmentAttributes.BACKGROUND_MUSIC, BackgroundMusic.OVERWORLD)
@@ -59,7 +59,7 @@ public class ModDimensions {
                 320, // height
                 320, // logicalHeight (portals and the raft platform up to Y 220 need the whole height)
                 blocks.getOrThrow(BlockTags.INFINIBURN_OVERWORLD), // infiniburn
-                1.0f, // ambientLight
+                0.0f, // ambientLight: like the overworld, so the deep sea, trench and caves get dark
                 new DimensionType.MonsterSettings(ConstantInt.of(0), 0),
                 DimensionType.Skybox.OVERWORLD,
                 CardinalLighting.Type.DEFAULT,

@@ -4,8 +4,9 @@
     {
       "entries": [
         {
-          "type": "minecraft:item",
-          "name": "raft:gold_coin",
+          "type": "minecraft:tag",
+          "expand": false,
+          "items": "#raft:loot/gold_coin",
           "modifier": [
             {
               "type": "minecraft:set_count",

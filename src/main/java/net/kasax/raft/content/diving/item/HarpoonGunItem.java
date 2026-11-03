@@ -54,11 +54,15 @@ public class HarpoonGunItem extends Item {
             if (!player.hasInfiniteMaterials()) {
                 ammo.shrink(1);
             }
+            // a puff at the muzzle: beside and below the line of sight, so it does not cover the crosshair
             Vec3 look = player.getLookAngle();
+            Vec3 side = look.cross(new Vec3(0.0, 1.0, 0.0));
+            side = side.lengthSqr() < 1.0E-4 ? Vec3.ZERO : side.normalize();
+            boolean rightHand = (hand == InteractionHand.MAIN_HAND) == (player.getMainArm() == net.minecraft.world.entity.HumanoidArm.RIGHT);
+            Vec3 muzzle = player.getEyePosition().add(look.scale(1.2)).add(side.scale(rightHand ? 0.4 : -0.4)).add(0.0, -0.3, 0.0);
             boolean wet = player.isUnderWater();
-            serverLevel.sendParticles(wet ? ParticleTypes.BUBBLE : ParticleTypes.POOF,
-                    player.getX() + look.x * 0.9, player.getEyeY() - 0.15 + look.y * 0.9, player.getZ() + look.z * 0.9,
-                    wet ? 8 : 3, 0.08, 0.08, 0.08, wet ? 0.08 : 0.01);
+            serverLevel.sendParticles(wet ? ParticleTypes.BUBBLE : ParticleTypes.POOF, muzzle.x, muzzle.y, muzzle.z,
+                    wet ? 5 : 2, 0.05, 0.05, 0.05, wet ? 0.05 : 0.01);
         }
         level.playSound(null, player.getX(), player.getY(), player.getZ(), DivingSounds.HARPOON_GUN_FIRE, SoundSource.PLAYERS,
                 1.0F, 0.9F + level.getRandom().nextFloat() * 0.2F);

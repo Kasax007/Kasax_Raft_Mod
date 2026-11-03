@@ -324,6 +324,34 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
         }
     }
 
+    /**
+     * Only blocks and other boats stop the raft. Mobs, items and players on the deck or in the water never block it
+     * (the deck carries whatever stands on it, vanilla pushing moves swimmers aside).
+     */
+    @Override
+    public boolean canCollideWith(Entity entity) {
+        return entity instanceof AbstractBoat && super.canCollideWith(entity);
+    }
+
+    /**
+     * The heavy raft is not shoved around by players and mobs that bump into it or stand on its deck edge (it still pushes
+     * swimmers aside).
+     */
+    @Override
+    public boolean isPushable() {
+        return false;
+    }
+
+    /**
+     * Players stand on the deck of the raft on their own client, which also carries them along. The server's copy of the
+     * raft is a few ticks ahead of the one the client sees, so the server must not test players against it: it would
+     * reject their moves as "inside an entity" and pull them back until they fall off.
+     */
+    @Override
+    public boolean canBeCollidedWith(@Nullable Entity other) {
+        return !(other instanceof Player) || this.level().isClientSide();
+    }
+
     /** No oar splashes while the motor does the work. */
     @Override
     protected @Nullable SoundEvent getPaddleSound() {

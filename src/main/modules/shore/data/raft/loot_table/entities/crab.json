@@ -70,8 +70,9 @@
       },
       "entries": [
         {
-          "type": "minecraft:item",
-          "name": "raft:seashell"
+          "type": "minecraft:tag",
+          "expand": false,
+          "items": "#raft:loot/seashell"
         }
       ],
       "rolls": 1

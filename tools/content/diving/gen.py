@@ -52,8 +52,15 @@ def item_models():
         assets.flat_item(M, name)
     assets.handheld_item(M, 'sea_scooter')
     # harpoon gun: the harpoon tip shows while the gun is loaded, not during the 1 s reload (cooldown)
-    assets.item_model(M, 'harpoon_gun', parent='minecraft:item/handheld', textures={'layer0': 'item/harpoon_gun'})
-    assets.item_model(M, 'harpoon_gun_empty', parent='minecraft:item/handheld', textures={'layer0': 'item/harpoon_gun_empty'})
+    # held forward like a crossbow (same transforms as the vanilla crossbow model)
+    gun_display = {
+        'thirdperson_righthand': {'rotation': [-90, 0, -60], 'translation': [2, 0.1, -3], 'scale': [0.9, 0.9, 0.9]},
+        'thirdperson_lefthand': {'rotation': [-90, 0, 30], 'translation': [2, 0.1, -3], 'scale': [0.9, 0.9, 0.9]},
+        'firstperson_righthand': {'rotation': [-90, 0, -55], 'translation': [1.13, 3.2, 1.13], 'scale': [0.68, 0.68, 0.68]},
+        'firstperson_lefthand': {'rotation': [-90, 0, 35], 'translation': [1.13, 3.2, 1.13], 'scale': [0.68, 0.68, 0.68]},
+    }
+    assets.item_model(M, 'harpoon_gun', textures={'layer0': 'item/harpoon_gun'}, display=gun_display)
+    assets.item_model(M, 'harpoon_gun_empty', textures={'layer0': 'item/harpoon_gun_empty'}, display=gun_display)
     assets.write_json(M, f'assets/{NS}/items/harpoon_gun.json', {'model': {
         'type': 'minecraft:range_dispatch', 'property': 'minecraft:cooldown',
         'entries': [{'threshold': 0.01, 'model': {'type': 'minecraft:model', 'model': 'raft:item/harpoon_gun_empty'}}],

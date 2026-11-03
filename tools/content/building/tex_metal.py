@@ -42,26 +42,35 @@ def cracked_concrete():
 
 
 def mossy_concrete():
-    """Cracked concrete with algae growing out of the cracks and up from the water line (bottom)."""
+    """Cracked concrete overgrown with algae: small clumps spread over the face and along the cracks, damp darker
+    concrete around them, lit from the top-left with a dark lip under every clump."""
     img = cracked_concrete()
-    n = noise(103, 4, 2)
+    n = noise(117, 4, 2)
     crackpx = {(x, y) for y in range(16) for x in range(16) if get(img, x, y) == CONCRETE[1]}
     score = {}
     for y in range(16):
         for x in range(16):
-            s = n[y][x] + max(0, y - 9) * 0.05
+            s = n[y][x]
             if any(((x + dx) % 16, (y + dy) % 16) in crackpx for dx in (-1, 0, 1) for dy in (-1, 0, 1)):
-                s += 0.22
+                s += 0.2
             score[(x, y)] = s
-    thr = sorted(score.values())[int(256 * 0.70)]
+    flat = sorted(score.values())
+    thr, damp, top = flat[int(256 * 0.67)], flat[int(256 * 0.57)], flat[-1]
     moss = {k for k, v in score.items() if v >= thr}
+    for (x, y), v in score.items():
+        if damp <= v < thr:
+            put(img, x, y, lerp(get(img, x, y), ALGAE[1], 0.35))
     for (x, y) in moss:
-        if (x, y) in crackpx:
-            put(img, x, y, ALGAE[0])
+        v = (score[(x, y)] - thr) / max(1e-6, top - thr)
+        if (x, (y + 1) % 16) not in moss:
+            c = ALGAE[0]
         elif (x, (y - 1) % 16) not in moss:
-            put(img, x, y, ALGAE[3])
+            c = ALGAE[3] if v > 0.2 else ALGAE[2]
+        elif ((x + 1) % 16, y) not in moss:
+            c = ALGAE[1]
         else:
-            put(img, x, y, ALGAE[2] if (x * 3 + y) % 4 else ALGAE[1])
+            c = ALGAE[3] if v > 0.55 else ALGAE[2] if v > 0.15 else ALGAE[1]
+        put(img, x, y, c)
     return img
 
 
@@ -213,15 +222,36 @@ def riveted_hull():
 
 
 def rusty_hull():
+    """Navy hull plates eaten by rust: patches that gather along the seams and the butt joint with a brownish stain
+    around them (lit rim on top, dark lip below) and rust streaks running down from the rivets."""
     p = NAVY
     img = _plates(p, 122, p[5], p[0])
-    rust_colours = [RUST[1], RUST[2], RUST[3], RUST[4], RUST[5]]
-    blotches(img, rust_colours, 0.45, 124, cell=4, octaves=2)
-    for (x, y0, y1) in [(3, 6, 12), (11, 0, 6), (14, 8, 15)]:  # streaks
+    n = noise(135, 4, 2)
+
+    def bias(x, y):
+        b = 0.08 if y in (7, 8, 15, 0) else 0.0
+        if x in (9, 10) and y >= 8:
+            b += 0.056
+        return b
+    score = {(x, y): n[y][x] + bias(x, y) for y in range(16) for x in range(16)}
+    flat = sorted(score.values())
+    thr, stain, top = flat[int(256 * 0.72)], flat[int(256 * 0.60)], flat[-1]
+    rust = {k for k, v in score.items() if v >= thr}
+    for (x, y), v in score.items():
+        if stain <= v < thr:
+            put(img, x, y, lerp(get(img, x, y), RUST[2], 0.4))
+    for (x, y) in rust:
+        v = (score[(x, y)] - thr) / max(1e-6, top - thr)
+        c = RUST[1] if v < 0.15 else RUST[2] if v < 0.5 else RUST[3]
+        if (x, (y - 1) % 16) not in rust:
+            c = RUST[3] if v > 0.2 else RUST[2]
+        if (x, (y + 1) % 16) not in rust:
+            c = RUST[0]
+        put(img, x, y, c)
+    for (x, y0, y1) in [(2, 3, 6), (6, 11, 14), (13, 3, 6)]:  # streaks below rivets
         for y in range(y0, y1 + 1):
-            put(img, x, y, RUST[2] if y % 3 else RUST[3])
-    for (x, y) in [(6, 3), (7, 3), (6, 4)]:  # flaking pit
-        put(img, x, y, RUST[0])
+            if (x, y) not in rust:
+                put(img, x, y, lerp(get(img, x, y), RUST[2], 0.6 if y == y0 else 0.35))
     return img
 
 
