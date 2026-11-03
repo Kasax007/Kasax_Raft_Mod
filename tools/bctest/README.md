@@ -17,6 +17,10 @@ Script commands (one per line, `#` comments):
 | `size <w> <h>` | window size (default 1280×720) |
 | `hud on/off`, `third on/off`, `gui <n>`, `rd <n>` | HUD, third person camera, GUI scale, render distance |
 | `use`, `attack`, `sneak`, `hold <use/attack/forward/jump/sneak> <ticks>` | input |
+| `sneakuse` | hold sneak and press use |
+| `esc` | close the open screen |
+| `slot <1-9>` | select a hotbar slot |
+| `count [dim]` | log loaded entities per type (`COUNT` line in latest.log) |
 | `log <text>` | marker in the log |
 
 Example:
@@ -30,5 +34,8 @@ wait 20
 hud off
 shot lighthouse
 ```
+
+`settle` logs how long it took (`settle took N s`). Chunk generation on the test machine is slow (3–5 min for a new
+area at render distance 8): use `rd 5` and reuse areas within one script. `BC_JFR=/path/x.jfr` records a profile.
 
 Errors from the mod (exceptions, missing models/textures) are in `latest.log`; `run.sh` prints the important lines.

@@ -28,6 +28,10 @@ import java.util.List;
  * size &lt;w&gt; &lt;h&gt;          window size (default 1280 720)
  * hud on|off, third on|off, gui &lt;scale&gt;, rd &lt;chunks&gt;
  * use | attack | sneak    press the use / attack / sneak key once
+ * sneakuse                hold sneak and press use (sneak-use an item or block)
+ * esc                     close the open screen
+ * slot &lt;1-9&gt;              select a hotbar slot
+ * count [dimension]       log the loaded entities per type (COUNT line in latest.log)
  * hold &lt;use|attack|forward|jump|sneak&gt; &lt;ticks&gt;
  * log &lt;text&gt;
  * </pre>
@@ -110,6 +114,18 @@ public class BcScript implements FabricClientGameTest {
                     case "use" -> ctx.getInput().pressKey(o -> o.keyUse);
                     case "attack" -> ctx.getInput().pressKey(o -> o.keyAttack);
                     case "sneak" -> ctx.getInput().pressKey(o -> o.keyShift);
+                    case "sneakuse" -> {
+                        ctx.getInput().holdKey(o -> o.keyShift);
+                        ctx.waitTicks(3);
+                        ctx.getInput().pressKey(o -> o.keyUse);
+                        ctx.waitTicks(3);
+                        ctx.getInput().releaseKey(o -> o.keyShift);
+                    }
+                    case "esc" -> ctx.setScreen(() -> null);
+                    case "slot" -> {
+                        int i = Integer.parseInt(arg) - 1;
+                        ctx.getInput().pressKey(o -> o.keyHotbarSlots[i]);
+                    }
                     case "hold" -> {
                         String[] a = arg.split("\\s+");
                         int ticks = Integer.parseInt(a[1]);
