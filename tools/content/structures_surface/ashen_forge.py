@@ -136,6 +136,19 @@ def build_hall():
                                 ('raft:black_sand', 2), ('minecraft:cracked_polished_blackstone_bricks', 2), seed='af_fc'))
             for y in range(1, 12):
                 s.set(x, y, z, 'minecraft:air')
+    # cheek cliffs: columnar basalt flanks close the forecourt at the sides, so it reads as a cut into the
+    # slope (and keeps a neighbouring lava lake or scree out of the court)
+    for x in list(range(0, 6)) + list(range(35, 41)):
+        inner = 5 - x if x < 6 else x - 35          # 0 next to the court, 5 at the template edge
+        for z in range(0, 9):
+            n = noise2('af_cheek', x, z, 2.5)
+            h = int(round(3 + z * 0.85 + (5 - inner) * 0.35 + (n - 0.5) * 3.0))
+            for y in range(0, h + 1):
+                s.put(x, y, z, TOP if y == h else (ROCK if y < h - 3 else Pal(
+                    ('minecraft:basalt[axis=y]', 6), ('minecraft:polished_basalt[axis=y]', 2),
+                    ('minecraft:smooth_basalt', 2), seed='af_cliff')))
+            if inner == 0 and z % 4 == 1:            # ember sconces facing the court
+                s.set(x, h + 1, z, 'minecraft:magma_block' if z < 4 else 'raft:brazier[lit=true,waterlogged=false]')
     # grand stairs
     for x in range(13, 28):
         for i, z in enumerate(range(2, 6)):
@@ -364,10 +377,11 @@ def build_hall():
             s.set(x, y, 37, 'minecraft:air')
             s.set(x, y, 38, 'minecraft:air')
     for x in range(17, 24):
-        s.set(x, D, 38, 'minecraft:lava')
+        s.set(x, D, 38, 'minecraft:lava')                 # fire bed, held in by the lip and magma behind
         s.set(x, D - 1, 38, 'minecraft:blackstone')
+        s.set(x, D, 37, slab('minecraft:polished_blackstone_brick_slab', 'bottom'))   # hearth lip
         s.set(x, D, 39, 'minecraft:magma_block')
-        s.set(x, D + 1, 39, 'minecraft:magma_block' if x % 2 else 'minecraft:lava')
+        s.set(x, D + 1, 39, 'minecraft:magma_block')
     s.set(16, D + 4, 37, stairs('minecraft:polished_blackstone_brick_stairs', 'east', 'top'))
     s.set(24, D + 4, 37, stairs('minecraft:polished_blackstone_brick_stairs', 'west', 'top'))
     for x in range(17, 24):
@@ -568,7 +582,7 @@ def build_vault():
     s.set(ccx - 1, F + 1, vz1, 'minecraft:iron_bars'); s.set(ccx + 1, F + 2, vz1, 'minecraft:iron_bars')
     s.set(ccx, F + 4, vz1, 'minecraft:gold_block')
     # inside: the Ember Sigil chest between two sigil pedestals
-    s.chest(ccx, F + 1, vz2 - 1, 'raft:chests/story/ashen_vault', facing='north')
+    s.chest(ccx, F + 1, vz2 - 1, 'raft:chests/story/ashen_vault', facing='north', block='raft:treasure_chest')
     s.set(ccx - 1, F + 1, vz2 - 1, 'raft:sigil_pedestal[waterlogged=false]')
     s.set(ccx + 1, F + 1, vz2 - 1, 'raft:sigil_pedestal[waterlogged=false]')
     s.set(ccx - 1, F + 2, vz2 - 1, 'minecraft:soul_lantern[hanging=false,waterlogged=false]')
@@ -580,7 +594,7 @@ def build_vault():
         for y in range(F + 1, F + 4):
             s.set(nx + 1, y, z, 'minecraft:air')
         s.put(nx + 1, F, z, FLOOR)
-    s.chest(nx + 1, F + 1, nz, 'raft:chests/ashen_storage', facing='west')
+    s.chest(nx + 1, F + 1, nz, 'raft:chests/ashen_storage', facing='west', block='raft:wooden_crate')
     s.set(nx + 1, F + 1, nz - 1, 'minecraft:iron_block')
     s.set(nx + 1, F + 1, nz + 1, 'minecraft:raw_gold_block')
     s.set(nx + 1, F + 3, nz, 'raft:glowing_tidestone')

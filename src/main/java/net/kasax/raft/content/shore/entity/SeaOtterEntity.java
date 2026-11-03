@@ -479,7 +479,7 @@ public class SeaOtterEntity extends Animal {
                 return;
             }
             otter.getLookControl().setLookAt(this.friend, 10.0F, otter.getMaxHeadXRot());
-            if (otter.tickCount % 10 == 0 || otter.getNavigation().isDone()) {
+            if ((otter.tickCount + otter.getId()) % 10 == 0 || otter.getNavigation().isDone()) {
                 double y = otter.isInWater() && this.friend.isInWater() ? this.friend.getY() : this.friend.getY();
                 otter.getNavigation().moveTo(this.friend.getX(), y, this.friend.getZ(), 1.25);
             }

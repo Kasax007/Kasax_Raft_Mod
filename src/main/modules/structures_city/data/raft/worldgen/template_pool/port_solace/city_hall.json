@@ -1,0 +1,15 @@
+{
+  "elements": [
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "raft:port_solace/city_hall_base",
+        "processors": "raft:port_solace/city",
+        "projection": "rigid",
+        "override_liquid_settings": "ignore_waterlogging"
+      },
+      "weight": 1
+    }
+  ],
+  "fallback": "minecraft:empty"
+}

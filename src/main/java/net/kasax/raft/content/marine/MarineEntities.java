@@ -41,7 +41,8 @@ public final class MarineEntities {
         ANGLERFISH = BcReg.entity("anglerfish", EntityType.Builder.of(AnglerfishEntity::new, MobCategory.UNDERGROUND_WATER_CREATURE)
                 .sized(0.9F, 0.7F).eyeHeight(0.4F).clientTrackingRange(8).notInPeaceful());
         MORAY_EEL = BcReg.entity("moray_eel", EntityType.Builder.of(MorayEelEntity::new, MobCategory.WATER_AMBIENT)
-                .sized(1.2F, 0.4F).eyeHeight(0.25F).clientTrackingRange(8).notInPeaceful());
+                // hitbox narrower than the 1.2 long body, so the eel fits into one-block crevices
+                .sized(0.6F, 0.4F).eyeHeight(0.25F).clientTrackingRange(8).notInPeaceful());
 
         FabricDefaultAttributeRegistry.register(HAMMERHEAD_SHARK, HammerheadSharkEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(WHALE, WhaleEntity.createAttributes());

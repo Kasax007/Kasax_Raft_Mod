@@ -52,7 +52,7 @@ _FULL_EXCEPT = {'jack_o_lantern', 'sea_lantern', 'carved_pumpkin'}
 # Beach Craft blocks with a `waterlogged` property (spec sections 4.3, 5, 6, 9.2)
 RAFT_WL = {
     'aqua_sea_glass_pane', 'green_sea_glass_pane', 'blue_sea_glass_pane', 'cracked_glass_pane', 'metal_hatch',
-    'catwalk', 'steel_railing', 'rusty_pipe', 'rusty_pipe_valve', 'control_panel', 'sea_anemone_red',
+    'catwalk', 'steel_railing', 'steel_beam', 'rusty_pipe', 'rusty_pipe_valve', 'control_panel', 'sea_anemone_red',
     'sea_anemone_purple', 'sea_anemone_glow', 'giant_clam', 'starfish_orange', 'starfish_purple', 'starfish_red',
     'sea_urchin', 'barnacles', 'tube_worms', 'seashells', 'sea_glass_scatter', 'string_lights_warm',
     'string_lights_colorful', 'bunting_red_white', 'bunting_rainbow', 'ship_lantern', 'jelly_lamp', 'brazier',
@@ -396,11 +396,11 @@ def leak_check(s, margin=1):
     for (pos, b) in list(s.blocks.items()):
         if _is_wet_source(b, pos, s.dry):
             q.append(pos); seen.add(pos)
-    # the sea around the template (unset positions on the bounding shell and above)
+    # the sea around and inside the template: every unset position keeps the world's block (sea water)
     for x in range(x0, x1 + 1):
         for z in range(z0, z1 + 1):
-            for y in (y1,):
-                if (x, y, z) not in s.blocks:
+            for y in range(y0, y1 + 1):
+                if (x, y, z) not in s.blocks and (x, y, z) not in seen:
                     q.append((x, y, z)); seen.add((x, y, z))
     for x in range(x0, x1 + 1):
         for y in range(y0, y1 + 1):

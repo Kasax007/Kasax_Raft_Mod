@@ -53,13 +53,18 @@ public class WhaleModel extends EntityModel<WhaleRenderState> {
                 .texOffs(88, 62).addBox(-1.0F, -11.0F, 6.0F, 2.0F, 2.0F, 4.0F),
                 PartPose.offset(0.0F, 13.0F, 0.0F));
         PartDefinition head = body.addOrReplaceChild("head", CubeListBuilder.create()
-                .texOffs(0, 38).addBox(-9.0F, -7.0F, -12.0F, 18.0F, 12.0F, 12.0F)
-                .texOffs(100, 62).addBox(-4.0F, -8.0F, -10.0F, 2.0F, 1.0F, 2.0F)
+                .texOffs(0, 38).addBox(-9.0F, -7.0F, -8.0F, 18.0F, 12.0F, 8.0F)
                 .texOffs(100, 62).addBox(2.0F, -8.0F, -7.0F, 2.0F, 1.0F, 2.0F)
-                .texOffs(100, 62).addBox(-3.0F, -8.0F, -4.0F, 2.0F, 1.0F, 2.0F),
+                .texOffs(100, 62).addBox(-3.0F, -8.0F, -4.0F, 2.0F, 1.0F, 2.0F)
+                .texOffs(100, 62).addBox(-4.0F, -7.0F, -11.0F, 2.0F, 1.0F, 2.0F),
                 PartPose.offset(0.0F, -1.0F, -9.0F));
+        // the rostrum: the head narrows towards the tip of the snout
+        head.addOrReplaceChild("snout", CubeListBuilder.create()
+                .texOffs(52, 71).addBox(-7.0F, -6.0F, -12.0F, 14.0F, 11.0F, 4.0F),
+                PartPose.offset(0.0F, 0.0F, 0.0F));
         head.addOrReplaceChild("jaw", CubeListBuilder.create()
-                .texOffs(60, 38).addBox(-9.5F, 0.0F, -11.0F, 19.0F, 6.0F, 12.0F),
+                .texOffs(60, 38).addBox(-9.5F, 0.0F, -7.0F, 19.0F, 6.0F, 8.0F)
+                .texOffs(88, 71).addBox(-7.5F, 0.0F, -11.0F, 15.0F, 5.0F, 4.0F),
                 PartPose.offset(0.0F, 5.0F, -1.0F));
         body.addOrReplaceChild("left_flipper", CubeListBuilder.create()
                 .texOffs(0, 79).addBox(0.0F, -1.0F, -3.0F, 20.0F, 2.0F, 6.0F),

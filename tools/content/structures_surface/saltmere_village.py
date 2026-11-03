@@ -29,6 +29,10 @@ FLOOR = Pal(('raft:palm_planks', 60), ('minecraft:bamboo_planks', 25), ('raft:we
 THATCH = 'raft:palm_thatch'
 THATCH_ST = 'raft:palm_thatch_stairs'
 THATCH_SL = 'raft:palm_thatch_slab[type=bottom,waterlogged=false]'
+ROOF_BAMBOO = ('minecraft:bamboo_mosaic_stairs', 'minecraft:bamboo_mosaic',
+               'minecraft:bamboo_mosaic_slab[type=bottom,waterlogged=false]')
+ROOF_TIN = ('raft:corrugated_metal_stairs', 'raft:corrugated_metal',
+            'raft:corrugated_metal_slab[type=bottom,waterlogged=false]')
 POST = 'raft:palm_log[axis=y]'
 FENCE = 'raft:palm_fence'
 ROPE = 'raft:rope_railing'
@@ -105,8 +109,9 @@ def exit_(s, x, z, facing, pool, prio=0, y=DY):
 
 
 def hut(s, x1, z1, x2, z2, fy, wh, walls=WALL, door=None, windows=(), roof='hip', axis='x', overhang=1,
-        steep=True, door_block=None, shutters='minecraft:bamboo_trapdoor', glass=False, plate=True):
-    """Hut shell: floor, posts, walls, windows, thatch roof; interior is air."""
+        steep=True, door_block=None, shutters='minecraft:bamboo_trapdoor', glass=False, plate=True, roofmat=None):
+    """Hut shell: floor, posts, walls, windows, roof (thatch unless roofmat=(stairs, full, slab)); interior is air."""
+    rst, rfull, rslab = roofmat or (THATCH_ST, THATCH, THATCH_SL)
     deck(s, x1, z1, x2, z2, fy, FLOOR, seed=f'hutfloor{x1}{z1}')
     for y in range(fy + 1, fy + wh + 1):
         for x in range(x1, x2 + 1):
@@ -150,9 +155,9 @@ def hut(s, x1, z1, x2, z2, fy, wh, walls=WALL, door=None, windows=(), roof='hip'
             s.door(dx_, fy + 1, dz_, door_block, face, hinge='left', open_=True)
     y0 = top + (0 if plate else 0)
     if roof == 'hip':
-        s.hip_roof(x1, z1, x2, z2, y0, THATCH_ST, fill=THATCH, overhang=overhang, top=THATCH_SL, steep=steep)
+        s.hip_roof(x1, z1, x2, z2, y0, rst, fill=rfull, overhang=overhang, top=rslab, steep=steep)
     else:
-        s.gable_roof(x1, z1, x2, z2, y0, axis, THATCH_ST, fill=THATCH, overhang=overhang, top=THATCH_SL,
+        s.gable_roof(x1, z1, x2, z2, y0, axis, rst, fill=rfull, overhang=overhang, top=rslab,
                      steep=steep, gable=walls)
     return top
 
@@ -685,7 +690,7 @@ def hut_fisher():
         s.set(x, DY + 2, 5, 'raft:cargo_net[facing=north,waterlogged=false]') if s.name_at(x, DY + 2, 6) else None
     # inside: hammock, chest, stove, shelf, rods
     s.hammock(2, DY + 1, D - 3, 'east')
-    s.chest(W - 3, DY + 1, D - 2, 'raft:chests/saltmere_house', facing='north')
+    s.chest(W - 3, DY + 1, D - 2, 'raft:chests/saltmere_house', facing='north', block='raft:wooden_crate')
     s.set(W - 3, DY + 1, 7, 'raft:simple_grill[lit=false]')
     s.set(2, DY + 1, 7, 'raft:driftwood_table[waterlogged=false]')
     s.set(2, DY + 2, 7, 'raft:seashell_lamp[waterlogged=false]')
@@ -729,7 +734,17 @@ def hut_netmaker():
         s.set(x, DY + 5, z1, 'raft:stripped_palm_log[axis=x]'); s.set(x, DY + 5, z2, 'raft:stripped_palm_log[axis=x]')
     for z in range(z1, z2 + 1):
         s.set(x1, DY + 5, z, 'raft:stripped_palm_log[axis=z]'); s.set(x2, DY + 5, z, 'raft:stripped_palm_log[axis=z]')
-    s.gable_roof(x1, z1, x2, z2, DY + 6, 'z', THATCH_ST, fill=THATCH, overhang=1, top=THATCH_SL, steep=True, gable=WALL2)
+    s.gable_roof(x1, z1, x2, z2, DY + 6, 'z', ROOF_TIN[0], fill=ROOF_TIN[1], overhang=1, top=ROOF_TIN[2], steep=True,
+                 gable=WALL2)
+    # patched tin roof: a few thatch and weathered patches, one hole
+    r = rnd('nm_patch')
+    for pos, (name, props, nbt) in list(s.blocks.items()):
+        if name == ROOF_TIN[0] and pos[1] >= DY + 6:
+            q = r.random()
+            if q < 0.16:
+                s.set(*pos, (THATCH_ST, props))
+            elif q < 0.24:
+                s.set(*pos, ('raft:weathered_stairs', props))
     roof_air(s, x1, z1, x2, z2, DY + 1, DY + 16)
     for x in range(x1 + 1, x2):
         for z in range(z1 + 1, z2):
@@ -740,7 +755,7 @@ def hut_netmaker():
     s.set(x1 + 1, DY + 1, z1 + 3, 'raft:rope_coil')
     s.set(x1 + 1, DY + 2, z1 + 3, 'raft:rope_coil')
     s.set(x2 - 1, DY + 1, z1 + 2, 'raft:wooden_crate[facing=west,open=true]')
-    s.chest(x2 - 1, DY + 1, z1 + 3, 'raft:chests/saltmere_house', facing='west')
+    s.chest(x2 - 1, DY + 1, z1 + 3, 'raft:chests/saltmere_house', facing='west', block='raft:wooden_crate')
     for z in range(z1 + 1, z2 - 1):
         s.set(cx, DY + 4, z, ROPE) if z != z1 + 3 else s.set(cx, DY + 4, z, FENCE)
     for z in range(z1 + 2, z2 - 1, 2):
@@ -847,7 +862,7 @@ def hut_house(variant):
     top = hut(s, x1, z1, x2, z2, fy, 4, walls, door=(cx, z1, 'north'),
               windows=[(x1, z1 + 2, 'west', 2), (x2, z1 + 2, 'east', 2), (cx - 1, z2, 'south', 3)],
               roof=roof, axis=axis, door_block='minecraft:bamboo_door' if variant != 'b' else None,
-              glass=(variant == 'c'))
+              glass=(variant == 'c'), roofmat=ROOF_BAMBOO if variant == 'b' else None)
     roof_air(s, x1, z1, x2, z2, top, top + 10)
     # porch railing + lanterns
     for x in range(0, W):
@@ -1075,7 +1090,8 @@ def shrine():
         s.set(x1, fy + 9, z, 'raft:tidestone_bricks'); s.set(x2, fy + 9, z, 'raft:tidestone_bricks')
     for x in range(x1 + 1, x2):
         s.set(x, fy + 9, z1, 'raft:glowing_tidestone' if x == cx else 'raft:tidestone_bricks')
-    s.hip_roof(x1, z1, x2, z2, fy + 10, THATCH_ST, fill=THATCH, overhang=1, top=THATCH_SL, steep=True)
+    s.hip_roof(x1, z1, x2, z2, fy + 10, 'raft:tidestone_brick_stairs', fill='raft:tidestone_bricks', overhang=1,
+               top='raft:chiseled_tidestone', steep=True)
     roof_air(s, x1, z1, x2, z2, fy + 1, fy + 22)
     for x in range(x1 + 1, x2):
         for z in range(z1 + 1, z2):

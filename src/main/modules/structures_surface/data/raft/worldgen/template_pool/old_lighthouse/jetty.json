@@ -4,9 +4,7 @@
       "element": {
         "element_type": "minecraft:single_pool_element",
         "location": "raft:old_lighthouse/jetty",
-        "processors": {
-          "processors": []
-        },
+        "processors": "raft:old_lighthouse_jetty",
         "projection": "terrain_matching"
       },
       "weight": 1

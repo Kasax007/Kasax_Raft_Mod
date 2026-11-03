@@ -26,7 +26,13 @@ def lighthouse(preview):
         ('raft:old_lighthouse/compound_a', 1, 'raft:old_lighthouse_weathering', 'rigid'),
         ('raft:old_lighthouse/compound_b', 1, 'raft:old_lighthouse_weathering', 'rigid'),
     ])
-    wg.pool('old_lighthouse/jetty', [('raft:old_lighthouse/jetty', 1, None, 'terrain_matching')])
+    wg.jetty_processors('old_lighthouse_jetty', [
+        ('raft:buoy_red', {'waterlogged': 'false'}), ('raft:buoy_green', {'waterlogged': 'false'}),
+        ('raft:palm_slab', {'type': 'bottom', 'waterlogged': 'false'}),
+        ('raft:palm_stairs', {'facing': 'east', 'half': 'bottom', 'shape': 'straight', 'waterlogged': 'false'}),
+        ('raft:palm_stairs', {'facing': 'west', 'half': 'bottom', 'shape': 'straight', 'waterlogged': 'false'}),
+    ])
+    wg.pool('old_lighthouse/jetty', [('raft:old_lighthouse/jetty', 1, 'raft:old_lighthouse_jetty', 'terrain_matching')])
     wg.structure('old_lighthouse', 'raft:old_lighthouse/start', 'surface_structures', 'beard_thin', 0,
                  'WORLD_SURFACE_WG', size=1, max_dist=80)
     wg.structure_set('old_lighthouse', 22, 8, SALTS['old_lighthouse'])

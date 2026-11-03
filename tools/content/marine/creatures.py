@@ -187,6 +187,20 @@ def whale_texture():
             if t.fy < 0.3:
                 return barnacles(t, skin(t, 2.0), 0.25)
             return pleats(t, white_skin(t)) if t.fy > 0.5 else white_skin(t)
+        if p == 'snout':
+            c = skin(t, 2.3)
+            if t.face == 'top':
+                d, rid = cells3(t.ax, 0, t.az, 2.6, 25)
+                return pick(dark, 4 if rid > 0.5 else 3.6) if d < 0.28 else c
+            if t.face in ('west', 'east'):
+                if t.j >= t.fh - 1:
+                    return pick(dark, 0.5)        # mouth line
+                return barnacles(t, c, 0.24) if t.fy > 0.4 else c
+            if t.face == 'north':
+                return barnacles(t, c, 0.34)
+            if t.face == 'bottom':
+                return pick(dark, 1)
+            return c
         if p == 'head':
             if t.box > 0:                        # tubercles on the head
                 return pick(dark, 1) if t.face != 'top' else pick(dark, 3.5)

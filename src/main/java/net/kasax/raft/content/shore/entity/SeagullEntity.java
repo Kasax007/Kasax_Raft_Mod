@@ -63,6 +63,9 @@ public class SeagullEntity extends Animal {
     public static final TagKey<Block> PERCHES = TagKey.create(Registries.BLOCK, Raft.id("seagull_perches"));
     public static final TagKey<Block> SPAWNABLE_ON = TagKey.create(Registries.BLOCK, Raft.id("seagull_spawnable_on"));
     public static final int SCARECROW_RADIUS = 16;
+    /** How far a gull looks for crops around itself, and how far away it still remembers a field. */
+    private static final int CROP_SEARCH = 24;
+    private static final int FIELD_MEMORY = 64;
     public static final byte EVENT_PECK = 82;
     public static final byte EVENT_CALL = 83;
     private static final int MAX_FLOCK = 7;
@@ -89,6 +92,8 @@ public class SeagullEntity extends Animal {
     private int restTicks;
     private int peckCooldown = 200;
     private int stealCooldown = 100;
+    /** The last field this gull raided; it keeps coming back to it while there is something left to peck. */
+    private @Nullable BlockPos field;
     private int eatTicks;
     private int fleeTicks;
     private @Nullable BlockPos home;
@@ -166,6 +171,15 @@ public class SeagullEntity extends Animal {
 
     private boolean isRaftBlock(BlockState state) {
         return state.is(PERCHES);
+    }
+
+    /**
+     * True every {@code interval} ticks on a tick where the goal selector runs its full update. Goals are only
+     * checked on every other tick (shifted by the entity id), so a plain {@code tickCount % n} would never be true
+     * for half of all gulls.
+     */
+    boolean aiTick(int interval) {
+        return (this.tickCount + this.getId()) % interval == 0;
     }
 
     /** True if a scarecrow keeps gulls away from this spot. */
@@ -408,6 +422,10 @@ public class SeagullEntity extends Animal {
             return new Vec3(raftPlayer.getX() + Math.cos(a) * radius, raftPlayer.getY() + 5.0 + r.nextDouble() * 5.0,
                     raftPlayer.getZ() + Math.sin(a) * radius);
         }
+        if (this.field != null && r.nextInt(3) == 0 && this.field.distSqr(this.blockPosition()) < FIELD_MEMORY * FIELD_MEMORY) {
+            return this.airAbove(this.field.getX() + (r.nextDouble() - 0.5) * 12.0, this.field.getZ() + (r.nextDouble() - 0.5) * 12.0,
+                    5.0, 10.0);
+        }
         double cx = this.getX();
         double cz = this.getZ();
         if (this.home != null && this.home.distSqr(this.blockPosition()) > 56 * 56) {
@@ -519,6 +537,9 @@ public class SeagullEntity extends Animal {
             output.putIntArray("Home", new int[]{this.home.getX(), this.home.getY(), this.home.getZ()});
         }
         output.putInt("EatTicks", this.eatTicks);
+        if (this.field != null) {
+            output.putIntArray("Field", new int[]{this.field.getX(), this.field.getY(), this.field.getZ()});
+        }
     }
 
     @Override
@@ -530,6 +551,11 @@ public class SeagullEntity extends Animal {
             }
         });
         this.eatTicks = input.getIntOr("EatTicks", 0);
+        input.getIntArray("Field").ifPresent(a -> {
+            if (a.length == 3) {
+                this.field = new BlockPos(a[0], a[1], a[2]);
+            }
+        });
     }
 
     // ------------------------------------------------------------------------------------------ spawning
@@ -627,10 +653,10 @@ public class SeagullEntity extends Animal {
         @Override
         public boolean canUse() {
             SeagullEntity gull = SeagullEntity.this;
-            if (gull.stealCooldown > 0 || !gull.getMainHandItem().isEmpty() || gull.tickCount % 10 != 0) {
+            if (gull.stealCooldown > 0 || !gull.getMainHandItem().isEmpty() || !gull.aiTick(10)) {
                 return false;
             }
-            List<ItemEntity> items = gull.level().getEntitiesOfClass(ItemEntity.class, gull.getBoundingBox().inflate(14.0, 8.0, 14.0),
+            List<ItemEntity> items = gull.level().getEntitiesOfClass(ItemEntity.class, gull.getBoundingBox().inflate(14.0, 16.0, 14.0),
                     e -> e.isAlive() && e.getItem().has(DataComponents.FOOD) && !e.isInWater());
             ItemEntity best = null;
             double bestDist = Double.MAX_VALUE;
@@ -664,7 +690,7 @@ public class SeagullEntity extends Animal {
             if (this.target == null) {
                 return;
             }
-            if (gull.tickCount % 10 == 0 || gull.getNavigation().isDone()) {
+            if (gull.aiTick(10) || gull.getNavigation().isDone()) {
                 gull.flyTo(this.target.position().add(0.0, 0.2, 0.0), 1.4);
             }
             gull.getLookControl().setLookAt(this.target);
@@ -700,6 +726,7 @@ public class SeagullEntity extends Animal {
     private class PeckCropGoal extends Goal {
         private @Nullable BlockPos crop;
         private int peckTicks;
+        private int approachTicks;
 
         PeckCropGoal() {
             this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
@@ -708,7 +735,7 @@ public class SeagullEntity extends Animal {
         @Override
         public boolean canUse() {
             SeagullEntity gull = SeagullEntity.this;
-            if (gull.peckCooldown > 0 || gull.tickCount % 20 != 0 || !(gull.level() instanceof ServerLevel level)) {
+            if (gull.peckCooldown > 0 || !gull.aiTick(20) || !(gull.level() instanceof ServerLevel level)) {
                 return false;
             }
             this.crop = this.findCrop(level);
@@ -719,20 +746,43 @@ public class SeagullEntity extends Animal {
             SeagullEntity gull = SeagullEntity.this;
             RandomSource r = gull.random;
             BlockPos origin = gull.blockPosition();
-            BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
-            for (int i = 0; i < 48; i++) {
-                int x = origin.getX() + r.nextInt(33) - 16;
-                int z = origin.getZ() + r.nextInt(33) - 16;
-                for (int y = origin.getY() + 4; y >= origin.getY() - 12; y--) {
-                    pos.set(x, y, z);
-                    BlockState state = level.getBlockState(pos);
-                    if (state.getBlock() instanceof CropBlock cropBlock && cropBlock.getAge(state) > 0
-                            && level.getBlockState(pos.below()).getBlock() instanceof FarmlandBlock
-                            && level.canSeeSky(pos.above())
-                            && !scarecrowGuards(level, pos)) {
-                        return pos.immutable();
+            // back to the known field first
+            if (gull.field != null) {
+                if (gull.field.distSqr(origin) < FIELD_MEMORY * FIELD_MEMORY) {
+                    for (int i = 0; i < 24; i++) {
+                        BlockPos crop = this.cropAt(level, gull.field.getX() + r.nextInt(11) - 5,
+                                gull.field.getZ() + r.nextInt(11) - 5, gull.field.getY());
+                        if (crop != null) {
+                            return crop;
+                        }
                     }
                 }
+                // eaten bare, guarded by a scarecrow or too far away: forget it
+                gull.field = null;
+            }
+            for (int i = 0; i < 64; i++) {
+                BlockPos crop = this.cropAt(level, origin.getX() + r.nextInt(CROP_SEARCH * 2 + 1) - CROP_SEARCH,
+                        origin.getZ() + r.nextInt(CROP_SEARCH * 2 + 1) - CROP_SEARCH, origin.getY());
+                if (crop != null) {
+                    return crop;
+                }
+            }
+            return null;
+        }
+
+        /** The crop on top of this column if a gull may peck it (crops do not block motion: it is the top block). */
+        private @Nullable BlockPos cropAt(ServerLevel level, int x, int z, int nearY) {
+            int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, x, z);
+            if (Math.abs(y - nearY) > 24) {
+                return null;
+            }
+            BlockPos pos = new BlockPos(x, y, z);
+            BlockState state = level.getBlockState(pos);
+            if (state.getBlock() instanceof CropBlock cropBlock && cropBlock.getAge(state) > 0
+                    && level.getBlockState(pos.below()).getBlock() instanceof FarmlandBlock
+                    && level.canSeeSky(pos.above())
+                    && !scarecrowGuards(level, pos)) {
+                return pos;
             }
             return null;
         }
@@ -740,7 +790,9 @@ public class SeagullEntity extends Animal {
         @Override
         public void start() {
             this.peckTicks = 0;
+            this.approachTicks = 0;
             if (this.crop != null) {
+                SeagullEntity.this.field = this.crop;
                 SeagullEntity.this.flyTo(Vec3.atBottomCenterOf(this.crop).add(0.0, 0.1, 0.0), 1.2);
             }
         }
@@ -771,6 +823,12 @@ public class SeagullEntity extends Animal {
             boolean close = dx * dx + dz * dz < 1.0 && Math.abs(target.y - gull.getY()) < 1.2;
             gull.getLookControl().setLookAt(target.x, target.y, target.z);
             if (!close) {
+                if (++this.approachTicks > 300) {
+                    // cannot get there (fenced in, roofed over): give up and forget the field
+                    this.crop = null;
+                    gull.field = null;
+                    return;
+                }
                 if (gull.getNavigation().isDone()) {
                     gull.flyTo(target.add(0.0, 0.1, 0.0), 1.2);
                 }
@@ -827,7 +885,7 @@ public class SeagullEntity extends Animal {
         public void tick() {
             SeagullEntity gull = SeagullEntity.this;
             SeagullEntity lead = gull.leader;
-            if (lead != null && (gull.tickCount % 8 == 0 || gull.getNavigation().isDone())) {
+            if (lead != null && (gull.aiTick(8) || gull.getNavigation().isDone())) {
                 Vec3 target = lead.position().add(gull.flockOffset).add(0.0, lead.isFlying() ? 0.5 : 3.0, 0.0);
                 gull.flyTo(target, lead.isFlying() ? 1.25 : 1.0);
             }

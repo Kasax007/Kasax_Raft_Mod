@@ -1,0 +1,23 @@
+{
+  "elements": [
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "raft:port_solace/street_a",
+        "processors": "raft:port_solace/city",
+        "projection": "rigid"
+      },
+      "weight": 2
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "raft:port_solace/street_b",
+        "processors": "raft:port_solace/city",
+        "projection": "rigid"
+      },
+      "weight": 2
+    }
+  ],
+  "fallback": "raft:port_solace/ends"
+}

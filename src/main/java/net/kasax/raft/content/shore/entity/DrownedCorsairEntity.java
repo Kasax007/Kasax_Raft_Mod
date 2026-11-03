@@ -68,10 +68,37 @@ public class DrownedCorsairEntity extends Drowned {
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolem.class, true));
     }
 
-    /** Corsairs chase their prey through the water, not only when the prey is swimming. */
+    /**
+     * Like a drowned, a corsair swims after prey in the water and walks out onto beaches after prey on land. Prey on a
+     * raft, a boat or a pier above the water is chased swimming too, up to the surface, where the corsair climbs aboard.
+     */
     @Override
     public boolean wantsToSwim() {
-        return this.getTarget() != null || super.wantsToSwim();
+        if (super.wantsToSwim()) {
+            return true;
+        }
+        LivingEntity target = this.getTarget();
+        if (target == null) {
+            return false;
+        }
+        if (target.getVehicle() != null || this.isAboveWater(target)) {
+            return true;
+        }
+        // prey on the shore above: swim up to the surface next to it and climb out there
+        double dx = target.getX() - this.getX();
+        double dz = target.getZ() - this.getZ();
+        return this.isUnderWater() && target.getY() > this.getY() + 1.5 && dx * dx + dz * dz < 12.0 * 12.0;
+    }
+
+    /** True if there is water within three blocks below the target's feet (raft, boat, pier, jetty). */
+    private boolean isAboveWater(LivingEntity target) {
+        BlockPos.MutableBlockPos pos = target.blockPosition().mutable();
+        for (int i = 0; i < 3; i++) {
+            if (this.level().getFluidState(pos.move(0, -1, 0)).is(FluidTags.WATER)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

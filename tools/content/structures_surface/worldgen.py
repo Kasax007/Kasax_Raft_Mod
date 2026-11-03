@@ -63,3 +63,24 @@ def rule(block, prob, out):
 def processor_list(name, rules):
     return write_json(MODULE, f'data/raft/worldgen/processor_list/{name}.json',
                       {'processors': [{'processor_type': 'minecraft:rule', 'rules': rules}]})
+
+
+def jetty_processors(name, floating):
+    """Terrain-matching piece over water: project first (gravity, as the projection does), then keep the
+    'floating' states only where they replace water (waterlogged) and drop them elsewhere (land)."""
+    rules = []
+    for block, props in floating:
+        wet = dict(props, waterlogged='true') if 'waterlogged' in props else props
+        rules.append({'input_predicate': {'predicate_type': 'minecraft:blockstate_match',
+                                          'block_state': {'id': block, 'properties': props}},
+                      'location_predicate': {'predicate_type': 'minecraft:block_match', 'block': 'minecraft:water'},
+                      'output_state': {'id': block, 'properties': wet}})
+        rules.append({'input_predicate': {'predicate_type': 'minecraft:blockstate_match',
+                                          'block_state': {'id': block, 'properties': props}},
+                      'location_predicate': {'predicate_type': 'minecraft:always_true'},
+                      'output_state': 'minecraft:structure_void'})
+    return write_json(MODULE, f'data/raft/worldgen/processor_list/{name}.json', {'processors': [
+        {'processor_type': 'minecraft:gravity', 'heightmap': 'WORLD_SURFACE_WG', 'offset': -1},
+        {'processor_type': 'minecraft:rule', 'rules': rules},
+        {'processor_type': 'minecraft:block_ignore', 'blocks': ['minecraft:structure_void']},
+    ]})

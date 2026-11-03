@@ -113,20 +113,52 @@ public class MorayEelEntity extends AbstractMarineMonster {
         return n;
     }
 
-    /** The best hole (most walled-in water block with an open side) within 8 blocks, or the start if none. */
+    /**
+     * How good a hiding place a water block is: 0 = none; otherwise the number of solid neighbours (3..5), but only if
+     * one horizontal neighbour is open water (at most 2 solid neighbours), so the eel sits in the mouth of a crevice
+     * with its head out instead of deep inside a tunnel.
+     */
+    private static int holeScore(LevelReader level, BlockPos p) {
+        if (!level.getFluidState(p).is(FluidTags.WATER)) {
+            return 0;
+        }
+        int e = enclosure(level, p);
+        if (e < 3 || e > 5) {
+            return 0;
+        }
+        for (Direction d : Direction.Plane.HORIZONTAL) {
+            BlockPos n = p.relative(d);
+            if (level.getFluidState(n).is(FluidTags.WATER) && enclosure(level, n) <= 2) {
+                return e;
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * The best hole within 8 blocks (horizontally) and 4 blocks (vertically): the most walled-in crevice mouth,
+     * the nearest one on a tie; the start position if there is none.
+     */
     private static BlockPos findHole(LevelReader level, BlockPos start, RandomSource random) {
         BlockPos best = null;
-        int bestScore = 2;
+        int bestScore = 0;
+        int bestDist = Integer.MAX_VALUE;
         BlockPos.MutableBlockPos m = new BlockPos.MutableBlockPos();
-        for (int i = 0; i < 300; i++) {
-            m.set(start.getX() + random.nextInt(17) - 8, start.getY() + random.nextInt(9) - 4, start.getZ() + random.nextInt(17) - 8);
-            if (!level.getFluidState(m).is(FluidTags.WATER)) {
-                continue;
-            }
-            int e = enclosure(level, m);
-            if (e > bestScore && e < 6) {
-                bestScore = e;
-                best = m.immutable();
+        for (int dy = -4; dy <= 4; dy++) {
+            for (int dx = -8; dx <= 8; dx++) {
+                for (int dz = -8; dz <= 8; dz++) {
+                    m.set(start.getX() + dx, start.getY() + dy, start.getZ() + dz);
+                    int score = holeScore(level, m);
+                    if (score == 0) {
+                        continue;
+                    }
+                    int dist = dx * dx + dy * dy * 2 + dz * dz;
+                    if (score > bestScore || score == bestScore && dist < bestDist) {
+                        best = m.immutable();
+                        bestScore = score;
+                        bestDist = dist;
+                    }
+                }
             }
         }
         return best != null ? best : start;
@@ -163,9 +195,12 @@ public class MorayEelEntity extends AbstractMarineMonster {
             }
             return;
         }
-        if (this.home == null && --this.homeSearchCooldown <= 0) {
-            this.homeSearchCooldown = 200;
-            this.home = findHole(this.level(), this.blockPosition(), this.random);
+        if (--this.homeSearchCooldown <= 0) {
+            // look for a (better) hole when there is none, when it was filled in, or now and then while it is poor
+            this.homeSearchCooldown = 600;
+            if (this.home == null || holeScore(this.level(), this.home) < 4) {
+                this.home = findHole(this.level(), this.home != null ? this.home : this.blockPosition(), this.random);
+            }
         }
     }
 

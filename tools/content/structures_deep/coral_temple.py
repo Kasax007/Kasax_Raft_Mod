@@ -440,6 +440,24 @@ def ruin(s, rnd):
                                {'LootTable': 'minecraft:archaeology/ocean_ruin_warm'})
             else:
                 s.set(x, 3, z, 'minecraft:sand')
+    # eroded rim: the outer courses of the stylobate have broken away in irregular bites and are half buried in sand
+    p1, p2, p3 = (rnd.random() * 6.3 for _ in range(3))
+    for x in range(-20, 21):
+        for z in range(-24, 23):
+            rim = abs(x) >= 17 or z <= -21 or z >= 20
+            if not rim or (abs(x) <= 6 and z >= 20):
+                continue
+            n = math.sin(x * 0.45 + p1) + math.sin(z * 0.52 + p2) + math.sin((x + z) * 0.31 + p3)
+            for y, th in ((3, 0.6), (2, 1.0), (1, 1.6), (0, 2.2)):
+                if n > th and s.name_at(x, y, z) and s.name_at(x, y, z) != 'minecraft:water' and \
+                        (y < 3 or 'stairs' in s.name_at(x, y, z) or 'wall' in s.name_at(x, y, z)):
+                    if y <= 1 and n < th + 0.35:
+                        s.set(x, y, z, 'minecraft:sand' if rnd.random() < 0.7 else 'minecraft:gravel')
+                    else:
+                        del s.blocks[(x, y, z)]
+            if n > 1.0 and rnd.random() < 0.25 and s.name_at(x, 3, z) is None and s.is_solid(x, 2, z):
+                s.set(x, 3, z, pick(rnd, [('raft:cracked_tidestone_bricks', 2), ('raft:tidestone_brick_slab[type=bottom]', 2),
+                                          ('minecraft:sand', 1)]))
     # crack the paving
     for (x, y, z), b in list(s.blocks.items()):
         if y == 2 and b[0] == 'raft:tidestone_bricks' and rnd.random() < 0.08:
@@ -457,61 +475,113 @@ def flood(s):
                     s.set(x, y, z, 'minecraft:water')
 
 
+# reef patches: (x, z, radius) – the reef reclaims the corners, the fallen columns, the collapsed east colonnade and
+# the broken west pylon; the processional way and the sanctum hall stay mostly clear (the Tidewardens' light
+# still keeps the sea away from the altar)
+REEFS = [(-15, -1, 3.6), (-14, 9, 3.0), (-16, 17, 3.4), (15, 3, 4.2), (14, 9, 3.8), (10, 6, 2.6), (7, 11, 2.4),
+         (-11, 13, 2.8), (12, 17, 2.6), (-10, 18, 3.0), (-13, -9, 2.4), (14, -12, 2.8), (-17, -19, 3.4),
+         (17, -20, 3.0), (5, 18, 1.6), (-6, 2, 1.8), (6, -2, 1.6)]
+CORAL_W = [('brain', 3), ('tube', 3), ('bubble', 2), ('fire', 2), ('horn', 3)]
+
+
+def _reef_strength(x, z):
+    best = 0.0
+    for (cx, cz, r) in REEFS:
+        d = math.hypot(x - cx, z - cz)
+        if d < r:
+            best = max(best, 1.0 - d / r)
+    return best
+
+
 def overgrowth(s, rnd):
     (x0, y0, z0), (x1, y1, z1) = s.bounds()
-    # coral blocks taking over the lower courses of walls and columns
+    in_hall = lambda x, z: -11 <= x <= 11 and -22 <= z <= -6          # noqa: E731
+    on_way = lambda x, z: abs(x) <= 2 and -5 <= z <= 23               # noqa: E731
+    # each reef patch has one or two dominant coral kinds
+    kinds = {}
+    for (cx, cz, r) in REEFS:
+        a = pick(rnd, CORAL_W)
+        kinds[(cx, cz)] = [a, a, pick(rnd, CORAL_W)]
+
+    def kind_at(x, z):
+        best, k = 1e9, 'tube'
+        for (cx, cz, r) in REEFS:
+            d = math.hypot(x - cx, z - cz) / r
+            if d < best:
+                best, k = d, rnd.choice(kinds[(cx, cz)])
+        return k
+    # 1) coral blocks replace the masonry inside the reef patches (lower courses, tops of ruins, paving)
     for (x, y, z), b in list(s.blocks.items()):
-        if 3 <= y <= 5 and b[0] in ('raft:tidestone_bricks', 'raft:cracked_tidestone_bricks',
-                                    'raft:mossy_tidestone_bricks', 'raft:tidestone'):
-            exposed = any(s.name_at(x + dx, y, z + dz) in (None, 'minecraft:water') for dx, dz in
-                          ((1, 0), (-1, 0), (0, 1), (0, -1)))
-            if exposed and rnd.random() < 0.10 * (6 - y) / 3:
-                s.set(x, y, z, rnd.choice(CORAL_BLOCKS))
-    # coral clusters on the stylobate edges and courtyard
-    cands = [(x, y, z) for (x, y, z) in list(s.blocks) if s.free(x, y + 1, z) and s.is_solid(x, y, z) and
-             s.blocks[(x, y, z)][0] != 'minecraft:water' and y + 1 <= WATER_TOP]
-    rnd.shuffle(cands)
-    placed = 0
-    for (x, y, z) in cands:
-        if placed > 420:
-            break
-        pos = (x, y + 1, z)
-        if s.name_at(*pos) not in (None, 'minecraft:water'):
+        if y < 2 or y > WATER_TOP or b[0] not in ('raft:tidestone_bricks', 'raft:cracked_tidestone_bricks',
+                                                  'raft:mossy_tidestone_bricks', 'raft:tidestone',
+                                                  'raft:coral_stone_bricks'):
             continue
+        if in_hall(x, z) or on_way(x, z):
+            continue
+        st = _reef_strength(x, z)
+        exposed = any(s.name_at(x + dx, y + dy, z + dz) in (None, 'minecraft:water') for dx, dy, dz in
+                      ((1, 0, 0), (-1, 0, 0), (0, 0, 1), (0, 0, -1), (0, 1, 0)))
+        if exposed and st > 0 and rnd.random() < 0.75 * st:
+            s.set(x, y, z, f'minecraft:{kind_at(x, z)}_coral_block')
+    # 2) corals, fans, pickles and anemones on top: dense in the patches, sparse elsewhere
+    cands = [(x, y, z) for (x, y, z) in list(s.blocks) if y + 1 <= WATER_TOP and s.is_solid(x, y, z) and
+             s.name_at(x, y + 1, z) in (None, 'minecraft:water')]
+    rnd.shuffle(cands)
+    for (x, y, z) in cands:
+        pos = (x, y + 1, z)
+        st = _reef_strength(x, z)
+        hall, way = in_hall(x, z), on_way(x, z)
         r = rnd.random()
-        c = rnd.choice(CORALS)
-        if r < 0.22:
-            s.set(*pos, f'minecraft:{c}_coral')
-        elif r < 0.40:
-            s.set(*pos, f'minecraft:{c}_coral_fan')
-        elif r < 0.52:
-            s.set(*pos, f'minecraft:sea_pickle[pickles={1 + int(rnd.random() * 4)}]')
-        elif r < 0.62:
-            s.set(*pos, pick(rnd, [('raft:sea_anemone_red', 3), ('raft:sea_anemone_purple', 3),
-                                   ('raft:sea_anemone_glow', 2)]))
-        elif r < 0.78:
-            s.seagrass(*pos, tall=r < 0.70)
-        elif r < 0.83 and y + 1 <= 4:
-            s.kelp(*pos, 3 + int(rnd.random() * 5))
-        elif r < 0.86:
-            s.set(*pos, f'raft:starfish_{rnd.choice(["orange", "purple", "red"])}[face=floor,facing=north]')
-        elif r < 0.88:
-            s.set(*pos, f'raft:giant_clam[facing={rnd.choice(["north", "south", "east", "west"])},open=false,'
-                        f'pearl=false]')
-        elif r < 0.90:
-            s.set(*pos, 'raft:sea_urchin')
-        placed += 1
-    # wall fans on vertical faces
+        if st > 0 and not hall and not way:
+            if r > 0.25 + 0.6 * st:
+                continue
+            k = kind_at(x, z)
+            q = rnd.random()
+            if q < 0.38:
+                s.set(*pos, f'minecraft:{k}_coral')
+            elif q < 0.70:
+                s.set(*pos, f'minecraft:{k}_coral_fan')
+            elif q < 0.82:
+                s.set(*pos, f'minecraft:sea_pickle[pickles={2 + int(rnd.random() * 3)}]')
+            elif q < 0.92:
+                s.set(*pos, pick(rnd, [('raft:sea_anemone_red', 3), ('raft:sea_anemone_purple', 3),
+                                       ('raft:sea_anemone_glow', 2)]))
+            elif q < 0.96:
+                s.set(*pos, f'raft:starfish_{rnd.choice(["orange", "purple", "red"])}[face=floor,facing=north]')
+            else:
+                s.set(*pos, f'raft:giant_clam[facing={rnd.choice(["north", "south", "east", "west"])},open=false,'
+                            f'pearl=false]')
+        elif hall:
+            # the dark hall: a few glowing anemones and pickles light the way to the altar
+            if y == 2 and r < 0.035:
+                s.set(*pos, pick(rnd, [('raft:sea_anemone_glow', 3), ('minecraft:sea_pickle[pickles=3]', 2)]))
+        elif y <= 3:
+            # open sea floor and courtyard: seagrass meadows, the odd urchin or kelp
+            if r < 0.10 and not way:
+                s.seagrass(*pos, tall=r < 0.04)
+            elif r < 0.125 and not way:
+                s.kelp(*pos, 3 + int(rnd.random() * 5))
+            elif r < 0.135:
+                s.set(*pos, 'raft:sea_urchin')
+            elif r < 0.15:
+                s.set(*pos, f'raft:seashells[shells={1 + int(rnd.random() * 3)}]')
+    # 3) wall fans on vertical faces, mostly in and around the reef patches
     n = 0
     for (x, y, z), b in list(s.blocks.items()):
-        if n > 140 or y > WATER_TOP or not s.is_solid(x, y, z):
+        if n > 160 or y > WATER_TOP or y < 3 or not s.is_solid(x, y, z) or in_hall(x, z):
             continue
+        st = _reef_strength(x, z)
         for dx, dz, f in ((1, 0, 'east'), (-1, 0, 'west'), (0, 1, 'south'), (0, -1, 'north')):
-            if s.name_at(x + dx, y, z + dz) in (None, 'minecraft:water') and rnd.random() < 0.025:
-                s.set(x + dx, y, z + dz, f'minecraft:{rnd.choice(CORALS)}_coral_wall_fan[facing={f}]')
+            if s.name_at(x + dx, y, z + dz) in (None, 'minecraft:water') and rnd.random() < 0.006 + 0.10 * st:
+                s.set(x + dx, y, z + dz, f'minecraft:{kind_at(x, z)}_coral_wall_fan[facing={f}]')
                 n += 1
                 break
-    s.grow_barnacles(((x0, 3, z0), (x1, WATER_TOP, z1)), 0.05, seed=3)
+    # 4) a kelp curtain in front of the west colonnade wall and behind the sanctum
+    for (x, z) in ((-16, 1), (-16, 6), (-16, 11), (-15, 13), (-9, -23), (-4, -23), (6, -23), (10, -23)):
+        if s.on_top(x, 3, z) or s.name_at(x, 3, z) in (None, 'minecraft:water'):
+            s.kelp(x, 3 if z > -23 else 1, z, 4 + int(rnd.random() * 4))
+    s.grow_barnacles(((x0, 3, z0), (x1, WATER_TOP, z1)), 0.04, seed=3,
+                     skip=lambda x, y, z: on_way(x, z))
     # moray eels in the dark side chapels
     for (x, z) in ((-9, -13), (9, -11)):
         s.entity(x + 0.5, 3.2, z + 0.5, {'id': 'raft:moray_eel', 'PersistenceRequired': True})

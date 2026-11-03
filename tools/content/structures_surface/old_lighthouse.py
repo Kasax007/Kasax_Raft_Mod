@@ -179,6 +179,7 @@ def plinth_and_tower(s):
     # band joints: dark stone lines between colour bands (every 4th layer, sparse)
     spiral_stairs(s)
     landings(s)
+    tower_lights(s)
     gallery_and_lantern(s)
 
 
@@ -230,6 +231,37 @@ def landings(s):
             s.set(cx + 1, L + 1, cz + 3, 'raft:driftwood_shelf[facing=north]')
             s.set(cx - 1, L + 1, cz - 3, 'minecraft:candle[candles=3,lit=false,waterlogged=false]')
             s.set(cx + 2, L + 1, cz - 3, 'minecraft:lantern[hanging=false,waterlogged=false]')
+
+
+def tower_lights(s):
+    """The shaft is dark: lantern brackets on the inner wall, lanterns under the landings, a lit ground floor."""
+    cx, cz = TC
+    for (y, ang) in ((Y_FLOOR + 5, 90), (Y_FLOOR + 5, 270), (17, 0), (17, 180), (27, 120), (27, 300)):
+        a = math.radians(ang)
+        ux, uz = math.cos(a), math.sin(a)
+        for step in range(5, 0, -1):            # walk inwards from the wall to the first free cell
+            bx, bz = int(round(cx + ux * step)), int(round(cz + uz * step))
+            if s.name_at(bx, y, bz) == 'minecraft:air' and s.name_at(bx, y - 1, bz) in (None, 'minecraft:air') \
+                    and dist(bx, bz) > 2.2:
+                s.set(bx, y, bz, stairs('minecraft:stone_brick_stairs', inward(bx, bz), 'top'))
+                s.set(bx, y - 1, bz, 'minecraft:lantern[hanging=true,waterlogged=false]')
+                break
+    for L in (12, 22):
+        for (ox, oz) in ((3, 0), (-3, 0), (0, 3), (0, -3)):
+            x, z = cx + ox, cz + oz
+            if s.name_at(x, L, z) and s.name_at(x, L - 1, z) in (None, 'minecraft:air'):
+                s.set(x, L - 1, z, 'minecraft:lantern[hanging=true,waterlogged=false]')
+                break
+    # ground floor: oil barrels, a coil of rope, a lamp on a crate
+    y = Y_FLOOR + 1
+    for (x, z, st) in ((cx + 3, cz + 2, 'minecraft:barrel[facing=up,open=false]'),
+                       (cx + 3, cz + 1, 'minecraft:barrel[facing=up,open=false]'),
+                       (cx + 2, cz + 3, 'raft:wooden_crate[facing=north,open=false]'),
+                       (cx - 2, cz - 3, 'raft:rope_coil')):
+        if s.name_at(x, y, z) == 'minecraft:air':
+            s.set(x, y, z, st)
+    if s.name_at(cx + 2, y + 1, cz + 3) in (None, 'minecraft:air'):
+        s.set(cx + 2, y + 1, cz + 3, 'minecraft:lantern[hanging=false,waterlogged=false]')
 
 
 def gallery_and_lantern(s):
@@ -518,7 +550,7 @@ def shed(s):
     s.door(x1, 1, z1 + 3, 'minecraft:spruce_door', 'west', hinge='left')
     s.set(x1, 3, z1 + 3, WEATHERED.pick(0, 0, 0))
     # contents
-    s.chest(x2 - 1, 1, z1 + 1, 'raft:chests/lighthouse_storage', facing='west')
+    s.chest(x2 - 1, 1, z1 + 1, 'raft:chests/lighthouse_storage', facing='west', block='raft:wooden_crate')
     s.set(x2 - 1, 1, z1 + 2, 'minecraft:barrel[facing=up,open=false]')
     s.set(x2 - 1, 2, z1 + 2, 'raft:rope_coil')
     s.set(x2 - 1, 1, z2 - 1, 'raft:wooden_crate[facing=west,open=false]')
@@ -742,17 +774,17 @@ def build_jetty():
     s.set(L + 9, 0, -1, 'raft:buoy_red[waterlogged=false]')
     s.set(L + 9, 0, 7, 'raft:buoy_green[waterlogged=false]')
     s.set(L + 12, 0, 3, 'raft:buoy_red[waterlogged=false]')
-    # moored rowboat on the south side of the head
+    # moored rowboat on the south side of the head (palm wood: the jetty processor keeps it only where it floats
+    # on water, so a jetty that ends up on land loses its boat and buoys)
     bz = 8
     for i in range(5):
         x = L + 1 + i
         if i in (0, 4):
-            s.set(x, 0, bz, stairs('minecraft:spruce_stairs', 'east' if i == 0 else 'west'))
-            s.set(x, 0, bz + 1, stairs('minecraft:spruce_stairs', 'east' if i == 0 else 'west'))
+            s.set(x, 0, bz, stairs('raft:palm_stairs', 'east' if i == 0 else 'west'))
+            s.set(x, 0, bz + 1, stairs('raft:palm_stairs', 'east' if i == 0 else 'west'))
         else:
-            s.set(x, 0, bz, slab('minecraft:spruce_slab', 'bottom'))
-            s.set(x, 0, bz + 1, slab('minecraft:spruce_slab', 'bottom'))
-    s.set(L + 3, 1, bz, 'minecraft:spruce_trapdoor[facing=north,half=bottom,open=false,powered=false,waterlogged=false]')
+            s.set(x, 0, bz, slab('raft:palm_slab', 'bottom'))
+            s.set(x, 0, bz + 1, slab('raft:palm_slab', 'bottom'))
     s.set(L + 1, 1, 7, 'minecraft:spruce_fence')   # mooring line post
     # connector at the land end (faces west)
     s.jigsaw(0, 1, 3, 'west_up', 'raft:lighthouse_jetty', 'raft:lighthouse_path', 'minecraft:empty',

@@ -22,6 +22,11 @@ from .common import (Deep, MODULE, NO_SPILL, leak_check, pick, processor_list, s
 
 SID = 'helix_station'
 RIB = 'minecraft:white_concrete'      # painted steel ribs (Expedition white)
+RIB_RED = 'minecraft:red_concrete'    # every other rib in Expedition red (white/red stripes, spec 2)
+
+
+def rib_colour(i):
+    return RIB_RED if i % 2 else RIB
 HULL = [('raft:riveted_hull', 78), ('raft:rusty_hull', 22)]
 HULL_RUSTY = [('raft:riveted_hull', 45), ('raft:rusty_hull', 55)]
 PAD = [('raft:cracked_concrete', 50), ('minecraft:light_gray_concrete', 25), ('raft:mossy_concrete', 15),
@@ -84,14 +89,15 @@ def tube_x(s, x1, x2, zc, rnd, porthole_every=3, ribs_every=4):
     inner = []
     for x in range(x1, x2 + 1):
         rib = (x - x1) % ribs_every == 0
+        rc = rib_colour((x - x1) // ribs_every)
         for dz in range(-2, 3):
             s.pset(x, 0, zc + dz, FLOOR if abs(dz) < 2 else HULL, rnd)
             if abs(dz) < 2:
-                s.set(x, 4, zc + dz, RIB if rib else pick(rnd, HULL))
+                s.set(x, 4, zc + dz, rc if rib else pick(rnd, HULL))
         for y in (1, 2, 3):
             for dz in (-2, 2):
                 if rib:
-                    s.set(x, y, zc + dz, RIB)
+                    s.set(x, y, zc + dz, rc)
                 elif y == 2 and (x - x1) % porthole_every == 1:
                     s.set(x, y, zc + dz, 'raft:porthole')
                 else:
@@ -109,14 +115,15 @@ def tube_z(s, z1, z2, xc, rnd, porthole_every=3, ribs_every=4):
     inner = []
     for z in range(z1, z2 + 1):
         rib = (z - z1) % ribs_every == 0
+        rc = rib_colour((z - z1) // ribs_every)
         for dx in range(-2, 3):
             s.pset(xc + dx, 0, z, FLOOR if abs(dx) < 2 else HULL, rnd)
             if abs(dx) < 2:
-                s.set(xc + dx, 4, z, RIB if rib else pick(rnd, HULL))
+                s.set(xc + dx, 4, z, rc if rib else pick(rnd, HULL))
         for y in (1, 2, 3):
             for dx in (-2, 2):
                 if rib:
-                    s.set(xc + dx, y, z, RIB)
+                    s.set(xc + dx, y, z, rc)
                 elif y == 2 and (z - z1) % porthole_every == 1:
                     s.set(xc + dx, y, z, 'raft:porthole')
                 else:
@@ -174,7 +181,7 @@ def crew_cylinder(s, x1, x2, rnd):
                     inner.append((x, y, z))
                     continue
                 if rib and not cap:
-                    s.set(x, y, z, RIB)
+                    s.set(x, y, z, rib_colour((x - x1) // 4))
                 elif not cap and y == 3 and abs(z) >= 4 and (x - x1) % 4 == 2:
                     s.set(x, y, z, 'raft:porthole')
                 elif cap and d < 2.2 and y >= 2:
@@ -372,7 +379,7 @@ def crew(s, rnd):
         s.set(x0, 2, -3, 'minecraft:spruce_slab[type=top]')
         s.bed(x0, 3, -3, 'white', 'west')
         s.set(x0 + 1, 1, -3, 'minecraft:barrel[facing=south,open=false]')
-        s.set(x0 + 1, 2, -3, 'minecraft:spruce_trapdoor[facing=south,half=bottom,open=true,powered=false]')
+        s.set(x0 + 1, 2, -3, 'minecraft:barrel[facing=south,open=false]')
         s.set(x0 + 1, 3, -3, 'raft:ship_lantern[hanging=false]')
     # mess table in the south half
     for x in (-22, -21, -20, -19):
@@ -397,10 +404,11 @@ def crew(s, rnd):
     s.set(-17, 1, 3, 'raft:cushion_blue')
     terminal(s, -15, 1, 3, 'north', 'helix_2')
     s.set(-24, 1, 1, 'raft:woven_rug'); s.set(-23, 1, 1, 'raft:woven_rug')
+    # ceiling: lanterns hang from the crown of the tube (y=8 is the shell), bulbs set into the shell
     for x in (-25, -21, -17):
-        s.set(x, 6, 0, 'raft:ship_lantern[hanging=true]')
-    s.set(-23, 6, 0, BULB)
-    s.set(-19, 6, 0, BULB_DIM)
+        s.set(x, 7, 0, 'raft:ship_lantern[hanging=true]')
+    s.set(-23, 8, 0, BULB)
+    s.set(-19, 8, 0, BULB_DIM)
 
 
 def lab(s, rnd):
@@ -581,7 +589,7 @@ def flooded_wing(s, rnd):
                       (cx + 4, cz - 1, 'raft:sea_urchin')):
         if s.on_top(x, 1, z):
             s.set(x, 1, z, c)
-    s.grow_barnacles(((cx - 6, 1, cz - 6), (cx + 6, 7, cz + 6)), 0.35, seed=11)
+    s.grow_barnacles(((cx - 6, 1, cz - 6), (cx + 6, 7, cz + 6)), 0.16, seed=11)
     # moray eels hiding in the wreckage
     for (x, z) in ((cx - 2, cz + 1), (cx + 2, cz - 3)):
         s.entity(x + 0.5, 1.2, z + 0.5, {'id': 'raft:moray_eel', 'PersistenceRequired': True})
@@ -687,7 +695,7 @@ def verify(s):
 
 
 def write_json_files():
-    structure_json(SID, f'raft:{SID}/start', 'surface_structures', 'beard_thin', -1, 'OCEAN_FLOOR_WG', size=1,
+    structure_json(SID, f'raft:{SID}/start', 'surface_structures', 'beard_thin', -2, 'OCEAN_FLOOR_WG', size=1,
                    max_distance=80, spawn_overrides={
                        'monster': spawns([('raft:moray_eel', 3, 1, 1), ('minecraft:drowned', 1, 1, 2)]),
                        'water_ambient': spawns([('raft:moray_eel', 2, 1, 1), ('minecraft:cod', 6, 2, 4),
