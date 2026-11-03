@@ -63,7 +63,7 @@
     }
   },
   "start_height": {
-    "absolute": -3
+    "absolute": -2
   },
   "start_pool": "raft:port_solace/plaza",
   "step": "surface_structures",

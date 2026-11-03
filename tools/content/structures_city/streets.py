@@ -48,16 +48,20 @@ def potholes(s, z0, z1, rnd, n=3):
                 s.set(x + dx, GY - 1, z + dz, 'minecraft:gravel' if rnd.random() < 0.6 else 'minecraft:sand')
 
 
-def street_ends(s, length, pool):
-    s.jig(6, GY, 0, 'north', 'street', 'street', pool, 'raft:asphalt', sel=1)
+def street_ends(s, length, pool, in_name='street'):
+    # the avenues attach to the plaza only by their north end (jigsaw 'avenue_in'), so the lots keep their sides
+    s.jig(6, GY, 0, 'north', in_name, 'street', pool, 'raft:asphalt', sel=1)
     s.jig(6, GY, length - 1, 'south', 'street', 'street', pool, 'raft:asphalt', sel=1)
 
 
 def lots(s, z, west_pool, east_pool):
+    # the landmark towers (lots_deco / lots_glass) are tried first
     if west_pool:
-        s.jig(0, GY, z, 'west', 'lot', 'front', west_pool, 'minecraft:stone', sel=2, prio=1)
+        s.jig(0, GY, z, 'west', 'lot', 'front', west_pool, 'minecraft:stone',
+              sel=3 if west_pool in ('lots_deco', 'lots_glass') else 2, prio=1)
     if east_pool:
-        s.jig(W - 1, GY, z, 'east', 'lot', 'front', east_pool, 'minecraft:stone', sel=2, prio=1)
+        s.jig(W - 1, GY, z, 'east', 'lot', 'front', east_pool, 'minecraft:stone',
+              sel=3 if east_pool in ('lots_deco', 'lots_glass') else 2, prio=1)
 
 
 def sidewalk_props(s, length, rnd, lamps=10, extras=True):
@@ -85,6 +89,10 @@ def sidewalk_props(s, length, rnd, lamps=10, extras=True):
                 hydrant(s, x - 1 if x == 1 else x + 1, FY + 1, z)
             elif r < 0.10:
                 newspaper_box(s, x, FY + 1, z, rnd.choice(['blue', 'yellow', 'red']))
+            elif r < 0.16:
+                # sea pickle colonies in gaps of the paving: the street lights of the drowned city
+                if s.is_solid(x, GY, z):
+                    s.set(x, FY, z, f'minecraft:sea_pickle[pickles={rnd.randint(2, 4)}]')
 
 
 def vehicles(s, length, rnd, n_cars=2, bus_at=None):
@@ -114,7 +122,7 @@ def finish_street(s, length, rnd, growth=True):
 
 # ------------------------------------------------------------------------------------------------ pieces
 def straight(name, length, seed, west_pool, east_pool, end_pool, bus_at=None, n_cars=2, stop=False, fallen=False,
-             lot_z=None):
+             lot_z=None, in_name='street'):
     rnd = random.Random(seed)
     s = City(name, seed)
     strip(s, 0, length - 1, rnd)
@@ -130,7 +138,7 @@ def straight(name, length, seed, west_pool, east_pool, end_pool, bus_at=None, n_
         fallen_lamp(s, 4, GY + 1, length - 8, along='x', length=5)
     road_sign(s, 1, FY + 1, 1, 'north', rnd.choice(['red', 'blue', 'white']))
     finish_street(s, length, rnd)
-    street_ends(s, length, end_pool)
+    street_ends(s, length, end_pool, in_name)
     lots(s, lot_z if lot_z is not None else length // 2, west_pool, east_pool)
     return s.done()
 
@@ -238,12 +246,15 @@ def dead_end(name, seed, kind='barricade'):
 
 def build_all():
     out = {}
+    # corner rule: of two lots that meet beyond a plaza corner only one may be deeper than 16 blocks
+    # (power: deco tower south / SE, mid north / NE; harbour: glass west / SW, shallow east / SE;
+    #  market: buildings north / NW, shallow south / SW)
     out['avenue_power'] = straight('port_solace/avenue_power', 31, 1101, 'lots_deco', 'lots_mid', 'junctions',
-                                   bus_at=None, n_cars=3, stop=True)
-    out['avenue_harbour'] = straight('port_solace/avenue_harbour', 31, 1102, 'lots_glass', 'lots_mid', 'junctions',
-                                     bus_at=12, n_cars=1, fallen=True)
-    out['avenue_market'] = straight('port_solace/avenue_market', 31, 1103, 'buildings', 'buildings', 'junctions',
-                                    n_cars=3, stop=True)
+                                   bus_at=None, n_cars=3, stop=True, in_name='avenue_in')
+    out['avenue_harbour'] = straight('port_solace/avenue_harbour', 31, 1102, 'lots_glass', 'lots_shallow', 'junctions',
+                                     bus_at=12, n_cars=1, fallen=True, in_name='avenue_in')
+    out['avenue_market'] = straight('port_solace/avenue_market', 31, 1103, 'buildings', 'lots_shallow', 'junctions',
+                                    n_cars=3, stop=True, in_name='avenue_in')
     out['street_a'] = straight('port_solace/street_a', 25, 1201, 'buildings', 'buildings', 'ends', n_cars=2)
     out['street_b'] = straight('port_solace/street_b', 25, 1202, 'buildings', 'small_lots', 'ends', n_cars=1,
                                fallen=True)

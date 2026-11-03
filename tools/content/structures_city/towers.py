@@ -10,7 +10,7 @@
 import math
 import random
 
-from .citylib import (CONCRETE, CONCRETE_DARK, FLOOR, FOUND, FY, GY, PAVE_SLAB, RUBBLE, City, bite, lamp_post,
+from .citylib import (CONCRETE, CONCRETE_DARK, FLOOR, FOUND, FY, GY, PAVE_SLAB, RUBBLE, City, bite, car, lamp_post,
                       rubble_pile, scatter_growth, slab, stair)
 from .common import DIRS, OPP, pick
 from . import towerkit as tk
@@ -223,6 +223,8 @@ def glass_base():
 
 
 def glass_top():
+    """Upper floors of the Harbour Authority: five storeys, snapped diagonally; the bare steel skeleton of the top
+    floors rises out of the sea next to a toppled crane mast (a landmark seen from the raft)."""
     rnd = random.Random(4202)
     s = City('port_solace/glass_tower_top', 4202)
     Y = 48
@@ -231,17 +233,66 @@ def glass_top():
                   band=[('minecraft:gray_concrete', 75), ('minecraft:polished_andesite', 15), ('raft:cracked_concrete', 10)],
                   wall=STEEL, glass=GLASS, bay=3, lintel=False, floor=FLOOR)
     x0, z0, x1, z1 = 0, 1, W - 1, D - 1
-    top = tk.shell(s, x0, z0, x1, z1, Y, 4, 4, st, rnd)
-    tk.slabs(s, x0, z0, x1, z1, Y, 4, 4, st, rnd)
+    top = tk.shell(s, x0, z0, x1, z1, Y, 5, 4, st, rnd)
+    tk.slabs(s, x0, z0, x1, z1, Y, 5, 4, st, rnd)
     tk.spiral_stairs(s, 8, 12, 11, 15, Y, top - 1, 'minecraft:polished_andesite_stairs', newel=CONCRETE_DARK, rnd=rnd)
-    for k in range(0, 3):
+    for k in range(0, 4):
         tk.office_floor(s, x0 + 1, z0 + 1, x1 - 1, z1 - 1, Y + 4 * k + 1, rnd,
+                        loot='raft:chests/port_solace_office' if k == 2 else None,
                         avoid=lambda x, z: 6 <= x <= 15 and 10 <= z <= 17)
+        tk.ceiling_lights(s, x0, z0, x1, z1, Y + 4 * k + 4, rnd, step=6, chance=0.4)
+    tk.break_windows(s, ((-1, Y, 0), (W, Y + 30, D)), rnd, missing=0.35, cracked=0.35)
+    # snapped top: the break runs diagonally, high in the south-west corner (curtain wall gone, floors stay)
+    tk.broken_top(s, x0, z0, x1, z1, Y + 8, top, rnd, jag=12, seed_peaks=2)
+
+    def solid_top(x, z):
+        for y in range(top + 8, Y, -1):
+            b = s.blocks.get((x, y, z))
+            if b and b[0] not in ('minecraft:water', 'minecraft:air'):
+                return y
+        return Y
+    # bare skeleton: steel columns at every pier position stand above the break, tied by a few girders
+    cols = {}
+    for x in range(x0, x1 + 1, 3):
+        for z in (z0, z1):
+            cols[(x, z)] = None
+    for z in range(z0, z1 + 1, 3):
+        for x in (x0, x1):
+            cols[(x, z)] = None
+    for (x, z) in cols:
+        h0 = solid_top(x, z)
+        h1 = min(top + 3, h0 + rnd.randint(2, 6) + (3 if x < 9 and z > 10 else 0))
+        for y in range(h0 + 1, h1 + 1):
+            s.set(x, y, z, 'raft:steel_beam[axis=y]')
+        cols[(x, z)] = h1
+    for fy in (Y + 12, Y + 16, top):
+        for (a, b) in [((x, z0), (x + 3, z0)) for x in range(x0, x1 - 2, 3)] + \
+                      [((x0, z), (x0, z + 3)) for z in range(z0, z1 - 2, 3)]:
+            if cols.get(a, 0) >= fy and cols.get(b, 0) >= fy and rnd.random() < 0.7:
+                axis = 'x' if a[1] == b[1] else 'z'
+                s.line((a[0], fy, a[1]), (b[0], fy, b[1]), f'raft:steel_beam[axis={axis}]')
+    # a girder that slipped and hangs diagonally, glass shards on the open floors
+    s.line((x1, top - 2, z0 + 2), (x1 - 5, top - 6, z0 + 2), 'raft:steel_beam[axis=x]')
+    # crane mast on the roof (lattice of iron bars around a beam), its jib broken and leaning
+    mx, mz = 3, z1 - 3
+    mt = top + 4
+    for y in range(solid_top(mx, mz) + 1, mt + 1):
+        s.set(mx, y, mz, 'raft:steel_beam[axis=y]')
+        for (dx, dz) in ((1, 0), (0, 1), (1, 1)):
+            s.set(mx + dx, y, mz + dz, 'minecraft:iron_bars' if y % 3 else 'minecraft:yellow_concrete')
+    s.set(mx, mt + 1, mz, 'minecraft:lightning_rod[facing=up]')
+    s.set(mx + 1, mt + 1, mz, 'minecraft:red_stained_glass')
+    s.set(mx + 1, mt, mz + 1, 'minecraft:sea_lantern')
+    for i in range(1, 12):
+        x, y = mx + 1 + i, mt - i // 3
+        if x > x1:
+            break
+        s.set(x, y, mz, 'minecraft:yellow_concrete' if i % 4 == 0 else 'minecraft:iron_bars')
+        s.set(x, y, mz + 1, 'minecraft:iron_bars')
+    for y in range(mt - 9, mt - 3):
+        s.set(mx + 9, y, mz, 'minecraft:iron_chain[axis=y]')
     # rooftop gear that slid to the edge
-    s.set(3, top + 1, 4, 'raft:satellite_dish[facing=north]')
-    tk.break_windows(s, ((-1, Y, 0), (W, Y + 30, D)), rnd, missing=0.3, cracked=0.3)
-    # snapped top: the break runs diagonally, high in the south-west corner
-    tk.broken_top(s, x0, z0, x1, z1, Y + 3, top, rnd, jag=10, seed_peaks=2)
+    s.set(3, solid_top(3, 4) + 1, 4, 'raft:satellite_dish[facing=north]')
     s.jig(9, Y, 11, 'down', 'glass_top', 'top_socket', 'minecraft:empty', 'minecraft:smooth_stone')
     return s.done()
 
@@ -263,51 +314,81 @@ def fallen_tower():
     tk.slabs(s, x0, z0, x1, z1, FY, 4, 4, st, rnd)
     tk.office_floor(s, x0 + 1, z0 + 1, x1 - 1, z1 - 1, FY + 1, rnd, loot='raft:chests/port_solace_office')
     tk.broken_top(s, x0, z0, x1, z1, FY + 8, FY + 15, rnd, jag=8, seed_peaks=2)
-    # the fallen part: a box lying along +z, its former front facing up
-    fz0, fz1 = 16, 42
-    fy0 = FY + 1
+    # the fallen part: the upper floors lie along +z on their back (former facade facing up); the broken end
+    # still rests on the jagged stump, so the slab of building is tilted: a cave of shadow opens below it
+    fz0, fz1 = 15, 42
     fx0, fx1 = 2, 14
-    h = 11          # lying: former width -> height
-    for x in range(fx0, fx1 + 1):
-        for z in range(fz0, fz1 + 1):
-            for y in range(fy0, fy0 + h):
+    h = 11          # lying: former depth -> height
+    tilt = 8        # the near end is lifted this many blocks
+
+    def yb(z):
+        return FY + 1 + int(round(tilt * (fz1 - z) / (fz1 - fz0)))
+
+    for z in range(fz0, fz1 + 1):
+        y0 = yb(z)
+        for x in range(fx0, fx1 + 1):
+            for y in range(y0, y0 + h):
                 edge_x = x in (fx0, fx1)
-                edge_y = y in (fy0, fy0 + h - 1)
-                floor_plate = (z - fz0) % 4 == 0
-                if edge_x or edge_y or floor_plate:
-                    if y == fy0 + h - 1 and not edge_x and not floor_plate:
-                        # former facade, now facing up: windows
-                        s.set(x, y, z, pick(rnd, st.glass) if (x - fx0) % 3 else pick(rnd, CONCRETE))
-                    elif edge_x and not floor_plate and fy0 < y < fy0 + h - 1:
-                        s.set(x, y, z, pick(rnd, st.glass) if (y - fy0) % 3 else pick(rnd, CONCRETE))
-                    else:
-                        s.set(x, y, z, pick(rnd, CONCRETE))
+                edge_y = y in (y0, y0 + h - 1)
+                floor_plate = (z - fz0) % 4 == 0 or z == fz1
+                if floor_plate and not (edge_x or edge_y):
+                    s.set(x, y, z, pick(rnd, FLOOR))
+                elif y == y0 + h - 1 and not edge_x:
+                    # former facade, now facing up: window bands between the piers
+                    s.set(x, y, z, pick(rnd, st.glass) if (x - fx0) % 3 else pick(rnd, CONCRETE_DARK))
+                elif edge_x and not edge_y:
+                    s.set(x, y, z, pick(rnd, st.glass) if (y - y0) % 3 else pick(rnd, CONCRETE))
+                elif edge_x or edge_y:
+                    s.set(x, y, z, pick(rnd, CONCRETE))
                 else:
                     s.set(x, y, z, 'minecraft:water')
                     s.interior.add((x, y, z))
+        # the open space below the lifted part
+        for x in range(fx0, fx1 + 1):
+            for y in range(FY + 1, y0):
+                s.set(x, y, z, 'minecraft:water')
+    # former roof at the far end: a parapet ring and a toppled water tank
+    for x in range(fx0, fx1 + 1):
+        for y in range(yb(fz1), yb(fz1) + h):
+            if x in (fx0, fx1) or y in (yb(fz1), yb(fz1) + h - 1):
+                s.set(x, y, fz1 + 1, pick(rnd, CONCRETE_DARK))
+    for y in range(FY + 1, FY + 4):
+        for z in range(fz1 - 4, fz1):
+            s.set(fx1 + 1, y, z, 'minecraft:spruce_planks' if (y + z) % 3 else 'minecraft:stripped_spruce_log[axis=z]')
+    # broken columns and rebar holding the lifted end
+    for (x, z) in ((4, fz0 + 2), (12, fz0 + 3), (8, fz0 + 9)):
+        for y in range(FY + 1, yb(z)):
+            s.set(x, y, z, 'raft:rebar_concrete' if rnd.random() < 0.4 else pick(rnd, CONCRETE))
+    # a car crushed under the slab, debris in the shadow
+    car(s, 9, FY + 1, fz0 + 12, along='z', rnd=rnd, wreck=0.6)
+    for _ in range(4):
+        rubble_pile(s, rnd.randint(fx0 + 1, fx1 - 1), FY + 1, rnd.randint(fz0 + 1, fz0 + 10), 1, rnd)
     # furniture fallen against the former side walls (now floors): desks on their sides, barrels
     for z in range(fz0 + 1, fz1, 4):
         for dz in (1, 2):
-            if rnd.random() < 0.5:
-                s.set(rnd.randint(fx0 + 1, fx1 - 1), fy0 + 1, z + dz, rnd.choice([
+            if rnd.random() < 0.6:
+                x = rnd.randint(fx0 + 1, fx1 - 1)
+                s.set(x, yb(z + dz) + 1, z + dz, rnd.choice([
                     'minecraft:barrel[facing=east,open=false]', 'minecraft:spruce_slab[type=bottom]',
-                    'minecraft:chiseled_bookshelf[facing=up]' if False else 'minecraft:bookshelf',
-                    'raft:cracked_concrete_slab[type=bottom]']))
-    s.chest(fx0 + 2, fy0 + 1, fz0 + 10, 'raft:chests/port_solace_office', facing='east', block='minecraft:barrel')
-    s.block_entity(fx1 - 2, fy0 + 1, fz0 + 18, 'raft:research_terminal[facing=north]', 'raft:research_terminal',
+                    'minecraft:bookshelf', 'raft:cracked_concrete_slab[type=bottom]',
+                    'minecraft:spruce_trapdoor[facing=north,half=bottom,open=false]']))
+    s.chest(fx0 + 2, yb(fz0 + 10) + 1, fz0 + 10, 'raft:chests/port_solace_office', facing='east', block='minecraft:barrel')
+    s.block_entity(fx1 - 2, yb(fz0 + 18) + 1, fz0 + 18, 'raft:research_terminal[facing=north]', 'raft:research_terminal',
                    {'LogId': 'solace_2'})
-    # the break: the fallen part's end near the stump is shattered
-    bite(s, 8, fy0 + 5, fz0, 5, 6, 3, rnd)
-    bite(s, 4, fy0 + 9, fz1 - 6, 3, 3, 4, rnd)
-    for _ in range(5):
-        rubble_pile(s, rnd.randint(1, W - 2), FY + 1, rnd.randint(13, 17), 2, rnd)
+    s.set(fx1 - 2, yb(fz0 + 18) + 3, fz0 + 18, 'minecraft:sea_lantern')
+    s.set(fx0 + 3, yb(fz0 + 6) + h - 2, fz0 + 6, 'raft:jelly_lamp[hanging=true]')
+    # the break: the end at the stump is shattered
+    bite(s, 8, yb(fz0) + 5, fz0, 5, 6, 3, rnd)
+    bite(s, 4, yb(fz1 - 6) + 9, fz1 - 6, 3, 3, 4, rnd)
+    for _ in range(4):
+        rubble_pile(s, rnd.randint(1, W - 2), FY + 1, rnd.randint(13, 15), 2, rnd)
     # beams between stump and fallen part
     for x in (4, 8, 12):
-        s.line((x, FY + 8, 14), (x, fy0 + 3, fz0 - 1), 'raft:steel_beam[axis=z]')
+        s.line((x, FY + 8, 13), (x, yb(fz0) + 3, fz0), 'raft:steel_beam[axis=z]')
     tk.break_windows(s, ((0, 0, 0), (W, 40, D)), rnd, missing=0.2, cracked=0.2)
-    scatter_growth(s, ((0, FY + 1, 0), (W - 1, fy0 + h + 1, D - 1)), rnd, kelp=0.03, grass=0.1, pickles=0.02,
-                   kelp_h=(5, 14), lichen=0.01)
-    s.grow_barnacles(((0, FY, 0), (W - 1, fy0 + h + 2, D - 1)), 0.2, 4301, support=lambda n: 'concrete' in n)
+    scatter_growth(s, ((0, FY + 1, 0), (W - 1, FY + tilt + h + 1, D - 1)), rnd, kelp=0.015, grass=0.1, pickles=0.02,
+                   kelp_h=(5, 12), lichen=0.01)
+    s.grow_barnacles(((0, FY, 0), (W - 1, FY + tilt + h + 2, D - 1)), 0.07, 4301, support=lambda n: 'concrete' in n)
     front_jig(s, 8)
     return s.done()
 

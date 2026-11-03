@@ -220,6 +220,9 @@ class Deep(Structure):
         skip(x, y, z) -> True leaves a position alone)."""
         rnd = random.Random(seed)
         (x1, y1, z1), (x2, y2, z2) = box
+        # never grow outside the template's current bounds (a jigsaw piece must not get bigger than its lot)
+        (bx1, by1, bz1), (bx2, by2, bz2) = self.bounds()
+        x1, z1, x2, z2 = max(x1, bx1), max(z1, bz1), min(x2, bx2), min(z2, bz2)
         for x in range(x1, x2 + 1):
             for y in range(y1, y2 + 1):
                 for z in range(z1, z2 + 1):

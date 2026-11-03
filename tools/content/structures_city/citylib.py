@@ -107,7 +107,38 @@ class City(Deep):
         self.pfill(x1, 0, z1, x2, top, z2, palette)
 
     # -- finalize
+    def fix_fallers(self):
+        """Gravel/sand that would fall (over water, air, plants or an unset cell inside the template) becomes a
+        look-alike block that does not fall, so no falling-block entities appear when a neighbour updates."""
+        (mx, my, mz), _ = self.bounds()
+        free = ('minecraft:air', 'minecraft:water', 'minecraft:seagrass', 'minecraft:tall_seagrass', 'minecraft:kelp',
+                'minecraft:kelp_plant', 'minecraft:glow_lichen', 'minecraft:short_grass', 'raft:glow_kelp',
+                'raft:glow_kelp_plant')
+        repl = {'minecraft:gravel': 'minecraft:tuff', 'minecraft:sand': 'minecraft:smooth_sandstone',
+                'minecraft:red_sand': 'minecraft:smooth_red_sandstone', 'minecraft:suspicious_gravel': 'minecraft:tuff',
+                'minecraft:suspicious_sand': 'minecraft:smooth_sandstone'}
+        n = 0
+        for _ in range(3):
+            for (x, y, z), (name, props, nbt) in list(self.blocks.items()):
+                if name not in repl and not name.endswith('_concrete_powder'):
+                    continue
+                if y == my:
+                    continue
+                below = self.blocks.get((x, y - 1, z))
+                if below is None or below[0] in free:
+                    self.set(x, y, z, repl.get(name, name.replace('_concrete_powder', '_concrete')))
+                    n += 1
+        # kelp needs a full block or kelp below: cut floating kelp columns
+        for (x, y, z), (name, props, nbt) in sorted(self.blocks.items(), key=lambda kv: kv[0][1]):
+            if name in ('minecraft:kelp', 'minecraft:kelp_plant') and y > my:
+                below = self.blocks.get((x, y - 1, z))
+                if below is None or not (is_full(below[0]) or below[0] == 'minecraft:kelp_plant'):
+                    self.set(x, y, z, 'minecraft:water')
+                    n += 1
+        return n
+
     def done(self):
+        self.fix_fallers()
         self.finalize()
         if self.mode == 'apply':
             for pos, (name, props, nbt) in list(self.blocks.items()):

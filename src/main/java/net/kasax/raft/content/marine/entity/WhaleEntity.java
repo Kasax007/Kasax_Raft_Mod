@@ -57,7 +57,7 @@ public class WhaleEntity extends WaterAnimal {
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 120.0)
-                .add(Attributes.MOVEMENT_SPEED, 0.012)
+                .add(Attributes.MOVEMENT_SPEED, 0.008)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0)
                 .add(Attributes.FOLLOW_RANGE, 24.0);
     }
@@ -152,9 +152,11 @@ public class WhaleEntity extends WaterAnimal {
         RandomSource r = this.random;
         Vec3 best = null;
         int bestDepth = -1;
-        for (int attempt = 0; attempt < 12; attempt++) {
+        for (int attempt = 0; attempt < 18; attempt++) {
+            // far waypoints first; in a small bay or lagoon the last tries look closer by
+            boolean near = attempt >= 12;
             float yaw = this.getYRot() + (attempt < 6 ? (r.nextFloat() - 0.5F) * 120.0F : r.nextFloat() * 360.0F);
-            double dist = 18 + r.nextInt(18);
+            double dist = near ? 8 + r.nextInt(8) : 18 + r.nextInt(18);
             double x = this.getX() - Mth.sin(yaw * Mth.DEG_TO_RAD) * dist;
             double z = this.getZ() + Mth.cos(yaw * Mth.DEG_TO_RAD) * dist;
             BlockPos probe = BlockPos.containing(x, this.getY() + 1, z);
@@ -170,7 +172,7 @@ public class WhaleEntity extends WaterAnimal {
                 }
                 continue;
             }
-            if (depth < 8) {
+            if (depth < (near ? 6 : 8)) {
                 continue;
             }
             // cruise 3–15 blocks below the surface, at least 4 above the floor
@@ -350,7 +352,16 @@ public class WhaleEntity extends WaterAnimal {
         public void tick() {
             this.ticks++;
             WhaleEntity w = WhaleEntity.this;
-            if (this.target == null || this.ticks > 500 || w.position().distanceToSqr(this.target) < 16.0
+            if (this.target == null) {
+                // nowhere to go right now: drift and look again a second later
+                if (this.ticks > 20) {
+                    this.pick();
+                }
+                if (this.target == null) {
+                    w.getMoveControl().setWait();
+                    return;
+                }
+            } else if (this.ticks > 500 || w.position().distanceToSqr(this.target) < 16.0
                     || (w.horizontalCollision && this.ticks > 20) || (w.shallowTicks > 40 && this.ticks > 60)) {
                 this.pick();
                 if (this.target == null) {
@@ -363,10 +374,16 @@ public class WhaleEntity extends WaterAnimal {
         }
     }
 
-    /** Every minute or two: rise until the back breaks the surface, spout two or three times, dive again. */
+    /**
+     * Every minute or two: glide up until the back breaks the surface (with a little buoyancy, so it also works in
+     * tight places), lie there drifting slowly forward, spout three times, then dive again.
+     */
     private class BreatheGoal extends Goal {
+        private static final float[] HEADINGS = {0.0F, 35.0F, -35.0F, 75.0F, -75.0F, 120.0F, -120.0F, 180.0F};
         private int ticks;
         private int spouts;
+        private int surfaceTicks;
+        private double surfaceY;
         private Vec3 target;
 
         BreatheGoal() {
@@ -385,21 +402,31 @@ public class WhaleEntity extends WaterAnimal {
 
         @Override
         public boolean canContinueToUse() {
-            return this.ticks < 320 && WhaleEntity.this.isInWater();
+            return this.ticks < 900 && WhaleEntity.this.isInWater() && !(this.spouts >= 3 && this.surfaceTicks > 160);
         }
 
         @Override
         public void start() {
-            WhaleEntity w = WhaleEntity.this;
             this.ticks = 0;
             this.spouts = 0;
-            int surface = w.surfaceAbove(w.blockPosition());
-            float yaw = w.getYRot() * Mth.DEG_TO_RAD;
-            // keep gliding forward while rising; the back ends just under the surface (spout hole above water)
-            this.target = new Vec3(w.getX() - Mth.sin(yaw) * 30.0, surface + 0.9 - w.getBbHeight(), w.getZ() + Mth.cos(yaw) * 30.0);
-            if (!w.clearPath(new Vec3(this.target.x, this.target.y - 1.0, this.target.z))) {
-                this.target = new Vec3(w.getX(), this.target.y, w.getZ());
+            this.surfaceTicks = 0;
+            this.pickTarget();
+        }
+
+        /** A waypoint 16 blocks away at breathing height, preferably straight ahead; straight up when boxed in. */
+        private void pickTarget() {
+            WhaleEntity w = WhaleEntity.this;
+            // feet height at which the back (and the blowhole) is just out of the water
+            this.surfaceY = w.surfaceAbove(w.blockPosition()) + 0.9 - w.getBbHeight();
+            for (float offset : HEADINGS) {
+                float yaw = (w.getYRot() + offset) * Mth.DEG_TO_RAD;
+                Vec3 t = new Vec3(w.getX() - Mth.sin(yaw) * 16.0, this.surfaceY, w.getZ() + Mth.cos(yaw) * 16.0);
+                if (w.clearPath(new Vec3(t.x, t.y - 1.0, t.z))) {
+                    this.target = t;
+                    return;
+                }
             }
+            this.target = new Vec3(w.getX(), this.surfaceY, w.getZ());
         }
 
         @Override
@@ -411,14 +438,26 @@ public class WhaleEntity extends WaterAnimal {
         public void tick() {
             WhaleEntity w = WhaleEntity.this;
             this.ticks++;
-            w.getMoveControl().setWantedPosition(this.target.x, this.target.y, this.target.z, 0.8);
-            boolean atSurface = Math.abs(w.getY() - this.target.y) < 0.8;
-            if (atSurface && this.spouts < 3 && this.ticks % 50 == 0) {
+            Vec3 v = w.getDeltaMovement();
+            if (this.surfaceY - w.getY() > 0.6) {
+                if (w.position().distanceToSqr(this.target.x, w.getY(), this.target.z) < 9.0
+                        || (w.horizontalCollision && this.ticks % 20 == 0)) {
+                    this.pickTarget();
+                }
+                w.getMoveControl().setWantedPosition(this.target.x, this.target.y, this.target.z, 1.0);
+                if (v.y < 0.05) {
+                    w.setDeltaMovement(v.x, Math.min(0.05, v.y + 0.006), v.z);
+                }
+                return;
+            }
+            // at the surface: drift slowly forward and hold the height
+            this.surfaceTicks++;
+            float yaw = w.getYRot() * Mth.DEG_TO_RAD;
+            w.getMoveControl().setWantedPosition(w.getX() - Mth.sin(yaw) * 6.0, this.surfaceY, w.getZ() + Mth.cos(yaw) * 6.0, 0.35);
+            w.setDeltaMovement(v.x, (this.surfaceY - w.getY()) * 0.1, v.z);
+            if (this.spouts < 3 && this.surfaceTicks % 45 == 10) {
                 w.spout();
                 this.spouts++;
-            }
-            if (this.spouts >= 3 && this.ticks % 50 == 25) {
-                this.ticks = 1000;
             }
         }
 

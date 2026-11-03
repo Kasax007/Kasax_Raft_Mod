@@ -4,7 +4,9 @@
 
 Writes the templates to src/main/modules/structures_city/data/raft/structure/port_solace/*.nbt and the worldgen JSON
 (structure, structure set, template pools, processor list, biome tag). Checks: block ids (vanilla 26.3 or spec),
-template size <= 48 per side, the City Hall vault is watertight (leak check in city_hall.base()).
+template size <= 48 per side, the City Hall vault is watertight (leak check in city_hall.base()), the fixed jigsaw
+chain plaza -> avenues -> City Hall / deco tower / glass tower (+ their tops) does not collide (layout.py; collisions
+would make the game drop a landmark). `python3 -m content.structures_city.layout --stats` simulates 40 cities.
 """
 import os
 import shutil
@@ -63,6 +65,14 @@ def main(previews=False):
     for f in worldgen.write_all():
         pass
     print('worldgen JSON written')
+    # the fixed chain plaza -> avenues -> landmark towers must not collide (else the game drops a tower)
+    from content.structures_city import layout
+    boxes = layout.layout(out)
+    for i in range(len(boxes)):
+        for j in range(i + 1, len(boxes)):
+            if layout.overlap(boxes[i][3], boxes[j][3]):
+                problems.append(f'layout: {boxes[i][0]} overlaps {boxes[j][0]}')
+    print('landmarks placed:', ', '.join(b[0] for b in boxes))
     if problems:
         print('PROBLEMS:')
         for p in problems:

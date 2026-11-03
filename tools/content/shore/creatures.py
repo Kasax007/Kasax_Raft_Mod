@@ -26,8 +26,8 @@ R_PINCER = Box(14, 30, 2, 1, 3)
 L_PALM = Box(24, 20, 2, 2, 3)
 L_FINGER = Box(24, 25, 1, 1, 2)
 L_PINCER = Box(30, 25, 1, 1, 2)
-LEG_UP = Box(40, 12, 3, 1, 1)
-LEG_LOW = Box(40, 14, 6, 1, 1)
+LEG_UP = Box(40, 12, 4, 1, 1)
+LEG_LOW = Box(40, 14, 8, 1, 1)
 SPIKES = [Box(48, 0, 1, 2, 1), Box(52, 0, 1, 3, 1), Box(48, 4, 1, 1, 1)]
 
 

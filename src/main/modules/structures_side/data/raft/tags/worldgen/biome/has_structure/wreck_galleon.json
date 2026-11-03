@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "raft:wreck_graveyard",
+      "required": false
+    },
+    {
+      "id": "raft:raft_ocean_biome",
+      "required": false
+    }
+  ]
+}

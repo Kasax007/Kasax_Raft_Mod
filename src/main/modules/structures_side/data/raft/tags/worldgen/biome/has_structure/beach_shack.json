@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "raft:palm_isle",
+      "required": false
+    },
+    {
+      "id": "raft:jungle_isle",
+      "required": false
+    }
+  ]
+}

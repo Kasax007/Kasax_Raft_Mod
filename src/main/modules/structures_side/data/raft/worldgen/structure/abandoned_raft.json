@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:jigsaw",
+  "biomes": "#raft:has_structure/abandoned_raft",
+  "liquid_settings": "apply_waterlogging",
+  "max_distance_from_center": 32,
+  "size": 1,
+  "spawn_overrides": {},
+  "start_height": {
+    "absolute": 98
+  },
+  "start_pool": "raft:abandoned_raft/start",
+  "step": "surface_structures",
+  "terrain_adaptation": "none",
+  "use_expansion_hack": false
+}

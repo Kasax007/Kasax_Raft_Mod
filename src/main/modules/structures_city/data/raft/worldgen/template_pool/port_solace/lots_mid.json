@@ -7,12 +7,30 @@
         "processors": "raft:port_solace/city",
         "projection": "rigid"
       },
-      "weight": 1
+      "weight": 2
     },
     {
       "element": {
         "element_type": "minecraft:single_pool_element",
         "location": "raft:port_solace/dept_store",
+        "processors": "raft:port_solace/city",
+        "projection": "rigid"
+      },
+      "weight": 3
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "raft:port_solace/apartment_brick",
+        "processors": "raft:port_solace/city",
+        "projection": "rigid"
+      },
+      "weight": 1
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "raft:port_solace/shop_row",
         "processors": "raft:port_solace/city",
         "projection": "rigid"
       },

@@ -221,7 +221,7 @@ def build():
                      support=lambda n: 'copper' in n or 'stone_brick' in n or 'concrete' in n)
     # jigsaws
     s.jig(C, GY, 0, 'north', 'hall_anchor', 'hall_front', 'city_hall', 'minecraft:stone', sel=3, prio=2)
-    s.jig(N - 1, GY, C, 'east', 'street', 'street', 'avenues_power', 'raft:asphalt', sel=1)
-    s.jig(C, GY, N - 1, 'south', 'street', 'street', 'avenues_harbour', 'raft:asphalt', sel=1)
-    s.jig(0, GY, C, 'west', 'street', 'street', 'avenues_market', 'raft:asphalt', sel=1)
+    s.jig(N - 1, GY, C, 'east', 'street', 'avenue_in', 'avenues_power', 'raft:asphalt', sel=1, prio=2)
+    s.jig(C, GY, N - 1, 'south', 'street', 'avenue_in', 'avenues_harbour', 'raft:asphalt', sel=1, prio=1)
+    s.jig(0, GY, C, 'west', 'street', 'avenue_in', 'avenues_market', 'raft:asphalt', sel=1)
     return s.done()

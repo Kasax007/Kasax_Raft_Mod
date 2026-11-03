@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "raft:raft_ocean_biome",
+      "required": false
+    },
+    {
+      "id": "raft:frost_floes",
+      "required": false
+    }
+  ]
+}

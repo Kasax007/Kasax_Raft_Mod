@@ -47,7 +47,7 @@ public class MantaRayEntity extends WaterAnimal {
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 20.0)
-                .add(Attributes.MOVEMENT_SPEED, 0.016);
+                .add(Attributes.MOVEMENT_SPEED, 0.008);
     }
 
     @Override

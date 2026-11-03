@@ -1,0 +1,59 @@
+{
+  "elements": [
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "raft:port_solace/apartment_teal",
+        "processors": "raft:port_solace/city",
+        "projection": "rigid"
+      },
+      "weight": 3
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "raft:port_solace/apartment_brick",
+        "processors": "raft:port_solace/city",
+        "projection": "rigid"
+      },
+      "weight": 2
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "raft:port_solace/shop_row",
+        "processors": "raft:port_solace/city",
+        "projection": "rigid"
+      },
+      "weight": 2
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "raft:port_solace/diner",
+        "processors": "raft:port_solace/city",
+        "projection": "rigid"
+      },
+      "weight": 1
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "raft:port_solace/park_lot",
+        "processors": "raft:port_solace/city",
+        "projection": "rigid"
+      },
+      "weight": 1
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "raft:port_solace/rubble_lot",
+        "processors": "raft:port_solace/city",
+        "projection": "rigid"
+      },
+      "weight": 1
+    }
+  ],
+  "fallback": "raft:port_solace/small_lots"
+}

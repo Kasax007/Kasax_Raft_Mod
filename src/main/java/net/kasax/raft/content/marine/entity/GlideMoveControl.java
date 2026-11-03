@@ -41,7 +41,8 @@ public class GlideMoveControl extends MoveControl<Mob> {
             this.mob.setYya(0.0F);
             return;
         }
-        float targetYaw = (float) (Mth.atan2(dz, dx) * Mth.RAD_TO_DEG) - 90.0F;
+        // a target (almost) straight above or below: keep the heading instead of spinning around it
+        float targetYaw = horizontal < 1.0 ? this.mob.getYRot() : (float) (Mth.atan2(dz, dx) * Mth.RAD_TO_DEG) - 90.0F;
         this.mob.setYRot(this.rotlerp(this.mob.getYRot(), targetYaw, this.maxYawPerTick));
         this.mob.yBodyRot = this.mob.getYRot();
         this.mob.yHeadRot = this.mob.getYRot();
@@ -54,9 +55,11 @@ public class GlideMoveControl extends MoveControl<Mob> {
             float turnFactor = 1.0F - Mth.clamp((turn - 20.0F) / 140.0F, 0.0F, 0.6F);
             float cos = Mth.cos(this.mob.getXRot() * Mth.DEG_TO_RAD);
             float sin = Mth.sin(this.mob.getXRot() * Mth.DEG_TO_RAD);
-            this.mob.setSpeed(speed * turnFactor);
-            this.mob.zza = cos * speed * turnFactor;
-            this.mob.yya = -sin * speed * turnFactor;
+            // the input vector is a unit direction (scaled down in turns); moveRelative multiplies it by the speed,
+            // so the creature accelerates by `speed` per tick and glides at about ten times that (water drag 0.9)
+            this.mob.setSpeed(speed);
+            this.mob.zza = cos * turnFactor;
+            this.mob.yya = -sin * turnFactor;
         } else {
             this.mob.setSpeed(speed * 0.05F);
             this.mob.zza = 0.0F;

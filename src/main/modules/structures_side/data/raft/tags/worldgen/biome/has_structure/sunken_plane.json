@@ -1,0 +1,16 @@
+{
+  "values": [
+    {
+      "id": "raft:kelp_forest",
+      "required": false
+    },
+    {
+      "id": "raft:raft_ocean_biome",
+      "required": false
+    },
+    {
+      "id": "raft:coral_shallows",
+      "required": false
+    }
+  ]
+}

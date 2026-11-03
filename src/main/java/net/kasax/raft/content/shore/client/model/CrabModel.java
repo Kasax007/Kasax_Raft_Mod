@@ -24,6 +24,9 @@ public class CrabModel extends EntityModel<CrabRenderState> {
 
     private static final float[] LEG_Z = {-1.5F, 0.5F, 2.5F};
     private static final float[] LEG_FAN = {0.45F, 0.0F, -0.45F};
+    /** Upper leg rises from the shell to a high knee, the long shin reaches out and down to the sand (crab stance). */
+    private static final float LEG_RISE = 0.75F;
+    private static final float LEG_KNEE = 1.88F;
 
     private final ModelPart body;
     private final ModelPart leftEye;
@@ -113,17 +116,17 @@ public class CrabModel extends EntityModel<CrabRenderState> {
 
         for (int i = 0; i < 3; i++) {
             PartDefinition left = body.addOrReplaceChild("left_leg" + i,
-                    CubeListBuilder.create().texOffs(40, 12).addBox(0.0F, -0.5F, -0.5F, 3.0F, 1.0F, 1.0F),
-                    PartPose.offsetAndRotation(4.5F, 0.5F, LEG_Z[i], 0.0F, LEG_FAN[i], -0.5F));
+                    CubeListBuilder.create().texOffs(40, 12).addBox(0.0F, -0.5F, -0.5F, 4.0F, 1.0F, 1.0F),
+                    PartPose.offsetAndRotation(4.5F, 0.5F, LEG_Z[i], 0.0F, LEG_FAN[i], -LEG_RISE));
             left.addOrReplaceChild("left_shin" + i,
-                    CubeListBuilder.create().texOffs(40, 14).addBox(0.0F, -0.5F, -0.5F, 6.0F, 1.0F, 1.0F),
-                    PartPose.offsetAndRotation(3.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.9F));
+                    CubeListBuilder.create().texOffs(40, 14).addBox(0.0F, -0.5F, -0.5F, 8.0F, 1.0F, 1.0F),
+                    PartPose.offsetAndRotation(4.0F, 0.0F, 0.0F, 0.0F, 0.0F, LEG_KNEE));
             PartDefinition right = body.addOrReplaceChild("right_leg" + i,
-                    CubeListBuilder.create().texOffs(40, 12).mirror().addBox(-3.0F, -0.5F, -0.5F, 3.0F, 1.0F, 1.0F),
-                    PartPose.offsetAndRotation(-4.5F, 0.5F, LEG_Z[i], 0.0F, -LEG_FAN[i], 0.5F));
+                    CubeListBuilder.create().texOffs(40, 12).mirror().addBox(-4.0F, -0.5F, -0.5F, 4.0F, 1.0F, 1.0F),
+                    PartPose.offsetAndRotation(-4.5F, 0.5F, LEG_Z[i], 0.0F, -LEG_FAN[i], LEG_RISE));
             right.addOrReplaceChild("right_shin" + i,
-                    CubeListBuilder.create().texOffs(40, 14).mirror().addBox(-6.0F, -0.5F, -0.5F, 6.0F, 1.0F, 1.0F),
-                    PartPose.offsetAndRotation(-3.0F, 0.0F, 0.0F, 0.0F, 0.0F, -1.9F));
+                    CubeListBuilder.create().texOffs(40, 14).mirror().addBox(-8.0F, -0.5F, -0.5F, 8.0F, 1.0F, 1.0F),
+                    PartPose.offsetAndRotation(-4.0F, 0.0F, 0.0F, 0.0F, 0.0F, -LEG_KNEE));
         }
         return LayerDefinition.create(mesh, 64, 64);
     }
@@ -204,10 +207,14 @@ public class CrabModel extends EntityModel<CrabRenderState> {
         if (pinch >= 0.0F && pinch < 0.5F) {
             float p = pinch / 0.5F;
             float reach = Mth.sin(p * Mth.PI);
-            this.rightArm.xRot -= reach * 0.9F;
+            // the big claw lunges forward from the raised threat pose (or up from rest) and snaps shut
+            float lunge = state.threatening ? 0.75F : -0.6F;
+            this.rightArm.xRot += reach * lunge;
             this.rightArm.yRot -= reach * 0.35F;
             this.rightClaw.yRot += reach * 0.5F;
-            this.leftArm.xRot -= reach * 0.5F;
+            this.rightClaw.xRot += state.threatening ? reach * 0.4F : 0.0F;
+            this.leftArm.xRot += reach * lunge * 0.4F;
+            this.body.xRot = reach * 0.12F;
             rightOpen += p < 0.55F ? 0.8F * (p / 0.55F) : 0.8F * (1.0F - (p - 0.55F) / 0.45F) - 0.1F;
         }
         this.rightPincer.xRot = Math.max(0.0F, rightOpen);

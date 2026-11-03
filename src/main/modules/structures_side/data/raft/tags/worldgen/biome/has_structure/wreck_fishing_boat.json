@@ -1,0 +1,36 @@
+{
+  "values": [
+    {
+      "id": "raft:raft_ocean_biome",
+      "required": false
+    },
+    {
+      "id": "raft:kelp_forest",
+      "required": false
+    },
+    {
+      "id": "raft:wreck_graveyard",
+      "required": false
+    },
+    {
+      "id": "raft:abyssal_trench",
+      "required": false
+    },
+    {
+      "id": "raft:drowned_shelf",
+      "required": false
+    },
+    {
+      "id": "raft:frost_floes",
+      "required": false
+    },
+    {
+      "id": "raft:coral_shallows",
+      "required": false
+    },
+    {
+      "id": "raft:glowing_lagoon",
+      "required": false
+    }
+  ]
+}

@@ -138,6 +138,12 @@ def spiral_stairs(s, x0, z0, x1, z1, y_from, y_to, block, newel=CONCRETE, rnd=No
                 else:
                     s.set(x, y, z, 'minecraft:water')
                     s.interior.add((x, y, z))
+    # guide lights in the newel: a diver swimming up the flooded shaft always sees the next one
+    newel_cells = [(x, z) for x in range(x0 + 1, x1) for z in range(z0 + 1, z1)]
+    for k, y in enumerate(range(y_from + 2, y_to, 4)):
+        if newel_cells:
+            lx, lz = newel_cells[k % len(newel_cells)]
+            s.set(lx, y, lz, 'minecraft:sea_lantern')
     n = len(cells)
     for j, y in enumerate(range(y_from, y_to + 1)):
         cx, cz = cells[j % n]

@@ -81,7 +81,11 @@ def script():
              f'cmd {DIM}locate biome raft:drowned_shelf',
              'log PLACE',
              f'cmd {DIM}place structure raft:port_solace {OX} 60 {OZ}',
-             'wait 60', 'settle 60']
+             'wait 100',
+             'log ENTITIES (falling blocks / items spawned by the placement)',
+             'cmd kill @e[type=minecraft:falling_block]', 'cmd kill @e[type=minecraft:item]',
+             'cmd tick query',
+             'settle 60', 'rd 8']
     # probe the pedestal
     for r in range(4):
         rh, hall, plz = frames(r)
@@ -92,7 +96,7 @@ def script():
     lines.append('cmd execute in raft:raftdim as @e[type=marker,tag=ps] run say FOUND_PEDESTAL')
     lines.append('hud off')
 
-    def view(name, pos_fn, look, pitch, absy=None, wait=40):
+    def view(name, pos_fn, look, pitch, absy=None, wait=40, settle=False):
         """pos_fn(r) -> world (x, y, z) in the frame where the pedestal is (px, ped_y, pz)."""
         for r in range(4):
             rh, hall, plz = frames(r)
@@ -104,7 +108,7 @@ def script():
             ys = f'{absy}' if absy is not None else f'~{dy}'
             lines.append(f'cmd execute in raft:raftdim as @e[type=marker,tag=r{r}] at @s run tp @p ~{dx} {ys} ~{dz} '
                          f'{yaw} {pitch}')
-        lines.extend([f'settle 20', f'wait {wait}', f'shot {name}'])
+        lines.extend(([f'settle 20'] if settle else []) + [f'wait {wait}', f'shot {name}'])
 
     def h(rot):  # direction given in hall template coords
         return rot(*h.v)
@@ -119,20 +123,16 @@ def script():
             return rot(*v)
         return p
 
-    # plaza / city overview (plaza frame: hall lies to the north = -z)
-    view('surface_close', lambda hall, plz: plz(23, 0, 95), make_p((0, -1)), -2, absy=104)
-    view('surface_far', lambda hall, plz: plz(23, 0, 175), make_p((0, -1)), 4, absy=122)
-    view('surface_side', lambda hall, plz: plz(150, 0, 23), make_p((-1, 0)), 2, absy=110)
-    view('plaza_statue', lambda hall, plz: plz(23, 12, 40), make_p((0, -1)), 8)
-    view('plaza_low', lambda hall, plz: plz(5, 6, 41), make_p((1, -1)), 0)
-    view('avenue', lambda hall, plz: plz(23, 7, 52), make_p((0, 1)), 5)
-    # city hall
-    view('hall_front', lambda hall, plz: hall(17, 12, -16), make_h((0, 1)), -5)
-    view('hall_lobby', lambda hall, plz: hall(17, 5, 5), make_h((0, 1)), 5)
-    view('hall_mayor', lambda hall, plz: hall(23, 40, 16), make_h((-1, -1)), 15)
-    view('hall_landing', lambda hall, plz: hall(10, 44, 15), make_h((1, 0)), 5)
-    view('vault', lambda hall, plz: hall(19, 44, 15), make_h((1, 0)), 10)
-    view('vault_back', lambda hall, plz: hall(24, 45, 18), make_h((-1, -1)), 20)
+    # spectator camera: does not fall (creative players sink/fall while the chunks settle)
+    lines.append('cmd gamemode spectator @p')
+    # interiors first (near the spawn: their chunks are drawn already)
+    view('vault', lambda hall, plz: hall(19, 44, 15), make_h((1, 0)), 10, wait=60)
+    view('vault_back', lambda hall, plz: hall(24, 45, 18), make_h((-1, -1)), 20, wait=30)
+    view('hall_mayor', lambda hall, plz: hall(23, 40, 16), make_h((-1, -1)), 15, wait=30)
+    # the deco tower stands south of the power avenue (layout.py: normalised origin at plaza (50, 0, 30))
+    view('deco_lobby', lambda hall, plz: plz(62, 6, 32), make_p((0, 1)), 10, wait=40)
+    view('plaza_statue', lambda hall, plz: plz(23, 12, 40), make_p((0, -1)), 8, wait=40)
+    view('avenue', lambda hall, plz: plz(23, 7, 52), make_p((0, 1)), 5, wait=40)
     # dryness of the vault: replaces water by structure_void around the pedestal ("No blocks were filled" = dry)
     lines.append('log COUNT_WATER vault')
     lines.append('cmd execute in raft:raftdim as @e[type=marker,tag=ps] at @s run fill ~-4 ~ ~-4 ~3 ~2 ~4 '
@@ -146,6 +146,13 @@ def script():
         lines.append(f'cmd execute in raft:raftdim as @e[type=marker,tag=r{r}] at @s run fill ~{a[0] - pp[0]} ~ '
                      f'~{a[2] - pp[2]} ~{b[0] - pp[0]} ~2 ~{b[2] - pp[2]} minecraft:structure_void replace '
                      f'minecraft:water')
+    # above the sea: the three landmark tops (City Hall, deco tower, glass tower)
+    lines.append('rd 10')
+    view('surface_close', lambda hall, plz: plz(23, 0, 60), make_p((0, -1)), 2, absy=103, wait=60, settle=True)
+    view('deco_top', lambda hall, plz: plz(62, 0, 88), make_p((0, -1)), -4, absy=104, wait=60, settle=True)
+    view('glass_top', lambda hall, plz: plz(6, 0, 102), make_p((0, -1)), -4, absy=104, wait=60, settle=True)
+    view('skyline', lambda hall, plz: plz(95, 0, 95), make_p((-1, -1)), 0, absy=106, wait=60, settle=True)
+    view('aerial', lambda hall, plz: plz(23, 0, 70), make_p((0, -1)), 50, absy=170, wait=60, settle=True)
     lines.append('wait 40')
     os.makedirs(WORK, exist_ok=True)
     p = os.path.join(WORK, 'test_city.txt')

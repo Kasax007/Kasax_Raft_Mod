@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 31415901,
+    "separation": 9,
+    "spacing": 26
+  },
+  "structures": [
+    {
+      "structure": "raft:wreck_galleon",
+      "weight": 1
+    }
+  ]
+}

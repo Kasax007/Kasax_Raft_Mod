@@ -92,6 +92,10 @@ public class SeagullEntity extends Animal {
     private int restTicks;
     private int peckCooldown = 200;
     private int stealCooldown = 100;
+    /** Gulls spot food lying in the open from far away (blocks, each direction). */
+    private static final double STEAL_RANGE = 22.0;
+    /** Distance (blocks) from which a flying gull dives straight at food instead of following a path. */
+    private static final double SWOOP_RANGE = 7.0;
     /** The last field this gull raided; it keeps coming back to it while there is something left to peck. */
     private @Nullable BlockPos field;
     private int eatTicks;
@@ -588,11 +592,16 @@ public class SeagullEntity extends Animal {
                 }
                 boolean air = !gull.onGround() || dy > 0.7 || horizontal > 3.0;
                 float yRotD = (float) (Mth.atan2(dz, dx) * Mth.RAD_TO_DEG) - 90.0F;
-                gull.setYRot(this.rotlerp(gull.getYRot(), yRotD, air ? 12.0F : 30.0F));
+                // wide curves in open flight, tight turns when swooping onto a spot close by
+                gull.setYRot(this.rotlerp(gull.getYRot(), yRotD, !air ? 30.0F : horizontal < 4.0 ? 28.0F : 12.0F));
                 gull.yBodyRot = gull.getYRot();
                 if (air) {
                     gull.setNoGravity(true);
                     float speed = (float) (this.speedModifier * gull.getAttributeValue(Attributes.FLYING_SPEED));
+                    if (horizontal < 2.5) {
+                        // brake before the target instead of overshooting and circling it
+                        speed *= 0.5F;
+                    }
                     gull.setSpeed(speed);
                     gull.setYya((float) Mth.clamp(dy * 0.35, -speed, speed));
                 } else {
@@ -645,6 +654,7 @@ public class SeagullEntity extends Animal {
     /** Swoops onto food lying on the ground and carries it off in its beak. */
     private class StealFoodGoal extends Goal {
         private @Nullable ItemEntity target;
+        private int ticks;
 
         StealFoodGoal() {
             this.setFlags(EnumSet.of(Goal.Flag.MOVE));
@@ -656,7 +666,7 @@ public class SeagullEntity extends Animal {
             if (gull.stealCooldown > 0 || !gull.getMainHandItem().isEmpty() || !gull.aiTick(10)) {
                 return false;
             }
-            List<ItemEntity> items = gull.level().getEntitiesOfClass(ItemEntity.class, gull.getBoundingBox().inflate(14.0, 16.0, 14.0),
+            List<ItemEntity> items = gull.level().getEntitiesOfClass(ItemEntity.class, gull.getBoundingBox().inflate(STEAL_RANGE, STEAL_RANGE, STEAL_RANGE),
                     e -> e.isAlive() && e.getItem().has(DataComponents.FOOD) && !e.isInWater());
             ItemEntity best = null;
             double bestDist = Double.MAX_VALUE;
@@ -667,21 +677,32 @@ public class SeagullEntity extends Animal {
                     best = item;
                 }
             }
+            if (best != null && !gull.hasLineOfSight(best)) {
+                // food inside a hut or under a roof: not worth the trouble for a while
+                gull.stealCooldown = 60;
+                best = null;
+            }
             this.target = best;
             return best != null;
         }
 
         @Override
         public void start() {
+            this.ticks = 0;
             if (this.target != null) {
                 SeagullEntity.this.flyTo(this.target.position().add(0.0, 0.2, 0.0), 1.4);
             }
         }
 
         @Override
+        public boolean requiresUpdateEveryTick() {
+            return true;
+        }
+
+        @Override
         public boolean canContinueToUse() {
             return this.target != null && this.target.isAlive() && SeagullEntity.this.getMainHandItem().isEmpty()
-                    && SeagullEntity.this.fleeTicks == 0;
+                    && SeagullEntity.this.fleeTicks == 0 && this.ticks < 300;
         }
 
         @Override
@@ -690,11 +711,26 @@ public class SeagullEntity extends Animal {
             if (this.target == null) {
                 return;
             }
-            if (gull.aiTick(10) || gull.getNavigation().isDone()) {
-                gull.flyTo(this.target.position().add(0.0, 0.2, 0.0), 1.4);
+            this.ticks++;
+            double distSqr = gull.distanceToSqr(this.target);
+            Vec3 aim = this.target.position().add(0.0, 0.2, 0.0);
+            if (gull.isFlying() && distSqr < SWOOP_RANGE * SWOOP_RANGE) {
+                // final swoop: dive straight at the food (a path would make the fast gull overshoot and circle it)
+                gull.getNavigation().stop();
+                Vec3 to = aim.subtract(gull.position());
+                double len = to.length();
+                if (len > 1.0E-3) {
+                    double v = Math.min(0.42, 0.14 + len * 0.05);
+                    gull.setDeltaMovement(gull.getDeltaMovement().scale(0.4).add(to.scale(0.6 * v / len)));
+                    float yaw = (float) (Mth.atan2(to.z, to.x) * Mth.RAD_TO_DEG) - 90.0F;
+                    gull.setYRot(yaw);
+                    gull.yBodyRot = yaw;
+                }
+            } else if (gull.aiTick(10) || gull.getNavigation().isDone()) {
+                gull.flyTo(aim, distSqr < 8.0 * 8.0 ? 0.9 : 1.4);
             }
             gull.getLookControl().setLookAt(this.target);
-            if (gull.distanceToSqr(this.target) < 1.6 && gull.level() instanceof ServerLevel level) {
+            if (distSqr < 2.6 && gull.level() instanceof ServerLevel level) {
                 ItemStack stack = this.target.getItem();
                 ItemStack taken = stack.split(1);
                 if (stack.isEmpty()) {
@@ -718,6 +754,10 @@ public class SeagullEntity extends Animal {
 
         @Override
         public void stop() {
+            if (this.target != null) {
+                // gave up (could not reach it in time)
+                SeagullEntity.this.stealCooldown = Math.max(SeagullEntity.this.stealCooldown, 200);
+            }
             this.target = null;
         }
     }

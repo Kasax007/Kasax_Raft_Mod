@@ -227,6 +227,9 @@ def dept_store():
     scatter_growth(s, ((x0, FY + 1, z0), (x1, top, z1)), rnd, kelp=0.003, grass=0.02, pickles=0.01, lichen=0.012)
     s.grow_barnacles(((-1, FY, -1), (W, top, D)), 0.12, 5201, support=lambda n: 'granite' in n or 'diorite' in n)
     front_jig(s, 15)
+    # no side overhang: the store fills a whole 31-block avenue lot
+    for pos in [p for p in s.blocks if p[0] < 0 or p[0] >= W]:
+        del s.blocks[pos]
     return s.done()
 
 
