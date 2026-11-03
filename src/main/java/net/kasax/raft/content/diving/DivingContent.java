@@ -1,5 +1,6 @@
 package net.kasax.raft.content.diving;
 
+import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.BcReg;
 import net.kasax.raft.content.BcTabs;
@@ -17,7 +18,9 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.dispenser.ProjectileDispenseBehavior;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.EntityType;
@@ -25,6 +28,7 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.component.UseEffects;
 import net.minecraft.world.item.equipment.ArmorMaterial;
@@ -99,6 +103,13 @@ public final class DivingContent {
             EntityType.Builder.<Harpoon>of(Harpoon::new, MobCategory.MISC).noLootTable().sized(0.5F, 0.5F)
                     .eyeHeight(0.13F).clientTrackingRange(4).updateInterval(20));
 
+    /** A diving helmet with the lamp fitted (what the diving_helmet_lamp recipe makes). */
+    public static ItemStack lampHelmet() {
+        ItemStack stack = new ItemStack(DIVING_HELMET);
+        stack.set(DIVING_LAMP, Unit.INSTANCE);
+        return stack;
+    }
+
     private static Item.Properties armor(ArmorMaterial material, ArmorType type) {
         return new Item.Properties().humanoidArmor(material, type).attributes(DivingGear.attributes(material, type));
     }
@@ -115,6 +126,9 @@ public final class DivingContent {
         BcTabs.add(BcTabs.Tab.VOYAGE, HARPOON_GUN);
         BcTabs.add(BcTabs.Tab.VOYAGE, HARPOON_ITEM);
         BcTabs.add(BcTabs.Tab.VOYAGE, SEA_SCOOTER);
+        // the helmet with the lamp fitted shows up right after the plain one
+        CreativeModeTabEvents.modifyOutputEvent(ResourceKey.create(Registries.CREATIVE_MODE_TAB, Raft.id("bc_" + BcTabs.Tab.VOYAGE.id)))
+                .register(output -> output.insertAfter(DIVING_HELMET, lampHelmet()));
         EnergyStorage.SIDED.registerForBlockEntity(AirCompressorBlockEntity::getEnergyStorage, AIR_COMPRESSOR_BE);
         DispenserBlock.registerBehavior(HARPOON_ITEM, new ProjectileDispenseBehavior(HARPOON_ITEM));
     }

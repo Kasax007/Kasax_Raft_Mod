@@ -2,10 +2,13 @@ package net.kasax.raft.content.decor.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -58,6 +61,20 @@ public class CoinPileBlock extends DecorBlock {
         BlockState below = level.getBlockState(pos.below());
         return Block.isFaceFull(below.getCollisionShape(level, pos.below()), Direction.UP)
                 || below.is(this) && below.getValue(LAYERS) == 8;
+    }
+
+    /**
+     * The pile falls apart (and drops its coins) when the block under it is gone. Only an empty space below counts, so
+     * piles that structures put on slabs, chests or other partial blocks stay where they are.
+     */
+    @Override
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos,
+                                     Direction directionToNeighbour, BlockPos neighbourPos, BlockState neighbourState,
+                                     RandomSource random) {
+        if (directionToNeighbour == Direction.DOWN && neighbourState.getCollisionShape(level, neighbourPos).isEmpty()) {
+            return state.getValue(WATERLOGGED) ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState();
+        }
+        return super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random);
     }
 
     @Override

@@ -817,8 +817,11 @@ def tech():
     model('wind_turbine', W, turbine)
     facing_states('wind_turbine')
     # item: the turbine with a static rotor (hub + three blades) in front
+    # the hub sticks out in front of the block (z < 0): its side UVs are shifted into 0..16
     rotor = [el([5.5, 5.5, -2], [10.5, 10.5, 2], box_faces('body', [5.5, 5.5, -2], [10.5, 10.5, 2],
-                                                            cull_outer=False))]
+                                                            cull_outer=False,
+                                                            uvs={'west': [0, 5.5, 4, 10.5], 'east': [12, 5.5, 16, 10.5],
+                                                                 'up': [5.5, 0, 10.5, 4], 'down': [5.5, 12, 10.5, 16]}))]
     for k, ang in enumerate((0, 120, 240)):
         r = {'origin': [8, 8, -1], 'axis': 'z', 'angle': float(ang - 360 if ang > 180 else ang)}
         rotor.append(el([6.5, 10, -1.5], [9.5, 31, -0.5], {

@@ -27,6 +27,7 @@
   "message.raft.expedition_raft.anchor_up": "Anchor raised",
   "message.raft.expedition_raft.has_upgrade": "This raft already has: %s",
   "message.raft.expedition_raft.hit": "Taking the raft apart... (%s more hits)",
+  "message.raft.expedition_raft.hit_last": "Taking the raft apart... (one more hit)",
   "message.raft.expedition_raft.installed": "%s installed",
   "message.raft.expedition_raft.no_room": "Not enough room for the raft here",
   "tooltip.raft.expedition_raft": "Four seats and storage. Sneak + use opens the storage.",

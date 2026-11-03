@@ -79,6 +79,7 @@ def generate():
         'message.raft.expedition_raft.anchor_down': 'Anchor dropped',
         'message.raft.expedition_raft.anchor_up': 'Anchor raised',
         'message.raft.expedition_raft.hit': 'Taking the raft apart... (%s more hits)',
+        'message.raft.expedition_raft.hit_last': 'Taking the raft apart... (one more hit)',
         'message.raft.expedition_raft.no_room': 'Not enough room for the raft here',
         'container.raft.expedition_raft.anchor_down_short': 'Drop',
         'container.raft.expedition_raft.anchor_up_short': 'Raise',

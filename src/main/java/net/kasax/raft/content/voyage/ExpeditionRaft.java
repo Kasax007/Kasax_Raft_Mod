@@ -61,6 +61,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * The Expedition Raft (spec 8.1): a 3x3 raft on vanilla boat physics with four seats, built-in storage, a fuel slot for
@@ -80,6 +81,10 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
     /** Extra damping of the turn rate: a big raft turns slower than a boat. */
     private static final float TURN_DAMPING = 0.93F;
     private static final int HIT_WINDOW = 40;
+    /** How far (0..1) a dismounting rider is moved from the seat towards the middle of the deck. */
+    private static final double DISMOUNT_TO_CENTRE = 0.6;
+    /** Upper limit of the steering player's lead (ticks) used for their dismount spot. */
+    private static final double MAX_LEAD_TICKS = 5.0;
 
     /** Seats (x = port, y = up, z = forward, blocks): helm on the stool at the stern, two midships, one at the bow. */
     private static final Vec3[] SEATS = {
@@ -101,6 +106,12 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
     private int hits;
     private long lastHitTime = Long.MIN_VALUE / 2;
     private boolean inputUp;
+
+    /** Server: the player who steered the raft in the last tick and how far it moved then (the server does not
+     * simulate a raft a player steers, so its delta movement stays zero). */
+    private @Nullable UUID steererId;
+    private Vec3 steeredMotion = Vec3.ZERO;
+    private @Nullable Vec3 steeredFrom;
 
     private boolean carryReady;
     private double carryX;
@@ -264,14 +275,31 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
         return seat.yRot(-this.getYRot() * Mth.DEG_TO_RAD);
     }
 
-    /** Riders get off onto the deck next to their seat. */
+    /**
+     * Riders get off onto the deck between their seat and the middle of the raft. The player who steers is a tick or two
+     * (plus the ping) ahead of the server, so their spot is moved on by the raft's speed over that time: at full speed a
+     * spot at the helm would otherwise lie behind the raft on their screen and they would drop into the sea under it.
+     */
     @Override
     public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
-        Vec3 target = new Vec3(passenger.getX(), this.getBoundingBox().maxY, passenger.getZ());
+        double x = Mth.lerp(DISMOUNT_TO_CENTRE, passenger.getX(), this.getX());
+        double z = Mth.lerp(DISMOUNT_TO_CENTRE, passenger.getZ(), this.getZ());
+        double y = this.getBoundingBox().maxY;
+        Vec3 deck = new Vec3(x, y, z);
+        if (passenger.getUUID().equals(this.steererId) && passenger instanceof ServerPlayer player) {
+            double ticks = Math.min(MAX_LEAD_TICKS, 1.0 + player.connection.latency() / 50.0);
+            Vec3 ahead = deck.add(this.steeredMotion.x * ticks, 0.0, this.steeredMotion.z * ticks);
+            for (Pose pose : passenger.getDismountPoses()) {
+                if (DismountHelper.canDismountTo(this.level(), ahead, passenger, pose)) {
+                    passenger.setPose(pose);
+                    return ahead;
+                }
+            }
+        }
         for (Pose pose : passenger.getDismountPoses()) {
-            if (DismountHelper.canDismountTo(this.level(), target, passenger, pose)) {
+            if (DismountHelper.canDismountTo(this.level(), deck, passenger, pose)) {
                 passenger.setPose(pose);
-                return target;
+                return deck;
             }
         }
         return super.getDismountLocationForPassenger(passenger);
@@ -288,6 +316,9 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
     public void tick() {
         AbstractBoatAccessor boat = (AbstractBoatAccessor) this;
         boat.raft$setOutOfControlTicks(0.0F);
+        if (!this.level().isClientSide()) {
+            this.trackSteering();
+        }
         if (this.isLocalInstanceAuthoritative()) {
             if (this.isAnchored()) {
                 this.setDeltaMovement(0.0, this.getDeltaMovement().y, 0.0);
@@ -307,6 +338,20 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
             this.tickClientEffects();
         }
         this.carryStandingEntities();
+    }
+
+    /**
+     * Remembers who steers the raft and how far their client moved it since the last tick (the moves arrive between
+     * ticks). Teleports and other jumps longer than a raft can sail in one tick do not count.
+     */
+    private void trackSteering() {
+        Vec3 now = this.position();
+        boolean steered = this.isClientAuthoritative() && this.getControllingPassenger() instanceof Player;
+        Vec3 motion = steered && this.steeredFrom != null
+                ? new Vec3(now.x - this.steeredFrom.x, 0.0, now.z - this.steeredFrom.z) : Vec3.ZERO;
+        this.steeredMotion = motion.lengthSqr() < 2.25 ? motion : Vec3.ZERO;
+        this.steererId = steered ? this.getControllingPassenger().getUUID() : null;
+        this.steeredFrom = now;
     }
 
     @Override
@@ -569,7 +614,9 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
         if (this.hits >= 3 || player.isShiftKeyDown()) {
             this.breakApart(level, true);
         } else {
-            player.sendOverlayMessage(Component.translatable("message.raft.expedition_raft.hit", 3 - this.hits));
+            int left = 3 - this.hits;
+            player.sendOverlayMessage(left == 1 ? Component.translatable("message.raft.expedition_raft.hit_last")
+                    : Component.translatable("message.raft.expedition_raft.hit", left));
         }
         return true;
     }
