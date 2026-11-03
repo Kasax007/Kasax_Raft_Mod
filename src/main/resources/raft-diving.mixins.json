@@ -6,6 +6,7 @@
     "LivingEntityAirMixin"
   ],
   "client": [
+    "client.AvatarRendererMixin",
     "client.WaterFogEnvironmentMixin"
   ],
   "injectors": {
