@@ -26,6 +26,8 @@ TRACKS = [
     ('shores_of_avalon', 'Shores of Avalon', 'music.raft.port_solace', 0.0, None, 1, -22.0, 'Port Solace, the drowned city'),
     ('port_horizon', 'Port Horizon', 'music.raft.saltmere', 24.0, 236.0, 1, -23.0, 'Saltmere, the stilt village'),
     ('shadowlands_horizon', 'Shadowlands 1 - Horizon', 'music.raft.abyss', 0.0, None, 1, -22.0, 'the Abyssal Trench'),
+    ('static_motion', 'Static Motion', 'music.raft.helix', 0.0, None, 1, -22.0, 'Helix Research Station'),
+    ('on_the_shore', 'On the Shore', 'music.raft.lighthouse', 0.0, None, 1, -23.0, 'the Old Lighthouse'),
     ('night_vigil', 'Night Vigil', 'music.raft.sanctum', 0.0, 209.0, 1, -22.0, 'the Tidewarden temples (Abyssal Sanctum, Coral Temple)'),
     ('black_vortex', 'Black Vortex', 'music.raft.leviathan', 0.0, None, 2, -19.0, 'the fight against the Leviathan'),
 ]

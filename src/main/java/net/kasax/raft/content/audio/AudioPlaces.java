@@ -27,7 +27,9 @@ public final class AudioPlaces {
     public static final String SALTMERE = "saltmere_village";
     public static final String SANCTUM = "abyssal_sanctum";
     public static final String CORAL_TEMPLE = "coral_temple";
-    private static final List<String> PLACES = List.of(SANCTUM, PORT_SOLACE, SALTMERE, CORAL_TEMPLE);
+    public static final String HELIX = "helix_station";
+    public static final String LIGHTHOUSE = "old_lighthouse";
+    private static final List<String> PLACES = List.of(SANCTUM, PORT_SOLACE, SALTMERE, CORAL_TEMPLE, HELIX, LIGHTHOUSE);
     private static final Map<UUID, String> SENT = new HashMap<>();
 
     private AudioPlaces() {

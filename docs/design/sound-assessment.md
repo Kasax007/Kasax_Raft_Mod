@@ -116,15 +116,18 @@ of its own is needed; **ok** = the vanilla sound fits (often on purpose), nothin
 | Saltmere (stilt village) | biome music | `music.raft.saltmere`: "Port Horizon" |
 | Abyssal Trench (biome, also under water) | deep dark | `music.raft.abyss`: "Shadowlands 1 - Horizon" |
 | Abyssal Sanctum and Coral Temple (the Tidewarden temples) | biome music | `music.raft.sanctum`: "Night Vigil" |
+| Helix Research Station | biome music | `music.raft.helix`: "Static Motion" |
+| Old Lighthouse | biome music | `music.raft.lighthouse`: "On the Shore" |
 | Leviathan fight | none | `music.raft.leviathan`: "Black Vortex", starts at once while the Leviathan's boss bar is shown, loops, fades out after the fight |
 | Other biomes (lagoon, shelf, graveyard, floes, islands), under water | vanilla tracks | unchanged |
 
 How it works: the sea and trench themes are data (`minecraft:audio/background_music` of the biomes and of the
 dimension type). Places are structures, not biomes: the server checks once a second whether a player is inside (or up
-to 16 blocks above) Port Solace, Saltmere, the sanctum or the Coral Temple and tells the client (`raft:audio_place`).
+to 16 blocks above) Port Solace, Saltmere, Helix Station, the Old Lighthouse, the sanctum or the Coral Temple and
+tells the client (`raft:audio_place`).
 The client's `MusicDirector` (mixin on `Minecraft.getSituationalMusic`) plays, in this order: the Leviathan's theme
 while its boss bar is shown, the place theme, otherwise the attribute music with the night swap. The "Now Playing" toast
 shows "Kevin MacLeod - <title>".
 
-All music together: 14.5 MB (Ogg Vorbis q3; the wide pieces stereo, the quiet and drone pieces mono), the sound effects
-3.1 MB.
+All music together: 17.0 MB (11 pieces, Ogg Vorbis q3; the wide pieces stereo, the quiet and drone pieces mono), the
+sound effects 2.7 MB.

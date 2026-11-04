@@ -458,6 +458,22 @@
       }
     ]
   },
+  "music.raft.helix": {
+    "sounds": [
+      {
+        "name": "raft:music/static_motion",
+        "stream": true
+      }
+    ]
+  },
+  "music.raft.lighthouse": {
+    "sounds": [
+      {
+        "name": "raft:music/on_the_shore",
+        "stream": true
+      }
+    ]
+  },
   "music.raft.sanctum": {
     "sounds": [
       {

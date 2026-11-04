@@ -55,6 +55,8 @@ public final class AudioSounds {
     public static Holder.Reference<SoundEvent> MUSIC_SALTMERE;
     public static Holder.Reference<SoundEvent> MUSIC_ABYSS;
     public static Holder.Reference<SoundEvent> MUSIC_SANCTUM;
+    public static Holder.Reference<SoundEvent> MUSIC_HELIX;
+    public static Holder.Reference<SoundEvent> MUSIC_LIGHTHOUSE;
     public static Holder.Reference<SoundEvent> MUSIC_LEVIATHAN;
 
     private AudioSounds() {
@@ -101,6 +103,8 @@ public final class AudioSounds {
         MUSIC_SALTMERE = BcReg.soundHolder("music.raft.saltmere");
         MUSIC_ABYSS = BcReg.soundHolder("music.raft.abyss");
         MUSIC_SANCTUM = BcReg.soundHolder("music.raft.sanctum");
+        MUSIC_HELIX = BcReg.soundHolder("music.raft.helix");
+        MUSIC_LIGHTHOUSE = BcReg.soundHolder("music.raft.lighthouse");
         MUSIC_LEVIATHAN = BcReg.soundHolder("music.raft.leviathan");
     }
 }

@@ -6,8 +6,9 @@ import org.jspecify.annotations.Nullable;
 /**
  * The music of the raft dimension. The sea themes and the trench theme come from the biomes' and the dimension's
  * {@code minecraft:audio/background_music} attribute (data); the client swaps the day theme for the night theme after
- * dusk, plays a place's theme inside Port Solace, Saltmere and the Tidewarden temples (the server tells it where the
- * player is, see {@link AudioPlaces}) and the Leviathan's theme while its boss bar is shown.
+ * dusk, plays a place's theme inside Port Solace, Saltmere, Helix Station, the Old Lighthouse and the Tidewarden
+ * temples (the server tells it where the player is, see {@link AudioPlaces}) and the Leviathan's theme while its boss
+ * bar is shown.
  */
 public final class AudioMusic {
     /** Delays in ticks: the sea themes come back after 2..6 minutes of silence, a place's theme within 0.5..2 minutes. */
@@ -21,6 +22,8 @@ public final class AudioMusic {
     public static Music PORT_SOLACE;
     public static Music SALTMERE;
     public static Music SANCTUM;
+    public static Music HELIX;
+    public static Music LIGHTHOUSE;
     /** The boss fight: replaces whatever plays at once and loops without a pause. */
     public static Music LEVIATHAN;
 
@@ -33,6 +36,8 @@ public final class AudioMusic {
         PORT_SOLACE = new Music(AudioSounds.MUSIC_PORT_SOLACE, PLACE_MIN_DELAY, PLACE_MAX_DELAY, false);
         SALTMERE = new Music(AudioSounds.MUSIC_SALTMERE, PLACE_MIN_DELAY, PLACE_MAX_DELAY, false);
         SANCTUM = new Music(AudioSounds.MUSIC_SANCTUM, PLACE_MIN_DELAY, PLACE_MAX_DELAY, false);
+        HELIX = new Music(AudioSounds.MUSIC_HELIX, PLACE_MIN_DELAY, PLACE_MAX_DELAY, false);
+        LIGHTHOUSE = new Music(AudioSounds.MUSIC_LIGHTHOUSE, PLACE_MIN_DELAY, PLACE_MAX_DELAY, false);
         LEVIATHAN = new Music(AudioSounds.MUSIC_LEVIATHAN, 0, 0, true);
     }
 
@@ -42,6 +47,8 @@ public final class AudioMusic {
             case AudioPlaces.PORT_SOLACE -> PORT_SOLACE;
             case AudioPlaces.SALTMERE -> SALTMERE;
             case AudioPlaces.SANCTUM, AudioPlaces.CORAL_TEMPLE -> SANCTUM;
+            case AudioPlaces.HELIX -> HELIX;
+            case AudioPlaces.LIGHTHOUSE -> LIGHTHOUSE;
             default -> null;
         };
     }

@@ -40,6 +40,16 @@ Licensed under Creative Commons: By Attribution 4.0 License
 http://creativecommons.org/licenses/by/4.0/
 (Beach Craft: plays in the Abyssal Trench; assets/raft/sounds/music/shadowlands_horizon.ogg, mono)
 
+"Static Motion" Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 4.0 License
+http://creativecommons.org/licenses/by/4.0/
+(Beach Craft: plays in Helix Research Station; assets/raft/sounds/music/static_motion.ogg, mono)
+
+"On the Shore" Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 4.0 License
+http://creativecommons.org/licenses/by/4.0/
+(Beach Craft: plays in the Old Lighthouse; assets/raft/sounds/music/on_the_shore.ogg, mono)
+
 "Night Vigil" Kevin MacLeod (incompetech.com)
 Licensed under Creative Commons: By Attribution 4.0 License
 http://creativecommons.org/licenses/by/4.0/
