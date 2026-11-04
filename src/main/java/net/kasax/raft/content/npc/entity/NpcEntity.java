@@ -287,7 +287,8 @@ public class NpcEntity extends PathfinderMob implements Merchant, Npc {
         BlockPos home = this.getHomePosition();
         int r = this.getHomeRadius();
         for (BlockPos p : BlockPos.betweenClosed(home.offset(-r, -3, -r), home.offset(r, 3, r))) {
-            if (this.placeBlocks.contains(level.getBlockState(p).getBlock())) {
+            int dx = p.getX() - home.getX(), dz = p.getZ() - home.getZ();
+            if (dx * dx + dz * dz <= r * r && this.placeBlocks.contains(level.getBlockState(p).getBlock())) {
                 this.places.add(p.immutable());
             }
         }

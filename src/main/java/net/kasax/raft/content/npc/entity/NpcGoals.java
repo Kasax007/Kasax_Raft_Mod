@@ -56,7 +56,12 @@ final class NpcGoals {
 
         @Override
         public boolean canUse() {
-            return this.npc.hasHome() && !this.npc.isTalking() && !this.npc.isWithinHome();
+            if (!this.npc.hasHome() || this.npc.isTalking()) {
+                return false;
+            }
+            // a little slack beyond the radius: the places of interest at the edge of home are fine
+            double r = this.npc.getHomeRadius() + 2.0;
+            return this.npc.getHomePosition().distToCenterSqr(this.npc.position()) > r * r;
         }
 
         @Override
