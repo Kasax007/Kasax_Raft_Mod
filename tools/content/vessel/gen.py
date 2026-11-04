@@ -446,6 +446,7 @@ LANG = {
     'message.raft.vessel.too_wide': 'This raft is too wide to sail (more than %s blocks across).',
     'message.raft.vessel.not_seaworthy': "%s can't go to sea.",
     'message.raft.vessel.not_floating': 'The raft must float on water to set sail.',
+    'message.raft.vessel.not_loaded': 'Part of this raft is too far away to set sail.',
     'message.raft.vessel.controls': 'W/S: sail · A/D: steer · Sneak: leave the helm and drop anchor',
     'message.raft.vessel.anchoring': 'Dropping anchor...',
     'message.raft.vessel.anchored': 'Anchor dropped. The raft is blocks again.',

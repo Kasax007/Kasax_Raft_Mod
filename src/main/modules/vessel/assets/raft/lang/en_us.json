@@ -19,6 +19,7 @@
   "message.raft.vessel.no_hull": "The helm must stand on a raft of Raft Foundations.",
   "message.raft.vessel.no_room": "No room to drop anchor here. Sail a little away from the shore.",
   "message.raft.vessel.not_floating": "The raft must float on water to set sail.",
+  "message.raft.vessel.not_loaded": "Part of this raft is too far away to set sail.",
   "message.raft.vessel.not_seaworthy": "%s can't go to sea.",
   "message.raft.vessel.too_big": "This raft is too big to sail (more than %s blocks).",
   "message.raft.vessel.too_wide": "This raft is too wide to sail (more than %s blocks across).",

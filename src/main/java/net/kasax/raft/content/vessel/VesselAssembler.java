@@ -133,7 +133,13 @@ public final class VesselAssembler {
             BlockPos p = queue.poll();
             for (Direction d : Direction.values()) {
                 BlockPos n = p.relative(d);
-                if (hull.contains(n.asLong()) || !level.isLoaded(n) || !level.getBlockState(n).is(VesselContent.HULLS)) {
+                if (hull.contains(n.asLong())) {
+                    continue;
+                }
+                if (!level.isLoaded(n)) {
+                    return Scan.fail(Component.translatable("message.raft.vessel.not_loaded"));
+                }
+                if (!level.getBlockState(n).is(VesselContent.HULLS)) {
                     continue;
                 }
                 hull.add(n.asLong());
