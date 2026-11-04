@@ -208,12 +208,13 @@ public final class VesselStructure {
      */
     public boolean forEachBox(VesselPose pose, AABB query, Predicate<AABB> out) {
         AABB local = pose.toLocal(query);
-        int x0 = Math.max(0, (int) Math.floor(local.minX));
-        int x1 = Math.min(this.sizeX - 1, (int) Math.floor(local.maxX));
-        int y0 = Math.max(0, (int) Math.floor(local.minY));
+        // one cell more around: some shapes reach into the next cell (fences and walls are 1.5 high)
+        int x0 = Math.max(0, (int) Math.floor(local.minX) - 1);
+        int x1 = Math.min(this.sizeX - 1, (int) Math.floor(local.maxX) + 1);
+        int y0 = Math.max(0, (int) Math.floor(local.minY) - 1);
         int y1 = Math.min(this.sizeY - 1, (int) Math.floor(local.maxY));
-        int z0 = Math.max(0, (int) Math.floor(local.minZ));
-        int z1 = Math.min(this.sizeZ - 1, (int) Math.floor(local.maxZ));
+        int z0 = Math.max(0, (int) Math.floor(local.minZ) - 1);
+        int z1 = Math.min(this.sizeZ - 1, (int) Math.floor(local.maxZ) + 1);
         for (int x = x0; x <= x1; x++) {
             for (int y = y0; y <= y1; y++) {
                 for (int z = z0; z <= z1; z++) {

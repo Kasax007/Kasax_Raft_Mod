@@ -383,7 +383,7 @@ public final class VesselAssembler {
         structure.forEachExteriorCell(pose, cell -> {
             int x0 = Mth.floor(cell.minX);
             int x1 = Mth.floor(cell.maxX);
-            int y0 = Mth.floor(cell.minY);
+            int y0 = Mth.floor(cell.minY) - 1;
             int y1 = Mth.floor(cell.maxY);
             int z0 = Mth.floor(cell.minZ);
             int z1 = Mth.floor(cell.maxZ);
