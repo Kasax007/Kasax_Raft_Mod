@@ -2,7 +2,9 @@
   "required": true,
   "package": "net.kasax.raft.content.world.mixin",
   "compatibilityLevel": "JAVA_25",
-  "mixins": [],
+  "mixins": [
+    "StructureSiteMixin"
+  ],
   "client": [],
   "injectors": {
     "defaultRequire": 1

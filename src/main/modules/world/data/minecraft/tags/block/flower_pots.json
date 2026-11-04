@@ -2,6 +2,9 @@
   "values": [
     "raft:potted_hibiscus",
     "raft:potted_tropical_fern",
-    "raft:potted_palm_sapling"
+    "raft:potted_palm_sapling",
+    "raft:potted_plumeria",
+    "raft:potted_tropical_orchid",
+    "raft:potted_aloe_vera"
   ]
 }

@@ -16,26 +16,36 @@ WALL = [('raft:corrugated_metal', 7), ('raft:rusted_plate', 1)]
 
 
 def floe(s, rnd):
-    """Irregular floe outline (blob of overlapping circles), thick under the hut, tapering keel."""
-    blobs = [(0, 0, 11), (9, 4, 7), (-8, 3, 7), (2, -9, 7), (-4, 9, 6)]
-    for x in range(-20, 20):
-        for z in range(-20, 20):
-            inside = max((1 - math.hypot(x - bx, z - bz) / r) for bx, bz, r in blobs)
+    """A natural iceberg: irregular outline (overlapping wobbly blobs), a low snow shelf for the camp, a submerged
+    rim around it, a jagged tapering peak in the north-west and a deep keel that narrows downwards."""
+    blobs = [(0, 0, 11), (9, 4, 7), (-8, 3, 7), (2, -9, 7), (-4, 9, 6), (8, 11, 5), (-12, -9, 8)]
+    ph = [rnd.random() * math.tau for _ in range(len(blobs) * 2)]
+    peak = (-13, -10)
+    for x in range(-26, 26):
+        for z in range(-26, 26):
+            inside = 0.0
+            for i, (bx, bz, r) in enumerate(blobs):
+                a = math.atan2(z - bz, x - bx)
+                rr = r * (1 + 0.16 * math.sin(3 * a + ph[2 * i]) + 0.09 * math.sin(7 * a + ph[2 * i + 1]))
+                inside = max(inside, 1 - math.hypot(x - bx, z - bz) / rr)
             if inside <= 0:
                 continue
-            depth = int(2 + inside * 9)                     # keel below the surface
-            for y in range(TOP - depth, TOP + 1):
-                s.set(x, y, z, pick(rnd, ICE) if y < TOP else pick(rnd, [('minecraft:snow_block', 5),
-                                                                          ('minecraft:packed_ice', 2)]))
-            if inside > 0.12 and rnd.random() < 0.7:
+            top = TOP - 2 if inside < 0.07 else TOP - 1 if inside < 0.16 else TOP
+            p = max(0.0, 1 - math.hypot(x - peak[0], z - peak[1]) / 10.0)
+            if p > 0 and top == TOP:
+                top += int(p ** 1.4 * 15 + rnd.random() * 2.2 * p)
+            depth = int(3 + inside * 15 + rnd.random() * 2)          # keel: deepest under the middle
+            band = (x * 3 + z * 5 + int(rnd.random() * 3)) % 11 < 2  # streaks of blue ice
+            for y in range(TOP - depth, top + 1):
+                if y == top and top >= TOP and p < 0.35:
+                    b = 'minecraft:snow_block'
+                elif band:
+                    b = 'minecraft:blue_ice'
+                else:
+                    b = pick(rnd, [('minecraft:packed_ice', 9), ('minecraft:ice', 1)])
+                s.set(x, y, z, b)
+            if top == TOP and p < 0.2 and inside > 0.2 and rnd.random() < 0.6:
                 s.set(x, TOP + 1, z, f'minecraft:snow[layers={rnd.randint(1, 3)}]')
-    # pressure ridge of blue ice on one side
-    for i in range(14):
-        x, z = -10 + i, -6 + int(math.sin(i / 2.5) * 2)
-        h = 1 + int(2 * math.sin(i / 13 * math.pi)) + rnd.randint(0, 1)
-        for y in range(TOP + 1, TOP + 1 + h):
-            s.set(x, y, z, pick(rnd, [('minecraft:blue_ice', 3), ('minecraft:packed_ice', 2)]))
-        s.set(x, TOP + 1 + h, z, 'minecraft:snow[layers=2]')
 
 
 def hut(s, rnd):
@@ -54,13 +64,14 @@ def hut(s, rnd):
     # gable roof of corrugated metal stairs, ridge along x
     for z in range(z0 - 1, z1 + 2):
         dz = min(z - (z0 - 1), (z1 + 1) - z)
-        y = F + 4 + min(dz, 3)
+        y = F + 3 + min(dz, 3)                       # eaves beside the wall top, then resting on the walls
         face = 'south' if z <= (z0 + z1) // 2 else 'north'
         for x in range(x0 - 1, x1 + 2):
             mid = z == (z0 + z1) // 2 + (0 if (z1 - z0) % 2 == 0 else 1)
             s.set(x, y, z, 'raft:corrugated_metal_slab[type=bottom]' if dz >= 3 else
                   f'raft:corrugated_metal_stairs[facing={face},half=bottom]')
-            s.set(x, y + 1, z, f'minecraft:snow[layers={rnd.randint(1, 2)}]') if rnd.random() < 0.6 else None
+            if dz >= 3 and rnd.random() < 0.6:
+                s.set(x, y + 1, z, f'minecraft:snow[layers={rnd.randint(1, 2)}]')
         for x in (x0, x1):
             for yy in range(F + 4, y):
                 s.set(x, yy, z, pick(rnd, WALL))
@@ -75,7 +86,7 @@ def hut(s, rnd):
     for x in (-1, 0, 1):
         s.set(x, F, z0 - 1, 'raft:catwalk[type=bottom]')
         s.set(x, F, z0 - 2, 'raft:catwalk[type=bottom]')
-    s.set(1, F + 3, z0 - 1, 'raft:ship_lantern[hanging=false]')
+    s.set(1, F + 2, z0 - 1, 'raft:ship_lantern[hanging=true]')
     # interior
     s.set(-3, F + 1, 3, 'minecraft:light_blue_bed[facing=north,occupied=false,part=foot]')
     s.set(-3, F + 1, 2, 'minecraft:light_blue_bed[facing=north,occupied=false,part=head]')
@@ -93,7 +104,7 @@ def hut(s, rnd):
     s.set(-2, F + 1, -1, 'raft:driftwood_chair[facing=west]')
     s.set(-3, F + 2, 0, 'raft:driftwood_shelf[facing=east]')
     s.set(0, F + 1, 1, 'raft:woven_rug')
-    s.set(0, F + 4, 1, 'minecraft:lantern[hanging=true]')
+    s.set(0, F + 5, 1, 'minecraft:lantern[hanging=true]')
     # generator shed (lean-to) on the east side
     for z in range(0, 4):
         for y in range(F, F + 3):
@@ -112,8 +123,6 @@ def hut(s, rnd):
         s.set(mx, y, mz, 'raft:steel_beam[axis=y]')
     s.set(mx, F + 10, mz, 'minecraft:lightning_rod[facing=up,powered=false]')
     s.set(mx + 1, F + 7, mz, 'raft:satellite_dish[facing=east]')
-    for (dx, dz) in ((-3, 0), (2, 3), (0, -3)):
-        s.line((mx, F + 6, mz), (mx + dx, F, mz + dz), 'minecraft:iron_chain[axis=y]')
     # weather station: anemometer cups on a post, a thermometer box
     for y in range(F, F + 4):
         s.set(6, y, 3, 'minecraft:spruce_fence')
@@ -158,12 +167,11 @@ def main(preview=False):
         if b[0] == 'minecraft:snow':
             below = s.blocks.get((x, y - 1, z))
             if below is None or below[0] in ('minecraft:snow', 'minecraft:air') or not (
-                    'ice' in below[0] or 'snow_block' in below[0] or 'corrugated_metal_slab' in below[0]
-                    or 'stairs' in below[0]):
+                    'ice' in below[0] or 'snow_block' in below[0] or 'corrugated_metal_slab' in below[0]):
                 s.set(x, y, z, None)
     path = 'iceberg_outpost/outpost_0'
     (_, y0, _), _ = s.bounds()
-    save(s, path)
+    save(s, path, anchored=True)
     if preview:
         print('  preview', contact(s, 'iceberg_outpost', cuts=(TOP + 3,), scale=6))
     write_structure('iceberg_outpost', [(path, 1)], None,

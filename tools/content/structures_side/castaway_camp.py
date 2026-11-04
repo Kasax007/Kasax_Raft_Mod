@@ -159,8 +159,11 @@ def boat_shelter(rnd):
                   'minecraft:orange_terracotta' if abs(x) == hw else 'raft:weathered_planks')
         s.set(4 - hw - 1, G + 3, z, 'minecraft:white_terracotta') if hw == 2 else None
         s.set(4 + hw + 1, G + 3, z, 'minecraft:white_terracotta') if hw == 2 else None
+        for x in range(-hw + 1, hw):                  # closed hull: one piece, no diagonal-only steps
+            s.set(4 + x, G + 3, z, 'raft:weathered_planks')
+        s.set(4, G + 4, z, 'raft:weathered_planks')
     for x in (1, 7):
-        for z in (1, 7):
+        for z in (2, 6):                              # the props stand right under the gunwales
             s.set(x, G + 1, z, 'raft:driftwood_log[axis=y]')
             s.set(x, G + 2, z, 'raft:driftwood_log[axis=y]')
     for x in range(1, 8):
@@ -201,7 +204,7 @@ def main(preview=False):
         rnd = random.Random(31415908 + v)
         s = fn(rnd)
         path = f'castaway_camp/{fn.__name__}'
-        save(s, path)
+        save(s, path, anchored=True)
         out.append((path, s))
         if preview:
             print('  preview', contact(s, f'castaway_camp_{fn.__name__}', scale=8))

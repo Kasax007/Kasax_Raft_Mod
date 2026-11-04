@@ -97,13 +97,17 @@ import java.util.function.Function;
  * scout &lt;structure&gt; [x z] log the nearest structure of that id (raft dimension, from the player or x z): start,
  *                         bounding box, pieces and rotation (SCOUT)
  * openbe x y z           open the screen of the container at x y z for the player (loot is rolled like opening it)
- * openloot &lt;table&gt; [radius]  go to the nearest container whose loot table contains that text and open it
+ * openloot &lt;table&gt; [radius] [peek]  go to the nearest container whose loot table contains that text and open it
+ *                         (sets {ox} {oy} {oz}; with peek only the variables)
  * tpbiome &lt;biome&gt; [dimension]   go to the nearest such biome (onto its surface)
  * chests [radius]         log containers (loot table) and block entities of the mod around the player (CHEST/BE)
  * find &lt;block&gt; [radius]  log where that block is around the player (FIND)
  * faceblock &lt;block&gt; [radius]   turn to the nearest such block
  * nearblock &lt;block&gt; &lt;radius&gt; &lt;dx&gt; &lt;dy&gt; &lt;dz&gt;   stand at that offset from the nearest such block, facing it
- * where                   log the player's position, rotation and biome (WHERE)
+ * where                   log the player's position, rotation and biome (WHERE); sets {px} {py} {pz}
+ * set &lt;name&gt; &lt;value&gt;     a script variable: {name} or {name+5} anywhere in later lines (scout sets x0 y0 z0 x1 y1 z1 and
+ *                         the box center cx cy cz, find sets fx fy fz of the nearest hit, height &lt;x&gt; &lt;z&gt; sets hy)
+ * freecam x y z yaw pitch | off   detached camera at that eye position (rec: cam=x,y,z,yaw,pitch with to/by/orbit/look)
  * log &lt;text&gt;
  * </pre>
  */
@@ -111,6 +115,29 @@ public class BcScript implements FabricClientGameTest {
     public static final Logger LOG = LoggerFactory.getLogger("bctest");
     /** While true the client skips drawing its per-tick frames (screenshots still render): see NoRenderMixin. */
     public static volatile boolean skipFrames;
+    /** While above 0 the client draws a frame at most every throttleMs milliseconds (settle). */
+    public static volatile long throttleMs;
+    /** Detached camera (x, eye y, z, yaw, pitch) while not null: see FreeCamMixin. The player stays where it is. */
+    public static volatile double[] freeCam;
+    /** Script variables ({name} or {name+5} in a line): set by scout, find, height, where and set. */
+    private final Map<String, Double> vars = new HashMap<>();
+
+    private String subst(String line) {
+        if (line.indexOf('{') < 0) return line;
+        java.util.regex.Matcher m = java.util.regex.Pattern.compile("\\{([a-z][a-z0-9]*)([+-][0-9.]+)?\\}").matcher(line);
+        StringBuilder sb = new StringBuilder();
+        while (m.find()) {
+            Double v = vars.get(m.group(1));
+            if (v == null) {
+                LOG.warn("[bctest] no variable {}", m.group(1));
+                v = 0.0;
+            }
+            double d = v + (m.group(2) == null ? 0 : Double.parseDouble(m.group(2)));
+            m.appendReplacement(sb, String.format(Locale.ROOT, "%.2f", d));
+        }
+        m.appendTail(sb);
+        return sb.toString();
+    }
 
     private ClientGameTestContext ctx;
     private TestSingleplayerContext sp;
@@ -154,6 +181,7 @@ public class BcScript implements FabricClientGameTest {
             for (int n = 0; n < lines.size(); n++) {
                 String line = lines.get(n).strip();
                 if (line.isEmpty() || line.startsWith("#") || line.startsWith("@") || line.equals("end")) continue;
+                line = subst(line);
                 if (System.currentTimeMillis() > deadline) {
                     LOG.warn("[bctest] deadline reached before line {}: stopping the script", n + 1);
                     break;
@@ -167,7 +195,7 @@ public class BcScript implements FabricClientGameTest {
                         String l = lines.get(k).strip();
                         if (l.startsWith("@")) {
                             String[] p = l.substring(1).split("\\s+", 2);
-                            at.computeIfAbsent(Integer.parseInt(p[0]), x -> new ArrayList<>()).add(p.length > 1 ? p[1] : "");
+                            at.computeIfAbsent(Integer.parseInt(p[0]), x -> new ArrayList<>()).add(p.length > 1 ? subst(p[1]) : "");
                             k++;
                         } else if (l.equals("end")) {
                             k++;
@@ -251,14 +279,7 @@ public class BcScript implements FabricClientGameTest {
             }
             case "settle" -> {
                 long t0 = System.currentTimeMillis();
-                if (sp != null) {
-                    ctx.waitTicks(20);
-                    try {
-                        sp.getConnection().waitForChunksRender();
-                    } catch (Throwable t) {
-                        LOG.warn("[bctest] chunks not ready in time: {}", t.toString());
-                    }
-                }
+                // (no waitForChunksRender: it draws full frames while it waits, which starves the server with shaders)
                 settle(arg.isEmpty() ? 40 : Integer.parseInt(arg));
                 LOG.info("[bctest] settle took {} s", (System.currentTimeMillis() - t0) / 1000);
             }
@@ -396,6 +417,10 @@ public class BcScript implements FabricClientGameTest {
                             pl.getYRot(), pl.getXRot(), level.getBiome(pl.blockPosition()).getRegisteredName());
                 });
                 LOG.info("[bctest] WHERE {}", res);
+                String[] w = res.split(" ");
+                vars.put("px", Double.parseDouble(w[1]));
+                vars.put("py", Double.parseDouble(w[2]));
+                vars.put("pz", Double.parseDouble(w[3]));
             }
             case "openbe" -> {
                 // openbe x y z: open the screen of that block (chest, barrel, crate ...) for the player, wherever they are
@@ -444,6 +469,13 @@ public class BcScript implements FabricClientGameTest {
                     LOG.warn("[bctest] openloot: no container with {} within {}", a[0], r);
                     break;
                 }
+                vars.put("ox", bp.getX() + 0.5);
+                vars.put("oy", (double) bp.getY());
+                vars.put("oz", bp.getZ() + 0.5);
+                if (a.length > 2 && a[2].equals("peek")) {
+                    LOG.info("[bctest] PEEK {} at {}", a[0], bp.toShortString());
+                    break;
+                }
                 double px = bp.getX() + 0.5, py = bp.getY() + 0.5, pz = bp.getZ() + 2.5;
                 float[] rot = aim(px, py + 1.62, pz, Vec3.atCenterOf(bp));
                 need().getServer().runCommand(String.format(Locale.ROOT, "execute as @p at @s run tp @s %.2f %.2f %.2f %.1f %.1f", px, py, pz, rot[0], rot[1]));
@@ -486,7 +518,17 @@ public class BcScript implements FabricClientGameTest {
                 // scout <structure> [x z]: from the player or from x z
                 String[] a = arg.split("\\s+");
                 BlockPos from = a.length >= 3 ? new BlockPos(Integer.parseInt(a[1]), 64, Integer.parseInt(a[2])) : null;
-                LOG.info("[bctest] SCOUT {} {}", a[0], need().getServer().computeOnServer(server -> scout(server, a[0], from)));
+                String res = need().getServer().computeOnServer(server -> scout(server, a[0], from));
+                LOG.info("[bctest] SCOUT {} {}", a[0], res);
+                java.util.regex.Matcher m = java.util.regex.Pattern.compile(
+                        "bbox (-?\\d+) (-?\\d+) (-?\\d+) \\.\\. (-?\\d+) (-?\\d+) (-?\\d+)").matcher(res);
+                if (m.find()) {
+                    String[] k = {"x0", "y0", "z0", "x1", "y1", "z1"};
+                    for (int i = 0; i < 6; i++) vars.put(k[i], Double.parseDouble(m.group(i + 1)));
+                    vars.put("cx", (vars.get("x0") + vars.get("x1") + 1) / 2);
+                    vars.put("cy", (vars.get("y0") + vars.get("y1") + 1) / 2);
+                    vars.put("cz", (vars.get("z0") + vars.get("z1") + 1) / 2);
+                }
             }
             case "chests" -> {
                 int r = arg.isEmpty() ? 64 : Integer.parseInt(arg);
@@ -523,6 +565,41 @@ public class BcScript implements FabricClientGameTest {
                 String[] a = arg.split("\\s+");
                 int r = a.length > 1 ? Integer.parseInt(a[1]) : 48;
                 LOG.info("[bctest] FIND {} {}", a[0], need().getServer().computeOnServer(server -> find(server, a[0], r)));
+                double[] f = need().getServer().computeOnServer(server -> {
+                    var pl = server.getPlayerList().getPlayers().getFirst();
+                    BlockPos best = null;
+                    for (BlockPos h : scan(server, a[0], r)) {
+                        if (best == null || h.distSqr(pl.blockPosition()) < best.distSqr(pl.blockPosition())) best = h;
+                    }
+                    return best == null ? null : new double[]{best.getX() + 0.5, best.getY(), best.getZ() + 0.5};
+                });
+                if (f != null) {
+                    vars.put("fx", f[0]);
+                    vars.put("fy", f[1]);
+                    vars.put("fz", f[2]);
+                }
+            }
+            case "set" -> {
+                String[] a = arg.split("\\s+");
+                vars.put(a[0], Double.parseDouble(a[1]));
+            }
+            case "height" -> {
+                // height <x> <z>: hy = the y above the highest solid block there (water and leaves ignored)
+                double[] v = nums(arg);
+                vars.put("hy", (double) need().getServer().computeOnServer(server -> {
+                    var pl = server.getPlayerList().getPlayers().getFirst();
+                    return ((ServerLevel) pl.level()).getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.OCEAN_FLOOR,
+                            (int) Math.floor(v[0]), (int) Math.floor(v[1]));
+                }));
+                LOG.info("[bctest] HEIGHT {} -> {}", arg, vars.get("hy"));
+            }
+            case "freecam" -> {
+                // freecam x y z yaw pitch | off: a detached camera (eye position) for shots; the player stays visible
+                if (arg.equals("off")) {
+                    freeCam = null;
+                } else {
+                    freeCam = nums(arg);
+                }
             }
             default -> LOG.warn("[bctest] unknown command '{}'", cmd);
         }
@@ -563,23 +640,58 @@ public class BcScript implements FabricClientGameTest {
      * sections are drawn, so no half-loaded terrain shows up in a shot.
      */
     private void settle(int maxSeconds) {
-        ctx.waitTicks(10);
-        for (int i = 0; i < maxSeconds * 2; i++) {
-            if (ctx.computeOnClient(mc -> {
-                if (mc.level == null || mc.player == null) return true;
-                int need = Math.max(2, mc.options.getEffectiveRenderDistance() - 1);
-                int cx = mc.player.chunkPosition().x(), cz = mc.player.chunkPosition().z();
-                for (int dx = -need; dx <= need; dx++) {
-                    for (int dz = -need; dz <= need; dz++) {
-                        if (dx * dx + dz * dz > need * need) continue;
-                        if (!mc.level.getChunkSource().hasChunk(cx + dx, cz + dz)) return false;
-                    }
-                }
-                return mc.levelRenderer.hasRenderedAllSections();
-            })) break;
+        long t0 = System.currentTimeMillis(), end = t0 + maxSeconds * 1000L;
+        // 1) the server generates the chunks around the player first: no client frames in the way (with shaders a
+        //    frame takes seconds and starves the server thread)
+        skipFrames = true;
+        try {
+            while (System.currentTimeMillis() < end && sp != null && !serverChunksReady()) ctx.waitTicks(20);
+        } finally {
+            skipFrames = false;
+        }
+        long t1 = System.currentTimeMillis();
+        // 2) the client meshes and draws them; meanwhile a frame at most every 1.5 s
+        throttleMs = 1500;
+        try {
             ctx.waitTicks(10);
+            while (System.currentTimeMillis() < end) {
+                if (ctx.computeOnClient(mc -> {
+                    if (mc.level == null || mc.player == null) return true;
+                    int need = Math.max(2, mc.options.getEffectiveRenderDistance() - 1);
+                    int cx = mc.player.chunkPosition().x(), cz = mc.player.chunkPosition().z();
+                    for (int dx = -need; dx <= need; dx++) {
+                        for (int dz = -need; dz <= need; dz++) {
+                            if (dx * dx + dz * dz > need * need) continue;
+                            if (!mc.level.getChunkSource().hasChunk(cx + dx, cz + dz)) return false;
+                        }
+                    }
+                    return mc.levelRenderer.hasRenderedAllSections();
+                })) break;
+                ctx.waitTicks(10);
+            }
+        } finally {
+            throttleMs = 0;
         }
         ctx.waitTicks(10);
+        LOG.info("[bctest] settle took {} s (server {} s)", (System.currentTimeMillis() - t0) / 1000, (t1 - t0) / 1000);
+    }
+
+    /** true when every chunk within the render distance (minus one) of the player is fully loaded on the server. */
+    private boolean serverChunksReady() {
+        int rd = ctx.computeOnClient(mc -> mc.options.getEffectiveRenderDistance());
+        return need().getServer().computeOnServer(server -> {
+            var pl = server.getPlayerList().getPlayers().getFirst();
+            var level = (ServerLevel) pl.level();
+            int need = Math.max(2, rd - 1);
+            int cx = pl.chunkPosition().x(), cz = pl.chunkPosition().z();
+            for (int dx = -need; dx <= need; dx++) {
+                for (int dz = -need; dz <= need; dz++) {
+                    if (dx * dx + dz * dz > need * need) continue;
+                    if (!level.getChunkSource().hasChunk(cx + dx, cz + dz)) return false;
+                }
+            }
+            return true;
+        });
     }
 
     /** Renames the world folder of this run to saves/&lt;keep&gt; (unless it is that folder already). */
@@ -686,6 +798,7 @@ public class BcScript implements FabricClientGameTest {
             }
         } finally {
             FilmSound.stop();
+            if (cam != null && cam.free) freeCam = null;
         }
         LOG.info("[bctest] REC {} {} frames at {} fps, {} ms per frame", name, frames, fps, (System.nanoTime() - w0) / 1_000_000 / Math.max(1, frames));
     }
@@ -745,10 +858,11 @@ public class BcScript implements FabricClientGameTest {
         double chase = -1, chaseDy, smooth = 0.2, pitchOff, yawOff;
         double cx, cy, cz;
         float cyaw, cpitch;
-        boolean first = true;
+        boolean first = true, free;
 
         static Cam of(Minecraft mc, Map<String, String> opt) {
-            if (!(opt.containsKey("to") || opt.containsKey("by") || opt.containsKey("orbit") || opt.containsKey("look"))) return null;
+            if (!(opt.containsKey("to") || opt.containsKey("by") || opt.containsKey("orbit") || opt.containsKey("look")
+                    || opt.containsKey("cam"))) return null;
             LocalPlayer p = mc.player;
             Cam c = new Cam();
             c.x0 = c.x1 = p.getX();
@@ -756,6 +870,16 @@ public class BcScript implements FabricClientGameTest {
             c.z0 = c.z1 = p.getZ();
             c.yaw0 = c.yaw1 = p.getYRot();
             c.pitch0 = c.pitch1 = p.getXRot();
+            if (opt.containsKey("cam")) {
+                // cam=x,y,z,yaw,pitch: a detached camera starting at that eye position; the player stays visible
+                double[] v = nums(opt.get("cam"));
+                c.free = true;
+                c.x0 = c.x1 = v[0];
+                c.y0 = c.y1 = v[1] - p.getEyeHeight();
+                c.z0 = c.z1 = v[2];
+                c.yaw0 = c.yaw1 = (float) v[3];
+                c.pitch0 = c.pitch1 = (float) v[4];
+            }
             if (opt.containsKey("to")) {
                 String[] v = opt.get("to").split(",");
                 if (v.length > 0 && !v[0].equals("~")) c.x1 = Double.parseDouble(v[0]);
@@ -798,7 +922,7 @@ public class BcScript implements FabricClientGameTest {
             if (opt.containsKey("yawoff")) c.yawOff = Double.parseDouble(opt.get("yawoff"));
             if (opt.containsKey("ease")) c.ease = !opt.get("ease").equals("0");
             c.move = c.x0 != c.x1 || c.y0 != c.y1 || c.z0 != c.z1 || c.ocx != null || c.chase > 0;
-            if (c.move && !p.isSpectator() && p.getAbilities().mayfly) {
+            if (c.move && !c.free && !p.isSpectator() && p.getAbilities().mayfly) {
                 p.getAbilities().flying = true;
                 p.onUpdateAbilities();
             }
@@ -821,9 +945,9 @@ public class BcScript implements FabricClientGameTest {
                 Vec3 t = lookEnt != null ? lookEnt.getPosition(delta).add(0, lookEnt.getBbHeight() * 0.5, 0) : lookAt;
                 if (chase > 0) {
                     if (first) {
-                        cx = p.getX();
-                        cy = p.getY();
-                        cz = p.getZ();
+                        cx = free ? x0 : p.getX();
+                        cy = free ? y0 : p.getY();
+                        cz = free ? z0 : p.getZ();
                     }
                     double dx = cx - t.x, dz = cz - t.z, d = Math.sqrt(dx * dx + dz * dz);
                     if (d < 1e-3) {
@@ -851,7 +975,11 @@ public class BcScript implements FabricClientGameTest {
                 pitch = (float) Mth.clamp(cpitch + pitchOff, -90, 90);
             }
             first = false;
-            setPose(p, x, y, z, yaw, pitch, move);
+            if (free) {
+                freeCam = new double[]{x, y + p.getEyeHeight(), z, yaw, pitch};
+            } else {
+                setPose(p, x, y, z, yaw, pitch, move);
+            }
         }
     }
 

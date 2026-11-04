@@ -95,6 +95,7 @@
       "minecraft:spring_lava"
     ],
     [
+      "raft:patch_aloe_vera",
       "raft:patch_sea_glass",
       "raft:patch_volcanic_ash_dunes"
     ],

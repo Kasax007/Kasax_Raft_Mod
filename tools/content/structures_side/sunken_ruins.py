@@ -280,7 +280,7 @@ def main(preview=False):
         overgrow(s, seed=70 + v, barnacle=0.05, kelp=0.05, kelp_h=(4, 14), grass=0.16, pickles=0.03, glow=0.3,
                  anemone=0.03, starfish=0.03, kelp_max_y=F + 2)
         path = f'sunken_ruins/{fn.__name__}'
-        save(s, path)
+        save(s, path, anchored=True, ground_layers=3)
         out.append((path, s))
         if preview:
             print('  preview', contact(s, f'sunken_ruins_{fn.__name__}', scale=6))

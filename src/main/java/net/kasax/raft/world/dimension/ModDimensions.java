@@ -2,7 +2,6 @@ package net.kasax.raft.world.dimension;
 
 import net.kasax.raft.Raft;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
@@ -10,7 +9,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.valueproviders.ConstantInt;
+import net.minecraft.tags.TimelineTags;
 import net.minecraft.world.attribute.AmbientSounds;
+import net.minecraft.world.clock.WorldClocks;
 import net.minecraft.world.attribute.BackgroundMusic;
 import net.minecraft.world.attribute.BedRule;
 import net.minecraft.world.attribute.EnvironmentAttributeMap;
@@ -31,7 +32,7 @@ public class ModDimensions {
     public static void bootstrapType(BootstrapContext<DimensionType> context) {
         HolderGetter<Block> blocks = context.lookup(Registries.BLOCK);
 
-        // Endless bright day: no time of day (so no timelines and no clock), full sky light.
+        // Day and night like the overworld (overworld timelines and clock), full sky light by day.
         EnvironmentAttributeMap attributes = EnvironmentAttributeMap.builder()
                 .set(EnvironmentAttributes.SKY_COLOR, ARGB.vector3fFromRGB24(0x6cbaea))
                 .set(EnvironmentAttributes.FOG_COLOR, ARGB.vector3fFromRGB24(0x22a1e6))
@@ -43,14 +44,10 @@ public class ModDimensions {
                 .set(EnvironmentAttributes.STRAW_BED_RULE, BedRule.DESTROY_ON_LEAVE)
                 .set(EnvironmentAttributes.RESPAWN_ANCHOR_WORKS, false)
                 .set(EnvironmentAttributes.AMBIENT_SOUNDS, AmbientSounds.LEGACY_CAVE_SETTINGS)
-                // without timelines both angles would default to 0: the full moon drawn right on top of the sun
-                .set(EnvironmentAttributes.MOON_ANGLE, 180F)
-                // eternal day: undead burn like at noon in the overworld (vanilla only sets this through the day timeline)
-                .set(EnvironmentAttributes.MONSTERS_BURN, true)
                 .build();
 
         context.register(RAFT_DIM_TYPE, new DimensionType(
-                true, // hasFixedTime
+                false, // hasFixedTime: day and night like the overworld
                 true, // hasSkyLight
                 false, // hasCeiling
                 false, // hasEnderDragonFight
@@ -64,7 +61,7 @@ public class ModDimensions {
                 DimensionType.Skybox.OVERWORLD,
                 CardinalLighting.Type.DEFAULT,
                 attributes,
-                HolderSet.empty(), // timelines
-                Optional.empty())); // default clock
+                context.lookup(Registries.TIMELINE).getOrThrow(TimelineTags.IN_OVERWORLD), // sun, moon, stars, burning undead
+                Optional.of(context.lookup(Registries.WORLD_CLOCK).getOrThrow(WorldClocks.OVERWORLD)))); // shares the overworld clock
     }
 }

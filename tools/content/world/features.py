@@ -133,6 +133,15 @@ def land_patch(name, feat, tries, xz=7, y=3, per_chunk=None, below=None):
     placed(name, feat, pl)
 
 
+def flower_patch(name, feat, tries, xz, per_chunk, below=None):
+    """a clump of flowers: tries spread over +-xz, each one on the ground of its own column"""
+    pl = [rarity(per_chunk)] if isinstance(per_chunk, int) and per_chunk > 1 else [count(per_chunk[1])] if isinstance(per_chunk, tuple) else []
+    tz = OrderedDict(type='minecraft:trapezoid', max=xz, min=-xz, plateau=0)
+    pl += [IN_SQUARE, count(tries), OrderedDict(type='minecraft:offset', x=tz, y=0, z=tz),
+           heightmap('MOTION_BLOCKING_NO_LEAVES'), BIOME, predicate(all_of(AIR, below) if below else AIR)]
+    placed(name, feat, pl)
+
+
 def sea_patch(name, feat, tries, xz=7, per_chunk=None, extra=None):
     """Things on the sea floor: tries spread around a random point of the chunk, each on the ocean floor in water."""
     pl = []
@@ -194,10 +203,19 @@ def island_plants():
     f = feature('island_grass', simple(weighted([(st('minecraft:short_grass'), 6), (st('minecraft:fern'), 1)])))
     land_patch('patch_island_grass', f, 32, per_chunk=('count', 2),
                below=blocks('minecraft:grass_block', offset=(0, -1, 0)))
+    # flowers (placed before the grasses, which would otherwise take every free spot): a clump in most chunks. Every
+    # try finds the ground of its own column (heightmap after the offset, leaves ignored), so the clumps also work on
+    # slopes and under the jungle canopy.
     f = feature('hibiscus', simple(st('hibiscus')))
-    land_patch('patch_hibiscus', f, 16, xz=5, y=2, per_chunk=2)
+    flower_patch('patch_hibiscus', f, 10, 4, ('count', 1))
     f = feature('bird_of_paradise', simple(st('bird_of_paradise', half='lower')))
-    land_patch('patch_bird_of_paradise', f, 10, xz=4, y=2, per_chunk=4)
+    flower_patch('patch_bird_of_paradise', f, 6, 3, 2)
+    f = feature('heliconia', simple(st('heliconia', half='lower')))
+    flower_patch('patch_heliconia', f, 6, 3, 2)
+    for name, rar in (('plumeria', 2), ('tropical_orchid', 2), ('spider_lily', 2), ('aloe_vera', 3)):
+        flower_patch(f'patch_{name}', feature(name, simple(st(name))), 8, 3, rar)
+    flower_patch('patch_beach_morning_glory', feature('beach_morning_glory', simple(st('beach_morning_glory'))), 10, 4, 2,
+                 below=blocks('minecraft:sand', 'raft:shell_sand', offset=(0, -1, 0)))
     f = feature('tropical_fern', simple(st('tropical_fern')))
     land_patch('patch_tropical_fern', f, 24, xz=6, per_chunk=('count', 2))
     f = feature('pineapple_bush', simple(rand_int('age', st('pineapple_bush', age=3), 1, 3)))

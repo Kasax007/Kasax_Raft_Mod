@@ -142,6 +142,11 @@ def ground():
     assets.tag(M, 'block', 'minecraft:enderman_holdable', ['shell_sand', 'black_sand', 'volcanic_ash'])
 
 
+NEW_FLOWERS = [('plumeria', 'white_dye'), ('beach_morning_glory', 'purple_dye'), ('tropical_orchid', 'magenta_dye'),
+               ('spider_lily', 'white_dye')]
+NEW_POTS = ['potted_plumeria', 'potted_tropical_orchid', 'potted_aloe_vera']
+
+
 def island_plants():
     # simple cross plants
     save(A.beach_grass(), 'block/beach_grass')
@@ -153,9 +158,16 @@ def island_plants():
     shears_only('tropical_fern')
     drop_self('hibiscus')
     assets.recipe_shapeless(M, 'red_dye_from_hibiscus', ['hibiscus'], 'minecraft:red_dye', category='misc')
+    # island flowers of 3.0.1
+    for b, dye in NEW_FLOWERS + [('aloe_vera', 'green_dye')]:
+        save(getattr(A, b)(), f'block/{b}')
+        assets.cross_plant(M, b)
+        drop_self(b)
+        assets.recipe_shapeless(M, f'{dye}_from_{b}', [b], f'minecraft:{dye}', category='misc')
 
     # two tall plants
-    for b, (lo, up) in (('sea_oats', A.sea_oats()), ('bird_of_paradise', A.bird_of_paradise())):
+    for b, (lo, up) in (('sea_oats', A.sea_oats()), ('bird_of_paradise', A.bird_of_paradise()),
+                        ('heliconia', A.heliconia())):
         save(lo, f'block/{b}_bottom')
         save(up, f'block/{b}_top')
         assets.block_model(M, f'{b}_bottom', 'minecraft:block/cross', {'cross': f'block/{b}_bottom'})
@@ -167,6 +179,8 @@ def island_plants():
     table('bird_of_paradise', [pool([item_entry('bird_of_paradise')],
                                     condition=all_of(SURVIVES, state_is('bird_of_paradise', half='lower')))])
     assets.recipe_shapeless(M, 'orange_dye_from_bird_of_paradise', ['bird_of_paradise'], 'minecraft:orange_dye', count=2)
+    table('heliconia', [pool([item_entry('heliconia')], condition=all_of(SURVIVES, state_is('heliconia', half='lower')))])
+    assets.recipe_shapeless(M, 'red_dye_from_heliconia', ['heliconia'], 'minecraft:red_dye', count=2)
 
     # pineapple bush (ages 0..3) and pineapple crop (ages 0..7)
     v = OrderedDict()
@@ -201,10 +215,9 @@ def island_plants():
 
     # flower pots
     for pot, plant in (('potted_hibiscus', 'block/hibiscus'), ('potted_tropical_fern', 'block/tropical_fern'),
-                       ('potted_palm_sapling', 'block/palm_sapling')):
+                       ('potted_palm_sapling', 'block/palm_sapling')) + tuple((p, f'block/{p[7:]}') for p in NEW_POTS):
         assets.potted(M, pot, R(plant))
-        item = {'potted_hibiscus': 'hibiscus', 'potted_tropical_fern': 'tropical_fern',
-                'potted_palm_sapling': 'palm_sapling'}[pot]
+        item = pot[len('potted_'):]
         table(pot, [pool([item_entry('minecraft:flower_pot')], condition=SURVIVES),
                     pool([item_entry(item)], condition=SURVIVES)])
 
@@ -216,20 +229,22 @@ def island_plants():
     assets.recipe_shapeless(M, 'pineapple_crown', ['pineapple'], 'pineapple_crown', category='misc')
 
     plants = ['beach_grass', 'sea_oats', 'tropical_fern']
-    flowers = ['hibiscus', 'bird_of_paradise']
+    small = ['hibiscus'] + [b for b, _ in NEW_FLOWERS]
+    flowers = small + ['bird_of_paradise', 'heliconia', 'aloe_vera']
     assets.tag(M, 'block', 'minecraft:replaceable', plants)
-    assets.tag(M, 'block', 'minecraft:replaceable_by_trees', plants + ['bird_of_paradise'])
-    assets.tag(M, 'block', 'minecraft:replaceable_by_mushrooms', plants + ['bird_of_paradise'])
+    assets.tag(M, 'block', 'minecraft:replaceable_by_trees', plants + ['bird_of_paradise', 'heliconia'])
+    assets.tag(M, 'block', 'minecraft:replaceable_by_mushrooms', plants + ['bird_of_paradise', 'heliconia'])
     assets.tag(M, 'block', 'minecraft:sword_efficient', plants + flowers + ['pineapple_bush'])
     assets.tag(M, 'block', 'minecraft:washed_away_by_fluids', plants + flowers + ['pineapple_bush', 'pineapple_crop'])
-    assets.tag(M, 'block', 'minecraft:small_flowers', ['hibiscus'])
-    assets.tag(M, 'block', 'minecraft:flowers', ['bird_of_paradise'])
+    assets.tag(M, 'block', 'minecraft:small_flowers', small)
+    assets.tag(M, 'block', 'minecraft:flowers', ['bird_of_paradise', 'heliconia'])
     assets.tag(M, 'block', 'minecraft:bee_attractive', flowers)
-    assets.tag(M, 'block', 'minecraft:flower_pots', ['potted_hibiscus', 'potted_tropical_fern', 'potted_palm_sapling'])
+    assets.tag(M, 'block', 'minecraft:flower_pots', ['potted_hibiscus', 'potted_tropical_fern', 'potted_palm_sapling']
+               + NEW_POTS)
     assets.tag(M, 'block', 'minecraft:crops', ['pineapple_crop'])
     assets.tag(M, 'block', 'minecraft:maintains_farmland', ['pineapple_crop'])
     assets.tag(M, 'block', 'minecraft:bee_growables', ['pineapple_crop', 'pineapple_bush'])
-    assets.tag(M, 'item', 'minecraft:small_flowers', ['hibiscus'])
+    assets.tag(M, 'item', 'minecraft:small_flowers', small)
     assets.tag(M, 'item', 'minecraft:flowers', ['bird_of_paradise'])
     assets.tag(M, 'item', 'minecraft:bee_food', flowers)
     assets.tag(M, 'item', 'minecraft:villager_plantable_seeds', ['pineapple_crown'])
@@ -427,6 +442,11 @@ NAMES = {
     'block.raft.beach_grass': 'Beach Grass', 'block.raft.sea_oats': 'Sea Oats', 'block.raft.hibiscus': 'Hibiscus',
     'block.raft.bird_of_paradise': 'Bird of Paradise', 'block.raft.tropical_fern': 'Tropical Fern',
     'block.raft.pineapple_bush': 'Pineapple Bush', 'block.raft.pineapple_crop': 'Pineapples',
+    'block.raft.plumeria': 'Plumeria', 'block.raft.beach_morning_glory': 'Beach Morning Glory',
+    'block.raft.tropical_orchid': 'Tropical Orchid', 'block.raft.spider_lily': 'Spider Lily',
+    'block.raft.heliconia': 'Heliconia', 'block.raft.aloe_vera': 'Aloe Vera',
+    'block.raft.potted_plumeria': 'Potted Plumeria', 'block.raft.potted_tropical_orchid': 'Potted Tropical Orchid',
+    'block.raft.potted_aloe_vera': 'Potted Aloe Vera',
     'block.raft.potted_hibiscus': 'Potted Hibiscus', 'block.raft.potted_tropical_fern': 'Potted Tropical Fern',
     'block.raft.potted_palm_sapling': 'Potted Palm Sapling', 'block.raft.glow_kelp': 'Glow Kelp',
     'block.raft.glow_kelp_plant': 'Glow Kelp Plant', 'block.raft.sea_anemone_red': 'Red Sea Anemone',

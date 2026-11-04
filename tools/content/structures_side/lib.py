@@ -890,10 +890,57 @@ def sediment(s, top_y, seed=0):
             s.blocks[pos] = (pick(rnd, [('minecraft:sand', 6), ('minecraft:gravel', 2), ('minecraft:clay', 1)]), {}, None)
 
 
-def save(s, path, finalize=True, waterlog=False, wet_max_y=None, floor_y=None):
-    """floor_y: template y of the sea floor surface for floor-projected builds (start height -3 -> 2)."""
+NON_SOLID = ('minecraft:air', 'minecraft:water', 'minecraft:structure_void', 'minecraft:cave_air', 'minecraft:jigsaw')
+
+
+def anchor(s, ground_layers=2, max_drop=6):
+    """No floating parts: a hanging block gets a chain up to the block above it (or goes if there is none within 6),
+    small parts that touch nothing down to the template's ground layers are dropped, bigger ones are reported."""
+    for (x, y, z), b in list(s.blocks.items()):
+        if b and b[1].get('hanging') == 'true':
+            ys = []
+            for yy in range(y + 1, y + 7):
+                nb = s.blocks.get((x, yy, z))
+                if nb and nb[0] not in NON_SOLID:
+                    break
+                ys.append(yy)
+            else:
+                ys = None
+            if ys is None:
+                s.set(x, y, z, None)
+            for yy in ys or ():
+                s.set(x, yy, z, 'minecraft:iron_chain[axis=y]')
+    solid = {p for p, b in s.blocks.items() if b and b[0] not in NON_SOLID}
+    ground = min(p[1] for p in solid) + ground_layers - 1
+    seen = set()
+    for p in sorted(solid):
+        if p in seen:
+            continue
+        stack, comp = [p], []
+        seen.add(p)
+        while stack:
+            x, y, z = q = stack.pop()
+            comp.append(q)
+            for n in ((x + 1, y, z), (x - 1, y, z), (x, y + 1, z), (x, y - 1, z), (x, y, z + 1), (x, y, z - 1)):
+                if n in solid and n not in seen:
+                    seen.add(n)
+                    stack.append(n)
+        if min(c[1] for c in comp) > ground:
+            if len(comp) <= max_drop:
+                print(f'  dropped {s.name}: {sorted({s.blocks[c][0].split(":")[1] for c in comp})} at {min(comp)}')
+                for c in comp:
+                    s.set(*c, None)
+            else:
+                print(f'  FLOATING {s.name}: {len(comp)} blocks from {min(comp)}')
+
+
+def save(s, path, finalize=True, waterlog=False, wet_max_y=None, floor_y=None, anchored=False, ground_layers=2):
+    """floor_y: template y of the sea floor surface for floor-projected builds (start height -3 -> 2).
+    anchored: run anchor() (no floating blocks)."""
     if floor_y is not None:
         sediment(s, floor_y)
+    if anchored:
+        anchor(s, ground_layers)
     if finalize:
         s.finalize(wet_max_y=wet_max_y, waterlog=waterlog)
     return s.save(MODULE, path)

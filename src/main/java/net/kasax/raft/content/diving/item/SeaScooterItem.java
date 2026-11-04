@@ -28,7 +28,7 @@ import java.util.function.Consumer;
  * Energy item component), charged in the air compressor or any charger that speaks the energy API.
  */
 public class SeaScooterItem extends Item implements SimpleEnergyItem {
-    public static final long CAPACITY = 3_000;
+    public static final long CAPACITY = 9_000;   // 4500 ticks = 3:45 min of thrust
     public static final long MAX_INPUT = 100;
     /** FE per tick while running: a full battery lasts 75 seconds. */
     public static final long DRAIN = 2;

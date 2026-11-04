@@ -210,11 +210,16 @@ def beach_grass():
 def sea_oats():
     lower, upper = img(), img()
     g = GRASS
-    for x, h, lean in [(3, 12, -2), (5, 15, -1), (7, 16, 0), (9, 14, 1), (11, 13, 2), (6, 8, 1), (12, 7, 2)]:
+    # leaves stay inside the lower half (they never reach its top edge) ...
+    for x, h, lean in [(3, 11, -2), (4, 13, -1), (8, 12, 1), (10, 13, 1), (12, 10, 2), (6, 8, 1), (13, 7, 2),
+                       (2, 7, -1)]:
         blade(lower, x, 15, h, lean, g)
-    # stems going on into the upper half, with drooping golden seed heads
+    # ... the seed stems run straight up through it and go on in the upper half, with drooping golden seed heads
     seed = ramp('#d6b26a', 4, 0.36, 0.05, 0.06)
     stem = g[2]
+    for x in (5, 7, 9, 11):
+        for y in range(16):
+            P(lower, x, y, stem)
     for x, h, lean, heads in [(5, 12, -2, 3), (7, 14, 0, 4), (9, 11, 2, 3), (11, 8, 3, 2)]:
         pts = []
         for i in range(h):
@@ -748,3 +753,118 @@ def glow_kelp_item():
 
 def pineapple_bush_item():
     return pineapple_bush(3)
+
+
+# ------------------------------------------------------------------------------------------- island flowers (3.0.1)
+def _stem(im, x, y0, y1, c, lean=0):
+    for y in range(y1, y0 + 1):
+        t = (y0 - y) / max(1, y0 - y1)
+        P(im, x + round(lean * t * t), y, c)
+
+
+def _leaf_pair(im, x, y, lf):
+    paint(im, ['..ab', '.abc', 'abc.'], {'a': lf[1], 'b': lf[2], 'c': lf[3]}, x + 1, y)
+    paint(im, ['ba..', 'cba.', '.cba'], {'a': lf[1], 'b': lf[2], 'c': lf[3]}, x - 4, y + 1)
+
+
+def plumeria():
+    """Frangipani: two five-petal blossoms, white with a yellow heart, over glossy dark leaves."""
+    im = img()
+    lf = DEEP_LEAF
+    _stem(im, 7, 15, 7, lf[1])
+    _stem(im, 8, 13, 9, lf[1], lean=2)
+    _leaf_pair(im, 7, 11, lf)
+    w = ramp('#f4efe2', 4, 0.22, 0.02, 0.05)
+    flower = ['.aba.', 'abyba', 'byYyb', 'abyba', '.aba.']
+    pal = {'a': w[1], 'b': w[2], 'y': '#f2c94c', 'Y': '#e8a020'}
+    paint(im, flower, pal, 4, 3)
+    paint(im, flower, pal, 8, 6)
+    return im
+
+
+def beach_morning_glory():
+    """Low creeping vine of the dunes: heart-shaped leaves and violet trumpet flowers."""
+    im = img()
+    lf = LEAF
+    for x in range(1, 15):
+        P(im, x, 14 + (x // 3) % 2, lf[1])
+    for x, y in ((2, 12), (6, 13), (10, 12), (13, 13)):
+        paint(im, ['.ab', 'abc', '.c.'], {'a': lf[2], 'b': lf[3], 'c': lf[1]}, x - 1, y)
+    v = ramp('#8a4fd0', 4, 0.42, 0.04, 0.06)
+    for x, y in ((3, 8), (9, 7), (12, 10)):
+        paint(im, ['abcba', '.bwb.', '..d..'], {'a': v[1], 'b': v[2], 'c': v[3], 'w': '#f6eefa', 'd': lf[2]}, x - 2, y)
+        _stem(im, x, y + 5 if y + 5 < 15 else 14, y + 3, lf[1])
+    return im
+
+
+def tropical_orchid():
+    """An arching orchid spray: magenta blooms on a curved stalk over broad strap leaves."""
+    im = img()
+    lf = DEEP_LEAF
+    paint(im, ['b......b', 'cb....bc', '.cbaabc.', '..cbbc..'], {'a': lf[1], 'b': lf[2], 'c': lf[3]}, 4, 12)
+    for i, (x, y) in enumerate(((8, 12), (8, 11), (8, 10), (7, 9), (7, 8), (6, 7), (6, 6), (7, 5), (8, 4), (9, 4))):
+        P(im, x, y, lf[1] if i < 4 else lf[2])
+    m = ramp('#d63fa8', 4, 0.45, 0.04, 0.06)
+    bloom = ['a.a', 'bcb', 'awa']
+    pal = {'a': m[1], 'b': m[2], 'c': m[3], 'w': '#fff0a0'}
+    for x, y in ((3, 6), (8, 2), (11, 5), (4, 2)):
+        paint(im, bloom, pal, x, y)
+    return im
+
+
+def spider_lily():
+    """White spider lily: long thin curling petals around a crown, on a tall green stem."""
+    im = img()
+    lf = LEAF
+    _stem(im, 8, 15, 7, lf[1])
+    paint(im, ['..ab', '.abc', 'abc.'], {'a': lf[1], 'b': lf[2], 'c': lf[3]}, 9, 12)
+    w = ramp('#f6f6f0', 4, 0.2, 0.02, 0.04)
+    for dx, dy in ((-1, -1), (1, -1), (-1, 1), (1, 1), (-1, 0), (1, 0)):
+        for k in range(1, 5):
+            P(im, 8 + dx * k, 5 + dy * (k // 2) - (1 if k == 4 else 0), w[1] if k < 4 else w[3])
+    paint(im, ['.c.', 'cgc', '.c.'], {'c': w[2], 'g': '#d8e88a'}, 7, 4)
+    for x, y in ((6, 2), (10, 2), (8, 1)):
+        P(im, x, y, '#e8d070')
+    return im
+
+
+def heliconia():
+    """Lobster claw heliconia (two blocks): banana-like paddle leaves below, a hanging zigzag of red, yellow-tipped
+    bracts above."""
+    lower, upper = img(), img()
+    lf = DEEP_LEAF
+    for x, top, lean in [(3, 1, -1), (8, 0, 0), (12, 2, 1)]:
+        for y in range(top + 6, 16):
+            P(lower, x, y, lf[1])
+        for y in range(top, top + 7):
+            w = 1 if y in (top, top + 6) else 2
+            for dx in range(-w, w + 1):
+                P(lower, x + lean + dx, y, lf[3] if dx < 0 else lf[2])
+            P(lower, x + lean, y, lf[4])
+    _stem(upper, 8, 15, 2, lf[1])
+    red = ramp('#d8262e', 4, 0.4, 0.04, 0.06)
+    for i in range(5):
+        y = 3 + i * 2
+        side = -1 if i % 2 == 0 else 1
+        for k in range(1, 4):
+            P(upper, 8 + side * k, y + (k // 2), red[2] if k < 3 else red[1])
+            P(upper, 8 + side * k, y + 1 + (k // 2), red[3])
+        P(upper, 8 + side * 4, y + 1, '#f2d03a')
+        P(upper, 8 + side * 4, y + 2, '#7ab83a')
+    return lower, upper
+
+
+def aloe_vera():
+    """Aloe: a rosette of thick, pale spotted leaves with small teeth."""
+    im = img()
+    g = ramp('#7fae8a', 5, 0.42, 0.04, 0.06)
+    for x, top, lean in [(2, 7, -3), (5, 4, -1), (8, 2, 0), (11, 4, 1), (13, 7, 3), (6, 8, -2), (10, 8, 2)]:
+        h = 15 - top
+        for i in range(h):
+            t = i / max(1, h - 1)
+            xx = x + round(lean * t * t)
+            y = 15 - i
+            P(im, xx, y, g[1] if i < h // 3 else g[2] if i < 2 * h // 3 else g[3])
+            if i < h - 2:
+                P(im, xx + (1 if lean >= 0 else -1), y, g[2] if (i + x) % 4 else '#d8e8d0')
+    return im

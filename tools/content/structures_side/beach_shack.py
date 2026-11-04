@@ -225,7 +225,7 @@ def main(preview=False):
         rnd = random.Random(31415911 + v)
         s = fn(rnd)
         path = f'beach_shack/{fn.__name__}'
-        save(s, path)
+        save(s, path, anchored=True)
         out.append((path, s))
         if preview:
             print('  preview', contact(s, f'beach_shack_{fn.__name__}', scale=7))

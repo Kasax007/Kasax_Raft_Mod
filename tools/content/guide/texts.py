@@ -97,7 +97,7 @@ The Ship Cannon fires Cannonballs (an iron ingot and gunpowder make 4): 8 damage
 T['technology'] = """\
 The sea has its own small tech line. It runs on FE (Team Reborn Energy), so machines of other tech mods can connect.
 # Power
-* Makeshift Solar Panel: 10 FE per tick in the sun. Over the Endless Sea the sun never sets.
+* Makeshift Solar Panel: 10 FE per tick in the sun, by day only.
 * Wind Turbine: 20 FE per tick. It needs free air in the 3 by 3 area in front of its rotor and a spot above y 90.
 * Makeshift Battery: stores 1,000,000 FE.
 * Copper Cable carries 128 FE per tick, Titanium Cable 512.
@@ -155,14 +155,14 @@ The Endless Sea is an archipelago: open water, islands, reefs and deep trenches.
 * Abyssal Trench: the deepest and darkest water. Tube worms, bubble vents and anglerfish.
 * Wreck Graveyard: foggy water full of wrecks and drowned corsairs.
 * Frost Floes: icebergs, ice floes and penguins.
-* Palm Isle: sandy beaches with palms, seashells, sea glass and crabs.
-* Jungle Isle: jungle, bamboo, pineapples and parrots.
-* Mangrove Isle: low, muddy islands with mangroves and frogs.
+* Palm Isle: sandy beaches with palms, hibiscus, plumeria, morning glory, aloe, seashells, sea glass and crabs.
+* Jungle Isle: jungle, bamboo, orchids, heliconias, birds of paradise, pineapples and parrots.
+* Mangrove Isle: low, muddy islands with mangroves, spider lilies and frogs.
 * Volcanic Isle: black sand, ash, basalt and lava, guarded by ember crabs.
 # Gifts of the sea
 Giant Clams open and close. Use an open clam to take its pearl; a new one grows in time.
 Sea Urchins hurt to touch and drop spines. Wild Pineapple Bushes are ready when the fruit is golden.
-Black Sand smelts into tinted glass. Hibiscus makes red dye, Bird of Paradise orange dye. Seashells become bone meal or Shell Sand."""
+Black Sand smelts into tinted glass. Island flowers make dyes (Hibiscus and Heliconia red, Bird of Paradise orange, Orchid magenta, Morning Glory purple, Plumeria and Spider Lily white, Aloe green) and look nice in flower pots. Seashells become bone meal or Shell Sand."""
 
 T['places'] = """\
 Away from the story you find many smaller places, with loot, logs and a bit of danger.
@@ -282,7 +282,7 @@ A full set gives Water Breathing, Dolphin's Grace and Conduit Power.
 
 T['tips'] = """\
 * Put Reinforced Foundations on the edges of your raft to keep sharks from biting.
-* The sun never sets over the Endless Sea, but deep water, caves and rooms are dark. Bring lights.
+* Nights over the Endless Sea are dark, and so are deep water, caves and rooms. Bring lights.
 * Glow kelp (light 8), glowing anemones (10) and tube worms (6) light the deep.
 * Rest in a Hammock on your raft: it sets your respawn point.
 * A Scarecrow keeps seagulls away from your crops.

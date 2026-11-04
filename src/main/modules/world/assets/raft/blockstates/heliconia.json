@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "raft:block/heliconia_bottom"
+    },
+    "half=upper": {
+      "model": "raft:block/heliconia_top"
+    }
+  }
+}

@@ -603,7 +603,7 @@ def verify(s):
 
 
 def write_json_files():
-    structure_json(SID, f'raft:{SID}/start', 'surface_structures', 'beard_box', -1, 'OCEAN_FLOOR_WG', size=1,
+    structure_json(SID, f'raft:{SID}/start', 'surface_structures', 'beard_thin', -1, 'OCEAN_FLOOR_WG', size=1,
                    max_distance=80, spawn_overrides={
                        'monster': spawns([('raft:moray_eel', 4, 1, 2), ('minecraft:drowned', 1, 1, 1)]),
                        'water_ambient': spawns([('raft:moray_eel', 3, 1, 1), ('minecraft:tropical_fish', 8, 3, 6),
@@ -616,7 +616,7 @@ def write_json_files():
         rule('raft:tidestone_bricks', 'raft:mossy_tidestone_bricks', probability=0.08),
         rule('raft:tidestone', 'raft:mossy_tidestone_bricks', probability=0.05),
     ]}])
-    biome_tag(SID, ['coral_shallows', 'glowing_lagoon'])
+    biome_tag(SID, ['coral_shallows', 'glowing_lagoon', 'raft_ocean_biome', 'kelp_forest'])   # site check: floor 50..74
 
 
 def main():

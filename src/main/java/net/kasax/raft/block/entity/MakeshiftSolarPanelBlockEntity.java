@@ -52,8 +52,8 @@ public class MakeshiftSolarPanelBlockEntity extends BlockEntity {
         boolean inRaftDim = level.dimension() == ModDimensions.RAFTDIM_LEVEL_KEY;
         boolean skyVisible = level.canSeeSky(pos.above());
 
-        // The overworld only gives energy during the day; the raft dimension is always sunny.
-        if (skyVisible && ((inOverworld && level.isBrightOutside()) || inRaftDim)) {
+        // Energy only by day, in the overworld and over the Endless Sea (it has day and night now).
+        if (skyVisible && (inOverworld || inRaftDim) && level.isBrightOutside()) {
             if (energyStorage.amount < energyStorage.getCapacity()) {
                 energyStorage.amount = Mth.clamp(energyStorage.amount + 10, 0, energyStorage.getCapacity());
                 update();

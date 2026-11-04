@@ -6,7 +6,8 @@
     "ScreenshotLeakMixin",
     "SoundLogMixin",
     "NoRenderMixin",
-    "UserMixin"
+    "UserMixin",
+    "FreeCamMixin"
   ],
   "injectors": {
     "defaultRequire": 1

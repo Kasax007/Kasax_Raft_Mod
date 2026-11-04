@@ -63,6 +63,8 @@ public final class WorldBlocks {
     public static Block PINEAPPLE_BUSH;
     public static Block PINEAPPLE_CROP;
     public static Block POTTED_HIBISCUS;
+    public static Block PLUMERIA, BEACH_MORNING_GLORY, TROPICAL_ORCHID, SPIDER_LILY, HELICONIA, ALOE_VERA;
+    public static Block POTTED_PLUMERIA, POTTED_TROPICAL_ORCHID, POTTED_ALOE_VERA;
     public static Block POTTED_TROPICAL_FERN;
     public static Block POTTED_PALM_SAPLING;
     // ------------------------------------------------------------------------------------------- sea life
@@ -138,6 +140,21 @@ public final class WorldBlocks {
         BIRD_OF_PARADISE = BcReg.block("bird_of_paradise", BeachTallFlowerBlock::new,
                 plant(MapColor.COLOR_ORANGE).offsetType(BlockBehaviour.OffsetType.XZ));
         BcReg.blockItem("bird_of_paradise", DoubleHighBlockItem::new, BIRD_OF_PARADISE, new Item.Properties(), TAB);
+        // island flowers of 3.0.1
+        PLUMERIA = BcReg.blockWithItem("plumeria", p -> new BeachFlowerBlock(MobEffects.REGENERATION, 5.0F, p),
+                plant(MapColor.SNOW).offsetType(BlockBehaviour.OffsetType.XZ), TAB);
+        BEACH_MORNING_GLORY = BcReg.blockWithItem("beach_morning_glory",
+                p -> new BeachFlowerBlock(MobEffects.NIGHT_VISION, 5.0F, p),
+                plant(MapColor.COLOR_PURPLE).offsetType(BlockBehaviour.OffsetType.XZ), TAB);
+        TROPICAL_ORCHID = BcReg.blockWithItem("tropical_orchid", p -> new BeachFlowerBlock(MobEffects.FIRE_RESISTANCE, 4.0F, p),
+                plant(MapColor.COLOR_MAGENTA).offsetType(BlockBehaviour.OffsetType.XZ), TAB);
+        SPIDER_LILY = BcReg.blockWithItem("spider_lily", p -> new BeachFlowerBlock(MobEffects.SLOW_FALLING, 5.0F, p),
+                plant(MapColor.SNOW).offsetType(BlockBehaviour.OffsetType.XZ), TAB);
+        HELICONIA = BcReg.block("heliconia", BeachTallFlowerBlock::new,
+                plant(MapColor.COLOR_RED).offsetType(BlockBehaviour.OffsetType.XZ));
+        BcReg.blockItem("heliconia", DoubleHighBlockItem::new, HELICONIA, new Item.Properties(), TAB);
+        ALOE_VERA = BcReg.blockWithItem("aloe_vera", p -> new BeachPlantBlock(null, p),
+                plant(MapColor.PLANT).offsetType(BlockBehaviour.OffsetType.XZ), TAB);
         PINEAPPLE_BUSH = BcReg.block("pineapple_bush", PineappleBushBlock::new,
                 BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).randomTicks().noCollision().sound(SoundType.GRASS)
                         .ignitedByLava().pushReaction(PushReaction.POPPED));
@@ -150,6 +167,11 @@ public final class WorldBlocks {
         POTTED_TROPICAL_FERN = BcReg.block("potted_tropical_fern", p -> new FlowerPotBlock(TROPICAL_FERN, p),
                 Blocks.flowerPotProperties());
         POTTED_PALM_SAPLING = BcReg.block("potted_palm_sapling", p -> new FlowerPotBlock(ModBlocks.PALM_SAPLING, p),
+                Blocks.flowerPotProperties());
+        POTTED_PLUMERIA = BcReg.block("potted_plumeria", p -> new FlowerPotBlock(PLUMERIA, p), Blocks.flowerPotProperties());
+        POTTED_TROPICAL_ORCHID = BcReg.block("potted_tropical_orchid", p -> new FlowerPotBlock(TROPICAL_ORCHID, p),
+                Blocks.flowerPotProperties());
+        POTTED_ALOE_VERA = BcReg.block("potted_aloe_vera", p -> new FlowerPotBlock(ALOE_VERA, p),
                 Blocks.flowerPotProperties());
 
         // ----------------------------------------------------------------------------------------- sea life

@@ -15,8 +15,16 @@ import org.spongepowered.asm.mixin.injection.At;
  */
 @Mixin(Minecraft.class)
 public class NoRenderMixin {
+    private static long bctest$last;
+
     @WrapOperation(method = "renderFrame", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GameRenderer;render()V"))
     private void bctest$skipFrame(GameRenderer renderer, Operation<Void> original) {
-        if (!BcScript.skipFrames) original.call(renderer);
+        if (BcScript.skipFrames) return;
+        if (BcScript.throttleMs > 0) {
+            long now = System.currentTimeMillis();
+            if (now - bctest$last < BcScript.throttleMs) return;
+            bctest$last = now;
+        }
+        original.call(renderer);
     }
 }

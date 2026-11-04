@@ -7,6 +7,14 @@
     {
       "id": "raft:glowing_lagoon",
       "required": false
+    },
+    {
+      "id": "raft:raft_ocean_biome",
+      "required": false
+    },
+    {
+      "id": "raft:kelp_forest",
+      "required": false
     }
   ]
 }

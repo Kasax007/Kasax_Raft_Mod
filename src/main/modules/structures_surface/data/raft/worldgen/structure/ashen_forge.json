@@ -25,6 +25,6 @@
   },
   "start_pool": "raft:ashen_forge/start",
   "step": "surface_structures",
-  "terrain_adaptation": "beard_box",
+  "terrain_adaptation": "beard_thin",
   "use_expansion_hack": false
 }

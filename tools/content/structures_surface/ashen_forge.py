@@ -1,6 +1,6 @@
 """Ashen Forge – Tidewarden forge temple built into a volcanic slope (story chapter 6, Ember Sigil).
 
-Pieces (jigsaw, rigid, terrain_adaptation beard_box, start projected to WORLD_SURFACE_WG):
+Pieces (jigsaw, rigid, terrain_adaptation beard_thin, start projected to WORLD_SURFACE_WG):
   ashen_forge/hall   start: forecourt with lava basins and guardian statues, monumental tidestone/basalt
                      facade with lava windows and a glowing emblem, the great hall with lava channels and
                      colonnades, the giant anvil and forge hearth (chimney with smoke), storeroom, tablets.
@@ -640,7 +640,7 @@ def build_all(preview=True):
     ])
     wg.pool('ashen_forge/start', [('raft:ashen_forge/hall', 1, 'raft:ashen_forge_cracks', 'rigid')])
     wg.pool('ashen_forge/vault', [('raft:ashen_forge/vault', 1, 'raft:ashen_forge_cracks', 'rigid')])
-    wg.structure('ashen_forge', 'raft:ashen_forge/start', 'surface_structures', 'beard_box', 0, 'WORLD_SURFACE_WG',
+    wg.structure('ashen_forge', 'raft:ashen_forge/start', 'surface_structures', 'beard_thin', 0, 'WORLD_SURFACE_WG',
                  size=1, max_dist=80, spawn_overrides={
                      'monster': {'bounding_box': 'piece', 'spawns': [
                          {'type': 'raft:ember_crab', 'count': {'type': 'minecraft:uniform', 'min_inclusive': 1,
