@@ -539,6 +539,15 @@ public class VesselEntity extends Entity {
         this.clientEffects();
     }
 
+    /** Client: a full position sync (or a jump) keeps the exact synced yaw, not the packed one of the packet. */
+    @Override
+    public void snapTo(double x, double y, double z, float yRot, float xRot) {
+        if (this.level().isClientSide() && this.clientReady) {
+            yRot = this.entityData.get(DATA_YAW);
+        }
+        super.snapTo(x, y, z, yRot, xRot);
+    }
+
     /** Client: the blocks arrived from the server. */
     public void setClientStructure(VesselStructure structure) {
         this.structure = structure;
