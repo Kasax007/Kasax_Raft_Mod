@@ -13,7 +13,7 @@ Script commands (one per line, `#` comments):
 | `pcmd <command>` | command as the player at the player (`place template raft:x ~ ~ ~`) |
 | `wait <ticks>` | wait game ticks |
 | `swait <ticks>` | wait until the server has run that many ticks (a busy server falls behind the client) |
-| `settle [s]` | wait until chunks around the player are downloaded and drawn |
+| `settle [s]` | wait until the client has loaded the level (after a dimension change) and the chunks around the player are downloaded and drawn |
 | `shot <name>` | screenshot |
 | `size <w> <h>` | window size (default 1280×720) |
 | `hud on/off`, `third on/off`, `gui <n>`, `rd <n>` | HUD, third person camera, GUI scale, render distance |
