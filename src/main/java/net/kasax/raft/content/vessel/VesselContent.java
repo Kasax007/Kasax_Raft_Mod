@@ -17,7 +17,6 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.material.PushReaction;
 
 /** Registrations of the vessel module: the helm, sail, oar and raft motor blocks and the sailing raft entity. */
 public final class VesselContent {
@@ -31,7 +30,7 @@ public final class VesselContent {
 
     public static final Block HELM = BcReg.blockWithItem("helm", HelmBlock::new,
             BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(1.5F).sound(SoundType.WOOD).noOcclusion()
-                    .ignitedByLava().pushReaction(PushReaction.BLOCK),
+                    .ignitedByLava(),
             BcTabs.Tab.VOYAGE, "tooltip.raft.helm", "tooltip.raft.helm.1");
     public static final Block SAIL = BcReg.blockWithItem("sail", SailBlock::new,
             BlockBehaviour.Properties.of().mapColor(MapColor.WOOL).strength(0.8F).sound(SoundType.WOOL).noOcclusion()

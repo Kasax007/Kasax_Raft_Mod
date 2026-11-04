@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "raft:block/oar"
+    },
+    "facing=east": {
+      "model": "raft:block/oar",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "raft:block/oar",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "raft:block/oar",
+      "y": 270
+    }
+  }
+}

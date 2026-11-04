@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "raft:block/helm"
+    },
+    "facing=east": {
+      "model": "raft:block/helm",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "raft:block/helm",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "raft:block/helm",
+      "y": 270
+    }
+  }
+}

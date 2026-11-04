@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "package": "net.kasax.raft.content.vessel.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "EntityGetterMixin",
+    "ServerGamePacketListenerImplMixin"
+  ],
+  "client": [
+    "client.ClientLevelTickMixin",
+    "client.LocalPlayerTickMixin",
+    "client.MinecraftPickMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -64,7 +64,7 @@ public final class VesselFuel {
             if (remainder != null) {
                 ItemStack rest = remainder.create();
                 if (!player.getInventory().add(rest)) {
-                    player.drop(rest, false);
+                    player.drop(rest, false, net.minecraft.util.Prediction.SERVER_ONLY);
                 }
             }
         }

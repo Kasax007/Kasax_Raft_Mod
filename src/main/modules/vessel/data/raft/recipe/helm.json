@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "W": "raft:ship_wheel",
+    "S": "minecraft:stick",
+    "P": "#minecraft:planks"
+  },
+  "pattern": [
+    " W ",
+    " S ",
+    "PPP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:helm"
+  }
+}

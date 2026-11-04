@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "R": "raft:rope",
+    "C": "raft:sail_canvas",
+    "S": "minecraft:stick"
+  },
+  "pattern": [
+    " R ",
+    "CSC",
+    " S "
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:sail"
+  }
+}

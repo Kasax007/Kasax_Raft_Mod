@@ -1,0 +1,379 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "raft:block/palm_planks",
+    "lock": "raft:block/driftwood_log",
+    "loom": "raft:block/stripped_palm_log",
+    "blade": "raft:block/palm_planks",
+    "grip": "raft:block/rope_coil"
+  },
+  "elements": [
+    {
+      "from": [
+        5.5,
+        0,
+        0.5
+      ],
+      "to": [
+        10.5,
+        2,
+        5.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            5.5,
+            14.0,
+            10.5,
+            16.0
+          ],
+          "texture": "#lock"
+        },
+        "east": {
+          "uv": [
+            0.5,
+            14.0,
+            5.5,
+            16.0
+          ],
+          "texture": "#lock"
+        },
+        "south": {
+          "uv": [
+            5.5,
+            14.0,
+            10.5,
+            16.0
+          ],
+          "texture": "#lock"
+        },
+        "west": {
+          "uv": [
+            0.5,
+            14.0,
+            5.5,
+            16.0
+          ],
+          "texture": "#lock"
+        },
+        "up": {
+          "uv": [
+            5.5,
+            0.5,
+            10.5,
+            5.5
+          ],
+          "texture": "#lock"
+        },
+        "down": {
+          "uv": [
+            5.5,
+            0.5,
+            10.5,
+            5.5
+          ],
+          "texture": "#lock"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        2,
+        2
+      ],
+      "to": [
+        9,
+        7,
+        4
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            7.0,
+            9.0,
+            9.0,
+            14.0
+          ],
+          "texture": "#lock"
+        },
+        "east": {
+          "uv": [
+            2.0,
+            9.0,
+            4.0,
+            14.0
+          ],
+          "texture": "#lock"
+        },
+        "south": {
+          "uv": [
+            7.0,
+            9.0,
+            9.0,
+            14.0
+          ],
+          "texture": "#lock"
+        },
+        "west": {
+          "uv": [
+            2.0,
+            9.0,
+            4.0,
+            14.0
+          ],
+          "texture": "#lock"
+        },
+        "up": {
+          "uv": [
+            7.0,
+            2.0,
+            9.0,
+            4.0
+          ],
+          "texture": "#lock"
+        },
+        "down": {
+          "uv": [
+            7.0,
+            2.0,
+            9.0,
+            4.0
+          ],
+          "texture": "#lock"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        7,
+        -14
+      ],
+      "to": [
+        8.5,
+        8,
+        16
+      ],
+      "rotation": {
+        "origin": [
+          8,
+          7.5,
+          3
+        ],
+        "axis": "x",
+        "angle": -22.5
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            7,
+            7,
+            8,
+            8
+          ],
+          "texture": "#loom"
+        },
+        "east": {
+          "uv": [
+            0,
+            7,
+            16,
+            8
+          ],
+          "texture": "#loom"
+        },
+        "south": {
+          "uv": [
+            8,
+            7,
+            9,
+            8
+          ],
+          "texture": "#loom"
+        },
+        "west": {
+          "uv": [
+            0,
+            8,
+            16,
+            9
+          ],
+          "texture": "#loom"
+        },
+        "up": {
+          "uv": [
+            7,
+            0,
+            8,
+            16
+          ],
+          "texture": "#loom"
+        },
+        "down": {
+          "uv": [
+            8,
+            0,
+            9,
+            16
+          ],
+          "texture": "#loom"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        6.75,
+        -16
+      ],
+      "to": [
+        10,
+        8.25,
+        -9
+      ],
+      "rotation": {
+        "origin": [
+          8,
+          7.5,
+          3
+        ],
+        "axis": "x",
+        "angle": -22.5
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            6,
+            6,
+            10,
+            7.5
+          ],
+          "texture": "#blade"
+        },
+        "east": {
+          "uv": [
+            0,
+            4,
+            7,
+            5.5
+          ],
+          "texture": "#blade"
+        },
+        "south": {
+          "uv": [
+            6,
+            8,
+            10,
+            9.5
+          ],
+          "texture": "#blade"
+        },
+        "west": {
+          "uv": [
+            9,
+            4,
+            16,
+            5.5
+          ],
+          "texture": "#blade"
+        },
+        "up": {
+          "uv": [
+            6,
+            0,
+            10,
+            7
+          ],
+          "texture": "#blade"
+        },
+        "down": {
+          "uv": [
+            6,
+            9,
+            10,
+            16
+          ],
+          "texture": "#blade"
+        }
+      }
+    },
+    {
+      "from": [
+        7.25,
+        6.75,
+        12.5
+      ],
+      "to": [
+        8.75,
+        8.25,
+        16
+      ],
+      "rotation": {
+        "origin": [
+          8,
+          7.5,
+          3
+        ],
+        "axis": "x",
+        "angle": -22.5
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            7,
+            12,
+            8.5,
+            15
+          ],
+          "texture": "#grip"
+        },
+        "east": {
+          "uv": [
+            7,
+            12,
+            8.5,
+            15
+          ],
+          "texture": "#grip"
+        },
+        "south": {
+          "uv": [
+            7,
+            12,
+            8.5,
+            15
+          ],
+          "texture": "#grip"
+        },
+        "west": {
+          "uv": [
+            7,
+            12,
+            8.5,
+            15
+          ],
+          "texture": "#grip"
+        },
+        "up": {
+          "uv": [
+            7,
+            12,
+            8.5,
+            15
+          ],
+          "texture": "#grip"
+        },
+        "down": {
+          "uv": [
+            7,
+            12,
+            8.5,
+            15
+          ],
+          "texture": "#grip"
+        }
+      }
+    }
+  ]
+}

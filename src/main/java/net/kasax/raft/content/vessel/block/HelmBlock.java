@@ -31,9 +31,10 @@ import java.util.Map;
 public class HelmBlock extends HorizontalDirectionalBlock {
     /** Shape for facing=north: stool at the south (stern) side, pedestal and wheel at the north side. */
     private static final VoxelShape NORTH_SHAPE = Shapes.or(
-            Block.box(4.0, 0.0, 9.0, 12.0, 7.0, 15.0),
-            Block.box(6.5, 0.0, 3.0, 9.5, 11.0, 6.0),
-            Block.box(1.0, 4.0, 2.5, 15.0, 16.0, 4.5));
+            Block.box(5.0, 0.0, 3.0, 11.0, 2.0, 8.0),
+            Block.box(6.5, 2.0, 4.0, 9.5, 12.0, 7.0),
+            Block.box(0.0, 4.0, 7.5, 16.0, 16.0, 8.5),
+            Block.box(4.0, 0.0, 10.0, 12.0, 7.5, 15.5));
     private static final Map<Direction, VoxelShape> SHAPES = Shapes.rotateHorizontal(NORTH_SHAPE);
 
     public HelmBlock(Properties properties) {

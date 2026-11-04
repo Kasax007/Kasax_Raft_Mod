@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "raft:block/raft_motor"
+    },
+    "facing=east": {
+      "model": "raft:block/raft_motor",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "raft:block/raft_motor",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "raft:block/raft_motor",
+      "y": 270
+    }
+  }
+}

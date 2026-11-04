@@ -48,8 +48,12 @@ final class AlmanacBook {
         list.add(simple("technology", "raft:wind_turbine", "raft:makeshift_solar_panel", "raft:wind_turbine",
                 "raft:makeshift_battery", "raft:copper_cable", "raft:quarry", "raft:titanium_furnace",
                 "raft:circuit_board"));
-        list.add(simple("sailing", "raft:expedition_raft", "raft:palm_boat", "raft:driftwood_raft", "raft:paddle",
-                "raft:expedition_raft", "raft:raft_sail", "raft:raft_engine", "raft:raft_anchor"));
+        list.add(new Chapter("sailing", "raft:expedition_raft", List.of(
+                Section.text("sailing", "raft:palm_boat", "raft:driftwood_raft", "raft:paddle", "raft:expedition_raft",
+                        "raft:raft_sail", "raft:raft_engine", "raft:raft_anchor"),
+                // rafts built from blocks (module vessel); bookmark {almanac:"sailing/shipwright"}
+                new Section("shipwright", "sailing.shipwright", List.of("raft:helm", "raft:raft_foundation", "raft:sail",
+                        "raft:oar", "raft:raft_motor"), null, true, false))));
         list.add(simple("diving", "raft:diving_helmet", "raft:diving_helmet", "raft:oxygen_tank", "raft:wetsuit",
                 "raft:flippers", "raft:air_compressor", "raft:harpoon_gun", "raft:sea_scooter"));
         list.add(simple("biomes", "raft:glow_kelp", "raft:glow_kelp", "raft:sea_anemone_glow", "raft:giant_clam",

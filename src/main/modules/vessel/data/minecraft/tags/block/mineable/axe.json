@@ -1,0 +1,7 @@
+{
+  "values": [
+    "raft:helm",
+    "raft:sail",
+    "raft:oar"
+  ]
+}
