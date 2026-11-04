@@ -50,7 +50,7 @@ final class TurbineSound extends AbstractTickableSoundInstance {
         float target = wind == WindTurbineBlockEntity.WIND_RUNNING ? 1.0F : wind == WindTurbineBlockEntity.WIND_TOO_LOW ? 0.3F : 0.0F;
         // the rotor speeds up and slows down over a few seconds, like the model
         this.speed += (target - this.speed) * 0.04F;
-        this.volume = Math.max(0.001F, this.speed * 0.9F);
+        this.volume = Math.max(0.001F, this.speed * 0.5F);
         this.pitch = 0.7F + 0.3F * this.speed;
         if (target == 0.0F && this.speed < 0.01F) {
             this.stop();

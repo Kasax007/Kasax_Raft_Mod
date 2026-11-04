@@ -105,7 +105,7 @@ GROUPS['creatures'] = [
     Spec('crab/ambient', creatures.crab_ambient, -25.0),
     Spec('crab/pinch', creatures.crab_pinch, -20.0),
     Spec('ember_crab/ambient', creatures.ember_crab_ambient, -26.0),
-    Spec('seagull/call', creatures.seagull_ambient, -20.0),
+    Spec('seagull/call', creatures.seagull_ambient, -23.0),
     Spec('seagull/hurt', creatures.seagull_hurt, -19.0),
     Spec('seagull/death', creatures.seagull_death, -19.0),
     Spec('seagull/steal', creatures.seagull_steal, -18.0),
@@ -137,7 +137,7 @@ GROUPS['story'] = [
     Spec('leviathan_altar/summon', story.summon, -15.0),
 ]
 GROUPS['ambience'] = [
-    Spec('ambient/sea_loop', ambience.sea_loop, -31.0, numbered=False, quality=3, loop=True),
+    Spec('ambient/sea_loop', ambience.sea_loop, -35.0, numbered=False, quality=3, loop=True),
     Spec('ambient/gulls_far', ambience.gulls_far, -30.0),
     Spec('ambient/deep', ambience.deep_mood, -27.0),
 ]

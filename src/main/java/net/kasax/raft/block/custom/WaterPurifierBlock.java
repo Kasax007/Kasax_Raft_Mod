@@ -97,7 +97,7 @@ public class WaterPurifierBlock extends BaseEntityBlock {
             // the water in the pot boils (the client ticks a block's animation about every 2 s: a 2.5 s bubbling
             // every ~9 s)
             if (random.nextInt(4) == 0) {
-                level.playLocalSound(x, y + 0.5, z, AudioSounds.PURIFIER_BOIL, SoundSource.BLOCKS, 0.7F + random.nextFloat() * 0.3F,
+                level.playLocalSound(x, y + 0.5, z, AudioSounds.PURIFIER_BOIL, SoundSource.BLOCKS, 0.3F + random.nextFloat() * 0.15F,
                         0.9F + random.nextFloat() * 0.2F, false);
             }
             Direction facing = state.getValue(FACING);

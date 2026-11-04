@@ -143,7 +143,7 @@ public class SimpleGrillBlock extends BaseEntityBlock {
             if (random.nextInt(3) == 0 && level.getBlockEntity(pos) instanceof SimpleGrillBlockEntity grill
                     && grill.getItems().stream().anyMatch(s -> !s.isEmpty())) {
                 level.playLocalSound(pos.getX() + 0.5, pos.getY() + 0.7, pos.getZ() + 0.5, AudioSounds.GRILL_SIZZLE,
-                        SoundSource.BLOCKS, 0.6f + random.nextFloat() * 0.4f, 0.9f + random.nextFloat() * 0.2f, false);
+                        SoundSource.BLOCKS, 0.3f + random.nextFloat() * 0.2f, 0.9f + random.nextFloat() * 0.2f, false);
             }
             if (random.nextInt(5) == 0) {
                 for (int i = 0; i < random.nextInt(1) + 1; i++) {
