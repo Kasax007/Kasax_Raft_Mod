@@ -602,5 +602,4 @@ public final class VesselAssembler {
         }
         vessel.stowed().clear();
     }
-
 }
