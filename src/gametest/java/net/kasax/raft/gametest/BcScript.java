@@ -68,6 +68,7 @@ import java.util.function.Function;
  * cmd &lt;command&gt;          run a server command as the server (use @p for the player)
  * pcmd &lt;command&gt;         run a command as the player, at the player's position
  * wait &lt;ticks&gt; [render]  wait game ticks (the client does not draw them unless "render" is given)
+ * swait &lt;ticks&gt;           wait until the server has run that many ticks (a busy server falls behind the client)
  * settle [seconds]        wait until all chunk sections around the camera are drawn (default max 40 s)
  * shot &lt;name&gt;            screenshot to OUT/&lt;name&gt;.png (.jpg while jpg is on)
  * still &lt;name&gt; [scale]   screenshot rendered larger than the window (default 1.25), for slow zooms in the edit
@@ -267,6 +268,17 @@ public class BcScript implements FabricClientGameTest {
             case "deadline" -> deadline = started + (long) (Double.parseDouble(arg) * 60_000);
             case "cmd" -> need().getServer().runCommand(arg);
             case "pcmd" -> need().getServer().runCommand("execute as @p at @p run " + arg);
+            case "swait" -> {
+                // swait <ticks>: wait for that many server ticks (client ticks run on even when the server lags)
+                int n = Integer.parseInt(arg.split("\\s+")[0]);
+                int target = need().getServer().computeOnServer(server -> server.getTickCount()) + n;
+                skipFrames = true;
+                try {
+                    need().getServer().waitFor(server -> server.getTickCount() >= target, Math.max(600, n * 30));
+                } finally {
+                    skipFrames = false;
+                }
+            }
             case "wait" -> {
                 // wait <ticks> [render]: the frames in between are not drawn unless "render" is given
                 String[] a = arg.split("\\s+");

@@ -12,6 +12,7 @@ Script commands (one per line, `#` comments):
 | `cmd <command>` | server command (e.g. `execute in raft:raftdim run tp @p 0 120 0 45 20`) |
 | `pcmd <command>` | command as the player at the player (`place template raft:x ~ ~ ~`) |
 | `wait <ticks>` | wait game ticks |
+| `swait <ticks>` | wait until the server has run that many ticks (a busy server falls behind the client) |
 | `settle [s]` | wait until chunks around the player are downloaded and drawn |
 | `shot <name>` | screenshot |
 | `size <w> <h>` | window size (default 1280×720) |
