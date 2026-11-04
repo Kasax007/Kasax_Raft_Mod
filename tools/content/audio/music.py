@@ -26,7 +26,7 @@ TRACKS = [
     ('shores_of_avalon', 'Shores of Avalon', 'music.raft.port_solace', 0.0, None, 1, -22.0, 'Port Solace, the drowned city'),
     ('port_horizon', 'Port Horizon', 'music.raft.saltmere', 24.0, 236.0, 1, -23.0, 'Saltmere, the stilt village'),
     ('shadowlands_horizon', 'Shadowlands 1 - Horizon', 'music.raft.abyss', 0.0, None, 1, -22.0, 'the Abyssal Trench'),
-    ('night_vigil', 'Night Vigil', 'music.raft.sanctum', 0.0, 209.0, 1, -22.0, 'the Abyssal Sanctum'),
+    ('night_vigil', 'Night Vigil', 'music.raft.sanctum', 0.0, 209.0, 1, -22.0, 'the Tidewarden temples (Abyssal Sanctum, Coral Temple)'),
     ('black_vortex', 'Black Vortex', 'music.raft.leviathan', 0.0, None, 2, -19.0, 'the fight against the Leviathan'),
 ]
 
@@ -83,11 +83,28 @@ def generate(sound_dir):
 
 
 def credits_text():
+    """CREDITS_MUSIC.txt (in the jar): incompetech's attribution text for every piece, and where it plays."""
     lines = ['Beach Craft - music credits', '',
-             'The music of the raft dimension is by Kevin MacLeod (incompetech.com).', LICENSE, '']
+             'The music of the raft dimension is by Kevin MacLeod (incompetech.com),',
+             'licensed under Creative Commons: By Attribution 4.0 (http://creativecommons.org/licenses/by/4.0/).',
+             'Changes for the game: all pieces were levelled and faded, two were shortened (marked below) and the',
+             'quieter ones were mixed down to mono to keep the download small. Nothing else was changed.', '']
     for key, title, event, start, end, channels, target, where in TRACKS:
-        lines.append('"%s" Kevin MacLeod (incompetech.com)' % title)
-        lines.append('  %s  (plays in %s; file assets/raft/sounds/music/%s.ogg%s)' % (
-            LICENSE, where, key, ', shortened' if end is not None else ''))
-    lines += ['', 'All sound effects of Beach Craft are synthesised for the mod (no recordings).', '']
+        lines += ['"%s" Kevin MacLeod (incompetech.com)' % title,
+                  'Licensed under Creative Commons: By Attribution 4.0 License',
+                  'http://creativecommons.org/licenses/by/4.0/',
+                  '(Beach Craft: plays in %s; assets/raft/sounds/music/%s.ogg, %s%s)' % (
+                      where, key, 'stereo' if channels == 2 else 'mono', ', shortened' if end is not None or start > 0 else ''), '']
+    lines += ['All sound effects of Beach Craft are synthesised for the mod (no recordings).', '']
     return '\n'.join(lines)
+
+
+def credits_html():
+    """The music credits for docs/curseforge/description.html (incompetech's attribution text per piece)."""
+    parts = []
+    for key, title, event, start, end, channels, target, where in TRACKS:
+        parts.append('<p>"%s" Kevin MacLeod (<a href="https://incompetech.com" rel="nofollow">incompetech.com</a>)<br>'
+                     'Licensed under Creative Commons: By Attribution 4.0 License<br>'
+                     '<a href="http://creativecommons.org/licenses/by/4.0/" rel="nofollow">http://creativecommons.org/licenses/by/4.0/</a></p>'
+                     % title)
+    return '\n'.join(parts)
