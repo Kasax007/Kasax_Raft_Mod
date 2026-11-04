@@ -30,11 +30,12 @@ def ambient():
     for k in range(3):
         rng = dsp.rng_of(1100 + k)
         dur = 2.6 + 0.4 * k
+        # (the game plays these at pitch 0.6..1.2: pitched a bit high, so they stay audible when played low)
         if k == 2:
-            y = lib.moan(dur, 70, 52, rng, shape=1.3, vib=0.015, growl=0.45, harm=(1, 0.7, 0.45, 0.25, 0.12))
-            y = dsp.lowpass(y, 1400)
+            y = lib.moan(dur, 105, 78, rng, shape=1.3, vib=0.015, growl=0.45, harm=(1, 0.7, 0.45, 0.25, 0.12))
+            y = dsp.lowpass(y, 1600)
         else:
-            f = dsp.env([(0, 34 + 4 * k), (dur * 0.4, 44 + 3 * k), (dur, 31)], dur)
+            f = dsp.env([(0, 56 + 6 * k), (dur * 0.4, 72 + 5 * k), (dur, 50)], dur)
             y = lib.growl_voice(f, dur, rng, size=3.5, rough=0.9, breath=0.35,
                                 vowel=[(300, 3, 0), (520, 4, -4), (900, 5, -10)], tilt=0.6)
             y = y * dsp.env([(0, 0), (0.6, 1), (dur - 0.8, 0.8), (dur, 0)], dur, 1.0)
