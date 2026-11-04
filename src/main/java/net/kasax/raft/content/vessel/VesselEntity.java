@@ -27,6 +27,7 @@ import net.minecraft.world.entity.InterpolationHandler;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.PositionPath;
 import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -38,6 +39,7 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.entity.EntityInLevelCallback;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -688,6 +690,18 @@ public class VesselEntity extends Entity {
         }
     }
 
+    /**
+     * Server: a raft collides from the moment it is in the level, not only from its first tick, so that what stands on
+     * it does not fall into the water in between (a raft that was just built or a chunk that was just loaded).
+     */
+    @Override
+    public void setLevelCallback(EntityInLevelCallback callback) {
+        super.setLevelCallback(callback);
+        if (callback != EntityInLevelCallback.NULL && !this.level().isClientSide() && this.structure != null && !this.isRemoved()) {
+            VesselColliders.add(this);
+        }
+    }
+
     @Override
     public void onRemoval(RemovalReason reason) {
         super.onRemoval(reason);
@@ -764,10 +778,22 @@ public class VesselEntity extends Entity {
         if (this.structure == null) {
             return super.getDismountLocationForPassenger(passenger);
         }
-        // stand up on the stool, where the helmsman's own client sees the helm
-        Vec3 seat = this.seatLocal();
+        // stand up on the stool (where the helmsman's own client sees the helm); when the raft is turned so that the
+        // wheel's box is in the way there, step back behind the helm, onto the deck or onto what stands there
+        BlockPos helm = this.structure.helm();
         VesselPose pose = passenger instanceof Player ? this.clientPose() : this.currentPose();
-        return pose.toWorld(seat.x, this.structure.helm().getY() + 7.5 / 16.0 + 0.01, seat.z);
+        Vec3[] spots = {
+                new Vec3(helm.getX() + 0.5, helm.getY() + 7.5 / 16.0 + 0.01, helm.getZ() + 0.15),
+                new Vec3(helm.getX() + 0.5, helm.getY() + 0.01, helm.getZ() - 0.45),
+                new Vec3(helm.getX() + 0.5, helm.getY() + 1.01, helm.getZ() - 0.45)};
+        for (Vec3 spot : spots) {
+            Vec3 at = pose.toWorld(spot);
+            AABB box = passenger.getDimensions(Pose.STANDING).makeBoundingBox(at).deflate(1.0E-3);
+            if (!this.structure.forEachBox(pose, box, b -> true) && this.level().noBlockCollision(passenger, box)) {
+                return at;
+            }
+        }
+        return pose.toWorld(spots[0]);
     }
 
     @Override
