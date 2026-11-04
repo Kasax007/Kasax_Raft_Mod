@@ -2,6 +2,13 @@
   "required": true,
   "package": "net.kasax.raft.gametest.mixin",
   "compatibilityLevel": "JAVA_25",
-  "client": ["ScreenshotLeakMixin"],
-  "injectors": { "defaultRequire": 1 }
+  "client": [
+    "ScreenshotLeakMixin",
+    "SoundLogMixin",
+    "NoRenderMixin",
+    "UserMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }
