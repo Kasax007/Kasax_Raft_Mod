@@ -82,6 +82,7 @@ public final class VesselAssembler {
         }
         Scan scan = scan(level, helmPos);
         if (scan.error() != null) {
+            Raft.LOGGER.info("Raft at {} cannot set sail: {}", helmPos.toShortString(), scan.error().getString());
             player.sendOverlayMessage(scan.error());
             level.playSound(null, helmPos, SoundEvents.WOOD_HIT, SoundSource.BLOCKS, 0.6F, 0.7F);
             return;
@@ -90,7 +91,7 @@ public final class VesselAssembler {
         level.playSound(null, helmPos, SoundEvents.WOODEN_TRAPDOOR_OPEN, SoundSource.BLOCKS, 1.0F, 0.6F);
         level.playSound(null, helmPos, SoundEvents.GENERIC_SPLASH, SoundSource.BLOCKS, 0.6F, 0.8F);
         vessel.takeHelm(player);
-        Raft.LOGGER.debug("Raft set sail at {} with {} blocks", helmPos, scan.blocks().size());
+        Raft.LOGGER.info("Raft set sail at {} with {} blocks", helmPos.toShortString(), scan.blocks().size());
     }
 
     /** Can this world block be part of a raft at all (water, air, fire and sea plants stay in the world)? */
@@ -487,6 +488,7 @@ public final class VesselAssembler {
         if (structure == null || !(vessel.level() instanceof ServerLevel level) || !canPlace(level, structure, pose)) {
             return false;
         }
+        Raft.LOGGER.info("Raft dropped anchor at {} (yaw {})", BlockPos.containing(pose.position()).toShortString(), pose.yaw);
         Rotation rotation = rotation(Direction.SOUTH, Direction.fromYRot(pose.yaw));
         List<BlockPos> placed = new ArrayList<>(structure.blockCount());
         List<BlockState> states = new ArrayList<>(structure.blockCount());
