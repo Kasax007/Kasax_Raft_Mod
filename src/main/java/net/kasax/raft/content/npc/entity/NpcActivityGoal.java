@@ -205,8 +205,27 @@ final class NpcActivityGoal extends Goal {
         }
     }
 
+    /** A player standing close by gets a glance (working, reading or sitting people notice visitors). */
+    private boolean glanceAtVisitor() {
+        net.minecraft.world.entity.player.Player p = this.level().getNearestPlayer(this.npc, 3.5);
+        if (p == null || p.isSpectator()) {
+            return false;
+        }
+        this.npc.getLookControl().setLookAt(p, 30.0F, 30.0F);
+        return true;
+    }
+
     @Override
     public void tick() {
+        if ((this.phase == Phase.WORK || this.phase == Phase.SIT) && this.glanceAtVisitor()) {
+            if (--this.timer <= 0) {
+                if (this.phase == Phase.SIT) {
+                    this.npc.setSitting(false);
+                }
+                this.end(120);
+            }
+            return;
+        }
         switch (this.phase) {
             case WALK -> this.tickWalk();
             case WORK -> this.tickWork();
