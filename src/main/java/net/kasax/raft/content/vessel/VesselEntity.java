@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.kasax.raft.content.vessel.block.RaftMotorBlockEntity;
 import net.kasax.raft.content.vessel.net.VesselDataPayload;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -26,6 +27,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.PositionPath;
 import net.minecraft.world.entity.decoration.HangingEntity;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.player.Input;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -102,8 +104,11 @@ public class VesselEntity extends Entity {
     /** The client's draw cache (a VesselClientModel); only touched by the renderer. */
     public @Nullable Object clientModel;
 
-    /** An item frame or painting that hung on the raft, stowed while sailing. local = its position on the raft. */
-    public record Stowed(Vec3 local, CompoundTag tag) {
+    /**
+     * An item frame or painting that hung on the raft, stowed while sailing: its position on the raft, its saved data
+     * and the bow direction when it was stowed (its own direction in the data is relative to that).
+     */
+    public record Stowed(Vec3 local, CompoundTag tag, Direction bow) {
     }
 
     public VesselEntity(EntityType<? extends VesselEntity> type, Level level) {
@@ -455,7 +460,8 @@ public class VesselEntity extends Entity {
         boolean moving = dx != 0.0 || dy != 0.0 || dz != 0.0 || dyaw != 0.0F;
         AABB zone = this.structure.worldBounds(from).expandTowards(0.0, CARRY_HEIGHT + 2.0, 0.0).inflate(0.5);
         List<Entity> riders = this.level().getEntities(this, zone, e -> !(e instanceof VesselEntity) && !e.isPassenger()
-                && !e.isSpectator() && !e.noPhysics && !(e instanceof HangingEntity) && e.isLocalInstanceAuthoritative()
+                && !e.isSpectator() && !e.noPhysics && !(e instanceof HangingEntity) && !(e instanceof Projectile)
+                && e.isLocalInstanceAuthoritative()
                 && e.getPistonPushReaction() != PushReaction.IGNORE_ENTITY);
         float rad = -dyaw * Mth.DEG_TO_RAD;
         double cos = Math.cos(rad);
@@ -916,6 +922,7 @@ public class VesselEntity extends Entity {
             child.putDouble("Y", s.local().y);
             child.putDouble("Z", s.local().z);
             child.store("Entity", CompoundTag.CODEC, s.tag());
+            child.putInt("Bow", s.bow().get2DDataValue());
         }
     }
 
@@ -930,7 +937,8 @@ public class VesselEntity extends Entity {
         this.autoTicks = Math.max(0, auto.getIntOr("Ticks", 0));
         this.stowed.clear();
         input.childrenListOrEmpty("Stowed").forEach(child -> child.read("Entity", CompoundTag.CODEC).ifPresent(tag ->
-                this.stowed.add(new Stowed(new Vec3(child.getDoubleOr("X", 0.0), child.getDoubleOr("Y", 0.0), child.getDoubleOr("Z", 0.0)), tag))));
+                this.stowed.add(new Stowed(new Vec3(child.getDoubleOr("X", 0.0), child.getDoubleOr("Y", 0.0), child.getDoubleOr("Z", 0.0)), tag,
+                        Direction.from2DDataValue(child.getIntOr("Bow", 0))))));
         // a raft loaded from disk has nobody at the helm: it drops anchor
         this.setState(STOPPING);
         this.dockWait = 0;

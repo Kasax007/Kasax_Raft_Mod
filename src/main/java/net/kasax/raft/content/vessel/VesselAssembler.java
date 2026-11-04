@@ -294,7 +294,7 @@ public final class VesselAssembler {
         Vec3 pos = new Vec3(helmPos.getX() + 0.5 - helmCentre.x, helmPos.getY() + 0.5 - helmCentre.y, helmPos.getZ() + 0.5 - helmCentre.z);
         VesselPose pose = new VesselPose(pos, yaw, structure.pivot());
 
-        List<VesselEntity.Stowed> stowed = stowHangingEntities(level, scan.blocks(), pose);
+        List<VesselEntity.Stowed> stowed = stowHangingEntities(level, scan.blocks(), pose, facing);
         liftBlocks(level, scan);
 
         VesselEntity vessel = new VesselEntity(VesselContent.VESSEL, level);
@@ -304,7 +304,8 @@ public final class VesselAssembler {
     }
 
     /** Item frames and paintings hanging on the raft go into its hold while it sails. */
-    private static List<VesselEntity.Stowed> stowHangingEntities(ServerLevel level, LongOpenHashSet blocks, VesselPose pose) {
+    private static List<VesselEntity.Stowed> stowHangingEntities(ServerLevel level, LongOpenHashSet blocks, VesselPose pose,
+                                                                 Direction bow) {
         List<VesselEntity.Stowed> stowed = new ArrayList<>();
         AABB area = null;
         for (long key : blocks) {
@@ -324,7 +325,7 @@ public final class VesselAssembler {
                 continue;
             }
             Vec3 at = Vec3.atCenterOf(hanging.getPos());
-            stowed.add(new VesselEntity.Stowed(pose.toLocal(at), out.buildResult()));
+            stowed.add(new VesselEntity.Stowed(pose.toLocal(at), out.buildResult(), bow));
             hanging.discard();
         }
         return stowed;
@@ -514,15 +515,17 @@ public final class VesselAssembler {
             level.updateNeighborsAt(w, state.getBlock());
             state.updateNeighbourShapes(level, w, Block.UPDATE_ALL);
         }
-        restoreStowed(level, vessel, pose, rotation);
+        restoreStowed(level, vessel, pose);
         Vec3 c = pose.position();
         level.playSound(null, c.x, c.y, c.z, SoundEvents.CHAIN_PLACE, SoundSource.BLOCKS, 1.0F, 0.8F);
         level.playSound(null, c.x, c.y, c.z, SoundEvents.GENERIC_SPLASH, SoundSource.BLOCKS, 0.6F, 1.2F);
         return true;
     }
 
-    private static void restoreStowed(ServerLevel level, VesselEntity vessel, VesselPose pose, Rotation rotation) {
+    private static void restoreStowed(ServerLevel level, VesselEntity vessel, VesselPose pose) {
+        Direction bow = Direction.fromYRot(pose.yaw);
         for (VesselEntity.Stowed s : vessel.stowed()) {
+            Rotation rotation = rotation(s.bow(), bow);
             Vec3 at = pose.toWorld(s.local());
             CompoundTag tag = s.tag().copy();
             ListTag posTag = new ListTag();
