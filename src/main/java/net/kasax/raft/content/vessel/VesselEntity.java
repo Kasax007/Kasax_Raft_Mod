@@ -841,6 +841,7 @@ public class VesselEntity extends Entity {
         if (player.startRiding(this, true, true)) {
             this.setState(SAILING);
             this.fuelWarned = false;
+            this.helmToggleTick = this.tickCount;
             this.dockTarget = null;
             this.warnedNoRoom = false;
             player.sendOverlayMessage(Component.translatable("message.raft.vessel.controls"));

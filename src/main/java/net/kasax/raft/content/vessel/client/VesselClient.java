@@ -26,6 +26,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public final class VesselClient {
     /** Set when a use was sent; holding the use key does not repeat it (no flickering in and out of the helm). */
     private static boolean useHeld;
+    private static boolean wasAtHelm;
 
     private VesselClient() {
     }
@@ -44,6 +45,14 @@ public final class VesselClient {
             });
         });
         VesselEntity.clientUse = VesselClient::use;
+        ClientTickEvents.START_CLIENT_TICK.register(mc -> {
+            // taking the helm with a long click: the held use key must not reach the wheel and leave it again
+            boolean atHelm = mc.player != null && mc.player.getVehicle() instanceof VesselEntity;
+            if (atHelm && !wasAtHelm && mc.options.keyUse.isDown()) {
+                useHeld = true;
+            }
+            wasAtHelm = atHelm;
+        });
         ClientTickEvents.END_CLIENT_TICK.register(mc -> {
             if (useHeld && !mc.options.keyUse.isDown()) {
                 useHeld = false;
