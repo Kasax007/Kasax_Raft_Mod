@@ -24,6 +24,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.InterpolationHandler;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.PositionPath;
 import net.minecraft.world.entity.decoration.HangingEntity;
@@ -515,6 +516,11 @@ public class VesselEntity extends Entity {
             }
             if (e.onGround() || e.getDeltaMovement().y >= 0.0) {
                 e.resetFallDistance();
+            }
+            // animals on board stay put while the raft moves: their path finding only knows the world under the
+            // raft (open water), so a stroll would end overboard
+            if (moving && e instanceof Mob mob && !mob.isNoAi() && this.structure.isOver(to, mob.getBoundingBox(), 0.6)) {
+                mob.getNavigation().stop();
             }
         }
     }
