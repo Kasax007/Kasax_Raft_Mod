@@ -38,7 +38,24 @@ def faces(box):
     ]
 
 
-def render(img, slim, yaw=-35.0, pitch=-12.0, scale=7, size=(260, 320)):
+# the 3D extras of NpcAccessories.java: (u, v, w, h, d, x, y, z) with x, y, z the cube corner in head model space
+# (y down from the neck); converted to the preview space (y up, the neck at 24)
+EXTRAS = {
+    'old_tamo': [(0, 0, 14, 1, 14, -7.0, -5.6, -7.0)],
+    'okafor': [(0, 0, 9, 1, 2, -4.5, -6.2, -6.6), (0, 4, 1, 1, 8, -0.5, -9.1, -4.0)],
+    'dr_voss': [(0, 0, 3, 2, 3, -1.5, -10.0, 0.5)],
+    'nalu': [(0, 0, 1, 2, 2, 4.1, -6.5, -1.5)],
+}
+
+
+def extra_boxes(pid):
+    out = []
+    for (u, v, w, h, d, x, y, z) in EXTRAS.get(pid, []):
+        out.append((u, v, w, h, d, x, 24 - (y + h), z, 0))
+    return out
+
+
+def render(img, slim, yaw=-35.0, pitch=-12.0, scale=7, size=(260, 320), extra=None, extra_img=None):
     out = Image.new('RGBA', size, (0, 0, 0, 0))
     draw = ImageDraw.Draw(out)
     cy, sy = math.cos(math.radians(yaw)), math.sin(math.radians(yaw))
@@ -55,7 +72,8 @@ def render(img, slim, yaw=-35.0, pitch=-12.0, scale=7, size=(260, 320)):
         return size[0] / 2 + x * scale, size[1] - 20 - y * scale, z
 
     quads = []
-    for box in boxes(slim):
+    parts = [(b, img) for b in boxes(slim)] + [(b, extra_img) for b in (extra or [])]
+    for box, tex_img in parts:
         for (rect, o, ax, ay, n) in faces(box):
             nx, ny, nz = rot(n)
             if nz >= 0:            # facing away from the camera (it looks along +z)
@@ -63,7 +81,7 @@ def render(img, slim, yaw=-35.0, pitch=-12.0, scale=7, size=(260, 320)):
             rx, ry, rw, rh = rect
             for j in range(rh):
                 for i in range(rw):
-                    c = img.getpixel((rx + i, ry + j))
+                    c = tex_img.getpixel((rx + i, ry + j))
                     if c[3] == 0:
                         continue
                     pts = []
@@ -79,10 +97,12 @@ def render(img, slim, yaw=-35.0, pitch=-12.0, scale=7, size=(260, 320)):
 
 def sheet(path):
     tiles = []
+    extras = characters.extras()
     for name, fn in characters.ALL.items():
         s = fn()
-        tiles.append(render(s.img, s.slim))
-        tiles.append(render(s.img, s.slim, yaw=150.0))
+        kw = {'extra': extra_boxes(name), 'extra_img': extras.get(name)}
+        tiles.append(render(s.img, s.slim, **kw))
+        tiles.append(render(s.img, s.slim, yaw=150.0, **kw))
     w, h = tiles[0].size
     big = Image.new('RGBA', (w * 8, h * 2), (96, 150, 186, 255))
     for i, t in enumerate(tiles):
