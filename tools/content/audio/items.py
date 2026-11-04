@@ -16,17 +16,18 @@ def harpoon_fire():
         dur = 0.8
         o = dsp.zeros(dur)
         dsp.place(o, lib.metal_click(rng, 1500 + 200 * k, 0.08, 0.02), 0.0, 0.8)
-        burst = dsp.highpass(dsp.white(0.25, rng), 700) * dsp.decay_env(0.25, 0.035, 0.0005)
-        dsp.place(o, burst, 0.008, 1.0)
-        thump = dsp.sine(np.interp(dsp.times(0.18), [0, 0.18], [150, 70]), 0.18) * dsp.decay_env(0.18, 0.04, 0.001)
-        dsp.place(o, thump, 0.008, 0.9)
+        # the air burst: a short, chesty "thunk" of escaping air (band-limited, not a bright hiss)
+        burst = dsp.bandpass(dsp.white(0.25, rng), 300, 3800, 2) * dsp.decay_env(0.25, 0.03, 0.0005)
+        dsp.place(o, burst, 0.008, 0.8)
+        thump = dsp.sine(np.interp(dsp.times(0.2), [0, 0.2], [170, 60]), 0.2) * dsp.decay_env(0.2, 0.05, 0.001)
+        dsp.place(o, thump, 0.008, 1.2)
         t = dsp.times(0.5)
-        whoosh = dsp.svf(dsp.white(0.5, rng), np.interp(t, [0, 0.5], [3200, 900]), 1.2, 'bp')
+        whoosh = dsp.svf(dsp.white(0.5, rng), np.interp(t, [0, 0.5], [2200, 700]), 1.2, 'bp')
         whoosh *= dsp.env([(0, 0), (0.03, 1), (0.5, 0)], 0.5, 1.0)
         dsp.place(o, whoosh, 0.02, 0.5)
         twang = dsp.modal([520 + 30 * k, 1310, 2150], [0.12, 0.06, 0.04], [1.0, 0.4, 0.2], 0.3, rng)
         dsp.place(o, twang, 0.01, 0.25)
-        out.append(o)
+        out.append(dsp.lowpass(o, 7000, 2))
     return out
 
 

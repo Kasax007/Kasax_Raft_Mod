@@ -13,6 +13,8 @@ import net.minecraft.sounds.SoundSource;
 final class TurbineSound extends AbstractTickableSoundInstance {
     private final WindTurbineBlockEntity turbine;
     private float speed;
+    /** Game time when the sound was started (the client renews a sound the engine dropped). */
+    long started;
 
     TurbineSound(WindTurbineBlockEntity turbine) {
         super(AudioSounds.WIND_TURBINE_SPIN, SoundSource.BLOCKS, SoundInstance.createUnseededRandom());

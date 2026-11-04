@@ -135,7 +135,7 @@ def dive():
         o = dsp.zeros(dur)
         dsp.place(o, lib.splash(2.2, rng, 2.0), 0.0, 1.0)
         gulp = dsp.sine(np.interp(dsp.times(0.6), [0, 0.6], [95, 38]), 0.6) * dsp.env([(0, 0), (0.05, 1), (0.6, 0)], 0.6)
-        dsp.place(o, gulp, 0.18, 0.8)
+        dsp.place(o, gulp, 0.18, 0.45)
         dsp.place(o, dsp.underwater(lib.bubble_burst(1.8, rng, rate=60, lo=90, hi=700), 1500, rng), 0.4, 0.6)
         out.append(_big_space(o, rng, 1.4, 0.15))
     return out

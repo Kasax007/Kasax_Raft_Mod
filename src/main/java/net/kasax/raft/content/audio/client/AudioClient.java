@@ -30,6 +30,7 @@ import java.util.List;
 public final class AudioClient {
     private static final Identifier RAFT_DIMENSION = Raft.id("raftdim");
     private static SeaAmbience sea;
+    private static long seaStarted;
     private static final List<TurbineSound> TURBINES = new ArrayList<>();
     private static float openSea;
 
@@ -63,11 +64,13 @@ public final class AudioClient {
             openSea = raftDim ? measureOpenSea(level, player) : 0.0F;
             turbines(mc, level, player);
         }
-        if (sea != null && sea.isStopped()) {
+        // a new loop when the old one ended, or when the sound engine dropped it (reload of sounds or device)
+        if (sea != null && (sea.isStopped() || level.getGameTime() - seaStarted > 100 && !mc.getSoundManager().isActive(sea))) {
             sea = null;
         }
         if (openSea > 0.02F && sea == null) {
             sea = new SeaAmbience();
+            seaStarted = level.getGameTime();
             mc.getSoundManager().play(sea);
         }
         if (sea != null) {
@@ -110,7 +113,7 @@ public final class AudioClient {
 
     /** A rotor sound for each wind turbine within 24 blocks that turns (the sound stops itself when it does not). */
     private static void turbines(Minecraft mc, ClientLevel level, LocalPlayer player) {
-        TURBINES.removeIf(TurbineSound::isStopped);
+        TURBINES.removeIf(s -> s.isStopped() || level.getGameTime() - s.started > 100 && !mc.getSoundManager().isActive(s));
         int cx = player.blockPosition().getX() >> 4;
         int cz = player.blockPosition().getZ() >> 4;
         for (int x = cx - 2; x <= cx + 2; x++) {
@@ -124,6 +127,7 @@ public final class AudioClient {
                             && be.getBlockPos().distToCenterSqr(player.position()) < 24.0 * 24.0
                             && TURBINES.stream().noneMatch(s -> s.isFor(turbine))) {
                         TurbineSound sound = new TurbineSound(turbine);
+                        sound.started = level.getGameTime();
                         TURBINES.add(sound);
                         mc.getSoundManager().play(sound);
                     }

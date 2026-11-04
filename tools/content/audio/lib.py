@@ -16,14 +16,14 @@ def splash(size, rng, dur=None, bright=1.0):
     td = min(dur, 0.25 + 0.15 * size)
     f = (140 / (0.6 + 0.4 * size)) * np.exp(-dsp.times(td) * 12) + 35
     thump = dsp.sine(f, td) * dsp.decay_env(td, 0.04 + 0.04 * size, 0.001)
-    dsp.place(out, thump, 0.0, 0.9)
+    dsp.place(out, thump, 0.0, 0.9 / (1 + 0.35 * size))
     # crown: broadband noise burst, darker for bigger bodies, with a slower tail
     nb = dsp.white(dur, rng)
     e = dsp.env([(0, 0), (0.004, 1), (0.05 + 0.05 * size, 0.55), (0.25 + 0.4 * size, 0.18), (dur, 0)], dur, 1.0)
     cut = np.interp(t, [0, 0.08, dur], [9000 * bright, (3500 - 600 * min(size, 2.5)) * bright, 1500])
     crown = dsp.svf(nb * e, cut, 0.6, 'lp')
     crown = dsp.highpass(crown, 120 + 160 / (0.5 + size))
-    dsp.place(out, crown, 0.0, 0.8)
+    dsp.place(out, crown, 0.0, 0.8 + 0.25 * min(size, 2.5))
     # gurgle: low resonant blobs right after the impact
     gl = min(dur, 0.6 + 0.4 * size)
     gurgle = dsp.bubbles(gl, rng, rate=14 + 10 * size, f_lo=90 / (0.5 + 0.5 * size), f_hi=500 / (0.5 + 0.3 * size),
@@ -139,13 +139,13 @@ def bird_note(dur, f_start, f_peak, f_end, rng, peak_at=0.3, nasal=1.0, rough=0.
     """One gull-like note: a bright, nasal, slightly rough harmonic tone with a rise-fall pitch contour."""
     f = dsp.env([(0, f_start), (dur * peak_at, f_peak), (dur, f_end)], dur, 1.0)
     f = f * (1 + 0.012 * dsp.smooth_random(dur, 30, rng, -1, 1))
-    harm = harm or [1.0, 0.8, 0.9, 0.6, 0.45, 0.3, 0.2, 0.12, 0.08, 0.05]
+    harm = harm or [1.0, 0.85, 0.75, 0.45, 0.3, 0.18, 0.1, 0.06, 0.035, 0.02]
     y = dsp.additive(f, dur, harm, rng=rng)
     # roughness: fast irregular amplitude modulation (the harsh quality of gull calls)
     t = dsp.times(dur)
     y *= 1 + rough * dsp.lowpass(dsp.white(dur, rng), 180) * 3
     # nasal formants
-    y = dsp.formants(y, [(1700, 3, 0), (3100, 4, -2 * nasal), (4300, 5, -6)]) * 0.8 + 0.3 * y
+    y = dsp.formants(y, [(1500, 3, 0), (2800, 4, -3 * nasal), (4200, 5, -10)]) * 0.8 + 0.3 * y
     e = dsp.env([(0, 0), (min(0.02, dur * 0.15), 1), (dur * 0.55, 0.85), (dur, 0)], dur, 1.0)
     return y * e
 
