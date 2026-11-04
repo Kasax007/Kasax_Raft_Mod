@@ -87,7 +87,7 @@ public class NpcEntity extends PathfinderMob implements Merchant, Npc {
     private int lostTicks;
     private int hurtLineCooldown;
     private final List<BlockPos> places = new ArrayList<>();
-    private long placesScannedAt = Long.MIN_VALUE;
+    private long placesScannedAt = -1_000_000L;
     private @Nullable Set<Block> placeBlocks;
 
     public NpcEntity(EntityType<? extends NpcEntity> type, Level level) {
@@ -220,7 +220,7 @@ public class NpcEntity extends PathfinderMob implements Merchant, Npc {
                 // builders: sneak-use in creative moves the NPC's home to where it stands now
                 this.setHomeTo(this.blockPosition(), this.character().homeRadius);
                 this.places.clear();
-                this.placesScannedAt = Long.MIN_VALUE;
+                this.placesScannedAt = -1_000_000L;
                 sp.sendOverlayMessage(Component.translatable("npc.raft.home_set", this.getDisplayName()).withStyle(ChatFormatting.AQUA));
                 return InteractionResult.SUCCESS_SERVER;
             }
