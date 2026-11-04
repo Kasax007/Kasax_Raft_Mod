@@ -22,12 +22,14 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.InterpolationHandler;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.PositionPath;
 import net.minecraft.world.entity.decoration.HangingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.player.Input;
 import net.minecraft.world.entity.player.Player;
@@ -466,9 +468,11 @@ public class VesselEntity extends Entity {
         }
         boolean moving = dx != 0.0 || dy != 0.0 || dz != 0.0 || dyaw != 0.0F;
         AABB zone = this.structure.worldBounds(from).expandTowards(0.0, CARRY_HEIGHT + 2.0, 0.0).inflate(0.5);
+        boolean client = this.level().isClientSide();
+        // clients also move items and experience orbs themselves between the server's rare updates of them
         List<Entity> riders = this.level().getEntities(this, zone, e -> !(e instanceof VesselEntity) && !e.isPassenger()
                 && !e.isSpectator() && !e.noPhysics && !(e instanceof HangingEntity) && !(e instanceof Projectile)
-                && e.isLocalInstanceAuthoritative()
+                && (e.isLocalInstanceAuthoritative() || client && (e instanceof ItemEntity || e instanceof ExperienceOrb))
                 && e.getPistonPushReaction() != PushReaction.IGNORE_ENTITY);
         float rad = -dyaw * Mth.DEG_TO_RAD;
         double cos = Math.cos(rad);
