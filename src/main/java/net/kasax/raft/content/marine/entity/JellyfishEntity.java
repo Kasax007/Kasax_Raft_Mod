@@ -1,6 +1,7 @@
 package net.kasax.raft.content.marine.entity;
 
 import net.kasax.raft.Raft;
+import net.kasax.raft.content.audio.AudioSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -11,7 +12,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -232,7 +232,7 @@ public class JellyfishEntity extends WaterAnimal {
             }
             if (e.hurtServer(level, this.damageSources().mobAttack(this), 1.0F)) {
                 e.addEffect(new MobEffectInstance(MobEffects.POISON, 60, 0), this);
-                this.playSound(SoundEvents.PLAYER_HURT_SWEET_BERRY_BUSH, 0.8F, 1.4F);
+                this.playSound(AudioSounds.JELLYFISH_STING, 1.0F, 0.9F + this.random.nextFloat() * 0.2F);
                 this.stingCooldown = 20;
             }
         }
@@ -258,12 +258,12 @@ public class JellyfishEntity extends WaterAnimal {
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.SLIME_HURT_SMALL;
+        return AudioSounds.JELLYFISH_HURT;
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.SLIME_DEATH_SMALL;
+        return AudioSounds.JELLYFISH_DEATH;
     }
 
     @Override

@@ -2,6 +2,7 @@ package net.kasax.raft.block.custom;
 
 import net.kasax.raft.block.entity.ModBlockEntities;
 import net.kasax.raft.block.entity.WaterPurifierBlockEntity;
+import net.kasax.raft.content.audio.AudioSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -92,6 +93,12 @@ public class WaterPurifierBlock extends BaseEntityBlock {
             double z = pos.getZ() + 0.5;
             if (random.nextDouble() < 0.1) {
                 level.playLocalSound(x, y, z, SoundEvents.FURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 1.0F, 1.0F, false);
+            }
+            // the water in the pot boils (the client ticks a block's animation about every 2 s: a 2.5 s bubbling
+            // every ~9 s)
+            if (random.nextInt(4) == 0) {
+                level.playLocalSound(x, y + 0.5, z, AudioSounds.PURIFIER_BOIL, SoundSource.BLOCKS, 0.7F + random.nextFloat() * 0.3F,
+                        0.9F + random.nextFloat() * 0.2F, false);
             }
             Direction facing = state.getValue(FACING);
             double side = random.nextDouble() * 0.4 - 0.2;

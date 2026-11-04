@@ -1,8 +1,8 @@
 package net.kasax.raft.content.building.block;
 
+import net.kasax.raft.content.audio.AudioSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
@@ -64,7 +64,7 @@ public class ControlPanelBlock extends HorizontalDirectionalBlock implements Sim
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         RandomSource random = level.getRandom();
-        level.playSound(player, pos, SoundEvents.STONE_BUTTON_CLICK_ON, SoundSource.BLOCKS, 0.4F, 1.4F + random.nextFloat() * 0.4F);
+        level.playSound(player, pos, AudioSounds.CONTROL_PANEL_BEEP, SoundSource.BLOCKS, 0.7F, 0.95F + random.nextFloat() * 0.1F);
         return InteractionResult.SUCCESS;
     }
 

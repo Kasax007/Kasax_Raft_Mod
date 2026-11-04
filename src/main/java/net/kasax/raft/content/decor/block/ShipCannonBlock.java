@@ -1,5 +1,6 @@
 package net.kasax.raft.content.decor.block;
 
+import net.kasax.raft.content.audio.AudioSounds;
 import net.kasax.raft.content.decor.DecorBlocks;
 import net.kasax.raft.content.decor.entity.CannonballEntity;
 import net.minecraft.core.BlockPos;
@@ -7,7 +8,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -72,7 +72,7 @@ public class ShipCannonBlock extends DecorBlock {
         level.sendParticles(ParticleTypes.LARGE_SMOKE, mx + facing.getStepX() * 0.5, my, mz + facing.getStepZ() * 0.5, 14,
                 0.2 + Math.abs(facing.getStepX()) * 0.3, 0.15, 0.2 + Math.abs(facing.getStepZ()) * 0.3, 0.03);
         level.sendParticles(ParticleTypes.FLAME, mx + facing.getStepX() * 0.3, my, mz + facing.getStepZ() * 0.3, 6, 0.08, 0.08, 0.08, 0.04);
-        level.playSound(null, mx, my, mz, SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 1.6F, 1.25F + level.getRandom().nextFloat() * 0.15F);
+        level.playSound(null, mx, my, mz, AudioSounds.CANNON_FIRE, SoundSource.BLOCKS, 2.0F, 0.92F + level.getRandom().nextFloat() * 0.16F);
         level.gameEvent(shooter, GameEvent.PROJECTILE_SHOOT, pos);
     }
 }

@@ -1,5 +1,6 @@
 package net.kasax.raft.content.marine.entity;
 
+import net.kasax.raft.content.audio.AudioSounds;
 import net.kasax.raft.content.marine.MarineSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -271,12 +272,12 @@ public class WhaleEntity extends WaterAnimal {
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.DOLPHIN_HURT;
+        return AudioSounds.WHALE_HURT;
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.DOLPHIN_DEATH;
+        return AudioSounds.WHALE_DEATH;
     }
 
     @Override
@@ -286,7 +287,8 @@ public class WhaleEntity extends WaterAnimal {
 
     @Override
     public float getVoicePitch() {
-        return 0.4F + this.random.nextFloat() * 0.1F;
+        // the whale's own groans are made at its pitch (it used pitched-down dolphin sounds before)
+        return 0.9F + this.random.nextFloat() * 0.2F;
     }
 
     @Override

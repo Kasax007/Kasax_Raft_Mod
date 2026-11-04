@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "net.kasax.raft.content.audio.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [],
+  "client": [
+    "BossHealthOverlayAccessor",
+    "MinecraftMusicMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
