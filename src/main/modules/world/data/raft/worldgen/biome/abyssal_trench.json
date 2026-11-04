@@ -2,14 +2,14 @@
   "attributes": {
     "minecraft:audio/background_music": {
       "default": {
-        "max_delay": 24000,
-        "min_delay": 12000,
-        "sound": "minecraft:music.overworld.deep_dark"
+        "max_delay": 4800,
+        "min_delay": 1200,
+        "sound": "raft:music.raft.abyss"
       },
       "underwater": {
-        "max_delay": 24000,
-        "min_delay": 12000,
-        "sound": "minecraft:music.under_water"
+        "max_delay": 4800,
+        "min_delay": 1200,
+        "sound": "raft:music.raft.abyss"
       }
     },
     "minecraft:gameplay/natural_mob_spawns": {
