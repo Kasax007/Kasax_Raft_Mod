@@ -61,10 +61,15 @@ public final class NpcDialogue {
         }
 
         List<NpcDialogPayload.Topic> topics = new ArrayList<>();
-        topics.add(new NpcDialogPayload.Topic(Component.translatable("npc.raft.ask.place"), Component.translatable(c.key("place"))));
-        topics.add(new NpcDialogPayload.Topic(Component.translatable("npc.raft.ask.next"), Component.translatable(NpcStory.hintKey(stage))));
-        int rumor = 1 + player.getRandom().nextInt(c.rumors);
-        topics.add(new NpcDialogPayload.Topic(Component.translatable("npc.raft.ask.rumor"), Component.translatable(c.key("rumor." + rumor))));
+        topics.add(new NpcDialogPayload.Topic(Component.translatable("npc.raft.ask.place"), List.of(Component.translatable(c.key("place")))));
+        topics.add(new NpcDialogPayload.Topic(Component.translatable("npc.raft.ask.next"), List.of(Component.translatable(NpcStory.hintKey(stage)))));
+        // all rumours, starting with a random one: asking again tells the next
+        List<Component> rumors = new ArrayList<>();
+        int start = player.getRandom().nextInt(c.rumors);
+        for (int i = 0; i < c.rumors; i++) {
+            rumors.add(Component.translatable(c.key("rumor." + (1 + (start + i) % c.rumors))));
+        }
+        topics.add(new NpcDialogPayload.Topic(Component.translatable("npc.raft.ask.rumor"), rumors));
 
         ServerPlayNetworking.send(player, new NpcDialogPayload(npc.getId(), c.id, npc.getDisplayName(), greeting, gift,
                 topics, NpcTrades.hasTrades(c)));

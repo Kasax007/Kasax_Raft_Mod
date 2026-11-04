@@ -206,13 +206,13 @@ def face(s, tone, eye='#3d5a80', brow='#3a2a20', white='#f3efe6', mouth=None, ag
     if blush:
         fx(1, eye_row + 1, blush); fx(6, eye_row + 1, blush)
     if glasses:
+        # thin round frames: the top rim and the sides, the eyes stay visible behind a faint lens tint
         g = tex.rgb(glasses)
         for x in (0, 3, 4, 7):
             fx(x, eye_row, g)
         for x in (1, 2, 5, 6):
             fx(x, eye_row - 1, g)
-            fx(x, eye_row + 1, g)
-        fx(1, eye_row, tex.mix(white, '#bfe4f2', 0.5)); fx(6, eye_row, tex.mix(white, '#bfe4f2', 0.5))
+        fx(1, eye_row, tex.mix(white, '#bfe4f2', 0.35)); fx(6, eye_row, tex.mix(white, '#bfe4f2', 0.35))
         # arms of the glasses on the sides
         for side in ('right', 'left'):
             for x in range(1, 6):

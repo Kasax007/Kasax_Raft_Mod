@@ -175,6 +175,7 @@ def npc_entity(npc, x, y, z, bx, by, bz, yaw):
 
 
 def place(check_only=False):
+    table = []
     by_file = {}
     for spot in SPOTS:
         by_file.setdefault((spot[0], spot[1]), []).append(spot)
@@ -200,11 +201,31 @@ def place(check_only=False):
             for label, p in (('feet', (bx, by, bz)), ('head', (bx, by + 1, bz)), ('below', (bx, by - 1, bz))):
                 print(f'    {label:5s} {block_at(palette, p, index)}')
             ents.append(npc_entity(npc, x, y, z, bx, by, bz, yaw))
+            table.append((f'raft:{name}', npc, float(x), float(y), float(z), float(yaw)))
         if not check_only:
             top['entities'] = (9, (10, ents))
             write_exact(path, tag_name, root)
     if not check_only:
         print('npc: templates patched')
+    check_retrofit(table)
+
+
+def check_retrofit(table):
+    """NpcRetrofit.java carries the same spots for structures generated before the npc module: compare."""
+    import re
+    java = os.path.join(MODULES, '..', 'java', 'net', 'kasax', 'raft', 'content', 'npc', 'NpcRetrofit.java')
+    src = open(java, encoding='utf-8').read()
+    rows = set(re.findall(r'new Spot\("([^"]+)", NpcCharacter\.(\w+), ([-\d.]+), ([-\d.]+), ([-\d.]+), ([-\d.]+)F\)', src))
+    want = {(t, n.upper(), f'{x}', f'{y}', f'{z}', f'{yaw}') for (t, n, x, y, z, yaw) in table}
+    have = {(t, n, f'{float(x)}', f'{float(y)}', f'{float(z)}', f'{float(yaw)}') for (t, n, x, y, z, yaw) in rows}
+    if want != have:
+        print('WARNING: NpcRetrofit.SPOTS differs from the templates:')
+        for r in sorted(want - have):
+            print('  missing in Java:', r)
+        for r in sorted(have - want):
+            print('  only in Java:   ', r)
+    else:
+        print('npc: NpcRetrofit spots match the templates')
 
 
 if __name__ == '__main__':

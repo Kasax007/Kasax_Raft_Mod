@@ -26,11 +26,11 @@ public record NpcDialogPayload(int entityId, String npc, Component name, Compone
                                List<Topic> topics, boolean trade) implements CustomPacketPayload {
     public static final Type<NpcDialogPayload> TYPE = new Type<>(Raft.id("npc_dialog"));
 
-    /** One question and its answer. */
-    public record Topic(Component label, Component reply) {
+    /** One question and its answers (asked again, the next answer is shown). */
+    public record Topic(Component label, List<Component> replies) {
         public static final StreamCodec<RegistryFriendlyByteBuf, Topic> CODEC = StreamCodec.composite(
                 ComponentSerialization.TRUSTED_STREAM_CODEC, Topic::label,
-                ComponentSerialization.TRUSTED_STREAM_CODEC, Topic::reply,
+                ComponentSerialization.TRUSTED_STREAM_CODEC.apply(ByteBufCodecs.list(8)), Topic::replies,
                 Topic::new);
     }
 

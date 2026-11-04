@@ -11,10 +11,12 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -39,12 +41,13 @@ public class NpcDialogScreen extends Screen {
     private final NpcDialogPayload dialog;
     private final List<Option> options = new ArrayList<>();
     private final List<List<String>> pages = new ArrayList<>();
+    /** How often each topic was asked (topic index -> count), so a repeated question gets the next answer. */
+    private final java.util.Map<Integer, Integer> asked = new java.util.HashMap<>();
     private Component text;
     private int chosen = -1;
     private int page;
     private int typed;
     private int ticks;
-    private boolean giftShown;
     private boolean sentBye;
 
     public NpcDialogScreen(NpcDialogPayload dialog) {
@@ -93,7 +96,13 @@ public class NpcDialogScreen extends Screen {
         for (int i = 0; i < topics.size(); i++) {
             NpcDialogPayload.Topic t = topics.get(i);
             int index = i;
-            this.options.add(new Option(t.label(), () -> this.show(t.reply(), index)));
+            this.options.add(new Option(t.label(), () -> {
+                if (t.replies().isEmpty()) {
+                    return;
+                }
+                int n = this.asked.merge(index, 1, Integer::sum) - 1;
+                this.show(t.replies().get(n % t.replies().size()), index);
+            }));
         }
         if (this.dialog.trade()) {
             this.options.add(new Option(Component.translatable("npc.raft.ask.trade"), () -> {
@@ -182,7 +191,7 @@ public class NpcDialogScreen extends Screen {
         if (key >= InputConstants.KEY_1 && key <= InputConstants.KEY_9) {
             int i = key - InputConstants.KEY_1;
             if (i < this.options.size()) {
-                this.options.get(i).action().run();
+                this.choose(i);
                 return true;
             }
         }
@@ -197,7 +206,7 @@ public class NpcDialogScreen extends Screen {
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
         int hit = this.optionAt(event.x(), event.y());
         if (hit >= 0) {
-            this.options.get(hit).action().run();
+            this.choose(hit);
             return true;
         }
         if (event.x() >= this.left() && event.x() < this.left() + this.panelW() && event.y() >= this.top()
@@ -206,6 +215,13 @@ public class NpcDialogScreen extends Screen {
             return true;
         }
         return super.mouseClicked(event, doubleClick);
+    }
+
+    private void choose(int i) {
+        if (this.minecraft != null) {
+            this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+        }
+        this.options.get(i).action().run();
     }
 
     @Override
@@ -275,9 +291,6 @@ public class NpcDialogScreen extends Screen {
             int gy = this.optionY() - 15;
             g.item(this.dialog.gift(), tx, gy - 4);
             g.text(this.font, Component.translatable("npc.raft.received", this.dialog.gift().getHoverName()), tx + 20, gy, GIFT, false);
-            if (!this.giftShown) {
-                this.giftShown = true;
-            }
         }
 
         // options

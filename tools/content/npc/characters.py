@@ -224,8 +224,8 @@ def teo():
     face(s, tone, eye='#35261c', brow='#1a1513', age=0)
     rx, ry, rw, rh = s.HEAD.face('front')
     for x in range(2, 6):
-        s.put(rx + x, ry + 5, '#241c19')                 # neat moustache
-    s.put(rx + 3, ry + 6, tone[1]); s.put(rx + 4, ry + 6, tone[1])
+        s.put(rx + x, ry + 5, '#2a1f1b' if x in (3, 4) else '#3b2c25')   # neat moustache
+    s.put(rx + 3, ry + 6, tone[2]); s.put(rx + 4, ry + 6, tone[2])
     hair(s, '#1b1719', style='short', fringe=1, side_len=3, back_len=4)
     hair_volume(s, '#211c1d', rows=1, back=2, sides=False)
     # orange aloha shirt with hibiscus flowers, open collar

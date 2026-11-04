@@ -53,7 +53,11 @@ line for the calm sea after the Leviathan. Hitting a person only makes them prot
   `tools/content/npc/characters.py`. Spawn eggs in the Creatures tab. Creative sneak-use on a person moves their home.
 - Placement: template entities. `tools/content/npc/place.py` patches the saved templates of the structure modules
   (only their entity list; spots are relative to a known anchor block, checked when the script runs). Every newly
-  generated structure gets its person exactly once (an entity is placed by the chunk that contains it). Structures
-  generated before this update stay empty; old worlds load unchanged.
+  generated structure gets its person exactly once (an entity is placed by the chunk that contains it).
+- Older worlds: `NpcRetrofit` looks at every structure start that loads, works out the person's spot from the
+  saved pieces (template + position + rotation) and, once the chunks around the spot have their entities loaded,
+  spawns the person if nobody of that kind is within 24 blocks. Each spot is then marked in a chunk attachment
+  (`raft:npc_spots_done`), so it happens once: structures from 3.0 worlds get their people when the player comes
+  near, new structures (which already have them) are only marked, and a person removed later stays removed.
 - Multiplayer: conversations are per player (payloads `raft:npc_dialog` / `raft:npc_action`), only one player trades
   with a person at a time, the server checks distance on every action.

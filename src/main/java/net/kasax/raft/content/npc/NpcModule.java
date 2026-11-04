@@ -24,6 +24,7 @@ public class NpcModule implements ContentModule {
     @Override
     public void init() {
         NpcContent.register();
+        NpcRetrofit.register();
         PayloadTypeRegistry.clientboundPlay().register(NpcDialogPayload.TYPE, NpcDialogPayload.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(NpcActionPayload.TYPE, NpcActionPayload.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(NpcActionPayload.TYPE, (payload, context) -> {
