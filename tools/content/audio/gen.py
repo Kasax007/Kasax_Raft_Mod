@@ -30,7 +30,7 @@ M = 'audio'
 class Spec:
     """One sound file family: sfx/<name>1..n.ogg, made by fn, levelled to lufs. A loop is neither trimmed nor faded."""
 
-    def __init__(self, name, fn, lufs=-18.0, ceiling=-1.0, numbered=True, quality=4, fout=0.03, loop=False, comp=False,
+    def __init__(self, name, fn, lufs=-18.0, ceiling=-1.5, numbered=True, quality=4, fout=0.03, loop=False, comp=False,
                  max_gr=5.0):
         self.name, self.fn, self.lufs, self.ceiling, self.numbered, self.quality, self.fout, self.loop = \
             name, fn, lufs, ceiling, numbered, quality, fout, loop
@@ -88,8 +88,8 @@ GROUPS['creatures'] = [
     Spec('shark/hurt', creatures.shark_hurt, -18.0),
     Spec('shark/death', creatures.shark_death, -18.0),
     Spec('shark/bite', creatures.shark_bite, -19.0),
-    Spec('shark/gnaw', creatures.shark_gnaw, -18.0, comp=True),
-    Spec('shark/raft_break', creatures.raft_break, -16.0, comp=True),
+    Spec('shark/gnaw', creatures.shark_gnaw, -18.0, comp=True, max_gr=9.0),
+    Spec('shark/raft_break', creatures.raft_break, -16.0, comp=True, max_gr=9.0),
     Spec('whale/hurt', creatures.whale_hurt, -17.0),
     Spec('whale/death', creatures.whale_death, -16.0),
     Spec('manta_ray/hurt', creatures.manta_hurt, -20.0),

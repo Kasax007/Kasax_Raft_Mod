@@ -73,6 +73,8 @@ def shark_gnaw():
         o = dsp.zeros(dur)
         dsp.place(o, lib.wood_crack(rng, 0.6, 1.0 + 0.15 * k), 0.0, 0.8)
         dsp.place(o, lib.jaw_snap(rng, 1.4, 0.4), 0.0, 0.7)
+        # teeth grinding through the wood for a moment after the bite
+        dsp.place(o, lib.crunch(0.35, rng, 320, 0.8), 0.05, 0.7)
         dsp.place(o, lib.splash(0.35, rng, 0.5), 0.05, 0.45)
         out.append(o)
     return out

@@ -637,13 +637,19 @@ def write_wav(x, path):
 
 
 def write_ogg(x, path, quality=4):
-    """Ogg Vorbis (mono or stereo, 44.1 kHz) without metadata, reproducible."""
+    """Ogg Vorbis (mono or stereo, 44.1 kHz) without metadata, reproducible. The codec can overshoot sharp peaks; if
+    the decoded file would clip (the game decodes to 16 bit), it is written again a little quieter."""
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    with tempfile.TemporaryDirectory() as tmp:
-        wav = os.path.join(tmp, 'x.wav')
-        write_wav(x, wav)
-        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', wav, '-c:a', 'libvorbis', '-q:a', str(quality),
-                        '-map_metadata', '-1', '-fflags', '+bitexact', '-flags:a', '+bitexact', path], check=True)
+    for _ in range(4):
+        with tempfile.TemporaryDirectory() as tmp:
+            wav = os.path.join(tmp, 'x.wav')
+            write_wav(x, wav)
+            subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', wav, '-c:a', 'libvorbis', '-q:a', str(quality),
+                            '-map_metadata', '-1', '-fflags', '+bitexact', '-flags:a', '+bitexact', path], check=True)
+        over = peak_db(read_audio(path, 1 if x.ndim == 1 else x.shape[1])) + 0.3
+        if over <= 0:
+            break
+        x = x * 10 ** (-over / 20)
     return path
 
 
