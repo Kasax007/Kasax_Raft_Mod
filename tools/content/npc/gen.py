@@ -72,35 +72,40 @@ def spawn_egg(pid):
 
 # ---------------------------------------------------------------------------------------------- conversation panel
 def panel():
-    """64x64 nine-slice (border 8): driftwood frame with brass corner studs around weathered parchment."""
+    """64x64 nine-slice (border 8): driftwood frame with brass corner studs around parchment. The edges and the
+    centre are tiled by the game, so every pattern repeats every 16 pixels (48 = 3 x 16)."""
     W = 64
     img = Image.new('RGBA', (W, W), (0, 0, 0, 0))
     wood = tex.ramp('#8c6a48', 6, spread=0.5)
-    paper = tex.ramp('#eadbb8', 5, spread=0.16)
+    paper = tex.ramp('#ecdfbf', 5, spread=0.14)
     brass = tex.ramp('#d6a83c', 4, spread=0.45)
-    n = tex.value_noise(W, W, 77, 4, 2)
-    grain = tex.value_noise(W, W, 78, 2, 1)
+    grain = [0.0, 0.05, 0.08, 0.04, -0.02, -0.06, -0.03, 0.02, 0.06, 0.03, -0.04, -0.08, -0.05, 0.0, 0.04, 0.02]
     for y in range(W):
         for x in range(W):
             edge = min(x, y, W - 1 - x, W - 1 - y)
+            horizontal = (y < 8 or y > W - 9) and not (x < edge or x > W - 1 - edge)
+            along = x if (y <= x <= W - 1 - y or W - 1 - y <= x <= y) else y
             if edge == 0:
                 c = '#2a1d14'
             elif edge < 6:
-                # wood: light on the top/left, dark on the bottom/right, grain along the board
-                along = x if (y < 6 or y > W - 7) else y
-                v = 0.55 + (0.18 if (y < 6 and y <= x and y <= W - 1 - x) or (x < 6 and x <= y and x <= W - 1 - y) else -0.12)
-                v += (grain[y][x] - 0.5) * 0.35 + (0.08 if along % 7 == 0 else 0)
+                lit = (y <= x <= W - 1 - y and y < 32) or (x <= y <= W - 1 - x and x < 32)
+                v = 0.58 if lit else 0.36
+                v += grain[(along + edge * 5) % 16]
                 if edge == 1:
-                    v += 0.15
-                if edge == 5:
-                    v -= 0.2
+                    v += 0.14
+                elif edge == 5:
+                    v -= 0.14
+                if along % 16 == 7 and edge in (2, 3):
+                    v -= 0.12                                 # a knot every 16 pixels
                 c = wood[max(0, min(5, int(round(v * 5))))]
             elif edge == 6:
                 c = '#4a3524'
             elif edge == 7:
                 c = paper[1]
             else:
-                v = 0.62 + (n[y][x] - 0.5) * 0.3
+                v = 0.66
+                if (x + 2 * y) % 16 == 0 or (3 * x + y) % 16 == 5:
+                    v -= 0.08                                 # faint fibres in the paper
                 c = paper[max(0, min(4, int(round(v * 4))))]
             tex.px(img, x, y, c)
     for (cx, cy) in ((2, 2), (W - 4, 2), (2, W - 4), (W - 4, W - 4)):
@@ -146,6 +151,8 @@ def main():
         sheets.append(s.preview(6))
         tex.save(spawn_egg(pid), MOD, f'item/{pid}_spawn_egg')
         assets.spawn_egg(MOD, f'{pid}_spawn_egg')
+    for pid, img in characters.extras().items():
+        tex.save(img, MOD, f'entity/npc/{pid}_extra')
     panel()
     advancements()
     assets.lang(MOD, texts.lang())

@@ -3,10 +3,15 @@ package net.kasax.raft.content.npc.client;
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.npc.NpcCharacter;
 import net.kasax.raft.content.npc.entity.NpcEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.ItemStack;
@@ -20,6 +25,30 @@ public class NpcRenderer extends HumanoidMobRenderer<NpcEntity, NpcRenderState, 
     public NpcRenderer(EntityRendererProvider.Context context, NpcCharacter character) {
         super(context, new NpcModel(context.bakeLayer(character.slim ? ModelLayers.PLAYER_SLIM : ModelLayers.PLAYER), character.slim), 0.5F);
         this.texture = Raft.id("textures/entity/npc/" + character.id + ".png");
+        ModelLayerLocation extra = NpcAccessories.of(character);
+        if (extra != null) {
+            this.addLayer(new ExtraLayer(this, new NpcModel(context.bakeLayer(extra), false), NpcAccessories.texture(character)));
+        }
+    }
+
+    /** Straw hat brim, hard hat visor, hair bun or flower (NpcAccessories), moving with the head. */
+    private static class ExtraLayer extends RenderLayer<NpcRenderState, NpcModel> {
+        private final NpcModel model;
+        private final Identifier texture;
+
+        ExtraLayer(RenderLayerParent<NpcRenderState, NpcModel> parent, NpcModel model, Identifier texture) {
+            super(parent);
+            this.model = model;
+            this.texture = texture;
+        }
+
+        @Override
+        public void submit(PoseStack poseStack, SubmitNodeCollector collector, int lightCoords, NpcRenderState state,
+                           float yRot, float xRot) {
+            if (state.headEquipment.isEmpty() && state.headItem.isEmpty() && state.wornHeadType == null) {
+                coloredCutoutModelCopyLayerRender(this.model, this.texture, poseStack, collector, lightCoords, state, -1, 1);
+            }
+        }
     }
 
     @Override

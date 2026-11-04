@@ -71,11 +71,11 @@ public class NpcDialogScreen extends Screen {
     }
 
     private int textX() {
-        return this.left() + 96;
+        return this.left() + 100;
     }
 
     private int textW() {
-        return this.panelW() - 96 - 14;
+        return this.panelW() - 100 - 12;
     }
 
     private int textY() {
@@ -217,11 +217,11 @@ public class NpcDialogScreen extends Screen {
         super.removed();
     }
 
-    /** Options in two columns, three rows each. */
+    /** Options right of the portrait, in two columns of three rows. */
     private int[] optionRect(int i) {
         int col = i / 3, row = i % 3;
-        int colW = (this.panelW() - 28) / 2;
-        return new int[]{this.left() + 14 + col * colW, this.optionY() + row * 12, colW - 4, 12};
+        int colW = this.textW() / 2;
+        return new int[]{this.textX() + col * colW, this.optionY() + row * 12, colW - 4, 12};
     }
 
     private int optionAt(double mx, double my) {
@@ -272,7 +272,7 @@ public class NpcDialogScreen extends Screen {
         }
         // the gift under the greeting
         if (!this.dialog.gift().isEmpty() && this.chosen < 0 && !this.typing() && this.page == this.pages.size() - 1) {
-            int gy = this.optionY() - 20;
+            int gy = this.optionY() - 15;
             g.item(this.dialog.gift(), tx, gy - 4);
             g.text(this.font, Component.translatable("npc.raft.received", this.dialog.gift().getHoverName()), tx + 20, gy, GIFT, false);
             if (!this.giftShown) {
@@ -289,13 +289,13 @@ public class NpcDialogScreen extends Screen {
                 g.fill(r[0] - 2, r[1] - 1, r[0] + r[2], r[1] + r[3] - 1, HOVER);
             }
             int color = i == this.chosen ? CHOSEN : over ? NAME : INK;
-            String label = (i + 1) + ". " + this.options.get(i).label().getString();
+            String label = this.font.plainSubstrByWidth((i + 1) + ". " + this.options.get(i).label().getString(), r[2]);
             g.text(this.font, label, r[0], r[1] + 1, color, false);
         }
     }
 
     private void drawPortrait(GuiGraphicsExtractor g, int x, int y, int mouseX, int mouseY) {
-        int w = 74, h = 104;
+        int w = 76, h = this.panelH() - 24;
         // frame: dark wood, then a little seascape behind the person
         g.fill(x - 2, y - 2, x + w + 2, y + h + 2, 0xFF4A3524);
         g.fill(x - 1, y - 1, x + w + 1, y + h + 1, 0xFF8C6B4A);
@@ -304,7 +304,7 @@ public class NpcDialogScreen extends Screen {
         g.fill(x, y + h * 2 / 3, x + w, y + h * 2 / 3 + 1, 0xFFE8F6FA);
         LivingEntity npc = this.npc();
         if (npc != null) {
-            InventoryScreen.extractEntityInInventoryFollowsMouse(g, x, y, x + w, y + h, 52, -0.45F, mouseX, mouseY, npc);
+            InventoryScreen.extractEntityInInventoryFollowsMouse(g, x, y, x + w, y + h, 54, 0.0F, mouseX, mouseY, npc);
         }
     }
 }

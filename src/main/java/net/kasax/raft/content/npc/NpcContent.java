@@ -15,6 +15,7 @@ import net.minecraft.world.item.SpawnEggItem;
 
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /** Entity types (one per character), spawn eggs and the per-player memory of the npc module. */
@@ -30,6 +31,14 @@ public final class NpcContent {
             .persistent(Codec.unboundedMap(Codec.STRING, Codec.LONG))
             .copyOnDeath()
             .buildAndRegister(Raft.id("npc_met"));
+
+    /**
+     * Structure spots that were checked for their person (chunk attachment, see {@link NpcRetrofit}): an older
+     * structure gets its person once, a person removed later is not brought back.
+     */
+    public static final AttachmentType<List<String>> SPOTS_DONE = AttachmentRegistry.<List<String>>builder()
+            .persistent(Codec.STRING.listOf())
+            .buildAndRegister(Raft.id("npc_spots_done"));
 
     private NpcContent() {
     }

@@ -1,0 +1,24 @@
+{
+  "parent": "raft:adventure/root",
+  "criteria": {
+    "talk": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:spyglass"
+    },
+    "title": {
+      "translate": "advancements.raft.adventure.new_friend.title"
+    },
+    "description": {
+      "translate": "advancements.raft.adventure.new_friend.description"
+    }
+  },
+  "requirements": [
+    [
+      "talk"
+    ]
+  ]
+}

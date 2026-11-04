@@ -65,7 +65,12 @@ final class NpcActivityGoal extends Goal {
                 || level.getGameTime() < this.nextStart) {
             return false;
         }
-        return this.plan();
+        if (this.plan()) {
+            return true;
+        }
+        // nothing to do right now (no place found or no path): try again later, not every other tick
+        this.nextStart = level.getGameTime() + 60 + this.npc.getRandom().nextInt(80);
+        return false;
     }
 
     @Override

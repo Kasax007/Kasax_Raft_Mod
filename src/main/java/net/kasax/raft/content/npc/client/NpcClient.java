@@ -13,6 +13,7 @@ public final class NpcClient {
     }
 
     public static void init() {
+        NpcAccessories.register();
         for (NpcCharacter c : NpcCharacter.values()) {
             EntityRendererRegistry.register(NpcContent.TYPES.get(c), context -> new NpcRenderer(context, c));
         }

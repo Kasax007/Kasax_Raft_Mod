@@ -27,6 +27,10 @@ final class AlmanacBook {
         }
     }
 
+    /** The people of the sea (npc module), in the order of the story. */
+    private static final List<String> PEOPLE = List.of("keeper_fenn", "nalu", "old_tamo", "dr_voss", "teo", "kai",
+            "dr_lund", "okafor");
+
     record Chapter(String id, String icon, List<Section> sections) {
         String titleKey() {
             return "almanac.raft." + id + ".title";
@@ -54,8 +58,15 @@ final class AlmanacBook {
                 "raft:flippers", "raft:air_compressor", "raft:harpoon_gun", "raft:sea_scooter"));
         list.add(simple("biomes", "raft:glow_kelp", "raft:glow_kelp", "raft:sea_anemone_glow", "raft:giant_clam",
                 "raft:starfish_orange", "raft:pineapple", "raft:black_sand", "raft:hibiscus"));
-        list.add(simple("places", "raft:treasure_chest", "raft:treasure_chest", "raft:wooden_crate", "raft:gold_coin",
+        List<Section> places = new ArrayList<>();
+        places.add(Section.text("places", "raft:treasure_chest", "raft:wooden_crate", "raft:gold_coin",
                 "raft:jolly_roger", "raft:expedition_radio", "minecraft:spyglass", "raft:receiver"));
+        // the people of the sea (npc module): an introduction and one portrait page each
+        places.add(new Section("people", "people", List.of("raft:gold_coin", "raft:pearl", "minecraft:cookie"), null, true, false));
+        for (String id : PEOPLE) {
+            places.add(new Section(id, "people." + id, List.of(), "raft:" + id, true, false));
+        }
+        list.add(new Chapter("places", "raft:treasure_chest", places));
         List<Section> creatures = new ArrayList<>();
         creatures.add(Section.text("creatures", "raft:shark_tooth", "raft:crab_claw", "raft:eel_fillet",
                 "raft:jelly_blob", "raft:glow_jelly", "raft:angler_lure", "minecraft:feather"));

@@ -182,15 +182,7 @@ def dr_voss():
     skin_body(s, tone)
     face(s, tone, eye='#2a1c15', brow='#17110f', age=1, lashes=False, glasses='#c19a4a')
     hair(s, '#1b1618', style='short', fringe=1, side_len=4, back_len=6)
-    # bun on top at the back
-    hr = ramp('#211b1d', 5, 0.4)
-    rx, ry, rw, rh = s.HAT.face('top')
-    for (x, y) in ((3, 0), (4, 0), (3, 1), (4, 1), (2, 1), (5, 1)):
-        s.put(rx + x, ry + y, hr[3 if y == 0 else 2])
-    bx, by, bw, bh = s.HAT.face('back')
-    for (x, y) in ((3, 0), (4, 0), (2, 1), (3, 1), (4, 1), (5, 1), (3, 2), (4, 2)):
-        s.put(bx + x, by + y, hr[2 if y < 2 else 1])
-    s.put(bx + 4, by + 1, '#c19a4a')                   # pencil through the bun
+    # (the bun on top is a 3D extra, see extras())
     # teal roll-neck, white lab coat (soot on the hem), dark trousers
     shirt(s, '#2b6b70', sleeve=12)
     white = ramp('#e8e6de', 6, 0.3)
@@ -258,12 +250,16 @@ def teo():
     towel = ramp('#f1efe8', 4, 0.25)
 
     def towel_fn(name, fx, fy, w, h):
-        if name in ('front', 'back') and fx in (5, 6) and fy < 5:
+        # over the left shoulder: front x 6-7 and back x 0-1 are the entity's left side
+        x0 = 6 if name == 'front' else 0
+        if name in ('front', 'back') and x0 <= fx <= x0 + 1 and fy < 4:
             return towel[2] if fy % 2 else towel[3]
-        if name == 'top' and fx in (5, 6):
-            return towel[3]
-        if name == 'front' and fx in (5, 6) and fy == 5:
+        if name in ('front', 'back') and x0 <= fx <= x0 + 1 and fy == 4:
             return '#4a8ec2'                              # blue stripe at the end
+        if name == 'top' and fx >= 6:
+            return towel[3]
+        if name == 'left' and fy < 2:
+            return towel[2]
         return 'clear'
     outer(s, s.JACKET, towel, (0, 12), towel_fn)
     return s
@@ -407,6 +403,64 @@ def okafor():
     outer(s, s.HAT, hat, (0, 8), hard, base=0.6, mottle=0.05)
     s.pixel(s.HAT, 'front', 3, 1, '#f4f2ec'); s.pixel(s.HAT, 'front', 4, 1, '#f4f2ec')   # sticker
     return s
+
+
+# ============================================================================================== 3D extras
+# textures of the extra head models (NpcAccessories.java), 64x32, box UV nets like the skins
+def _extra_box(img, box, ramp_, fn=None, base=0.55):
+    from .skins import FACE_LIGHT
+    for name, (rx, ry, rw, rh) in box.faces().items():
+        for fy in range(rh):
+            for fx in range(rw):
+                c = fn(name, fx, fy, rw, rh) if fn else None
+                if c is None:
+                    v = base + FACE_LIGHT[name]
+                    k = len(ramp_)
+                    c = ramp_[max(0, min(k - 1, int(round(v * (k - 1)))))]
+                img.putpixel((rx + fx, ry + fy), tex.rgb(c))
+
+
+def extras():
+    from PIL import Image
+    from .skins import Box
+    out = {}
+    # Tamo: wide straw brim with a woven pattern, darker rim and underside
+    img = Image.new('RGBA', (64, 32), (0, 0, 0, 0))
+    straw = ramp('#d8b76c', 5, 0.38)
+
+    def weave(name, fx, fy, w, h):
+        if name == 'top':
+            ring = min(fx, fy, w - 1 - fx, h - 1 - fy)
+            if ring == 0:
+                return straw[1]
+            return straw[3] if (fx + fy) % 2 else straw[2 if ring > 1 else 1]
+        if name == 'bottom':
+            return straw[1] if (fx + fy) % 2 else straw[0]
+        return straw[1]
+    _extra_box(img, Box(0, 0, 14, 1, 14), straw, weave)
+    out['old_tamo'] = img
+    # Okafor: hard hat visor and ridge, the orange of the crown on the skin
+    img = Image.new('RGBA', (64, 32), (0, 0, 0, 0))
+    hat = ramp('#ef8a24', 5, 0.38)
+    _extra_box(img, Box(0, 0, 9, 1, 2), hat, lambda n, fx, fy, w, h: hat[1] if n in ('bottom', 'front') else None, base=0.6)
+    _extra_box(img, Box(0, 4, 1, 1, 8), hat, None, base=0.65)
+    out['okafor'] = img
+    # Voss: the hair bun with a pencil through it
+    img = Image.new('RGBA', (64, 32), (0, 0, 0, 0))
+    hr = ramp('#211b1d', 5, 0.4)
+    _extra_box(img, Box(0, 0, 3, 2, 3), hr, lambda n, fx, fy, w, h: '#c19a4a' if n in ('right', 'left') and fy == 0 and fx == 1 else None, base=0.5)
+    out['dr_voss'] = img
+    # Nalu: a red hibiscus behind the left ear
+    img = Image.new('RGBA', (64, 32), (0, 0, 0, 0))
+    red = ramp('#d8343f', 4, 0.4)
+
+    def flower(name, fx, fy, w, h):
+        if name == 'left':
+            return '#f6d24a' if (fx, fy) == (0, 1) else red[3 if fy == 0 else 2]
+        return red[1]
+    _extra_box(img, Box(0, 0, 1, 2, 2), red, flower)
+    out['nalu'] = img
+    return out
 
 
 ALL = {
