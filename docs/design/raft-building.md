@@ -23,8 +23,8 @@ The fixed Expedition Raft (module `voyage`) stays as it is. Everything new lives
    fuel on it, also while sailing). Without any of these the helmsman can only paddle slowly (power 0.5).
    Top speed = 0.45 · P / (P + blocks/8) blocks per tick (≈ 2–6 blocks/s), heavier rafts accelerate and turn slower.
 5. **Limits:** at most 1024 blocks, 32 × 32 blocks of hull, 24 blocks high. The raft must float (at least half
-   of its hull bottom over water) and only sails where there is water under it; land, ice, piers and other
-   blocks stop it. Portals, bedrock and similar blocks cannot go to sea.
+   of its hull bottom over water) and only sails where there is water under it; land, ice, piers, other blocks
+   and other sailing rafts stop it. Portals, bedrock and similar blocks cannot go to sea.
 
 ## 2. How it works
 
