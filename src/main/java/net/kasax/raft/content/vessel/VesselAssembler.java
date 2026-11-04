@@ -22,7 +22,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntitySpawnRequest;
 import net.minecraft.world.entity.EntityType;
@@ -604,8 +603,4 @@ public final class VesselAssembler {
         vessel.stowed().clear();
     }
 
-    /** For callers outside this package (e.g. the use payload). */
-    public static boolean isHelmOf(Entity entity, BlockPos local) {
-        return entity instanceof VesselEntity vessel && vessel.structure() != null && vessel.structure().helm().equals(local);
-    }
 }
