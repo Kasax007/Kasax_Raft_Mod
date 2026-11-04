@@ -45,7 +45,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 
 /**
  * A raft built by players, sailing as one piece (see docs/design/raft-building.md). The blocks live in a
@@ -78,9 +78,8 @@ public class VesselEntity extends Entity {
     /** Server ticks between the server's raft and what clients see (interpolation). */
     private static final int CLIENT_LAG_TICKS = 2;
 
-    /** Set by the client module: sends the block the player aims at to the server. */
-    public static BiConsumer<VesselEntity, InteractionHand> clientUse = (vessel, hand) -> {
-    };
+    /** Set by the client module: sends the block the player aims at to the server (or passes, see VesselClient). */
+    public static BiFunction<VesselEntity, InteractionHand, InteractionResult> clientUse = (vessel, hand) -> InteractionResult.PASS;
 
     private @Nullable VesselStructure structure;
     private final List<Stowed> stowed = new ArrayList<>();
@@ -769,8 +768,7 @@ public class VesselEntity extends Entity {
     @Override
     public InteractionResult interact(Player player, InteractionHand hand, Vec3 location) {
         if (this.level().isClientSide()) {
-            clientUse.accept(this, hand);
-            return InteractionResult.SUCCESS;
+            return clientUse.apply(this, hand);
         }
         return InteractionResult.PASS;
     }

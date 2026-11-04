@@ -9,12 +9,17 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.kasax.raft.content.vessel.VesselColliders;
 import net.kasax.raft.content.vessel.VesselContent;
 import net.kasax.raft.content.vessel.VesselEntity;
+import net.kasax.raft.content.vessel.VesselStructure;
 import net.kasax.raft.content.vessel.net.VesselDataPayload;
 import net.kasax.raft.content.vessel.net.VesselUsePayload;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 
 /** Client-only init of the vessel module: the raft renderer, the block payload and the use key on raft blocks. */
 @Environment(EnvType.CLIENT)
@@ -50,12 +55,28 @@ public final class VesselClient {
         });
     }
 
-    private static void use(VesselEntity vessel, InteractionHand hand) {
+    /**
+     * The use key on a raft block. The helm and the motor always answer; with an empty hand or a block in hand the
+     * server says to drop anchor first. Anything else (food, potions, tools) is used as if the raft was not there.
+     */
+    private static InteractionResult use(VesselEntity vessel, InteractionHand hand) {
         BlockPos local = VesselPicker.targetOf(vessel);
-        if (local == null || useHeld) {
-            return;
+        VesselStructure structure = vessel.structure();
+        Minecraft mc = Minecraft.getInstance();
+        if (local == null || structure == null || mc.player == null) {
+            return InteractionResult.PASS;
         }
-        useHeld = true;
-        ClientPlayNetworking.send(new VesselUsePayload(vessel.getId(), local, hand == InteractionHand.OFF_HAND));
+        BlockState state = structure.get(local);
+        ItemStack held = mc.player.getItemInHand(hand);
+        boolean answers = local.equals(structure.helm()) || state != null && state.is(VesselContent.RAFT_MOTOR)
+                || held.isEmpty() || held.getItem() instanceof BlockItem;
+        if (!answers) {
+            return InteractionResult.PASS;
+        }
+        if (!useHeld) {
+            useHeld = true;
+            ClientPlayNetworking.send(new VesselUsePayload(vessel.getId(), local, hand == InteractionHand.OFF_HAND));
+        }
+        return InteractionResult.SUCCESS;
     }
 }
