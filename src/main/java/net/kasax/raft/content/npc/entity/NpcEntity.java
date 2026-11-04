@@ -359,6 +359,17 @@ public class NpcEntity extends PathfinderMob implements Merchant, Npc {
         return false;
     }
 
+    /** People stay in their world: no portals. */
+    @Override
+    public boolean canUsePortal(boolean ignorePassenger) {
+        return false;
+    }
+
+    @Override
+    public boolean isPushedByFluid() {
+        return false;
+    }
+
     @Override
     public boolean removeWhenFarAway(double distSqr) {
         return false;
