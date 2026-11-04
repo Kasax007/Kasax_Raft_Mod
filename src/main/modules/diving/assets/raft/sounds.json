@@ -13,16 +13,13 @@
   "item.harpoon_gun.fire": {
     "sounds": [
       {
-        "name": "minecraft:item/crossbow/shoot1",
-        "pitch": 0.72
+        "name": "raft:sfx/harpoon_gun/fire1"
       },
       {
-        "name": "minecraft:item/crossbow/shoot2",
-        "pitch": 0.72
+        "name": "raft:sfx/harpoon_gun/fire2"
       },
       {
-        "name": "minecraft:item/crossbow/shoot3",
-        "pitch": 0.72
+        "name": "raft:sfx/harpoon_gun/fire3"
       }
     ],
     "subtitle": "subtitles.raft.item.harpoon_gun.fire"
@@ -30,9 +27,10 @@
   "item.harpoon_gun.reload": {
     "sounds": [
       {
-        "name": "minecraft:item/crossbow/loading_end",
-        "pitch": 1.25,
-        "volume": 0.8
+        "name": "raft:sfx/harpoon_gun/reload1"
+      },
+      {
+        "name": "raft:sfx/harpoon_gun/reload2"
       }
     ],
     "subtitle": "subtitles.raft.item.harpoon_gun.reload"
@@ -78,19 +76,13 @@
   "block.air_compressor.crank": {
     "sounds": [
       {
-        "name": "minecraft:block/grindstone/grindstone1",
-        "pitch": 1.5,
-        "volume": 0.7
+        "name": "raft:sfx/air_compressor/crank1"
       },
       {
-        "name": "minecraft:block/grindstone/grindstone2",
-        "pitch": 1.5,
-        "volume": 0.7
+        "name": "raft:sfx/air_compressor/crank2"
       },
       {
-        "name": "minecraft:block/grindstone/grindstone3",
-        "pitch": 1.5,
-        "volume": 0.7
+        "name": "raft:sfx/air_compressor/crank3"
       }
     ],
     "subtitle": "subtitles.raft.block.air_compressor.crank"
@@ -98,9 +90,10 @@
   "block.air_compressor.fill": {
     "sounds": [
       {
-        "name": "minecraft:random/fizz",
-        "pitch": 1.7,
-        "volume": 0.5
+        "name": "raft:sfx/air_compressor/fill1"
+      },
+      {
+        "name": "raft:sfx/air_compressor/fill2"
       }
     ],
     "subtitle": "subtitles.raft.block.air_compressor.fill"
@@ -108,20 +101,13 @@
   "item.sea_scooter.run": {
     "sounds": [
       {
-        "name": "minecraft:block/beehive/work1",
-        "pitch": 0.55
+        "name": "raft:sfx/sea_scooter/run1"
       },
       {
-        "name": "minecraft:block/beehive/work2",
-        "pitch": 0.55
+        "name": "raft:sfx/sea_scooter/run2"
       },
       {
-        "name": "minecraft:block/beehive/work3",
-        "pitch": 0.55
-      },
-      {
-        "name": "minecraft:block/beehive/work4",
-        "pitch": 0.55
+        "name": "raft:sfx/sea_scooter/run3"
       }
     ],
     "subtitle": "subtitles.raft.item.sea_scooter.run"
@@ -129,12 +115,7 @@
   "item.oxygen_tank.refill": {
     "sounds": [
       {
-        "name": "minecraft:block/bubble_column/upwards_ambient1",
-        "pitch": 1.4
-      },
-      {
-        "name": "minecraft:block/bubble_column/upwards_ambient2",
-        "pitch": 1.4
+        "name": "raft:sfx/oxygen_tank/refill1"
       }
     ],
     "subtitle": "subtitles.raft.item.oxygen_tank.refill"
@@ -142,8 +123,7 @@
   "item.oxygen_tank.low": {
     "sounds": [
       {
-        "name": "minecraft:note/bit",
-        "volume": 0.7
+        "name": "raft:sfx/oxygen_tank/low1"
       }
     ],
     "subtitle": "subtitles.raft.item.oxygen_tank.low"
