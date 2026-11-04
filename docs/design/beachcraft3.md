@@ -49,6 +49,7 @@ Every content area is a **module**. A module owns exactly these places and must 
 | `shore` | `...content.shore` | `src/main/modules/shore/` | `tools/content/shore/` |
 | `marine` | `...content.marine` | `src/main/modules/marine/` | `tools/content/marine/` |
 | `voyage` | `...content.voyage` | `src/main/modules/voyage/` | `tools/content/voyage/` |
+| `vessel` | `...content.vessel` (rafts built from blocks, see `raft-building.md`) | `src/main/modules/vessel/` | `tools/content/vessel/` |
 | `diving` | `...content.diving` | `src/main/modules/diving/` | `tools/content/diving/` |
 | `story` | `...content.story` | `src/main/modules/story/` | `tools/content/story/` |
 | `boss` | `...content.boss` | `src/main/modules/boss/` | `tools/content/boss/` |
