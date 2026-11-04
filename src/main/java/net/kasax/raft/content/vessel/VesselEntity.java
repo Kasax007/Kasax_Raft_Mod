@@ -367,7 +367,7 @@ public class VesselEntity extends Entity {
 
     private boolean tryPose(VesselPose pose) {
         List<BlockPos> lilyPads = new ArrayList<>(0);
-        if (!VesselAssembler.fits(this.level(), this.structure, pose, lilyPads)) {
+        if (!VesselAssembler.fits(this, this.structure, pose, lilyPads)) {
             return false;
         }
         this.applyPose(pose);

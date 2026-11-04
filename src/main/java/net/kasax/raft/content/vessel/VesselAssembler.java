@@ -376,10 +376,11 @@ public final class VesselAssembler {
 
     // ------------------------------------------------------------------------------------------- sailing checks
     /**
-     * Can the raft be at this pose: inside the world border and loaded chunks, no land or other solid block in any of
-     * its outer cells, and water under at least a third of its keel. Lily pads in the way are collected (to break).
+     * Can the raft be at this pose: inside the world border and loaded chunks, no land, other solid block or other raft
+     * in any of its outer cells, and water under at least a third of its keel. Lily pads in the way are collected.
      */
-    static boolean fits(Level level, VesselStructure structure, VesselPose pose, List<BlockPos> lilyPads) {
+    static boolean fits(VesselEntity self, VesselStructure structure, VesselPose pose, List<BlockPos> lilyPads) {
+        Level level = self.level();
         AABB bounds = structure.worldBounds(pose);
         if (!level.getWorldBorder().isWithinBounds(bounds)
                 || !level.hasChunksAt(Mth.floor(bounds.minX), Mth.floor(bounds.minZ), Mth.floor(bounds.maxX), Mth.floor(bounds.maxZ))) {
@@ -422,6 +423,18 @@ public final class VesselAssembler {
         });
         if (blocked[0]) {
             return false;
+        }
+        // other sailing rafts are in the way too
+        for (VesselEntity other : VesselColliders.in(level)) {
+            VesselStructure os = other.structure();
+            if (other == self || os == null || other.isDocked() || !other.getBoundingBox().intersects(bounds)) {
+                continue;
+            }
+            VesselPose op = other.currentPose();
+            structure.forEachExteriorCell(pose, cell -> blocked[0] = os.forEachBox(op, cell, box -> true));
+            if (blocked[0]) {
+                return false;
+            }
         }
         long[] keel = structure.keel();
         int wet = 0;
