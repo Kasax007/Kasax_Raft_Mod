@@ -448,6 +448,7 @@ LANG = {
     'message.raft.vessel.not_floating': 'The raft must float on water to set sail.',
     'message.raft.vessel.controls': 'W/S: sail · A/D: steer · Sneak: leave the helm and drop anchor',
     'message.raft.vessel.anchoring': 'Dropping anchor...',
+    'message.raft.vessel.anchored': 'Anchor dropped. The raft is blocks again.',
     'message.raft.vessel.no_room': 'No room to drop anchor here. Sail a little away from the shore.',
     'message.raft.vessel.helm_taken': 'Someone is already at the helm.',
     'message.raft.vessel.anchor_first': 'Drop anchor to use this.',

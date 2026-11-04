@@ -98,6 +98,7 @@ public class VesselEntity extends Entity {
     private int autoTurn;
     private int autoTicks;
     private int helmToggleTick = -100;
+    private boolean fuelWarned;
     private final VesselPose[] history = new VesselPose[CLIENT_LAG_TICKS + 2];
     private int historyIndex;
     private boolean clientReady;
@@ -269,6 +270,11 @@ public class VesselEntity extends Entity {
         if (motor != this.isMotorRunning()) {
             this.entityData.set(DATA_MOTOR, motor);
         }
+        if (forward != 0 && !motor && this.structure.motors().length > 0 && !this.fuelWarned
+                && this.getControllingPassenger() instanceof Player pilot) {
+            this.fuelWarned = true;
+            pilot.sendOverlayMessage(Component.translatable("message.raft.vessel.motor_empty"));
+        }
         float power = BASE_POWER + this.structure.oars() * OAR_POWER + this.structure.sails() * SAIL_POWER
                 + (motor ? this.fueledMotors() * MOTOR_POWER : 0.0F);
         float weight = this.weight();
@@ -423,6 +429,7 @@ public class VesselEntity extends Entity {
                 this.setState(DOCKED);
                 this.dockedTicks = 0;
                 this.ejectPassengers();
+                this.tellAboard(Component.translatable("message.raft.vessel.anchored"));
             } else {
                 this.dockTarget = null;
                 this.dockWait = 40;
@@ -820,6 +827,7 @@ public class VesselEntity extends Entity {
         }
         if (player.startRiding(this, true, true)) {
             this.setState(SAILING);
+            this.fuelWarned = false;
             this.dockTarget = null;
             this.warnedNoRoom = false;
             player.sendOverlayMessage(Component.translatable("message.raft.vessel.controls"));

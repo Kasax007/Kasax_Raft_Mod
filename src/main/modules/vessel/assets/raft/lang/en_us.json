@@ -9,6 +9,7 @@
   "block.raft.sail": "Sail",
   "entity.raft.vessel": "Raft",
   "message.raft.vessel.anchor_first": "Drop anchor to use this.",
+  "message.raft.vessel.anchored": "Anchor dropped. The raft is blocks again.",
   "message.raft.vessel.anchoring": "Dropping anchor...",
   "message.raft.vessel.controls": "W/S: sail · A/D: steer · Sneak: leave the helm and drop anchor",
   "message.raft.vessel.helm_taken": "Someone is already at the helm.",
