@@ -1,7 +1,6 @@
 package net.kasax.raft.content.vessel;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -27,9 +26,16 @@ public final class VesselPose {
         this.z = z;
         this.yaw = yaw;
         this.pivot = pivot;
-        double rad = yaw * Mth.DEG_TO_RAD;
-        this.cos = Math.cos(rad);
-        this.sin = Math.sin(rad);
+        // exact values for quarter turns, so docked blocks land exactly on the grid
+        if (yaw % 90.0F == 0.0F) {
+            int quarter = Math.floorMod(Math.round(yaw / 90.0F), 4);
+            this.cos = quarter == 0 ? 1.0 : quarter == 2 ? -1.0 : 0.0;
+            this.sin = quarter == 1 ? 1.0 : quarter == 3 ? -1.0 : 0.0;
+        } else {
+            double rad = Math.toRadians(yaw);
+            this.cos = Math.cos(rad);
+            this.sin = Math.sin(rad);
+        }
     }
 
     public VesselPose(Vec3 pos, float yaw, Vec3 pivot) {

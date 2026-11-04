@@ -28,8 +28,13 @@ public final class VesselColliders {
     }
 
     static void add(VesselEntity vessel) {
-        List<VesselEntity> list = side(vessel.level().isClientSide());
+        boolean client = vessel.level().isClientSide();
+        List<VesselEntity> list = side(client);
         if (!list.contains(vessel)) {
+            if (client) {
+                // a client has one level at a time: forget rafts of the level it left
+                list.removeIf(v -> v.level() != vessel.level());
+            }
             list.add(vessel);
         }
     }

@@ -56,6 +56,10 @@ The fixed Expedition Raft (module `voyage`) stays as it is. Everything new lives
 * **Saving.** The vessel saves its blocks (palette + packed positions), block entity NBT, stowed entities, speed
   and fuel. A vessel loaded without helmsman docks. It never leaves with a logging-out player
   (`hasExactlyOnePlayerPassenger` = false), cannot use portals and ignores damage, pistons and explosions.
+  `/kill` drops anchor on the spot (or drops everything as items if there is no room).
+* **Autopilot** (map makers, tests): `/data merge entity @e[type=raft:vessel,limit=1]
+  {Autopilot:{Forward:1b,Turn:-1b,Ticks:200}}` sails as if a helmsman held these keys (Forward/Turn -1..1)
+  for that many ticks, also without anyone at the helm; then the raft drops anchor as usual.
 
 ## 3. Content
 
