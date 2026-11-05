@@ -1,0 +1,43 @@
+# Run: tools/bctest/run.sh tools/content/boss/tests/boss_heal.txt <outdir>
+# Expected (5.11.2026): HP 450 after the reset, still 450 after 700 ticks with a survival player in the arena,
+# 450 after 300 ticks alone and 600 after 700 ticks alone (heals after 600 ticks without players within 24 blocks).
+# The Leviathan cannot be hurt while it is submerged or in its intro, so the test sets its health directly.
+world 7
+rd 5
+cmd execute in raft:raftdim run tp @p 40 112 0
+settle 120
+cmd execute in raft:raftdim run fill 25 84 -15 55 84 15 minecraft:glass
+cmd execute in raft:raftdim run fill 25 85 -15 55 99 15 minecraft:water
+swait 20
+log SUMMON
+cmd execute in raft:raftdim run summon raft:leviathan 40 92 0
+swait 140
+cmd data merge entity @e[type=raft:leviathan,limit=1] {Health:450.0f}
+swait 5
+log HP_AFTER_HIT
+cmd data get entity @e[type=raft:leviathan,limit=1] Health
+log CONTROL_SURVIVAL_PLAYER_NEAR
+cmd gamemode survival @p
+cmd effect give @p minecraft:resistance infinite 255 true
+cmd effect give @p minecraft:water_breathing infinite 0 true
+cmd effect give @p minecraft:slow_falling infinite 0 true
+cmd execute in raft:raftdim run tp @p 46 104 6
+swait 175
+cmd execute in raft:raftdim run tp @p 46 104 6
+swait 175
+cmd execute in raft:raftdim run tp @p 46 104 6
+swait 175
+cmd execute in raft:raftdim run tp @p 46 104 6
+swait 175
+log HP_AFTER_700_WITH_PLAYER
+cmd data get entity @e[type=raft:leviathan,limit=1] Health
+log LEAVE_ARENA
+cmd execute in raft:raftdim run tp @p 100 112 0
+swait 300
+log HP_AFTER_300_ALONE
+cmd data get entity @e[type=raft:leviathan,limit=1] Health
+swait 400
+log HP_AFTER_700_ALONE
+cmd data get entity @e[type=raft:leviathan,limit=1] Health
+cmd data get entity @e[type=raft:leviathan,limit=1] Pos
+log DONE
