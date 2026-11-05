@@ -10,6 +10,7 @@ import net.kasax.raft.content.vessel.VesselColliders;
 import net.kasax.raft.content.vessel.VesselContent;
 import net.kasax.raft.content.vessel.VesselEntity;
 import net.kasax.raft.content.vessel.VesselStructure;
+import net.kasax.raft.content.vessel.net.VesselArrivalPayload;
 import net.kasax.raft.content.vessel.net.VesselBlocksPayload;
 import net.kasax.raft.content.vessel.net.VesselBreakPayload;
 import net.kasax.raft.content.vessel.net.VesselDataPayload;
@@ -43,6 +44,11 @@ public final class VesselClient {
     /** The helm answers once per click (no flickering in and out of the helm while the key is held). */
     private static boolean helmUseHeld;
     private static boolean wasAtHelm;
+    /** Where the server put the player on a raft (raft, position in its frame, where to wait meanwhile, ticks left). */
+    private record Arrival(int vessel, Vec3 local, Vec3 hold, int[] ticksLeft) {
+    }
+
+    private static @Nullable Arrival arrival;
     private static int miningVessel = -1;
     private static @Nullable BlockPos miningLocal;
     private static float miningProgress;
@@ -73,6 +79,14 @@ public final class VesselClient {
                 }
             });
         });
+        ClientPlayNetworking.registerGlobalReceiver(VesselArrivalPayload.TYPE, (payload, context) -> {
+            Minecraft mc = context.client();
+            mc.execute(() -> {
+                if (mc.player != null) {
+                    arrival = new Arrival(payload.entityId(), payload.local(), mc.player.position(), new int[]{100});
+                }
+            });
+        });
         ClientPlayNetworking.registerGlobalReceiver(VesselUseResultPayload.TYPE, (payload, context) -> {
             Minecraft mc = context.client();
             mc.execute(() -> useInAir(mc));
@@ -96,7 +110,50 @@ public final class VesselClient {
             VesselColliders.clear(true);
             VesselDataPayload.clearPending();
             stopMining();
+            arrival = null;
         });
+    }
+
+    /**
+     * The start of the own player's tick (LocalPlayerTickMixin): after the server put the player onto a raft, wait in the
+     * air where it put them until this client has the raft's blocks, then stand on the raft where the server meant
+     * (its copy of the raft may be a little behind the server's). Without this the player falls through the deck while
+     * the raft entity is still on its way (after a teleport from far away, a login or a dimension change).
+     */
+    public static void beforePlayerTick(LocalPlayer player) {
+        Arrival a = arrival;
+        if (a == null) {
+            return;
+        }
+        if (player.isPassenger() || player.isSpectator() || a.ticksLeft()[0] <= 0) {
+            arrival = null;
+            return;
+        }
+        if (player.connection.hasClientLoaded()) {
+            a.ticksLeft()[0]--;
+        }
+        if (player.level().getEntity(a.vessel()) instanceof VesselEntity vessel && vessel.structure() != null) {
+            if (!vessel.isDocked()) {
+                Vec3 at = vessel.currentPose().toWorld(a.local());
+                player.setPos(at.x, at.y, at.z);
+                player.setOldPosAndRot();
+                player.setDeltaMovement(player.getDeltaMovement().multiply(1.0, 0.0, 1.0));
+                player.resetFallDistance();
+            }
+            arrival = null;
+        } else {
+            player.setPos(a.hold().x, a.hold().y, a.hold().z);
+            player.setDeltaMovement(Vec3.ZERO);
+            player.resetFallDistance();
+        }
+    }
+
+    /**
+     * The server moved the own player (ClientPacketListenerTeleportMixin): a wait from an earlier move ends. A move
+     * onto a raft is followed by its VesselArrivalPayload, which starts the wait again.
+     */
+    public static void movedByServer() {
+        arrival = null;
     }
 
     /** The use key on a raft block: the server uses the block (or the held item on it) as if it were in the world. */

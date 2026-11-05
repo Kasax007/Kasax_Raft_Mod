@@ -65,7 +65,14 @@ it while it sails. The fixed Expedition Raft (module `voyage`) stays as it is. E
   sneak-edge check. Blocks placed or broken at sea change the collision at once (the copy follows the plot).
 * **Carrying.** Each tick the vessel moves everything that rests on it or is in the air above its deck (up to
   3 blocks) by its own translation and rotation: the server carries mobs and items, each client its own player
-  (with the render interpolation corrected, so it is smooth whichever entity ticks first).
+  (with the render interpolation corrected, so it is smooth whichever entity ticks first). A client also lifts its own
+  player out of the deck if it sank into it.
+* **Arriving on a raft.** When the server puts a player onto a raft's deck (teleport, login, dimension change,
+  respawn, leaving the helm) or a raft comes into the view of a player standing on it, the client is told where on
+  the raft (`VesselArrivalPayload`, position in the raft's frame). It keeps the player in the air until its copy of the
+  raft is there (the raft entity comes a moment after the teleport, later on a lagging server; at most 5 s) and then
+  stands them on it at that spot; without this the player would fall through the deck in between. Any later move by
+  the server ends the wait (a move onto a raft again sends its own payload).
 * **Using blocks at sea.** A client mixin on `Minecraft.pick` ray-casts the vessel in its local frame (exact block
   shapes) and targets it like an entity. The use key sends `VesselUsePayload` (block, hit point and face in the raft's
   frame); the server runs vanilla `ServerPlayerGameMode.useItemOn` on the plot block, with the player turned into the
@@ -130,3 +137,8 @@ position without a helmsman, carries a player standing at a corner through a tur
 11.5,0,12.5` prints the player's position in the raft frame), checks that the wheat grew and the furnace smelted in
 the plot and keeps the world. `raft_2.txt` reopens it with the raft at sea, checks the plot (chest, furnace, lamp),
 checks that it is still at sea after a while, drops anchor at the helm (sneak + use) and checks the blocks in the world.
+`raft_3.txt` lets a raft drift (autopilot, nobody at the helm, its sea force-loaded), teleports the player onto its
+deck next to the helm from about 300 blocks away, checks that the player stays on deck and drops anchor at the helm
+(sneak + use) while the raft still drifts; then sets sail again and does the same from the overworld, and keeps a
+world with the raft drifting in circles and the player on deck. `raft_4.txt` reopens that world (login onto the
+moving raft), checks the player is on deck and drops anchor at the helm.

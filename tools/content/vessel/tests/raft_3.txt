@@ -1,0 +1,137 @@
+# Run: tools/bctest/run.sh tools/content/vessel/tests/raft_3.txt <outdir>; keeps the world "arrivalsave" for raft_4.txt.
+# Raft arrival: a player teleported (from far away, and from another dimension) onto a drifting raft stays on deck
+# and drops anchor at the helm (sneak + use) while the raft still drifts. Helm centre = raft pivot + ^0 ^1.5 ^-3
+# (raft built as below). The raft sails straight south (yaw 0): a player at ^1.2 ^-0.4 ^1.0 from the helm centre
+# looks at it with yaw 129.8, pitch 34.
+world arrivaltest
+rd 5
+gui 2
+cmd gamerule raft:shark_bites false
+cmd gamerule spawn_monsters false
+cmd execute in raft:raftdim run tp @p 0.5 112 0.5 0 40
+wait 20
+settle 200
+swait 40
+cmd execute in raft:raftdim run fill -24 100 -24 24 107 64 air
+cmd execute in raft:raftdim run fill -24 92 -24 24 99 64 water
+cmd execute in raft:raftdim run fill -24 100 65 24 107 112 air
+cmd execute in raft:raftdim run fill -24 92 65 24 99 112 water
+cmd execute in raft:raftdim run kill @e[type=!minecraft:player,distance=..90]
+# the raft's sea stays loaded while the player is away (out of its view, or in another dimension)
+cmd execute in raft:raftdim run forceload add -32 -32 32 112
+swait 20
+cmd execute in raft:raftdim run fill -3 99 -4 3 99 4 raft:raft_foundation
+cmd execute in raft:raftdim run fill -3 100 -4 3 100 -4 minecraft:oak_planks
+cmd execute in raft:raftdim run setblock 0 100 -3 raft:helm[facing=south]
+cmd execute in raft:raftdim run setblock 2 100 1 minecraft:chest[facing=west]{Items:[{Slot:0b,id:"minecraft:diamond",count:5}]}
+cmd execute in raft:raftdim run setblock 0 100 2 raft:sail[facing=south]
+swait 20
+settle 60
+nearblock raft:helm 48 1.3 0.5 0
+swait 10
+use
+swaitfor 1500 execute in raft:raftdim if entity @e[type=raft:vessel]
+swait 20
+hold sneak 8
+swait 10
+cmd gamemode survival @p
+# the raft drifts on (autopilot, nobody at the helm) while the player is far away
+cmd data merge entity @e[type=raft:vessel,limit=1] {Autopilot:{Forward:1b,Turn:0b,Ticks:600}}
+cmd execute in raft:raftdim run tp @p 220.5 130 220.5
+cmd execute in raft:raftdim run setblock 220 128 220 minecraft:stone
+wait 20
+settle 60
+swait 60
+count raft:raftdim
+log TELEPORT_ONTO_DRIFTING_RAFT
+cmd data get entity @e[type=raft:vessel,limit=1] Pos
+cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-3 run tp @p ^1.6 ^-0.4 ^
+wait 20
+settle 60
+swait 40
+where
+cmd data get entity @e[type=raft:vessel,limit=1] Pos
+cmd data get entity @e[type=raft:vessel,limit=1] Rotation
+cmd data get entity @p Pos
+third on
+wait 5 render
+shot 60_after_teleport
+third off
+# drop anchor at the helm while the raft still drifts (sneak + use)
+log ANCHOR_WHILE_DRIFTING_AFTER_TELEPORT
+cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-3 run tp @p ^1.2 ^-0.4 ^1.0 129.8 34
+swait 10
+where
+cmd data get entity @e[type=raft:vessel,limit=1] Pos
+wait 3 render
+shot aim_helm_1
+sneakuse
+swaitfor 600 execute in raft:raftdim unless entity @e[type=raft:vessel]
+count raft:raftdim
+find raft:helm 48
+find minecraft:chest 48
+cmd execute in raft:raftdim positioned {fx} {fy} {fz} run data get block ~ ~ ~ Items
+wait 10 render
+shot 61_anchored_after_teleport
+# set sail again; the same from another dimension
+log SET_SAIL_AGAIN
+cmd gamemode creative @p
+nearblock raft:helm 48 1.3 0.5 0
+swait 10
+use
+swaitfor 1500 execute in raft:raftdim if entity @e[type=raft:vessel]
+swait 20
+hold sneak 8
+swait 10
+cmd gamemode survival @p
+log DIMENSION_CHANGE_ONTO_DRIFTING_RAFT
+cmd data merge entity @e[type=raft:vessel,limit=1] {Autopilot:{Forward:1b,Turn:0b,Ticks:600}}
+cmd execute in minecraft:overworld run tp @p 0.5 200 0.5
+wait 20
+settle 60
+swait 40
+cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-3 run tp @p ^1.6 ^-0.4 ^
+wait 20
+settle 90
+swait 40
+where
+cmd data get entity @e[type=raft:vessel,limit=1] Pos
+cmd data get entity @e[type=raft:vessel,limit=1] Rotation
+cmd data get entity @p Pos
+third on
+wait 5 render
+shot 62_after_dimension_change
+third off
+log ANCHOR_WHILE_DRIFTING_AFTER_DIMENSION_CHANGE
+cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-3 run tp @p ^1.2 ^-0.4 ^1.0 129.8 34
+swait 10
+where
+cmd data get entity @e[type=raft:vessel,limit=1] Pos
+wait 3 render
+shot aim_helm_2
+sneakuse
+swaitfor 600 execute in raft:raftdim unless entity @e[type=raft:vessel]
+count raft:raftdim
+find raft:helm 48
+find minecraft:chest 48
+cmd execute in raft:raftdim positioned {fx} {fy} {fz} run data get block ~ ~ ~ Items
+wait 10 render
+shot 63_anchored_after_dimension_change
+# for the login test (t7): set sail again, the raft drifts in circles with the player on deck when the world is saved
+log LOGIN_SETUP
+cmd gamemode creative @p
+nearblock raft:helm 48 1.3 0.5 0
+swait 10
+use
+swaitfor 1500 execute in raft:raftdim if entity @e[type=raft:vessel]
+swait 20
+hold sneak 8
+swait 10
+cmd gamemode survival @p
+cmd data merge entity @e[type=raft:vessel,limit=1] {Autopilot:{Forward:1b,Turn:1b,Ticks:3000}}
+swait 60
+where
+cmd data get entity @e[type=raft:vessel,limit=1] Pos
+cmd data get entity @e[type=raft:vessel,limit=1] Rotation
+keep arrivalsave
+log DONE
