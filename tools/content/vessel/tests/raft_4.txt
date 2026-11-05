@@ -1,5 +1,5 @@
 # Run after raft_3.txt: tools/bctest/run.sh tools/content/vessel/tests/raft_4.txt <outdir>
-# Raft arrival on login: reopen the world kept by t6 (the raft drifts in circles, the player stood on its deck when
+# Raft arrival on login: reopen the world kept by raft_3.txt (the raft drifts in circles, the player stood on its deck when
 # the world was saved). The player must be on the deck after loading; then the raft is stopped and anchored at the helm.
 open arrivalsave
 rd 5
