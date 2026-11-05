@@ -83,7 +83,7 @@ public final class VesselClient {
             Minecraft mc = context.client();
             mc.execute(() -> {
                 if (mc.player != null) {
-                    arrival = new Arrival(payload.entityId(), payload.local(), mc.player.position(), new int[]{200});
+                    arrival = new Arrival(payload.entityId(), payload.local(), mc.player.position(), new int[]{100});
                 }
             });
         });
@@ -132,12 +132,14 @@ public final class VesselClient {
         if (player.connection.hasClientLoaded()) {
             a.ticksLeft()[0]--;
         }
-        if (player.level().getEntity(a.vessel()) instanceof VesselEntity vessel && vessel.structure() != null && !vessel.isDocked()) {
-            Vec3 at = vessel.currentPose().toWorld(a.local());
-            player.setPos(at.x, at.y, at.z);
-            player.setOldPosAndRot();
-            player.setDeltaMovement(player.getDeltaMovement().multiply(1.0, 0.0, 1.0));
-            player.resetFallDistance();
+        if (player.level().getEntity(a.vessel()) instanceof VesselEntity vessel && vessel.structure() != null) {
+            if (!vessel.isDocked()) {
+                Vec3 at = vessel.currentPose().toWorld(a.local());
+                player.setPos(at.x, at.y, at.z);
+                player.setOldPosAndRot();
+                player.setDeltaMovement(player.getDeltaMovement().multiply(1.0, 0.0, 1.0));
+                player.resetFallDistance();
+            }
             arrival = null;
         } else {
             player.setPos(a.hold().x, a.hold().y, a.hold().z);
