@@ -122,10 +122,11 @@ Advancement `raft:adventure/shipwright` ("Shipwright": set sail on a raft you bu
 ## 5. Tests
 
 `tools/bctest/run.sh tools/content/vessel/tests/raft_1.txt <out>` builds a raft with a chest, a furnace with raw iron
-and coal, a moist wheat field, a lever next to a redstone lamp and a chicken in a walled pool of the raft dimension,
-sets sail at the helm, leaves the helm, flips the lever (the lamp in the plot lights), places and breaks a block,
-opens the chest and keeps it open while the raft sails, takes the diamonds out, checks that the raft holds position
-without a helmsman, carries a player standing at a corner through a turn (`corner.py <out>/gradle.log 11.5,0,12.5`
-prints the player's position in the raft frame), checks that the wheat grew and the furnace smelted in the plot and
-keeps the world; `raft_2.txt` reopens it with the raft at sea, checks the plot, drops anchor and checks the blocks in
-the world.
+and coal, a moist wheat field, a lever next to a redstone lamp, a ladder and a chicken in a walled pool of the raft
+dimension, sets sail at the helm and leaves the helm. At sea it flips the lever (the lamp in the plot lights), places
+and breaks a plank in creative and in survival (mining time as on land, the plank drops on the deck), climbs the
+ladder, opens the chest and keeps it open while the raft sails, takes the diamonds out, checks that the raft holds
+position without a helmsman, carries a player standing at a corner through a turn (`corner.py <out>/gradle.log
+11.5,0,12.5` prints the player's position in the raft frame), checks that the wheat grew and the furnace smelted in
+the plot and keeps the world. `raft_2.txt` reopens it with the raft at sea, checks the plot (chest, furnace, lamp),
+checks that it is still at sea after a while, drops anchor at the helm (sneak + use) and checks the blocks in the world.
