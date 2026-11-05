@@ -187,14 +187,16 @@ public final class VesselInteractions {
     // ------------------------------------------------------------------------------------------- break
     /** A player began breaking a block of the raft (their client counts the progress). */
     static void startBreak(VesselEntity vessel, ServerPlayer player, BlockPos local) {
-        net.kasax.raft.Raft.LOGGER.info("Raft block break start {} by {}", local.toShortString(), player.getName().getString());
-        MINING.put(player.getUUID(), new Mining(vessel.getId(), local.asLong(), player.level().getServer().getTickCount(), false));
+        net.kasax.raft.Raft.LOGGER.debug("Raft block break start {} by {}", local.toShortString(), player.getName().getString());
+        // a break that already finished on the client but waits on the server is kept (the client may mine on)
+        MINING.compute(player.getUUID(), (uuid, old) -> old != null && old.done() && old.vessel() == vessel.getId() && old.local() == local.asLong()
+                ? old : new Mining(vessel.getId(), local.asLong(), player.level().getServer().getTickCount(), false));
     }
 
     /** A player's client says the block is broken: check the time it took and break it in the plot. */
     static void finishBreak(VesselEntity vessel, ServerPlayer player, BlockPos local) {
         Mining mining = MINING.remove(player.getUUID());
-        net.kasax.raft.Raft.LOGGER.info("Raft block break finish {} by {} (started {})", local.toShortString(), player.getName().getString(),
+        net.kasax.raft.Raft.LOGGER.debug("Raft block break finish {} by {} (started {})", local.toShortString(), player.getName().getString(),
                 mining == null ? "never" : BlockPos.of(mining.local()).toShortString() + " at " + mining.startTick());
         if (player.isCreative()) {
             breakNow(vessel, player, local);
@@ -232,12 +234,17 @@ public final class VesselInteractions {
         }
         BlockState state = vessel.level().getBlockState(at);
         float perTick = state.getDestroyProgress(player, vessel.level(), at);
+        if (!player.onGround() && VesselColliders.isAboard(player)) {
+            // the server does not see the deck under the player's feet (players collide with rafts on their own client
+            // only), so it counts the player as in the air, where mining is five times slower
+            perTick *= 5.0F;
+        }
         if (state.isAir() || perTick <= 0.0F) {
             return true;
         }
         int took = player.level().getServer().getTickCount() - mining.startTick() + 1;
         if (perTick * took < 0.7F) {
-            net.kasax.raft.Raft.LOGGER.info("Raft block break {} waits: {} ticks of {}", local.toShortString(), took, 0.7F / perTick);
+            net.kasax.raft.Raft.LOGGER.debug("Raft block break {} waits: {} ticks of {}", local.toShortString(), took, 0.7F / perTick);
             return false;
         }
         breakNow(vessel, player, local);
