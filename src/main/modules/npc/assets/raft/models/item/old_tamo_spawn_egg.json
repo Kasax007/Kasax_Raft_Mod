@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "raft:item/old_tamo_spawn_egg"
+  }
+}

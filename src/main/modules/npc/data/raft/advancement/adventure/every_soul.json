@@ -1,0 +1,67 @@
+{
+  "parent": "raft:adventure/root",
+  "criteria": {
+    "keeper_fenn": {
+      "trigger": "minecraft:impossible"
+    },
+    "nalu": {
+      "trigger": "minecraft:impossible"
+    },
+    "old_tamo": {
+      "trigger": "minecraft:impossible"
+    },
+    "dr_voss": {
+      "trigger": "minecraft:impossible"
+    },
+    "teo": {
+      "trigger": "minecraft:impossible"
+    },
+    "kai": {
+      "trigger": "minecraft:impossible"
+    },
+    "dr_lund": {
+      "trigger": "minecraft:impossible"
+    },
+    "okafor": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "icon": {
+      "id": "minecraft:cake"
+    },
+    "title": {
+      "translate": "advancements.raft.adventure.every_soul.title"
+    },
+    "description": {
+      "translate": "advancements.raft.adventure.every_soul.description"
+    },
+    "frame": "challenge"
+  },
+  "requirements": [
+    [
+      "keeper_fenn"
+    ],
+    [
+      "nalu"
+    ],
+    [
+      "old_tamo"
+    ],
+    [
+      "dr_voss"
+    ],
+    [
+      "teo"
+    ],
+    [
+      "kai"
+    ],
+    [
+      "dr_lund"
+    ],
+    [
+      "okafor"
+    ]
+  ]
+}

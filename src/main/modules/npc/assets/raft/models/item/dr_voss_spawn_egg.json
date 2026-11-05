@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "raft:item/dr_voss_spawn_egg"
+  }
+}
