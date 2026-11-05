@@ -28,10 +28,13 @@ swait 200
 cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^2.4 ^-3 run tp @p ~ ~ ~
 swait 5
 where
-cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-3 run tp @p ^1.6 ^-0.4 ^
+# stand on the deck in front of the helm, to one side (not edge-on to the thin wheel)
+cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-3 run tp @p ^1.2 ^-0.4 ^1.0
 swait 10
 face {px} 100.6 {pz}
 swait 5
+wait 3 render
+shot aim_helm
 sneakuse
 swaitfor 600 execute in raft:raftdim unless entity @e[type=raft:vessel]
 count raft:raftdim
