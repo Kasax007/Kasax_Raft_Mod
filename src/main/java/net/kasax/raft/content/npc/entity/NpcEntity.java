@@ -193,10 +193,12 @@ public class NpcEntity extends PathfinderMob implements Merchant, Npc {
         if (this.tradingPlayer != null && (!this.tradingPlayer.isAlive() || this.tradingPlayer.level() != this.level())) {
             this.tradingPlayer = null;
         }
-        // lost: in the water or far from home (fell off a pier, pushed by a piston...) -> back home after 5 s
+        // lost: in the water, far from home (fell off a pier, pushed by a piston...) or up on a roof or a railing
+        // (every home is one floor) -> back home after 5 s
         if (this.tickCount % 20 == 0 && this.hasHome()) {
             double r = this.getHomeRadius() + 12.0;
             boolean lost = this.isInWater() || this.isInLava()
+                    || this.getY() > this.getHomePosition().getY() + 2.5
                     || this.getHomePosition().distToCenterSqr(this.position()) > r * r;
             this.lostTicks = lost ? this.lostTicks + 20 : 0;
             if (this.lostTicks >= 100 && !this.isTalking()) {
