@@ -1,0 +1,77 @@
+# Run after raft_1.txt: tools/bctest/run.sh tools/content/vessel/tests/raft_2.txt <outdir>
+# Raft building, run 2: reopen the world kept by run 1 (a raft was sailing on autopilot when it was saved).
+open vesselsave
+rd 5
+wait 60
+settle 120
+swait 20
+log RELOADED
+count raft:raftdim
+where
+cmd data get entity @e[type=raft:vessel,limit=1] Pos
+cmd data get entity @e[type=raft:vessel,limit=1] Autopilot
+cmd data get entity @e[type=raft:vessel,limit=1] Raft.BlockEntities
+cmd data get entity @e[type=raft:vessel,limit=1] Stowed
+third on
+shot 20_reloaded
+cmd data merge entity @e[type=raft:vessel,limit=1] {Autopilot:{Ticks:1}}
+log DOCKING
+swait 240
+count raft:raftdim
+# a few drawn frames: the client builds the meshes of the placed blocks only while it draws
+wait 10 render
+shot 21_docked_after_reload
+find minecraft:chest 48
+cmd execute in raft:raftdim positioned {fx} {fy} {fz} run data get block ~ ~ ~ Items
+find minecraft:barrel 48
+cmd execute in raft:raftdim positioned {fx} {fy} {fz} run data get block ~ ~ ~ Items
+find raft:raft_motor 48
+cmd execute in raft:raftdim positioned {fx} {fy} {fz} run data get block ~ ~ ~
+find raft:helm 48
+cmd data get entity @e[type=minecraft:item_frame,limit=1] Item
+cmd data get entity @e[type=minecraft:item_frame,limit=1] Facing
+# a foundation set onto open water: use the item while looking at the sea
+log FOUNDATION
+third off
+cmd execute in raft:raftdim run setblock 18 100 38 minecraft:stone
+cmd execute in raft:raftdim run tp @p 18.5 101 38.5 0 50
+cmd item replace entity @p hotbar.5 with raft:raft_foundation 8
+slot 6
+swait 10
+pose 18.5 101 38.5 0 50
+face 18.5 99.9 40.5
+wait 5
+use
+swait 10
+find raft:raft_foundation 3
+cmd execute in raft:raftdim run data get block 18 99 40
+wait 10 render
+shot 22_foundation_on_water
+# refusals (on land in the overworld): a helm on stone, and a raft of foundations on dry land
+log REFUSALS
+cmd execute in minecraft:overworld run tp @p 0.5 200 0.5
+wait 80
+settle 60
+height 0 0
+cmd execute in minecraft:overworld positioned 0 {hy} 0 run fill ~-2 ~ ~-2 ~2 ~4 ~4 air
+cmd execute in minecraft:overworld positioned 0 {hy} 0 run fill ~-2 ~-1 ~-2 ~2 ~-1 ~4 minecraft:stone
+cmd execute in minecraft:overworld positioned 0 {hy} 0 run fill ~-1 ~ ~-1 ~1 ~ ~1 raft:raft_foundation
+cmd execute in minecraft:overworld positioned 0 {hy} 0 run setblock ~ ~1 ~ raft:helm[facing=south]
+cmd execute in minecraft:overworld positioned 0 {hy} 0 run setblock ~ ~ ~3 raft:helm[facing=south]
+cmd gamemode creative @p
+slot 2
+pose 1.5 {hy+1} -0.5 0 40
+face 0.5 {hy+1.5} 0.5
+swait 5
+use
+swait 10
+pose 1.5 {hy} 2.5 0 40
+face 0.5 {hy+0.5} 3.5
+swait 5
+use
+swait 10
+count minecraft:overworld
+third on
+wait 10 render
+shot 23_refusals
+log DONE

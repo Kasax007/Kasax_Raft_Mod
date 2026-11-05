@@ -82,3 +82,12 @@ Advancement `raft:adventure/shipwright` ("Shipwright": set sail on a raft you bu
 * Blocks on a sailing raft do not tick (furnaces, crops wait until anchored); sign text and banner patterns are not
   drawn while sailing; chests can be opened once anchored.
 * Mobs on board use world pathfinding and may walk off; leads tied to fences on board break when setting sail.
+
+## 5. Tests
+
+`tools/bctest/run.sh tools/content/vessel/tests/raft_1.txt <out>` builds a raft in a walled pool of the raft
+dimension, sets sail at the helm, sails and turns, carries a player standing at a corner while it turns
+(`corner.py <out>/gradle.log` prints the player's position in the raft frame), drops anchor (chest, barrel, item
+frame and chicken checked), sails into a wall, unloads and reloads the chunks and keeps the world; `raft_2.txt`
+reopens that world with the raft sailing, drops anchor, places a foundation on open water and checks the refusals
+on land.
