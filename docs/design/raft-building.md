@@ -65,7 +65,13 @@ it while it sails. The fixed Expedition Raft (module `voyage`) stays as it is. E
   sneak-edge check. Blocks placed or broken at sea change the collision at once (the copy follows the plot).
 * **Carrying.** Each tick the vessel moves everything that rests on it or is in the air above its deck (up to
   3 blocks) by its own translation and rotation: the server carries mobs and items, each client its own player
-  (with the render interpolation corrected, so it is smooth whichever entity ticks first).
+  (with the render interpolation corrected, so it is smooth whichever entity ticks first). A client also lifts its own
+  player out of the deck if it sank into it.
+* **Arriving on a raft.** When the server puts a player onto a raft's deck (teleport, login, dimension change,
+  respawn, leaving the helm) or a raft comes into the view of a player standing on it, the client is told where on
+  the raft (`VesselArrivalPayload`, position in the raft's frame). It keeps the player in the air until its copy of the
+  raft is there (the raft entity comes a moment after the teleport, later on a lagging server) and then stands them on
+  it at that spot; without this the player would fall through the deck in between.
 * **Using blocks at sea.** A client mixin on `Minecraft.pick` ray-casts the vessel in its local frame (exact block
   shapes) and targets it like an entity. The use key sends `VesselUsePayload` (block, hit point and face in the raft's
   frame); the server runs vanilla `ServerPlayerGameMode.useItemOn` on the plot block, with the player turned into the
