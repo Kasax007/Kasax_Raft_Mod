@@ -12,7 +12,9 @@ Script commands (one per line, `#` comments):
 | `cmd <command>` | server command (e.g. `execute in raft:raftdim run tp @p 0 120 0 45 20`) |
 | `pcmd <command>` | command as the player at the player (`place template raft:x ~ ~ ~`) |
 | `wait <ticks>` | wait game ticks |
-| `settle [s]` | wait until chunks around the player are downloaded and drawn |
+| `swait <ticks>` | wait until the server has run that many ticks (a busy server falls behind the client) |
+| `swaitfor <ticks> <command>` | wait until a server command succeeds (e.g. `execute if entity @e[type=raft:vessel]`), at most that many server ticks |
+| `settle [s]` | wait until the client has loaded the level (after a dimension change) and the chunks around the player are downloaded and drawn |
 | `shot <name>` | screenshot |
 | `size <w> <h>` | window size (default 1280×720) |
 | `hud on/off`, `third on/off`, `gui <n>`, `rd <n>` | HUD, third person camera, GUI scale, render distance |

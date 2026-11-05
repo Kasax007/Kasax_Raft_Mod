@@ -1,0 +1,39 @@
+{
+  "parent": "raft:adventure/set_sail",
+  "criteria": {
+    "sail": {
+      "conditions": {
+        "player": {
+          "type": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "minecraft:vehicle": {
+              "minecraft:entity_type": "raft:vessel"
+            }
+          }
+        }
+      },
+      "trigger": "minecraft:started_riding"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.raft.adventure.shipwright.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "id": "raft:helm"
+    },
+    "title": {
+      "translate": "advancements.raft.adventure.shipwright.title"
+    }
+  },
+  "requirements": [
+    [
+      "sail"
+    ]
+  ],
+  "rewards": {
+    "experience": 30
+  }
+}

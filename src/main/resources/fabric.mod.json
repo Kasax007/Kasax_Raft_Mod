@@ -33,6 +33,7 @@
 		"raft-shore.mixins.json",
 		"raft-marine.mixins.json",
 		"raft-voyage.mixins.json",
+		"raft-vessel.mixins.json",
 		"raft-diving.mixins.json",
 		"raft-story.mixins.json",
 		"raft-boss.mixins.json",
