@@ -109,6 +109,7 @@ import java.util.function.Function;
  * set &lt;name&gt; &lt;value&gt;     a script variable: {name} or {name+5} anywhere in later lines (scout sets x0 y0 z0 x1 y1 z1 and
  *                         the box center cx cy cz, find sets fx fy fz of the nearest hit, height &lt;x&gt; &lt;z&gt; sets hy)
  * freecam x y z yaw pitch | off   detached camera at that eye position (rec: cam=x,y,z,yaw,pitch with to/by/orbit/look)
+ * respawn                 if the player is dead (a world saved like that): respawn and close the death screen
  * log &lt;text&gt;
  * </pre>
  */
@@ -578,6 +579,16 @@ public class BcScript implements FabricClientGameTest {
                     vars.put("fx", f[0]);
                     vars.put("fy", f[1]);
                     vars.put("fz", f[2]);
+                }
+            }
+            case "respawn" -> {
+                // a world saved with a dead player opens on the death screen: respawn and close it
+                boolean dead = ctx.computeOnClient(mc -> mc.player != null && mc.player.isDeadOrDying());
+                if (dead) {
+                    ctx.runOnClient(mc -> mc.player.respawn());
+                    ctx.waitTicks(40);
+                    ctx.setScreen(() -> null);
+                    LOG.info("[bctest] RESPAWNED");
                 }
             }
             case "set" -> {
