@@ -419,7 +419,7 @@ Set a Helm on the raft so that it faces the bow, and use it to set sail. W and S
 Sneak to leave the helm: the raft slows down and waits where it is. Use the helm again to steer on.
 To drop anchor, use the wheel while you steer, or sneak and use the helm. The raft turns to the nearest compass direction and becomes blocks again.
 # At sea
-Open chests and furnaces, craft, farm, flip levers, build and break: the raft's blocks work while it sails. Beds and signs wait until you drop anchor.
+Open chests and furnaces, craft, farm, flip levers, build and break: the raft's blocks work while it sails. Set Raft Foundations against its side to grow it at sea. Beds and signs wait until you drop anchor.
 # Power
 * Oar: rowing power. Set it on the deck edge, pointing out.
 * Sail: wind power. Stack sails for a taller mast; each sail counts.
@@ -459,7 +459,7 @@ LANG = {
     'message.raft.vessel.helm_taken': 'Someone is already at the helm.',
     'message.raft.vessel.anchor_first': 'Drop anchor to use this.',
     'message.raft.vessel.no_sleep': "You can't sleep on a sailing raft.",
-    'message.raft.vessel.too_far_out': "The raft can't grow that far while it sails.",
+    'message.raft.vessel.too_far_out': 'Build over the raft: add Raft Foundations to grow it (up to 8 blocks out at sea).',
     'message.raft.vessel.no_open_water': 'Open water would run off a sailing raft.',
     'message.raft.vessel.motor_fuel': 'Motor fuel: %s',
     'message.raft.vessel.motor_full': "The motor's tank is full.",

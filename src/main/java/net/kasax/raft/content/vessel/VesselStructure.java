@@ -66,6 +66,8 @@ public final class VesselStructure {
     private final int sails;
     private final int oars;
     private final double radius;
+    /** Columns (x, z) inside the hull's outline (hull columns and the holes they enclose), computed when first needed. */
+    private @Nullable boolean[] outline;
 
     public VesselStructure(BlockPos helm, Vec3 pivot, Long2ObjectOpenHashMap<BlockState> blocks) {
         this.helm = helm.immutable();
@@ -152,6 +154,55 @@ public final class VesselStructure {
             }
         }
         this.radius = Math.sqrt(r2);
+    }
+
+    /**
+     * Is the column (x, z) inside the hull's outline (a column with a hull block, or a hole the hull encloses)? Blocks
+     * that belong to the raft stand there (see VesselAssembler.scan).
+     */
+    public boolean insideOutline(int x, int z) {
+        if (x < this.minX || z < this.minZ || x >= this.maxX || z >= this.maxZ) {
+            return false;
+        }
+        int w = this.maxX - this.minX;
+        int d = this.maxZ - this.minZ;
+        boolean[] grid = this.outline;
+        if (grid == null) {
+            boolean[] hull = new boolean[w * d];
+            for (Long2ObjectMap.Entry<BlockState> e : this.blocks.long2ObjectEntrySet()) {
+                if (e.getValue().is(VesselContent.HULLS)) {
+                    hull[(BlockPos.getX(e.getLongKey()) - this.minX) * d + BlockPos.getZ(e.getLongKey()) - this.minZ] = true;
+                }
+            }
+            boolean[] outside = new boolean[w * d];
+            java.util.ArrayDeque<int[]> open = new java.util.ArrayDeque<>();
+            for (int cx = 0; cx < w; cx++) {
+                for (int cz = 0; cz < d; cz++) {
+                    if ((cx == 0 || cz == 0 || cx == w - 1 || cz == d - 1) && !hull[cx * d + cz]) {
+                        outside[cx * d + cz] = true;
+                        open.add(new int[]{cx, cz});
+                    }
+                }
+            }
+            int[][] steps = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+            while (!open.isEmpty()) {
+                int[] c = open.poll();
+                for (int[] st : steps) {
+                    int nx = c[0] + st[0];
+                    int nz = c[1] + st[1];
+                    if (nx >= 0 && nz >= 0 && nx < w && nz < d && !hull[nx * d + nz] && !outside[nx * d + nz]) {
+                        outside[nx * d + nz] = true;
+                        open.add(new int[]{nx, nz});
+                    }
+                }
+            }
+            grid = new boolean[w * d];
+            for (int i = 0; i < grid.length; i++) {
+                grid[i] = !outside[i];
+            }
+            this.outline = grid;
+        }
+        return grid[(x - this.minX) * d + z - this.minZ];
     }
 
     /** A copy with some blocks changed (air or null removes the block). */

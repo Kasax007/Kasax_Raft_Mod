@@ -147,11 +147,15 @@ public final class VesselInteractions {
         } else {
             return true;
         }
-        if (VesselShipyard.plotAt(level, target.getX(), target.getY(), target.getZ()) != vessel.plot()) {
+        VesselStructure structure = vessel.structure();
+        BlockPos origin = VesselShipyard.origin(level, vessel.plot());
+        boolean hull = stack.getItem() instanceof BlockItem item && item.getBlock().defaultBlockState().is(VesselContent.HULLS);
+        // inside the plot, and (except new foundations, which grow the hull) above the hull, as when setting sail
+        if (VesselShipyard.plotAt(level, target.getX(), target.getY(), target.getZ()) != vessel.plot()
+                || !hull && structure != null && !structure.insideOutline(target.getX() - origin.getX(), target.getZ() - origin.getZ())) {
             player.sendOverlayMessage(Component.translatable("message.raft.vessel.too_far_out"));
             return false;
         }
-        VesselStructure structure = vessel.structure();
         if (structure != null && structure.blockCount() >= VesselStructure.MAX_BLOCKS_AT_SEA && level.getBlockState(target).isAir()) {
             player.sendOverlayMessage(Component.translatable("message.raft.vessel.too_big", VesselStructure.MAX_BLOCKS_AT_SEA));
             return false;
