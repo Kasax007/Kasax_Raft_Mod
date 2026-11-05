@@ -68,7 +68,8 @@ import java.util.function.Function;
  * cmd &lt;command&gt;          run a server command as the server (use @p for the player)
  * pcmd &lt;command&gt;         run a command as the player, at the player's position
  * wait &lt;ticks&gt; [render]  wait game ticks (the client does not draw them unless "render" is given)
- * settle [seconds]        wait until all chunk sections around the camera are drawn (default max 40 s)
+ * settle [seconds]        wait until the client has loaded the level and all chunk sections around the camera are
+ *                         drawn (default max 40 s)
  * shot &lt;name&gt;            screenshot to OUT/&lt;name&gt;.png (.jpg while jpg is on)
  * still &lt;name&gt; [scale]   screenshot rendered larger than the window (default 1.25), for slow zooms in the edit
  * rec &lt;name&gt; &lt;frames&gt; &lt;fps&gt; [options]   record a clip: OUT/&lt;name&gt;/f00000.jpg ... at fps frames per second of game
@@ -659,6 +660,9 @@ public class BcScript implements FabricClientGameTest {
             while (System.currentTimeMillis() < end) {
                 if (ctx.computeOnClient(mc -> {
                     if (mc.level == null || mc.player == null) return true;
+                    // after a dimension change the player only moves (and sends moves) once the client has loaded
+                    // the level: it needs drawn frames for that, else it gives up after 30 s
+                    if (mc.getConnection() != null && !mc.getConnection().hasClientLoaded()) return false;
                     int need = Math.max(2, mc.options.getEffectiveRenderDistance() - 1);
                     int cx = mc.player.chunkPosition().x(), cz = mc.player.chunkPosition().z();
                     for (int dx = -need; dx <= need; dx++) {
