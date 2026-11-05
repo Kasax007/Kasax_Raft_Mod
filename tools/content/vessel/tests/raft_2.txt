@@ -25,16 +25,25 @@ count raft:raftdim
 # drop anchor by input: stand next to the helm (helm centre = raft pivot + ^0 ^1.5 ^-3), sneak and use it
 log DROP_ANCHOR_HELM
 third off
-cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-3 run tp @p ^1.6 ^-0.4 ^ facing ^ ^ ^
-swait 10
+cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-3 run tp @p ~ ~ ~
+swait 3
 where
+cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-3 run tp @p ^1.6 ^-0.4 ^
+swait 10
+face {px} {py+0.3} {pz}
+swait 5
+where
+wait 3 render
+shot 40b_aim_helm
 sneakuse
-swait 300
+swaitfor 600 execute in raft:raftdim unless entity @e[type=raft:vessel]
+swait 20
 count raft:raftdim
 # (the same by NBT, in case the helm was not hit; nothing happens if the raft is anchored already)
 log DROP_ANCHOR_NBT
 cmd data merge entity @e[type=raft:vessel,limit=1] {DropAnchor:1b}
-swait 300
+swaitfor 600 execute in raft:raftdim unless entity @e[type=raft:vessel]
+swait 20
 count raft:raftdim
 find minecraft:chest 48
 cmd execute in raft:raftdim positioned {fx} {fy} {fz} run data get block ~ ~ ~ Items
