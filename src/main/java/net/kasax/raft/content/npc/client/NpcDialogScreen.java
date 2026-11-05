@@ -286,8 +286,8 @@ public class NpcDialogScreen extends Screen {
         if (!this.typing() && this.page < this.pages.size() - 1 && (this.ticks / 8) % 2 == 0) {
             g.text(this.font, "▼", tx + this.textW() - 6, this.textY() + LINES * 10 - 9, FADED, false);
         }
-        // the gift under the greeting
-        if (!this.dialog.gift().isEmpty() && this.chosen < 0 && !this.typing() && this.page == this.pages.size() - 1) {
+        // the gift under the greeting (below the text area, so it can show on every page of the greeting)
+        if (!this.dialog.gift().isEmpty() && this.chosen < 0 && (this.page > 0 || !this.typing())) {
             int gy = this.optionY() - 15;
             g.item(this.dialog.gift(), tx, gy - 4);
             g.text(this.font, Component.translatable("npc.raft.received", this.dialog.gift().getHoverName()), tx + 20, gy, GIFT, false);
