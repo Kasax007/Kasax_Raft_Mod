@@ -43,6 +43,7 @@ final class NpcActivityGoal extends Goal {
     private int step;
     private int cycles;
     private @Nullable BlockPos target;
+    private @Nullable BlockPos stand;
     private @Nullable Vec3 lookAt;
     private @Nullable BlockPos fishSpot;
     private boolean fishSearched;
@@ -100,15 +101,47 @@ final class NpcActivityGoal extends Goal {
             return false;
         }
         BlockPos place = places.get(this.npc.getRandom().nextInt(places.size()));
-        // a lantern or chime up high: stand on the floor below it and look up, never climb up to it
-        BlockPos home = this.npc.getHomePosition();
-        BlockPos stand = place.getY() > home.getY() + 1 ? new BlockPos(place.getX(), home.getY(), place.getZ()) : place;
-        if (!this.walkTo(stand, Phase.WORK, 1)) {
+        BlockPos stand = this.standFor(place);
+        if (stand == null || !this.walkTo(stand, Phase.WORK, 0)) {
             return false;
         }
         this.target = place;
+        this.stand = stand;
         return true;
     }
+
+    /**
+     * The floor cell to work a place from: right below a lantern or chime up high (never climb up to it), else next to
+     * the place (a chair, a table, a shelf: work it, do not stand on it); the nearest ring around it first, then the
+     * cell nearest to the NPC. Null when no floor cell is close.
+     */
+    private @Nullable BlockPos standFor(BlockPos place) {
+        BlockPos home = this.npc.getHomePosition();
+        int y0 = place.getY() > home.getY() + 1 ? home.getY() : place.getY();
+        ServerLevel level = this.level();
+        BlockPos best = null;
+        double bestScore = Double.MAX_VALUE;
+        for (int dx = -2; dx <= 2; dx++) {
+            for (int dz = -2; dz <= 2; dz++) {
+                int ring = Math.max(Math.abs(dx), Math.abs(dz));
+                for (int dy : STAND_DY) {
+                    BlockPos c = new BlockPos(place.getX() + dx, y0 + dy, place.getZ() + dz);
+                    if (!NpcPaths.standable(level, c)) {
+                        continue;
+                    }
+                    double score = ring * 1000.0 + c.distToCenterSqr(this.npc.position());
+                    if (score < bestScore) {
+                        bestScore = score;
+                        best = c;
+                    }
+                    break;
+                }
+            }
+        }
+        return best;
+    }
+
+    private static final int[] STAND_DY = {0, -1, 1};
 
     private boolean planGaze() {
         Vec3 eye = this.npc.getEyePosition();
@@ -162,7 +195,7 @@ final class NpcActivityGoal extends Goal {
 
     private boolean walkTo(BlockPos pos, Phase then, int accuracy) {
         Path path = this.npc.getNavigation().createPath(pos, accuracy);
-        if (path == null) {
+        if (path == null || (then == Phase.WORK && !path.canReach())) {
             return false;
         }
         this.target = pos;
@@ -265,19 +298,25 @@ final class NpcActivityGoal extends Goal {
             this.end(40);
             return;
         }
-        double reach = this.after == Phase.WORK ? 2.6 : 1.1;
-        double d = this.npc.position().distanceToSqr(Vec3.atBottomCenterOf(this.target));
-        if (this.after == Phase.WORK) {
-            Vec3 c = Vec3.atCenterOf(this.target);
+        boolean work = this.after == Phase.WORK && this.stand != null;
+        double d;
+        if (work) {
+            // at the floor cell chosen to work the place from (horizontal: the place may be up high)
+            Vec3 c = Vec3.atBottomCenterOf(this.stand);
             double dx = c.x - this.npc.getX(), dz = c.z - this.npc.getZ();
-            d = dx * dx + dz * dz;               // horizontal: places up high are worked on from the floor
+            d = dx * dx + dz * dz;
+        } else {
+            d = this.npc.position().distanceToSqr(Vec3.atBottomCenterOf(this.target));
         }
+        double reach = work ? 0.6 : 1.1;
         if (d < reach * reach) {
             this.begin(this.after);
         } else if (--this.timer <= 0) {
             this.end(100);
         } else if (this.npc.getNavigation().isDone()) {
-            if (d < 9.0) {
+            Vec3 c = Vec3.atCenterOf(this.target);
+            double dx = c.x - this.npc.getX(), dz = c.z - this.npc.getZ();
+            if (dx * dx + dz * dz < 9.0) {
                 this.begin(this.after);
             } else {
                 this.end(100);
