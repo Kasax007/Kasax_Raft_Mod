@@ -413,6 +413,13 @@ COLLAGES = {
                T('work/npcs/out2/voss_view.jpg', 'Dr. Voss in the Ashen Forge', 1, (0.5, 0.5), 1.1),
                T('work/npcs/out4/fenn_trade.jpg', 'Trade for gold and pearls', 1, box=(380, 124, 900, 444))]),
     ],
+    'shipwright.jpg': [
+        (330, [T('rel/smoke/74_ship_sailing_back.jpg', 'Sail the raft you built', 1.35, (0.54, 0.47), 1.5),
+               T('rel/smoke/72_ship_sailing_side.jpg', 'Everything on deck sails along', 1.0, (0.62, 0.52), 1.9)]),
+        (236, [T('rel/smoke/31_lamp_lit.jpg', 'Redstone keeps working', 1, box=(180, 70, 1000, 532)),
+               T('rel/smoke/34_chest_open_moving.jpg', 'Chests stay open at sea', 1, box=(300, 140, 980, 523)),
+               T('rel/smoke/60_almanac_shipwright.jpg', 'A page in the Almanac', 1, box=BOOK)]),
+    ],
     'boss.jpg': [
         (390, [T('release/shots/run2/lev_07.png', 'The Leviathan', 1.35, (0.5, 0.55), 1.12),
                T('release/shots/run2/lev_29.png', 'Tidelings', 1, (0.5, 0.45), 1.12)]),
