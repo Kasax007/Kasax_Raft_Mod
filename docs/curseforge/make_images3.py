@@ -249,12 +249,25 @@ STRIPS = [('start', 'GETTING STARTED', ':item/energy_staff'),
           ('diving', 'DIVING', 'diving:item/diving_helmet'),
           ('decor', 'BUILD AND DECORATE', 'decor:item/string_lights_colorful'),
           ('almanac', "THE SEAFARER'S ALMANAC", 'guide:item/seafarers_almanac'),
-          ('deep', 'THE BOTTOM OF THE SEA', 'story:item/tidewarden_key')]
+          ('deep', 'THE BOTTOM OF THE SEA', 'story:item/tidewarden_key'),
+          # 3.1
+          ('shipwright', 'BUILD YOUR OWN RAFT', 'vessel:item/helm'),
+          ('sounds', 'SOUNDS AND MUSIC', ':item/some_game_music_music_disc')]
+
+
+def npc_face(npc, size=72):
+    """Head of a person of the sea (front of the skin's head plus the hat layer)."""
+    skin = Image.open(os.path.join(ROOT, 'src', 'main', 'modules', 'npc', 'assets', 'raft', 'textures', 'entity', 'npc',
+                                   npc + '.png')).convert('RGBA')
+    head = skin.crop((8, 8, 16, 16))
+    head.alpha_composite(skin.crop((40, 8, 48, 16)))
+    return head.resize((size, size), Image.NEAREST)
 
 
 def build_strips():
     for name, title, icon in STRIPS:
         strip(name, title, icon)
+    strip('people', 'PEOPLE OF THE SEA', npc_face('keeper_fenn'))
 
 
 def hotbar_icons(rel, names, empty=None, x0=376, y0=664, step=60, size=48, tol=9, sel=0):
@@ -388,6 +401,17 @@ COLLAGES = {
         (236, [T('release/shots/run1/whale_a.png', 'Whale', 1, (0.45, 0.62), 1.25),
                T('release/shots/run2/otters_close.png', 'Sea Otters', 1, (0.45, 0.45), 2.0),
                T('release/shots/run2/trench_angler_dark.png', 'Anglerfish', 1, (0.42, 0.5), 1.5)]),
+    ],
+    # 3.1: the people of the sea (shots of the npc module's tests) and a raft built from blocks (release smoke test)
+    'people.jpg': [
+        (330, [T('work/npcs/out4/fenn_greet.jpg', 'Keeper Fenn at the Old Lighthouse', 1.3, (0.5, 0.55), 1.1),
+               T('work/npcs/out5/nalu_veranda.jpg', 'Nalu in Saltmere', 1.0, (0.45, 0.45), 1.15)]),
+        (236, [T('work/npcs/out5/kai_sitting.jpg', 'Kai at his camp fire', 1, (0.5, 0.5), 1.15),
+               T('work/npcs/out2/lund_view.jpg', 'Dr. Lund on the ice', 1, (0.5, 0.5), 1.1),
+               T('work/npcs/out2/okafor_view.jpg', 'Okafor on Rig Seven', 1, (0.55, 0.5), 1.1)]),
+        (236, [T('work/npcs/out5/teo_view.jpg', "Teo's tiki bar", 1, (0.5, 0.5), 1.1),
+               T('work/npcs/out2/voss_view.jpg', 'Dr. Voss in the Ashen Forge', 1, (0.5, 0.5), 1.1),
+               T('work/npcs/out4/fenn_trade.jpg', 'Trade for gold and pearls', 1, box=(380, 124, 900, 444))]),
     ],
     'boss.jpg': [
         (390, [T('release/shots/run2/lev_07.png', 'The Leviathan', 1.35, (0.5, 0.55), 1.12),

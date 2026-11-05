@@ -53,6 +53,9 @@ Every content area is a **module**. A module owns exactly these places and must 
 | `diving` | `...content.diving` | `src/main/modules/diving/` | `tools/content/diving/` |
 | `story` | `...content.story` | `src/main/modules/story/` | `tools/content/story/` |
 | `boss` | `...content.boss` | `src/main/modules/boss/` | `tools/content/boss/` |
+| `guide` | `...content.guide` (Seafarer's Almanac, section 15) | `src/main/modules/guide/` | `tools/content/guide/` |
+| `audio` | `...content.audio` (sounds and music, see `sound-assessment.md`) | `src/main/modules/audio/` | `tools/content/audio/` |
+| `npc` | `...content.npc` (the people of the sea, see `npcs.md`) | `src/main/modules/npc/` | `tools/content/npc/` |
 | `structures_surface` | (data only) | `src/main/modules/structures_surface/` | `tools/content/structures_surface/` |
 | `structures_deep` | (data only) | `src/main/modules/structures_deep/` | `tools/content/structures_deep/` |
 | `structures_city` | (data only) | `src/main/modules/structures_city/` | `tools/content/structures_city/` |
