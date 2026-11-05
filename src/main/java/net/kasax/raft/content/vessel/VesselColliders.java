@@ -30,7 +30,7 @@ public final class VesselColliders {
     static void add(VesselEntity vessel) {
         boolean client = vessel.level().isClientSide();
         List<VesselEntity> list = side(client);
-        if (!list.contains(vessel)) {
+        if (!holds(list, vessel)) {
             if (client) {
                 // a client has one level at a time: forget rafts of the level it left
                 list.removeIf(v -> v.level() != vessel.level());
@@ -40,7 +40,22 @@ public final class VesselColliders {
     }
 
     static void remove(VesselEntity vessel) {
-        side(vessel.level().isClientSide()).remove(vessel);
+        side(vessel.level().isClientSide()).removeIf(v -> v == vessel);
+    }
+
+    /**
+     * Is this very raft in the list? Not {@code list.contains}: entities are equal when their ids are, and a raft seen
+     * again after a dimension change is a new entity on the client with the id of its copy in the level it left (which
+     * stays in the list until then); with {@code contains} the new one was never added, so the player could neither
+     * stand on it nor use its blocks.
+     */
+    private static boolean holds(List<VesselEntity> list, VesselEntity vessel) {
+        for (VesselEntity v : list) {
+            if (v == vessel) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Forget all client rafts (leaving a world) or all server rafts (server stopped). */
@@ -57,7 +72,7 @@ public final class VesselColliders {
         List<VesselEntity> out = new ArrayList<>(2);
         for (VesselEntity v : list) {
             if (v.isRemoved()) {
-                list.remove(v);
+                list.removeIf(x -> x == v);
             } else if (v.level() == level) {
                 out.add(v);
             }
