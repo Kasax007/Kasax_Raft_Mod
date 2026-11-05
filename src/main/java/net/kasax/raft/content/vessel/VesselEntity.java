@@ -783,12 +783,14 @@ public class VesselEntity extends Entity {
         BlockPos helm = this.structure.helm();
         VesselPose pose = passenger instanceof Player ? this.clientPose() : this.currentPose();
         Vec3[] spots = {
-                new Vec3(helm.getX() + 0.5, helm.getY() + 7.5 / 16.0 + 0.01, helm.getZ() + 0.15),
+                new Vec3(helm.getX() + 0.5, helm.getY() + 7.5 / 16.0 + 0.01, helm.getZ() + 0.2),
                 new Vec3(helm.getX() + 0.5, helm.getY() + 0.01, helm.getZ() - 0.45),
                 new Vec3(helm.getX() + 0.5, helm.getY() + 1.01, helm.getZ() - 0.45)};
-        for (Vec3 spot : spots) {
-            Vec3 at = pose.toWorld(spot);
-            AABB box = passenger.getDimensions(Pose.STANDING).makeBoundingBox(at).deflate(1.0E-3);
+        for (int i = 0; i < spots.length; i++) {
+            Vec3 at = pose.toWorld(spots[i]);
+            // the stool is narrower than a player: a little overlap with the wheel or the cell behind is fine there
+            double slack = i == 0 ? 0.16 : 1.0E-3;
+            AABB box = passenger.getDimensions(Pose.STANDING).makeBoundingBox(at).deflate(slack, 1.0E-3, slack);
             if (!this.structure.forEachBox(pose, box, b -> true) && this.level().noBlockCollision(passenger, box)) {
                 return at;
             }

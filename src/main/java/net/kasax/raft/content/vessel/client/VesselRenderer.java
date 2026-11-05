@@ -46,7 +46,7 @@ public class VesselRenderer extends EntityRenderer<VesselEntity, VesselRenderSta
         state.model = null;
         state.target = null;
         VesselStructure structure = entity.structure();
-        if (structure == null || entity.isDocked()) {
+        if (structure == null) {
             return;
         }
         VesselClientModel model = entity.clientModel instanceof VesselClientModel m && m.isCurrent(structure) ? m : null;
@@ -54,7 +54,11 @@ public class VesselRenderer extends EntityRenderer<VesselEntity, VesselRenderSta
             model = VesselClientModel.build(structure, this.resolver);
             entity.clientModel = model;
         }
-        model.updateLight(entity.level(), entity.renderPose(partialTicks), entity.level().getGameTime());
+        // an anchored raft is still drawn for its last few ticks, until the world has built the meshes of its blocks
+        // (no gap); its light stays as it was, the cells are taken by the placed blocks now
+        if (!entity.isDocked()) {
+            model.updateLight(entity.level(), entity.renderPose(partialTicks), entity.level().getGameTime());
+        }
         state.model = model;
         state.yaw = entity.getYRot(partialTicks);
         state.target = VesselPicker.targetOf(entity);
