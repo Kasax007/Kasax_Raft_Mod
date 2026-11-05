@@ -517,6 +517,8 @@ public class VesselEntity extends Entity {
         this.autoTicks = 0;
         this.anchoredBy = by != null ? by.getUUID() : null;
         this.setState(ANCHORING);
+        net.kasax.raft.Raft.LOGGER.info("Raft at {} drops anchor ({})", this.blockPosition().toShortString(),
+                by != null ? by.getName().getString() : "command");
         if (by != null) {
             by.sendOverlayMessage(Component.translatable("message.raft.vessel.anchoring"));
         }
@@ -1133,8 +1135,7 @@ public class VesselEntity extends Entity {
         }
         // DropAnchor:1b (map makers, tests): drop anchor as if a player asked
         if (input.getBooleanOr("DropAnchor", false) && this.getState() == SAILING) {
-            this.setState(ANCHORING);
-            this.anchoredBy = null;
+            this.requestAnchor(null);
         }
         this.entityData.set(DATA_YAW, Mth.wrapDegrees(this.getYRot()));
         if (this.structure != null) {
