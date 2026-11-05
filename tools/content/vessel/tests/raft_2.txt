@@ -1,77 +1,51 @@
 # Run after raft_1.txt: tools/bctest/run.sh tools/content/vessel/tests/raft_2.txt <outdir>
-# Raft building, run 2: reopen the world kept by run 1 (a raft was sailing on autopilot when it was saved).
-open vesselsave
+# Raft building with a shipyard, run 4: reopen the world kept by run 3 (the raft was at sea, its blocks in plot 0),
+# check that everything is still there, then drop anchor and check the blocks in the world.
+open shipyardsave
 rd 5
-wait 60
+gui 2
+wait 20
 settle 120
-swait 20
+swait 40
 log RELOADED
 count raft:raftdim
 where
 cmd data get entity @e[type=raft:vessel,limit=1] Pos
-cmd data get entity @e[type=raft:vessel,limit=1] Autopilot
-cmd data get entity @e[type=raft:vessel,limit=1] Raft.BlockEntities
-cmd data get entity @e[type=raft:vessel,limit=1] Stowed
+cmd data get entity @e[type=raft:vessel,limit=1] Plot
+cmd execute in raft:raftdim if block 28000013 217 28000013 minecraft:chest
+cmd execute in raft:raftdim run data get block 28000013 217 28000013 Items
+cmd execute in raft:raftdim run data get block 28000009 217 28000010 Items
+cmd execute in raft:raftdim if block 28000014 217 28000015 minecraft:redstone_lamp[lit=true]
 third on
-shot 20_reloaded
-cmd data merge entity @e[type=raft:vessel,limit=1] {Autopilot:{Ticks:1}}
-log DOCKING
-swait 240
-count raft:raftdim
-# a few drawn frames: the client builds the meshes of the placed blocks only while it draws
 wait 10 render
-shot 21_docked_after_reload
+shot 40_reloaded
+# no automatic anchoring: still a raft after a while
+swait 200
+count raft:raftdim
+# drop anchor by input: stand next to the helm (helm centre = raft pivot + ^0 ^1.5 ^-3), sneak and use it
+log DROP_ANCHOR_HELM
+third off
+cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-3 run tp @p ^1.6 ^-0.4 ^ facing ^ ^ ^
+swait 10
+where
+sneakuse
+swait 300
+count raft:raftdim
+# (the same by NBT, in case the helm was not hit; nothing happens if the raft is anchored already)
+log DROP_ANCHOR_NBT
+cmd data merge entity @e[type=raft:vessel,limit=1] {DropAnchor:1b}
+swait 300
+count raft:raftdim
 find minecraft:chest 48
 cmd execute in raft:raftdim positioned {fx} {fy} {fz} run data get block ~ ~ ~ Items
-find minecraft:barrel 48
+find minecraft:furnace 48
 cmd execute in raft:raftdim positioned {fx} {fy} {fz} run data get block ~ ~ ~ Items
-find raft:raft_motor 48
-cmd execute in raft:raftdim positioned {fx} {fy} {fz} run data get block ~ ~ ~
+find minecraft:wheat 48
+cmd execute in raft:raftdim positioned {fx} {fy} {fz} unless block ~ ~ ~ minecraft:wheat[age=0]
+find minecraft:redstone_lamp 48
+cmd execute in raft:raftdim positioned {fx} {fy} {fz} if block ~ ~ ~ minecraft:redstone_lamp[lit=true]
 find raft:helm 48
-cmd data get entity @e[type=minecraft:item_frame,limit=1] Item
-cmd data get entity @e[type=minecraft:item_frame,limit=1] Facing
-# a foundation set onto open water: use the item while looking at the sea
-log FOUNDATION
-third off
-cmd execute in raft:raftdim run setblock 18 100 38 minecraft:stone
-cmd execute in raft:raftdim run tp @p 18.5 101 38.5 0 50
-cmd item replace entity @p hotbar.5 with raft:raft_foundation 8
-slot 6
-swait 10
-pose 18.5 101 38.5 0 50
-face 18.5 99.9 40.5
-wait 5
-use
-swait 10
-find raft:raft_foundation 3
-cmd execute in raft:raftdim run data get block 18 99 40
+cmd execute in raft:raftdim if block 28000013 217 28000013 minecraft:air
 wait 10 render
-shot 22_foundation_on_water
-# refusals (on land in the overworld): a helm on stone, and a raft of foundations on dry land
-log REFUSALS
-cmd execute in minecraft:overworld run tp @p 0.5 200 0.5
-wait 80
-settle 60
-height 0 0
-cmd execute in minecraft:overworld positioned 0 {hy} 0 run fill ~-2 ~ ~-2 ~2 ~4 ~4 air
-cmd execute in minecraft:overworld positioned 0 {hy} 0 run fill ~-2 ~-1 ~-2 ~2 ~-1 ~4 minecraft:stone
-cmd execute in minecraft:overworld positioned 0 {hy} 0 run fill ~-1 ~ ~-1 ~1 ~ ~1 raft:raft_foundation
-cmd execute in minecraft:overworld positioned 0 {hy} 0 run setblock ~ ~1 ~ raft:helm[facing=south]
-cmd execute in minecraft:overworld positioned 0 {hy} 0 run setblock ~ ~ ~3 raft:helm[facing=south]
-cmd gamemode creative @p
-slot 2
-pose 1.5 {hy+1} -0.5 0 40
-face 0.5 {hy+1.5} 0.5
-swait 5
-use
-swait 10
-pose 1.5 {hy} 2.5 0 40
-face 0.5 {hy+0.5} 3.5
-swait 5
-use
-swait 10
-count minecraft:overworld
-third on
-wait 10 render
-shot 23_refusals
+shot 41_anchored
 log DONE

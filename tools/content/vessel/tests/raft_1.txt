@@ -1,11 +1,14 @@
-# Run: tools/bctest/run.sh tools/content/vessel/tests/raft_1.txt <outdir>; keeps the world "vesselsave" for raft_2.txt.
-# corner.py <outdir>/gradle.log prints the corner player's position in the raft frame (it should stay put while the raft turns).
-# Raft building, run 1: build a raft on the sea, set sail, sail, turn, a player at a corner while it turns,
-# drop anchor, check chests and the item frame; set sail again into a wall, unload/reload the chunk, keep the world.
-world vesseltest
+# Run: tools/bctest/run.sh tools/content/vessel/tests/raft_1.txt <outdir>; keeps the world "shipyardsave" for raft_2.txt.
+# corner.py <outdir>/gradle.log 11.5,0,12.5 prints the corner player's position in the raft frame (it should stay put).
+# Raft building with a shipyard, run 3: everything on the raft keeps working while it sails.
+# The raft's blocks are in shipyard plot 0 of raft:raftdim: origin 28000000 216 28000000; a block at world (x y z) of
+# the raft as built here is at plot (28000011+x, 117+y, 28000012+z) (helm at 0 100 -3 facing south).
+world shipyardtest
 rd 5
+gui 2
 cmd gamerule raft:shark_bites false
 cmd gamerule spawn_monsters false
+cmd gamerule random_tick_speed 0
 cmd execute in raft:raftdim run tp @p 0.5 112 0.5 0 40
 wait 20
 settle 200
@@ -20,194 +23,149 @@ cmd execute in raft:raftdim run fill 25 95 -25 25 104 49 minecraft:stone
 cmd execute in raft:raftdim run kill @e[type=!minecraft:player,distance=..90]
 swait 20
 cmd execute in raft:raftdim run kill @e[type=minecraft:item,distance=..90]
-tab raft:bc_voyage
-shot 00_tab
-esc
-cmd give @p raft:seafarers_almanac[minecraft:custom_data={almanac:"sailing/shipwright"}]
-slot 1
-use
-wait 5
-shot 00_almanac
-esc
-slot 2
 log BUILD
 cmd execute in raft:raftdim run fill -3 99 -4 3 99 4 raft:raft_foundation
 cmd execute in raft:raftdim run fill -3 100 -4 3 100 -4 minecraft:oak_planks
 cmd execute in raft:raftdim run setblock 0 100 -3 raft:helm[facing=south]
-cmd execute in raft:raftdim run setblock 2 100 1 minecraft:chest[facing=west]{Items:[{Slot:0b,id:"minecraft:diamond",count:5},{Slot:1b,id:"minecraft:apple",count:12},{Slot:5b,id:"raft:rope",count:7}]}
+cmd execute in raft:raftdim run setblock 2 100 1 minecraft:chest[facing=west]{Items:[{Slot:0b,id:"minecraft:diamond",count:5},{Slot:1b,id:"minecraft:apple",count:12}]}
+cmd execute in raft:raftdim run setblock -2 100 -2 minecraft:furnace[facing=east]{Items:[{Slot:0b,id:"minecraft:raw_iron",count:4},{Slot:1b,id:"minecraft:coal",count:2}]}
 cmd execute in raft:raftdim run setblock 0 100 2 raft:sail[facing=south]
 cmd execute in raft:raftdim run setblock 0 101 2 raft:sail[facing=south]
 cmd execute in raft:raftdim run setblock -3 100 0 raft:oar[facing=west]
 cmd execute in raft:raftdim run setblock 3 100 0 raft:oar[facing=east]
-cmd execute in raft:raftdim run setblock -2 101 -4 raft:raft_motor[facing=north]
-cmd execute in raft:raftdim run setblock -3 100 4 minecraft:oak_fence
-cmd execute in raft:raftdim run setblock 3 100 4 minecraft:lantern
-cmd execute in raft:raftdim run setblock -2 100 2 minecraft:crafting_table
-cmd execute in raft:raftdim run setblock 2 100 -2 minecraft:barrel[facing=up]{Items:[{Slot:3b,id:"minecraft:cod",count:9}]}
-cmd execute in raft:raftdim run summon minecraft:chicken -1.5 100 3.5
-cmd execute in raft:raftdim run summon minecraft:item_frame -1 100 2 {Facing:5b,block_pos:[I;-1,100,2],Item:{id:"minecraft:compass",count:1}}
-cmd execute in raft:raftdim run summon minecraft:item 1.5 100.2 3.5 {Item:{id:"minecraft:gold_ingot",count:3},PickupDelay:32767}
+cmd execute in raft:raftdim run fill -3 100 2 -1 100 4 minecraft:farmland[moisture=7]
+cmd execute in raft:raftdim run setblock -2 101 3 minecraft:wheat[age=0]
+cmd execute in raft:raftdim run setblock -3 100 1 minecraft:oak_slab[type=bottom,waterlogged=true]
+cmd execute in raft:raftdim run setblock 2 100 3 minecraft:lever[face=floor,facing=west]
+cmd execute in raft:raftdim run setblock 3 100 3 minecraft:redstone_lamp
+cmd execute in raft:raftdim run fill -3 100 -3 -3 102 -3 minecraft:oak_planks
+cmd execute in raft:raftdim run fill -2 100 -3 -2 102 -3 minecraft:ladder[facing=east]
+cmd execute in raft:raftdim run summon minecraft:chicken 2.5 100 -2.5
 swait 20
 settle 60
 hud on
 pose 7.5 105 -9.5 30 25
 face 0.5 100 0.5
-shot 01_built
-pose 2.6 100.2 -0.6 135 25
-face 0.5 100.7 -2.5
-shot 01b_helm_close
-pose -1.0 101.0 -7.5 -10 20
-face -1.5 101.3 -3.5
-shot 01c_motor_close
-pose 3.0 100.5 4.0 150 10
-face 0.5 101.0 2.5
-shot 01d_sail_close
-pose -1.2 100.2 0.5 -90 20
-face -2.5 100.4 0.5
-shot 01e_oar_close
-pose 1.5 101 -3.5 0 20
-face 0.5 100.6 -2.5
-swait 10
-where
-shot 02_aim_helm
-use
-swait 20
-wait 5
-log AFTER_USE
-where
-count raft:raftdim
-cmd time query gametime
-cmd data get entity @e[type=raft:vessel,limit=1] Pos
-cmd data get entity @e[type=raft:vessel,limit=1] Rotation
-shot 03_at_helm
-third on
-shot 04_at_helm_third
-cmd gamemode survival @p
-press forward
-swait 80
-wait 3
-shot 05_sailing
-cmd data get entity @e[type=raft:vessel,limit=1] Pos
-press right
-swait 60
-wait 3
-shot 06_turning
-cmd data get entity @e[type=raft:vessel,limit=1] Rotation
-cmd data get entity @e[type=raft:vessel,limit=1] Pos
-release right
-release forward
-swait 20
-log LEAVE
-hold sneak 8
-swait 5
-where
-cmd data merge entity @e[type=raft:vessel,limit=1] {Autopilot:{Forward:1b,Turn:-1b,Ticks:140}}
-cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s run tp @p ^2.3 ^1.05 ^3.3
-swait 5
-wait 3
-log CORNER
-where
-cmd data get entity @e[type=raft:vessel,limit=1] Pos
-cmd data get entity @e[type=raft:vessel,limit=1] Rotation
-shot 07_corner_a
-swait 40
-where
-cmd data get entity @e[type=raft:vessel,limit=1] Pos
-cmd data get entity @e[type=raft:vessel,limit=1] Rotation
-shot 08_corner_b
-cmd data get entity @e[type=minecraft:chicken,limit=1] Pos
-freecam {px+6} {py+6} {pz+6} 135 35
-shot 08b_corner_outside
-freecam off
-swait 40
-where
-cmd data get entity @e[type=raft:vessel,limit=1] Pos
-cmd data get entity @e[type=raft:vessel,limit=1] Rotation
-shot 09_corner_c
-log DOCKING
-swait 200
-where
-count raft:raftdim
-# a few drawn frames: the client builds the meshes of the placed blocks only while it draws
-wait 10 render
-shot 10_docked
-find minecraft:chest 48
-cmd execute in raft:raftdim positioned {fx} {fy} {fz} run data get block ~ ~ ~ Items
-find minecraft:barrel 48
-cmd execute in raft:raftdim positioned {fx} {fy} {fz} run data get block ~ ~ ~ Items
-cmd data get entity @e[type=minecraft:item_frame,limit=1] Item
-cmd data get entity @e[type=minecraft:item_frame,limit=1] Facing
-cmd data get entity @e[type=minecraft:chicken,limit=1] Pos
-find raft:helm 48
-log RESAIL
-cmd gamemode creative @p
+shot 30_built
+log SET_SAIL
 nearblock raft:helm 48 1.3 0.5 0
-face {fx} {fy+0.6} {fz}
 swait 10
-shot 11_aim_helm_again
+use
+swait 300
+log AFTER_SET_SAIL
+count raft:raftdim
+cmd data get entity @e[type=raft:vessel,limit=1] Plot
+cmd execute in raft:raftdim if block 28000013 217 28000013 minecraft:chest
+cmd execute in raft:raftdim if block 28000009 218 28000015 minecraft:wheat
+cmd execute in raft:raftdim if block 2 100 1 minecraft:air
+log LEAVE_HELM
+hold sneak 8
+swait 10
+cmd gamerule random_tick_speed 200
+where
+cmd data get entity @e[type=raft:vessel,limit=1] Pos
+# ---- redstone: flip the lever on the raft, the lamp next to it lights up
+log LEVER
+pose 1.5 100 4.5 0 40
+face 2.5 100.1 3.5
+swait 5
 use
 swait 10
-cmd data merge entity @e[type=raft:vessel,limit=1] {Autopilot:{Forward:1b,Turn:0b,Ticks:900}}
-hold sneak 8
+cmd execute in raft:raftdim if block 28000014 217 28000015 minecraft:redstone_lamp[lit=true]
+wait 10 render
+shot 31_lamp_lit
+# ---- build on the raft and break it again
+log PLACE
+cmd item replace entity @p hotbar.2 with minecraft:oak_planks 16
+slot 3
+pose 1.5 100 0.5 180 50
+face 1.5 100.0 -0.5
+swait 5
+use
+swait 10
+cmd execute in raft:raftdim if block 28000012 217 28000011 minecraft:oak_planks
+wait 10 render
+shot 32_placed
+log BREAK
+face 1.5 100.5 -0.5
+swait 5
+attack
+swait 10
+cmd execute in raft:raftdim if block 28000012 217 28000011 minecraft:air
+count raft:raftdim
+# ---- climb the ladder on the raft
+log CLIMB
+pose -1.5 100 -2.5 90 0
+swait 5
+press forward
 swait 30
 where
-count raft:raftdim
-cmd data get entity @e[type=raft:vessel,limit=1] Pos
-shot 12_sailing_away
-swait 300
-log WALL
-cmd data get entity @e[type=raft:vessel,limit=1] Pos
-swait 40
-cmd data get entity @e[type=raft:vessel,limit=1] Pos
-wait 3
-shot 12b_at_wall
-where
-freecam {px+7} {py+5} {pz+7} 135 28
-shot 12c_wall_outside
-freecam off
-log UNLOAD
-cmd execute in minecraft:overworld run tp @p 0.5 200 0.5
-wait 20
-settle 60
-swait 300
-count raft:raftdim
-log RETURN
-cmd execute in raft:raftdim run tp @p {px} {py+5} {pz}
-wait 20
-settle 90
+release forward
 swait 20
-count raft:raftdim
-cmd data get entity @e[type=raft:vessel,limit=1] Pos
-cmd data get entity @e[type=raft:vessel,limit=1] Autopilot
-cmd data get entity @e[type=raft:vessel,limit=1] Raft.BlockEntities
-cmd data get entity @e[type=raft:vessel,limit=1] Stowed
-third on
-shot 13_after_reload_from_chunk
-third off
-cmd data merge entity @e[type=raft:vessel,limit=1] {Autopilot:{Ticks:1}}
-swait 200
-log DOCKED_AFTER_RELOAD
-count raft:raftdim
-find minecraft:chest 48
-cmd execute in raft:raftdim positioned {fx} {fy} {fz} run data get block ~ ~ ~ Items
-find minecraft:barrel 48
-cmd execute in raft:raftdim positioned {fx} {fy} {fz} run data get block ~ ~ ~ Items
-cmd data get entity @e[type=minecraft:item_frame,limit=1] Item
-cmd data get entity @e[type=minecraft:chicken,limit=1] Pos
-find raft:helm 48
-freecam {fx+7} {fy+6} {fz+7} 135 32
-wait 10 render
-shot 13b_docked_outside
-freecam off
-log KEEP_SAILING
-nearblock raft:helm 48 1.3 0.5 0
-swait 10
+# ---- open the chest, then sail with it open and take the diamonds out
+log CHEST
+slot 2
+pose 2.5 100 -0.5 0 30
+face 2.5 100.5 1.5
+swait 5
 use
 swait 10
-cmd data merge entity @e[type=raft:vessel,limit=1] {Autopilot:{Forward:-1b,Turn:1b,Ticks:6000}}
-hold sneak 8
-swait 20
-count raft:raftdim
+wait 5 render
+shot 33_chest_open
+cmd data merge entity @e[type=raft:vessel,limit=1] {Autopilot:{Forward:1b,Turn:0b,Ticks:100}}
+swait 40
+wait 3 render
+shot 34_chest_open_moving
 cmd data get entity @e[type=raft:vessel,limit=1] Pos
-keep vesselsave
+click 496 244
+wait 3
+click 496 378
+wait 3
+shot 35_items_moved
+esc
+swait 10
+cmd execute in raft:raftdim run data get block 28000013 217 28000013 Items
+cmd data get entity @p Inventory
+# ---- nobody at the helm: the raft stays a raft and waits where it is
+log HOLD
+swait 120
+cmd data get entity @e[type=raft:vessel,limit=1] Pos
+swait 100
+cmd data get entity @e[type=raft:vessel,limit=1] Pos
+count raft:raftdim
+# ---- a player at a corner while the raft turns (autopilot), position in the raft frame from WHERE + Pos + Rotation
+log CORNER
+cmd data merge entity @e[type=raft:vessel,limit=1] {Autopilot:{Forward:1b,Turn:-1b,Ticks:160}}
+cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s run tp @p ^2.3 ^1.05 ^3.3
+swait 10
+where
+cmd data get entity @e[type=raft:vessel,limit=1] Pos
+cmd data get entity @e[type=raft:vessel,limit=1] Rotation
+swait 40
+where
+cmd data get entity @e[type=raft:vessel,limit=1] Pos
+cmd data get entity @e[type=raft:vessel,limit=1] Rotation
+freecam {px+6} {py+6} {pz+6} 135 35
+wait 3 render
+shot 36_corner_outside
+freecam off
+swait 40
+where
+cmd data get entity @e[type=raft:vessel,limit=1] Pos
+cmd data get entity @e[type=raft:vessel,limit=1] Rotation
+# ---- what worked in the plot while sailing: the crop grew, the furnace smelted
+log WORKING
+swait 200
+cmd execute in raft:raftdim unless block 28000009 218 28000015 minecraft:wheat[age=0]
+cmd execute in raft:raftdim if block 28000009 218 28000015 minecraft:wheat[age=7]
+cmd execute in raft:raftdim run data get block 28000009 217 28000010 Items
+cmd execute in raft:raftdim run data get block 28000009 217 28000010 cooking_time_spent
+cmd data get entity @e[type=minecraft:chicken,limit=1] Pos
+cmd data get entity @e[type=raft:vessel,limit=1] Pos
+where
+third on
+wait 5 render
+shot 37_sailing_third
+count raft:raftdim
+keep shipyardsave
 log DONE
