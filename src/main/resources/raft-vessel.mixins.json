@@ -5,7 +5,9 @@
   "mixins": [
     "EntityGetterMixin",
     "PlayerEdgeMixin",
-    "ServerGamePacketListenerImplMixin"
+    "PlayerReachMixin",
+    "ServerGamePacketListenerImplMixin",
+    "ServerLevelShipyardMixin"
   ],
   "client": [
     "client.ClientLevelTickMixin",

@@ -4,7 +4,12 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.kasax.raft.content.vessel.net.VesselBlocksPayload;
+import net.kasax.raft.content.vessel.net.VesselBreakPayload;
 import net.kasax.raft.content.vessel.net.VesselDataPayload;
+import net.kasax.raft.content.vessel.net.VesselUseResultPayload;
 import net.kasax.raft.content.vessel.net.VesselUsePayload;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -29,18 +34,37 @@ public final class VesselEvents {
 
     static void register() {
         PayloadTypeRegistry.clientboundPlay().register(VesselDataPayload.TYPE, VesselDataPayload.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(VesselBlocksPayload.TYPE, VesselBlocksPayload.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(VesselUseResultPayload.TYPE, VesselUseResultPayload.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(VesselUsePayload.TYPE, VesselUsePayload.CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(VesselBreakPayload.TYPE, VesselBreakPayload.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(VesselUsePayload.TYPE, (payload, context) -> {
             ServerPlayer player = context.player();
             context.server().execute(() -> {
-                Entity entity = player.level().getEntity(payload.entityId());
-                if (entity instanceof VesselEntity vessel && !player.isSpectator()) {
-                    vessel.useBlock(player, payload.local(), payload.hand());
+                if (player.level().getEntity(payload.entityId()) instanceof VesselEntity vessel && !player.isSpectator()) {
+                    VesselInteractions.use(vessel, player, payload.local(), payload.hit(), payload.face(), payload.inside());
+                }
+            });
+        });
+        ServerPlayNetworking.registerGlobalReceiver(VesselBreakPayload.TYPE, (payload, context) -> {
+            ServerPlayer player = context.player();
+            context.server().execute(() -> {
+                if (player.level().getEntity(payload.entityId()) instanceof VesselEntity vessel && !player.isSpectator()) {
+                    if (payload.done()) {
+                        VesselInteractions.finishBreak(vessel, player, payload.local());
+                    } else {
+                        VesselInteractions.startBreak(vessel, player, payload.local());
+                    }
                 }
             });
         });
         UseItemCallback.EVENT.register(VesselEvents::placeFoundationOnWater);
-        ServerLifecycleEvents.SERVER_STOPPED.register(server -> VesselColliders.clear(false));
+        ServerTickEvents.END_SERVER_TICK.register(server -> VesselAssembler.tickLaunches());
+        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> VesselInteractions.forget(handler.player));
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
+            VesselColliders.clear(false);
+            VesselAssembler.clearLaunches();
+        });
     }
 
     /**

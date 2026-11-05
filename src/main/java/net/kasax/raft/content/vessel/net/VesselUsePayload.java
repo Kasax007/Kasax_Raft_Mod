@@ -2,27 +2,26 @@ package net.kasax.raft.content.vessel.net;
 
 import net.kasax.raft.Raft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.Vec3;
 
 /**
- * Client -> server: the player used a block of a sailing raft. {@code local} is the block in the raft's own frame,
- * as the client's ray-cast found it (exact even while the raft moves and turns).
+ * Client -> server: the player used (right click) a block of a sailing raft. {@code local} is the block in the raft's
+ * own frame as the client's ray-cast found it, {@code hit} the exact point (raft frame) and {@code face} the side.
  */
-public record VesselUsePayload(int entityId, BlockPos local, boolean offHand) implements CustomPacketPayload {
+public record VesselUsePayload(int entityId, BlockPos local, Vec3 hit, Direction face, boolean inside) implements CustomPacketPayload {
     public static final Type<VesselUsePayload> TYPE = new Type<>(Raft.id("vessel_use"));
     public static final StreamCodec<RegistryFriendlyByteBuf, VesselUsePayload> CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT, VesselUsePayload::entityId,
             BlockPos.STREAM_CODEC, VesselUsePayload::local,
-            ByteBufCodecs.BOOL, VesselUsePayload::offHand,
+            Vec3.STREAM_CODEC, VesselUsePayload::hit,
+            Direction.STREAM_CODEC, VesselUsePayload::face,
+            ByteBufCodecs.BOOL, VesselUsePayload::inside,
             VesselUsePayload::new);
-
-    public InteractionHand hand() {
-        return this.offHand ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
-    }
 
     @Override
     public Type<? extends CustomPacketPayload> type() {

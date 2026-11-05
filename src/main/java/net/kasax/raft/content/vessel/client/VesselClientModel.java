@@ -35,10 +35,12 @@ final class VesselClientModel {
     final int[] y;
     final int[] z;
     final BlockModelRenderState[] models;
+    final BlockState[] states;
     final int[] light;
     private long lightTick = Long.MIN_VALUE;
 
-    private VesselClientModel(VesselStructure structure, Object modelSet, List<int[]> positions, List<BlockModelRenderState> models) {
+    private VesselClientModel(VesselStructure structure, Object modelSet, List<int[]> positions, List<BlockModelRenderState> models,
+                              List<BlockState> states) {
         this.structure = structure;
         this.modelSet = modelSet;
         int n = positions.size();
@@ -51,6 +53,7 @@ final class VesselClientModel {
             this.z[i] = positions.get(i)[2];
         }
         this.models = models.toArray(new BlockModelRenderState[0]);
+        this.states = states.toArray(new BlockState[0]);
         this.light = new int[n];
     }
 
@@ -65,6 +68,7 @@ final class VesselClientModel {
     static VesselClientModel build(VesselStructure structure, BlockModelResolver resolver) {
         List<int[]> positions = new ArrayList<>();
         List<BlockModelRenderState> models = new ArrayList<>();
+        List<BlockState> states = new ArrayList<>();
         for (Long2ObjectMap.Entry<BlockState> e : structure.blocks().long2ObjectEntrySet()) {
             long key = e.getLongKey();
             int bx = BlockPos.getX(key);
@@ -80,8 +84,9 @@ final class VesselClientModel {
             }
             positions.add(new int[]{bx, by, bz});
             models.add(model);
+            states.add(e.getValue());
         }
-        return new VesselClientModel(structure, currentModelSet(), positions, models);
+        return new VesselClientModel(structure, currentModelSet(), positions, models, states);
     }
 
     private static boolean enclosed(VesselStructure structure, int x, int y, int z) {
@@ -94,7 +99,11 @@ final class VesselClientModel {
         return true;
     }
 
-    /** The world light at every block (block and sky light at its centre), refreshed once per game tick. */
+    /**
+     * The world light at every block (block and sky light at its centre), refreshed once per game tick. Blocks that give
+     * light (lanterns, lit lamps, a burning furnace) are at least as bright as their own light: the world has no light
+     * source where the raft is.
+     */
     void updateLight(Level level, VesselPose pose, long gameTime) {
         if (gameTime == this.lightTick) {
             return;
@@ -104,7 +113,8 @@ final class VesselClientModel {
         for (int i = 0; i < this.models.length; i++) {
             Vec3 c = pose.toWorld(this.x[i] + 0.5, this.y[i] + 0.5, this.z[i] + 0.5);
             cursor.set(c.x, c.y, c.z);
-            this.light[i] = LightCoordsUtil.pack(level.getBrightness(LightLayer.BLOCK, cursor), level.getBrightness(LightLayer.SKY, cursor));
+            int block = Math.max(level.getBrightness(LightLayer.BLOCK, cursor), this.states[i].getLightEmission());
+            this.light[i] = LightCoordsUtil.pack(block, level.getBrightness(LightLayer.SKY, cursor));
         }
     }
 }

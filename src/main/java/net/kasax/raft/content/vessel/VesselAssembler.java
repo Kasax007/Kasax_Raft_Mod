@@ -44,10 +44,14 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 /**
- * Turns a raft of blocks into a {@link VesselEntity} (set sail) and back (drop anchor).
+ * Turns a raft of blocks into a {@link VesselEntity} (set sail) and back (drop anchor). Setting sail moves the blocks
+ * (with their block entities) into a shipyard plot ({@link VesselShipyard}) where they keep working while the raft
+ * sails; dropping anchor moves them back onto the grid.
  *
  * <p>What belongs to the raft: the raft foundations connected to the one under the helm (the hull, tag
  * {@code raft:vessel_hulls}), and every block connected to them that stands inside the hull's outline (holes in the
@@ -70,27 +74,87 @@ public final class VesselAssembler {
     }
 
     // ------------------------------------------------------------------------------------------- set sail
-    /** The helm at {@code helmPos} was used: build the vessel and seat the player, or tell them what is wrong. */
+    /** A raft waiting for its shipyard plot to load before it sets sail. */
+    private record Launch(ServerLevel level, BlockPos helm, UUID player, int plot, int[] age) {
+    }
+
+    private static final List<Launch> LAUNCHES = new ArrayList<>();
+    /** Give up when a plot has not loaded after this many ticks. */
+    private static final int LAUNCH_TIMEOUT = 1200;
+
+    /**
+     * The helm at {@code helmPos} was used: check the raft, then take a shipyard plot and set sail as soon as its
+     * chunks are loaded (a tick or two; the first time a plot is used its chunks are generated, which takes longer).
+     */
     public static void setSail(ServerLevel level, BlockPos helmPos, ServerPlayer player) {
-        if (player.isSpectator()) {
+        if (player.isSpectator() || !(level.getBlockState(helmPos).getBlock() instanceof HelmBlock)
+                || VesselShipyard.plotAt(level, helmPos.getX(), helmPos.getY(), helmPos.getZ()) >= 0) {
             return;
         }
-        BlockState helm = level.getBlockState(helmPos);
-        if (!(helm.getBlock() instanceof HelmBlock)) {
-            return;
+        for (Launch launch : LAUNCHES) {
+            if (launch.level() == level && launch.helm().equals(helmPos)) {
+                return;
+            }
         }
         Scan scan = scan(level, helmPos);
         if (scan.error() != null) {
-            Raft.LOGGER.info("Raft at {} cannot set sail: {}", helmPos.toShortString(), scan.error().getString());
-            player.sendOverlayMessage(scan.error());
-            level.playSound(null, helmPos, SoundEvents.WOOD_HIT, SoundSource.BLOCKS, 0.6F, 0.7F);
+            refuse(level, helmPos, player, scan.error());
             return;
         }
-        VesselEntity vessel = build(level, helmPos, helm.getValue(HelmBlock.FACING), scan);
+        VesselShipyard yard = VesselShipyard.get(level);
+        int plot = yard.allocate();
+        if (plot < 0) {
+            refuse(level, helmPos, player, Component.translatable("message.raft.vessel.shipyard_full"));
+            return;
+        }
+        VesselShipyard.hold(level, plot);
+        LAUNCHES.add(new Launch(level, helmPos.immutable(), player.getUUID(), plot, new int[1]));
+        player.sendOverlayMessage(Component.translatable("message.raft.vessel.setting_sail"));
         level.playSound(null, helmPos, SoundEvents.WOODEN_TRAPDOOR_OPEN, SoundSource.BLOCKS, 1.0F, 0.6F);
-        level.playSound(null, helmPos, SoundEvents.GENERIC_SPLASH, SoundSource.BLOCKS, 0.6F, 0.8F);
-        vessel.takeHelm(player);
-        Raft.LOGGER.info("Raft set sail at {} with {} blocks", helmPos.toShortString(), scan.blocks().size());
+    }
+
+    private static void refuse(ServerLevel level, BlockPos helmPos, ServerPlayer player, Component error) {
+        Raft.LOGGER.info("Raft at {} cannot set sail: {}", helmPos.toShortString(), error.getString());
+        player.sendOverlayMessage(error);
+        level.playSound(null, helmPos, SoundEvents.WOOD_HIT, SoundSource.BLOCKS, 0.6F, 0.7F);
+    }
+
+    /** Server tick: rafts whose plot has loaded set sail now. */
+    static void tickLaunches() {
+        for (Iterator<Launch> it = LAUNCHES.iterator(); it.hasNext(); ) {
+            Launch launch = it.next();
+            ServerLevel level = launch.level();
+            ServerPlayer player = level.getServer().getPlayerList().getPlayer(launch.player());
+            boolean ready = VesselShipyard.loaded(level, launch.plot());
+            if (!ready && ++launch.age()[0] < LAUNCH_TIMEOUT && player != null) {
+                continue;
+            }
+            it.remove();
+            VesselEntity vessel = null;
+            if (ready && player != null && player.level() == level && level.getBlockState(launch.helm()).getBlock() instanceof HelmBlock helm) {
+                Scan scan = scan(level, launch.helm());
+                if (scan.error() != null) {
+                    refuse(level, launch.helm(), player, scan.error());
+                } else {
+                    vessel = build(level, launch.helm(), level.getBlockState(launch.helm()).getValue(HelmBlock.FACING), scan, launch.plot());
+                    level.playSound(null, launch.helm(), SoundEvents.GENERIC_SPLASH, SoundSource.BLOCKS, 0.6F, 0.8F);
+                    vessel.takeHelm(player);
+                    Raft.LOGGER.info("Raft set sail at {} with {} blocks (plot {})", launch.helm().toShortString(), scan.blocks().size(),
+                            launch.plot());
+                }
+            } else if (player != null && !ready) {
+                refuse(level, launch.helm(), player, Component.translatable("message.raft.vessel.not_loaded"));
+            }
+            VesselShipyard.release(level, launch.plot());
+            if (vessel == null) {
+                VesselShipyard.get(level).free(launch.plot());
+            }
+        }
+    }
+
+    /** Server stopped: forget waiting launches (their plots are free again next time, nothing was moved yet). */
+    static void clearLaunches() {
+        LAUNCHES.clear();
     }
 
     /** Can this world block be part of a raft at all (water, air, fire and sea plants stay in the world)? */
@@ -258,14 +322,13 @@ public final class VesselAssembler {
         return out.buildResult();
     }
 
-    private static VesselEntity build(ServerLevel level, BlockPos helmPos, Direction facing, Scan scan) {
+    private static VesselEntity build(ServerLevel level, BlockPos helmPos, Direction facing, Scan scan, int plot) {
         Rotation toLocal = rotation(facing, Direction.SOUTH);
         LongArrayList order = new LongArrayList(scan.blocks());
         int minX = Integer.MAX_VALUE;
         int minY = Integer.MAX_VALUE;
         int minZ = Integer.MAX_VALUE;
         int maxX = Integer.MIN_VALUE;
-        int maxY = Integer.MIN_VALUE;
         int maxZ = Integer.MIN_VALUE;
         BlockPos[] rel = new BlockPos[order.size()];
         for (int i = 0; i < rel.length; i++) {
@@ -275,38 +338,91 @@ public final class VesselAssembler {
             minY = Math.min(minY, r.getY());
             minZ = Math.min(minZ, r.getZ());
             maxX = Math.max(maxX, r.getX());
-            maxY = Math.max(maxY, r.getY());
             maxZ = Math.max(maxZ, r.getZ());
         }
-        BlockPos shift = new BlockPos(minX, minY, minZ);
-        Long2ObjectOpenHashMap<BlockState> states = new Long2ObjectOpenHashMap<>();
-        Long2ObjectOpenHashMap<CompoundTag> blockEntities = new Long2ObjectOpenHashMap<>();
+        // the raft's frame is its plot: the blocks start MARGIN blocks in from the plot's sides, the hull bottom at y 0
+        BlockPos shift = new BlockPos(minX - VesselShipyard.MARGIN, minY, minZ - VesselShipyard.MARGIN);
+        BlockPos origin = VesselShipyard.origin(level, plot);
+        clearPlot(level, plot);
+        List<BlockPos> plotPositions = new ArrayList<>(rel.length);
+        List<CompoundTag> blockEntities = new ArrayList<>(rel.length);
         for (int i = 0; i < rel.length; i++) {
             BlockPos world = BlockPos.of(order.getLong(i));
-            BlockPos local = rel[i].subtract(shift);
-            BlockState state = level.getBlockState(world);
-            states.put(local.asLong(), state.rotate(toLocal));
+            BlockPos at = origin.offset(rel[i].subtract(shift));
             BlockEntity be = level.getBlockEntity(world);
-            if (be != null) {
-                blockEntities.put(local.asLong(), saveBlockEntity(be, level));
+            level.setBlock(at, level.getBlockState(world).rotate(toLocal), FLAGS_PLACE);
+            plotPositions.add(at);
+            blockEntities.add(be != null ? saveBlockEntity(be, level) : null);
+        }
+        loadBlockEntities(level, plotPositions, blockEntities);
+        updateAll(level, plotPositions);
+        Long2ObjectOpenHashMap<BlockState> states = new Long2ObjectOpenHashMap<>();
+        for (BlockPos at : plotPositions) {
+            BlockState state = level.getBlockState(at);
+            if (!state.isAir()) {
+                states.put(at.subtract(origin).asLong(), state);
             }
         }
         BlockPos helmLocal = BlockPos.ZERO.subtract(shift);
-        VesselStructure structure = new VesselStructure(maxX - minX + 1, maxY - minY + 1, maxZ - minZ + 1, helmLocal, states, blockEntities);
+        Vec3 pivot = new Vec3(VesselShipyard.MARGIN + (maxX - minX + 1) * 0.5, 0.0, VesselShipyard.MARGIN + (maxZ - minZ + 1) * 0.5);
+        VesselStructure structure = new VesselStructure(helmLocal, pivot, states);
         float yaw = facing.toYRot();
         // the pivot's world position: the helm's block centre maps onto itself
-        VesselPose zero = new VesselPose(0.0, 0.0, 0.0, yaw, structure.pivot());
+        VesselPose zero = new VesselPose(0.0, 0.0, 0.0, yaw, pivot);
         Vec3 helmCentre = zero.toWorld(helmLocal.getX() + 0.5, helmLocal.getY() + 0.5, helmLocal.getZ() + 0.5);
         Vec3 pos = new Vec3(helmPos.getX() + 0.5 - helmCentre.x, helmPos.getY() + 0.5 - helmCentre.y, helmPos.getZ() + 0.5 - helmCentre.z);
-        VesselPose pose = new VesselPose(pos, yaw, structure.pivot());
+        VesselPose pose = new VesselPose(pos, yaw, pivot);
 
         List<VesselEntity.Stowed> stowed = stowHangingEntities(level, scan.blocks(), pose, facing);
         liftBlocks(level, scan);
 
         VesselEntity vessel = new VesselEntity(VesselContent.VESSEL, level);
-        vessel.setup(structure, stowed, pos, yaw);
+        vessel.setup(structure, plot, stowed, pos, yaw);
         level.addFreshEntity(vessel);
         return vessel;
+    }
+
+    /** Loads saved block entity data into the block entities just created by placing their blocks. */
+    private static void loadBlockEntities(ServerLevel level, List<BlockPos> positions, List<CompoundTag> data) {
+        for (int i = 0; i < positions.size(); i++) {
+            CompoundTag tag = data.get(i);
+            if (tag == null) {
+                continue;
+            }
+            BlockPos pos = positions.get(i);
+            BlockEntity be = level.getBlockEntity(pos);
+            if (be != null) {
+                be.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, level.registryAccess(), tag));
+                be.setChanged();
+                BlockState state = level.getBlockState(pos);
+                level.sendBlockUpdated(pos, state, state, Block.UPDATE_ALL);
+            }
+        }
+    }
+
+    /** After placing blocks without updates: tell their neighbours and fix shapes (fences, redstone, ...). */
+    private static void updateAll(ServerLevel level, List<BlockPos> positions) {
+        for (BlockPos pos : positions) {
+            BlockState state = level.getBlockState(pos);
+            level.updateNeighborsAt(pos, state.getBlock());
+            state.updateNeighbourShapes(level, pos, Block.UPDATE_ALL);
+        }
+    }
+
+    /** Removes everything from a plot (no drops, block entity contents are not spilled). */
+    static void clearPlot(ServerLevel level, int plot) {
+        BlockPos origin = VesselShipyard.origin(level, plot);
+        BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
+        for (int x = 0; x < VesselShipyard.SIZE_X; x++) {
+            for (int z = 0; z < VesselShipyard.SIZE_Z; z++) {
+                for (int y = 0; y < VesselShipyard.SIZE_Y; y++) {
+                    cursor.set(origin.getX() + x, origin.getY() + y, origin.getZ() + z);
+                    if (!level.getBlockState(cursor).isAir()) {
+                        level.setBlock(cursor, Blocks.AIR.defaultBlockState(), FLAGS_LIFT);
+                    }
+                }
+            }
+        }
     }
 
     /** Item frames and paintings hanging on the raft go into its hold while it sails. */
@@ -500,41 +616,38 @@ public final class VesselAssembler {
         return null;
     }
 
-    /** Places the raft's blocks at an aligned pose (block entities and stowed frames included). */
+    /**
+     * Moves the raft's blocks from its plot back into the world at an aligned pose (block entities with their contents,
+     * stowed frames) and empties the plot.
+     */
     static boolean dock(VesselEntity vessel, VesselPose pose) {
         VesselStructure structure = vessel.structure();
-        if (structure == null || !(vessel.level() instanceof ServerLevel level) || !canPlace(level, structure, pose)) {
+        if (structure == null || vessel.plot() < 0 || !(vessel.level() instanceof ServerLevel level) || !canPlace(level, structure, pose)
+                || !VesselShipyard.loaded(level, vessel.plot())) {
             return false;
         }
         Raft.LOGGER.info("Raft dropped anchor at {} (yaw {})", BlockPos.containing(pose.position()).toShortString(), pose.yaw);
         Rotation rotation = rotation(Direction.SOUTH, Direction.fromYRot(pose.yaw));
+        BlockPos origin = VesselShipyard.origin(level, vessel.plot());
         List<BlockPos> placed = new ArrayList<>(structure.blockCount());
-        List<BlockState> states = new ArrayList<>(structure.blockCount());
-        for (Long2ObjectMap.Entry<BlockState> e : structure.blocks().long2ObjectEntrySet()) {
-            long key = e.getLongKey();
-            BlockPos w = pose.worldBlock(BlockPos.getX(key), BlockPos.getY(key), BlockPos.getZ(key));
-            BlockState state = e.getValue().rotate(rotation);
-            level.setBlock(w, state, FLAGS_PLACE);
-            placed.add(w);
-            states.add(state);
-        }
-        for (Long2ObjectMap.Entry<CompoundTag> e : structure.blockEntities().long2ObjectEntrySet()) {
-            long key = e.getLongKey();
-            BlockPos w = pose.worldBlock(BlockPos.getX(key), BlockPos.getY(key), BlockPos.getZ(key));
-            BlockEntity be = level.getBlockEntity(w);
-            if (be != null) {
-                be.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, level.registryAccess(), e.getValue()));
-                be.setChanged();
-                BlockState state = level.getBlockState(w);
-                level.sendBlockUpdated(w, state, state, Block.UPDATE_ALL);
+        List<CompoundTag> blockEntities = new ArrayList<>(structure.blockCount());
+        List<BlockPos> sources = new ArrayList<>(structure.blockCount());
+        for (long key : structure.blocks().keySet()) {
+            BlockPos from = origin.offset(BlockPos.getX(key), BlockPos.getY(key), BlockPos.getZ(key));
+            BlockState state = level.getBlockState(from);
+            if (state.isAir()) {
+                continue;
             }
+            BlockEntity be = level.getBlockEntity(from);
+            BlockPos to = pose.worldBlock(BlockPos.getX(key), BlockPos.getY(key), BlockPos.getZ(key));
+            level.setBlock(to, state.rotate(rotation), FLAGS_PLACE);
+            placed.add(to);
+            sources.add(from);
+            blockEntities.add(be != null ? saveBlockEntity(be, level) : null);
         }
-        for (int i = 0; i < placed.size(); i++) {
-            BlockPos w = placed.get(i);
-            BlockState state = level.getBlockState(w);
-            level.updateNeighborsAt(w, state.getBlock());
-            state.updateNeighbourShapes(level, w, Block.UPDATE_ALL);
-        }
+        loadBlockEntities(level, placed, blockEntities);
+        clearPlot(level, vessel.plot());
+        updateAll(level, placed);
         restoreStowed(level, vessel, pose);
         Vec3 c = pose.position();
         level.playSound(null, c.x, c.y, c.z, SoundEvents.CHAIN_PLACE, SoundSource.BLOCKS, 1.0F, 0.8F);
@@ -567,30 +680,29 @@ public final class VesselAssembler {
         vessel.stowed().clear();
     }
 
-    /** The raft was killed by a command: drop anchor where it is, or drop everything as items. */
+    /** The raft was killed by a command: drop anchor where it is, or drop everything as items (at the raft). */
     static void emergencyDock(VesselEntity vessel) {
         VesselStructure structure = vessel.structure();
-        if (structure == null || !(vessel.level() instanceof ServerLevel level)) {
+        if (structure == null || vessel.plot() < 0 || !(vessel.level() instanceof ServerLevel level)) {
+            return;
+        }
+        if (!VesselShipyard.loaded(level, vessel.plot())) {
+            // the plot cannot be reached now: its blocks stay there, the plot stays taken
+            Raft.LOGGER.warn("Raft at {} removed while its plot {} was not loaded", vessel.blockPosition().toShortString(), vessel.plot());
             return;
         }
         VesselPose pose = findDockPose(vessel);
         if (pose != null && dock(vessel, pose)) {
             return;
         }
-        Vec3 at = vessel.position().add(0.0, 1.0, 0.0);
-        for (Long2ObjectMap.Entry<BlockState> e : structure.blocks().long2ObjectEntrySet()) {
-            ItemStack stack = new ItemStack(e.getValue().getBlock().asItem());
-            if (!stack.isEmpty()) {
-                Containers.dropItemStack(level, at.x, at.y, at.z, stack);
-            }
-            CompoundTag tag = structure.blockEntities().get(e.getLongKey());
-            if (tag != null) {
-                BlockEntity be = BlockEntity.loadStatic(BlockPos.containing(at), e.getValue(), tag, level.registryAccess());
-                if (be instanceof Container container) {
-                    Containers.dropContents(level, BlockPos.containing(at), container);
-                }
-            }
+        // broken as by a player: containers spill, shulker boxes keep their contents; the drops spawn in the plot and
+        // appear at the raft (see VesselShipyard.relocate)
+        BlockPos origin = VesselShipyard.origin(level, vessel.plot());
+        for (long key : structure.blocks().keySet()) {
+            level.destroyBlock(origin.offset(BlockPos.getX(key), BlockPos.getY(key), BlockPos.getZ(key)), true);
         }
+        clearPlot(level, vessel.plot());
+        Vec3 at = vessel.position().add(0.0, 1.0, 0.0);
         for (VesselEntity.Stowed s : vessel.stowed()) {
             EntityType.create(TagValueInput.create(ProblemReporter.DISCARDING, level.registryAccess(), s.tag()), level,
                     new EntitySpawnRequest(EntitySpawnReason.LOAD, true)).ifPresent(entity -> {

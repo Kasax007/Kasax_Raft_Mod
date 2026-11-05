@@ -1,10 +1,15 @@
 package net.kasax.raft.content.vessel;
 
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.kasax.raft.content.vessel.block.RaftMotorBlockEntity;
+import net.kasax.raft.content.vessel.net.VesselBlocksPayload;
 import net.kasax.raft.content.vessel.net.VesselDataPayload;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.PositionAndRotation;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -31,39 +36,42 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.PositionPath;
 import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.player.Input;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.EntityInLevelCallback;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.minecraft.core.PositionAndRotation;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.function.BiFunction;
 
 /**
- * A raft built by players, sailing as one piece (see docs/design/raft-building.md). The blocks live in a
- * {@link VesselStructure}; the entity's position is the structure's pivot and its yaw the bow direction.
+ * A raft built by players, sailing as one piece (see docs/design/raft-building.md). Its blocks are real blocks in a
+ * shipyard plot ({@link VesselShipyard}) where they keep working; the entity carries a copy of them
+ * ({@link VesselStructure}) to collide with and draw, its position is the structure's pivot and its yaw the bow.
  *
- * <p>The server simulates the raft (helmsman input, speed, turning, land and water checks) and carries mobs and items
- * on board; clients get the blocks once ({@link VesselDataPayload}), interpolate the pose (the yaw comes as an exact
- * float, not as a packed rotation) and carry their own player. When nobody is at the helm the raft brakes, glides onto
- * the block grid and turns back into blocks ({@link VesselAssembler#dock}).
+ * <p>The server simulates the raft (helmsman input, speed, turning, land and water checks), carries mobs and items on
+ * board and passes block changes in the plot on to the clients; clients get the blocks when they start tracking the
+ * raft ({@link VesselDataPayload}, then {@link VesselBlocksPayload}), interpolate the pose (the yaw comes as an exact
+ * float, not as a packed rotation) and carry their own player. A raft only turns back into blocks when a player drops
+ * anchor ({@link #requestAnchor}); with nobody at the helm it slows down and stays where it is.
  */
 public class VesselEntity extends Entity {
     public static final byte SAILING = 0;
-    public static final byte STOPPING = 1;
+    public static final byte ANCHORING = 1;
     public static final byte ALIGNING = 2;
     public static final byte DOCKED = 3;
 
@@ -82,18 +90,25 @@ public class VesselEntity extends Entity {
     private static final double CARRY_HEIGHT = 3.0;
     /** Server ticks between the server's raft and what clients see (interpolation). */
     private static final int CLIENT_LAG_TICKS = 2;
+    /** Every so many ticks the whole plot is compared with the raft's copy of it (changes clients were not told of). */
+    private static final int RESCAN_TICKS = 200;
 
-    /** Set by the client module: sends the block the player aims at to the server (or passes, see VesselClient). */
+    /** Set by the client module: sends the block the player aims at to the server (see VesselClient). */
     public static BiFunction<VesselEntity, InteractionHand, InteractionResult> clientUse = (vessel, hand) -> InteractionResult.PASS;
 
     private @Nullable VesselStructure structure;
+    /** The shipyard plot with the raft's blocks (server; -1 on clients). */
+    private int plot = -1;
+    private boolean plotHeld;
+    private boolean plotSynced;
+    private int rescan;
+    private final LongOpenHashSet changed = new LongOpenHashSet();
     private final List<Stowed> stowed = new ArrayList<>();
     private float speed;
     private float yawRate;
     private @Nullable VesselPose dockTarget;
-    private int dockWait;
+    private @Nullable UUID anchoredBy;
     private int dockedTicks;
-    private boolean warnedNoRoom;
     private int bumpCooldown;
     private int passengerTurnTick = -1;
     /** Autopilot (NBT {@code Autopilot:{Forward:1b,Turn:-1b,Ticks:200}}, for map makers and tests): sails as if a
@@ -134,9 +149,11 @@ public class VesselEntity extends Entity {
         return this.level().isClientSide() ? new Interpolation(this) : InterpolationHandler.NO_OP;
     }
 
-    /** Server: a freshly built raft at its first pose. */
-    void setup(VesselStructure structure, List<Stowed> stowed, Vec3 pos, float yaw) {
+    /** Server: a raft that has just set sail, its blocks in {@code plot}. */
+    void setup(VesselStructure structure, int plot, List<Stowed> stowed, Vec3 pos, float yaw) {
         this.structure = structure;
+        this.plot = plot;
+        this.plotSynced = true;
         this.stowed.clear();
         this.stowed.addAll(stowed);
         this.applyPose(new VesselPose(pos, yaw, structure.pivot()));
@@ -146,6 +163,10 @@ public class VesselEntity extends Entity {
     // ------------------------------------------------------------------------------------------- access
     public @Nullable VesselStructure structure() {
         return this.structure;
+    }
+
+    public int plot() {
+        return this.plot;
     }
 
     public List<Stowed> stowed() {
@@ -213,23 +234,36 @@ public class VesselEntity extends Entity {
     }
 
     private void serverTick() {
-        if (this.structure == null) {
+        if (this.structure == null || this.plot < 0 || !(this.level() instanceof ServerLevel level)) {
             this.discard();
             return;
         }
         VesselColliders.add(this);
+        if (this.isDocked()) {
+            // the blocks are back in the world; the raft is still drawn for a few ticks (no gap on clients)
+            if (++this.dockedTicks > 3) {
+                this.discard();
+            }
+            return;
+        }
+        this.holdPlot(level);
+        this.syncPlot(level);
+        if (this.structure.isEmpty()) {
+            // everything on it was broken: nothing left to sail
+            VesselAssembler.clearPlot(level, this.plot);
+            this.setState(DOCKED);
+            this.discard();
+            return;
+        }
         if (this.bumpCooldown > 0) {
             this.bumpCooldown--;
         }
         VesselPose from = this.currentPose();
         switch (this.getState()) {
             case SAILING -> this.sail();
-            case STOPPING -> this.stop();
+            case ANCHORING -> this.anchor();
             case ALIGNING -> this.align();
             default -> {
-                if (++this.dockedTicks > 3) {
-                    this.discard();
-                }
                 return;
             }
         }
@@ -243,9 +277,104 @@ public class VesselEntity extends Entity {
     }
 
     /** The pose the clients saw a few ticks ago (their raft is behind the server's). */
-    private VesselPose clientPose() {
+    VesselPose clientPose() {
         VesselPose pose = this.history[Math.floorMod(this.historyIndex - 1 - CLIENT_LAG_TICKS, this.history.length)];
         return pose != null ? pose : this.currentPose();
+    }
+
+    // ------------------------------------------------------------------------------------------- plot
+    /** Keeps the plot loaded and ticking while this raft is in the level (released in {@link #onRemoval}). */
+    private void holdPlot(ServerLevel level) {
+        if (!this.plotHeld && this.plot >= 0) {
+            this.plotHeld = true;
+            VesselShipyard.hold(level, this.plot);
+            VesselShipyard.get(level).attach(this.plot, this);
+        }
+    }
+
+    /** Server: a block in the plot changed (see VesselShipyard.blockChanged). */
+    void plotBlockChanged(BlockPos pos) {
+        if (this.level() instanceof ServerLevel level && this.plot >= 0) {
+            this.changed.add(pos.subtract(VesselShipyard.origin(level, this.plot)).asLong());
+        }
+    }
+
+    /** Takes the plot's block changes into the raft's copy and sends them to the players who see the raft. */
+    private void syncPlot(ServerLevel level) {
+        if (!VesselShipyard.loaded(level, this.plot)) {
+            return;
+        }
+        BlockPos origin = VesselShipyard.origin(level, this.plot);
+        Long2ObjectOpenHashMap<BlockState> changes = new Long2ObjectOpenHashMap<>();
+        if (!this.plotSynced || ++this.rescan >= RESCAN_TICKS) {
+            this.plotSynced = true;
+            this.rescan = 0;
+            BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
+            for (int x = 0; x < VesselShipyard.SIZE_X; x++) {
+                for (int z = 0; z < VesselShipyard.SIZE_Z; z++) {
+                    for (int y = 0; y < VesselShipyard.SIZE_Y; y++) {
+                        BlockState state = level.getBlockState(cursor.set(origin.getX() + x, origin.getY() + y, origin.getZ() + z));
+                        long key = BlockPos.asLong(x, y, z);
+                        if (!Objects.equals(this.structure.get(key), state.isAir() ? null : state)) {
+                            changes.put(key, state);
+                        }
+                    }
+                }
+            }
+        } else if (!this.changed.isEmpty()) {
+            for (long key : this.changed) {
+                int x = BlockPos.getX(key);
+                int y = BlockPos.getY(key);
+                int z = BlockPos.getZ(key);
+                if (x < 0 || y < 0 || z < 0 || x >= VesselShipyard.SIZE_X || y >= VesselShipyard.SIZE_Y || z >= VesselShipyard.SIZE_Z) {
+                    continue;
+                }
+                BlockState state = level.getBlockState(origin.offset(x, y, z));
+                if (!Objects.equals(this.structure.get(key), state.isAir() ? null : state)) {
+                    changes.put(key, state);
+                }
+            }
+        }
+        this.changed.clear();
+        if (changes.isEmpty()) {
+            return;
+        }
+        this.structure = this.structure.withChanges(changes);
+        this.setBoundingBox(this.makeBoundingBox(this.position()));
+        int[] positions = new int[changes.size()];
+        int[] states = new int[changes.size()];
+        int i = 0;
+        for (var e : changes.long2ObjectEntrySet()) {
+            positions[i] = VesselStructure.pack(e.getLongKey());
+            states[i++] = Block.getId(e.getValue());
+        }
+        VesselBlocksPayload payload = new VesselBlocksPayload(this.getId(), positions, states);
+        for (ServerPlayer player : PlayerLookup.tracking(this)) {
+            ServerPlayNetworking.send(player, payload);
+        }
+    }
+
+    /** Client: blocks of the raft changed on the server. */
+    public void applyBlockChanges(int[] positions, int[] states) {
+        if (this.structure == null) {
+            return;
+        }
+        Long2ObjectOpenHashMap<BlockState> changes = new Long2ObjectOpenHashMap<>(positions.length);
+        for (int i = 0; i < positions.length && i < states.length; i++) {
+            changes.put(VesselStructure.unpack(positions[i]), Block.stateById(states[i]));
+        }
+        this.structure = this.structure.withChanges(changes);
+        this.clientModel = null;
+        this.setBoundingBox(this.makeBoundingBox(this.position()));
+    }
+
+    /** The motor block entity at a raft position (in the plot), if loaded. */
+    private @Nullable RaftMotorBlockEntity motor(long key) {
+        if (!(this.level() instanceof ServerLevel level) || !VesselShipyard.loaded(level, this.plot)) {
+            return null;
+        }
+        BlockPos at = VesselShipyard.origin(level, this.plot).offset(BlockPos.getX(key), BlockPos.getY(key), BlockPos.getZ(key));
+        return level.getBlockEntity(at) instanceof RaftMotorBlockEntity motor ? motor : null;
     }
 
     // ------------------------------------------------------------------------------------------- sailing
@@ -254,8 +383,9 @@ public class VesselEntity extends Entity {
     }
 
     private void sail() {
-        int forward;
-        int turn;
+        int forward = 0;
+        int turn = 0;
+        boolean steered = true;
         if (this.getControllingPassenger() instanceof ServerPlayer pilot) {
             Input input = pilot.getLastClientInput();
             forward = (input.forward() ? 1 : 0) - (input.backward() ? 1 : 0);
@@ -265,10 +395,8 @@ public class VesselEntity extends Entity {
             forward = this.autoForward;
             turn = this.autoTurn;
         } else {
-            this.setState(STOPPING);
-            this.dockWait = 0;
-            this.stop();
-            return;
+            // nobody at the helm: the raft slows down and stays where it is (it only anchors when told to)
+            steered = false;
         }
         boolean motor = forward != 0 && this.burnFuel();
         if (motor != this.isMotorRunning()) {
@@ -286,7 +414,7 @@ public class VesselEntity extends Entity {
         float target = forward > 0 ? top : forward < 0 ? -top * 0.4F : 0.0F;
         float accel = top / (12.0F + weight / 16.0F) + 0.0015F;
         if (forward == 0) {
-            this.speed *= 0.97F;
+            this.speed *= steered ? 0.97F : 0.93F;
         }
         this.speed = Mth.approach(this.speed, target, accel);
         float maxTurn = Mth.clamp(3.5F * Mth.sqrt(24.0F / Math.max(24.0F, weight)), 0.6F, 3.5F);
@@ -305,13 +433,9 @@ public class VesselEntity extends Entity {
     private boolean burnFuel() {
         boolean any = false;
         for (long key : this.structure.motors()) {
-            CompoundTag tag = this.structure.blockEntities().get(key);
-            if (tag == null) {
-                continue;
-            }
-            int fuel = tag.getIntOr(RaftMotorBlockEntity.FUEL_KEY, 0);
-            if (fuel > 0) {
-                tag.putInt(RaftMotorBlockEntity.FUEL_KEY, fuel - 1);
+            RaftMotorBlockEntity motor = this.motor(key);
+            if (motor != null && motor.getFuel() > 0) {
+                motor.setFuel(motor.getFuel() - 1);
                 any = true;
             }
         }
@@ -321,8 +445,8 @@ public class VesselEntity extends Entity {
     private int fueledMotors() {
         int n = 0;
         for (long key : this.structure.motors()) {
-            CompoundTag tag = this.structure.blockEntities().get(key);
-            if (tag != null && tag.getIntOr(RaftMotorBlockEntity.FUEL_KEY, 0) > 0) {
+            RaftMotorBlockEntity motor = this.motor(key);
+            if (motor != null && motor.getFuel() > 0) {
                 n++;
             }
         }
@@ -381,12 +505,24 @@ public class VesselEntity extends Entity {
         return true;
     }
 
-    // ------------------------------------------------------------------------------------------- docking
-    private void stop() {
-        if (this.autoTicks > 0 || this.getControllingPassenger() != null) {
-            this.setState(SAILING);
+    // ------------------------------------------------------------------------------------------- anchoring
+    /**
+     * A player wants to drop anchor: the raft brakes, glides onto the block grid and becomes blocks again. Only ever
+     * started by a player (or the {@code DropAnchor} NBT command), never by itself.
+     */
+    public void requestAnchor(@Nullable Player by) {
+        if (this.isDocked() || this.getState() != SAILING) {
             return;
         }
+        this.autoTicks = 0;
+        this.anchoredBy = by != null ? by.getUUID() : null;
+        this.setState(ANCHORING);
+        if (by != null) {
+            by.sendOverlayMessage(Component.translatable("message.raft.vessel.anchoring"));
+        }
+    }
+
+    private void anchor() {
         this.speed = Mth.approach(this.speed * 0.85F, 0.0F, 0.01F);
         this.yawRate = Mth.approach(this.yawRate * 0.7F, 0.0F, 0.2F);
         if (this.isMotorRunning()) {
@@ -398,27 +534,31 @@ public class VesselEntity extends Entity {
         }
         this.speed = 0.0F;
         this.yawRate = 0.0F;
-        if (this.dockWait > 0) {
-            this.dockWait--;
-            return;
-        }
         VesselPose target = VesselAssembler.findDockPose(this);
         if (target == null) {
-            this.dockWait = 60;
-            if (!this.warnedNoRoom) {
-                this.warnedNoRoom = true;
-                this.tellAboard(Component.translatable("message.raft.vessel.no_room"));
-            }
+            this.cancelAnchor("message.raft.vessel.no_room");
             return;
         }
         this.dockTarget = target;
         this.setState(ALIGNING);
     }
 
+    private void cancelAnchor(String message) {
+        this.setState(SAILING);
+        this.dockTarget = null;
+        Player by = this.anchoredBy != null ? this.level().getPlayerByUUID(this.anchoredBy) : null;
+        if (by != null) {
+            by.sendOverlayMessage(Component.translatable(message));
+        } else {
+            this.tellAboard(Component.translatable(message));
+        }
+        this.anchoredBy = null;
+    }
+
     private void align() {
         VesselPose target = this.dockTarget;
         if (target == null) {
-            this.setState(STOPPING);
+            this.setState(SAILING);
             return;
         }
         VesselPose cur = this.currentPose();
@@ -435,9 +575,7 @@ public class VesselEntity extends Entity {
                 this.ejectPassengers();
                 this.tellAboard(Component.translatable("message.raft.vessel.anchored"));
             } else {
-                this.dockTarget = null;
-                this.dockWait = 40;
-                this.setState(STOPPING);
+                this.cancelAnchor("message.raft.vessel.no_room");
             }
             return;
         }
@@ -572,8 +710,8 @@ public class VesselEntity extends Entity {
         if (Math.abs(speed) > 0.06F && this.random.nextFloat() < Math.abs(speed) * 2.5F) {
             // spray along the bow (or the stern when going backwards)
             VesselPose pose = this.currentPose();
-            double lx = this.random.nextDouble() * this.structure.sizeX();
-            double lz = speed > 0 ? this.structure.sizeZ() + 0.2 : -0.2;
+            double lx = this.structure.minX() + this.random.nextDouble() * (this.structure.maxX() - this.structure.minX());
+            double lz = speed > 0 ? this.structure.maxZ() + 0.2 : this.structure.minZ() - 0.2;
             Vec3 p = pose.toWorld(lx, 0.9, lz);
             this.level().addParticle(ParticleTypes.SPLASH, p.x, p.y, p.z, 0.0, 0.1, 0.0);
         }
@@ -699,6 +837,9 @@ public class VesselEntity extends Entity {
         super.setLevelCallback(callback);
         if (callback != EntityInLevelCallback.NULL && !this.level().isClientSide() && this.structure != null && !this.isRemoved()) {
             VesselColliders.add(this);
+            if (this.level() instanceof ServerLevel level) {
+                this.holdPlot(level);
+            }
         }
     }
 
@@ -706,14 +847,25 @@ public class VesselEntity extends Entity {
     public void onRemoval(RemovalReason reason) {
         super.onRemoval(reason);
         VesselColliders.remove(this);
+        if (this.level() instanceof ServerLevel level && this.plot >= 0) {
+            if (this.plotHeld) {
+                this.plotHeld = false;
+                VesselShipyard.release(level, this.plot);
+            }
+            VesselShipyard yard = VesselShipyard.get(level);
+            yard.detach(this.plot, this);
+            if (reason.shouldDestroy() && this.isDocked()) {
+                yard.free(this.plot);
+            }
+        }
     }
 
     @Override
     public void remove(RemovalReason reason) {
-        if (!this.level().isClientSide() && reason == RemovalReason.KILLED && this.structure != null && !this.isDocked()) {
-            // /kill: never lose a raft – drop anchor right here, or drop everything as items
-            this.setState(DOCKED);
+        if (!this.level().isClientSide() && reason.shouldDestroy() && this.structure != null && !this.isDocked()) {
+            // killed by a command: never lose a raft – drop anchor right here, or drop everything as items
             VesselAssembler.emergencyDock(this);
+            this.setState(DOCKED);
         }
         super.remove(reason);
     }
@@ -801,13 +953,8 @@ public class VesselEntity extends Entity {
     @Override
     protected void removePassenger(Entity passenger) {
         super.removePassenger(passenger);
-        if (!this.level().isClientSide() && this.getState() == SAILING && this.getPassengers().isEmpty()) {
-            this.setState(STOPPING);
-            this.dockWait = 0;
-            this.warnedNoRoom = false;
-            if (passenger instanceof Player player) {
-                player.sendOverlayMessage(Component.translatable("message.raft.vessel.anchoring"));
-            }
+        if (!this.level().isClientSide() && this.getState() == SAILING && this.getPassengers().isEmpty() && passenger instanceof Player player) {
+            player.sendOverlayMessage(Component.translatable("message.raft.vessel.left_helm"));
         }
     }
 
@@ -820,49 +967,28 @@ public class VesselEntity extends Entity {
         return InteractionResult.PASS;
     }
 
-    /** Server: a player used a block of the raft (sent by their client with the exact block). */
-    public void useBlock(ServerPlayer player, BlockPos local, InteractionHand hand) {
-        if (this.structure == null || this.isDocked()) {
+    /**
+     * Server: a player used the helm. At the helm: drop anchor. Otherwise sneaking: drop anchor; else take the helm.
+     */
+    void useHelm(ServerPlayer player) {
+        if (this.tickCount - this.helmToggleTick < 10 || this.isDocked()) {
             return;
         }
-        BlockState state = this.structure.get(local);
-        if (state == null) {
-            return;
-        }
-        Vec3 center = this.clientPose().toWorld(local.getX() + 0.5, local.getY() + 0.5, local.getZ() + 0.5);
-        double reach = player.blockInteractionRange() + 3.0;
-        if (player.getEyePosition().distanceToSqr(center) > reach * reach) {
-            return;
-        }
-        if (local.equals(this.structure.helm())) {
-            if (this.tickCount - this.helmToggleTick < 10) {
-                return;
-            }
-            this.helmToggleTick = this.tickCount;
-            if (this.hasPassenger(player)) {
-                player.stopRiding();
-            } else if (!this.getPassengers().isEmpty()) {
+        this.helmToggleTick = this.tickCount;
+        if (this.hasPassenger(player) || player.isShiftKeyDown()) {
+            if (this.getControllingPassenger() != null && !this.hasPassenger(player)) {
                 player.sendOverlayMessage(Component.translatable("message.raft.vessel.helm_taken"));
             } else {
-                this.takeHelm(player);
+                this.requestAnchor(player);
             }
-            return;
+        } else if (!this.getPassengers().isEmpty()) {
+            player.sendOverlayMessage(Component.translatable("message.raft.vessel.helm_taken"));
+        } else {
+            this.takeHelm(player);
         }
-        ItemStack stack = player.getItemInHand(hand);
-        CompoundTag motor = this.structure.blockEntities().get(local.asLong());
-        if (state.is(VesselContent.RAFT_MOTOR) && motor != null && player.level() instanceof ServerLevel level) {
-            int fuel = motor.getIntOr(RaftMotorBlockEntity.FUEL_KEY, 0);
-            if (VesselFuel.isFuel(stack)) {
-                motor.putInt(RaftMotorBlockEntity.FUEL_KEY, VesselFuel.refuel(level, BlockPos.containing(center), player, stack, fuel));
-            } else {
-                VesselFuel.showFuel(player, fuel);
-            }
-            return;
-        }
-        player.sendOverlayMessage(Component.translatable("message.raft.vessel.anchor_first"));
     }
 
-    /** Seats the player at the helm and sails on (also stops a raft that is about to drop anchor). */
+    /** Seats the player at the helm and sails on (also stops a raft that was about to drop anchor). */
     public void takeHelm(ServerPlayer player) {
         if (this.isDocked()) {
             return;
@@ -875,7 +1001,7 @@ public class VesselEntity extends Entity {
             this.fuelWarned = false;
             this.helmToggleTick = this.tickCount;
             this.dockTarget = null;
-            this.warnedNoRoom = false;
+            this.anchoredBy = null;
             player.sendOverlayMessage(Component.translatable("message.raft.vessel.controls"));
         }
     }
@@ -961,6 +1087,7 @@ public class VesselEntity extends Entity {
         if (this.structure != null) {
             this.structure.save(output.child("Raft"));
         }
+        output.putInt("Plot", this.plot);
         output.putFloat("Speed", this.speed);
         output.putFloat("YawRate", this.yawRate);
         if (this.autoTicks > 0) {
@@ -982,7 +1109,15 @@ public class VesselEntity extends Entity {
 
     @Override
     protected void readAdditionalSaveData(ValueInput input) {
-        this.structure = input.child("Raft").map(VesselStructure::load).orElse(null);
+        VesselStructure loaded = input.child("Raft").map(VesselStructure::load).orElse(null);
+        if (loaded != null) {
+            this.structure = loaded;
+        }
+        int plot = input.getIntOr("Plot", -1);
+        if (plot != this.plot) {
+            this.plot = plot;
+            this.plotSynced = false;
+        }
         this.speed = input.getFloatOr("Speed", 0.0F);
         this.yawRate = input.getFloatOr("YawRate", 0.0F);
         ValueInput auto = input.childOrEmpty("Autopilot");
@@ -993,9 +1128,14 @@ public class VesselEntity extends Entity {
         input.childrenListOrEmpty("Stowed").forEach(child -> child.read("Entity", CompoundTag.CODEC).ifPresent(tag ->
                 this.stowed.add(new Stowed(new Vec3(child.getDoubleOr("X", 0.0), child.getDoubleOr("Y", 0.0), child.getDoubleOr("Z", 0.0)), tag,
                         Direction.from2DDataValue(child.getIntOr("Bow", 0))))));
-        // a raft loaded from disk has nobody at the helm: it drops anchor
-        this.setState(STOPPING);
-        this.dockWait = 0;
+        if (this.getState() != SAILING && this.getState() != DOCKED) {
+            this.setState(SAILING);
+        }
+        // DropAnchor:1b (map makers, tests): drop anchor as if a player asked
+        if (input.getBooleanOr("DropAnchor", false) && this.getState() == SAILING) {
+            this.setState(ANCHORING);
+            this.anchoredBy = null;
+        }
         this.entityData.set(DATA_YAW, Mth.wrapDegrees(this.getYRot()));
         if (this.structure != null) {
             this.setBoundingBox(this.makeBoundingBox(this.position()));

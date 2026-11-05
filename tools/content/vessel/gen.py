@@ -413,20 +413,22 @@ Build a raft of your own and sail it like a ship.
 # Foundations
 Look at open water and place a Raft Foundation: it settles into the sea, its top level with the waves. Set more against its sides to grow the raft block by block.
 # Build on it
-Floors, walls, a roof, chests, stations, decorations: everything that stands on the foundations sails along. Keep it inside the edge of the foundations.
+Floors, walls, a roof, chests, furnaces, crops, redstone: everything that stands on the foundations sails along, and it all keeps working at sea. Keep it inside the edge of the foundations.
 # The Helm
 Set a Helm on the raft so that it faces the bow, and use it to set sail. W and S sail, A and D steer.
-Sneak or use the wheel again to leave the helm: the raft slows down, turns to the nearest compass direction and drops anchor. Then it is blocks again, and chests keep what is in them.
+Sneak to leave the helm: the raft slows down and waits where it is. Use the helm again to steer on.
+To drop anchor, use the wheel while you steer, or sneak and use the helm. The raft turns to the nearest compass direction and becomes blocks again.
+# At sea
+Open chests and furnaces, craft, farm, flip levers, build and break: the raft's blocks work while it sails. Beds and signs wait until you drop anchor.
 # Power
 * Oar: rowing power. Set it on the deck edge, pointing out.
 * Sail: wind power. Stack sails for a taller mast; each sail counts.
 * Raft Motor: the most power. Set it on the stern edge and use furnace fuel on it, even while you sail.
 Heavy rafts need more power: they are slower and turn more slowly.
 # Good to know
-* Up to 1024 blocks and 32 blocks across.
+* Up to 1024 blocks and 32 blocks across to set sail; at sea it can grow a little.
 * A raft needs water under it. Land, ice and piers stop it.
 * Friends, animals and items on deck sail along.
-* Blocks of a sailing raft can't be broken or used: drop anchor first.
 * No room to drop anchor? Sail a little away from the shore."""
 
 LANG = {
@@ -436,7 +438,7 @@ LANG = {
     'block.raft.raft_motor': 'Raft Motor',
     'entity.raft.vessel': 'Raft',
     'tooltip.raft.helm': 'Set it on your raft facing the bow and use it to set sail.',
-    'tooltip.raft.helm.1': 'Everything on the raft foundations sails along.',
+    'tooltip.raft.helm.1': 'Everything on the raft foundations sails along and keeps working.',
     'tooltip.raft.sail': 'Wind power for a raft you built. Stack sails for a taller mast.',
     'tooltip.raft.oar': 'Rowing power for a raft you built. Set it on the deck edge.',
     'tooltip.raft.raft_motor': 'Strong power for a raft you built. Set it on the stern edge.',
@@ -447,12 +449,18 @@ LANG = {
     'message.raft.vessel.not_seaworthy': "%s can't go to sea.",
     'message.raft.vessel.not_floating': 'The raft must float on water to set sail.',
     'message.raft.vessel.not_loaded': 'Part of this raft is too far away to set sail.',
-    'message.raft.vessel.controls': 'W/S: sail · A/D: steer · Sneak: leave the helm and drop anchor',
+    'message.raft.vessel.controls': 'W/S: sail · A/D: steer · Use the wheel: drop anchor · Sneak: leave the helm',
+    'message.raft.vessel.setting_sail': 'Setting sail...',
+    'message.raft.vessel.shipyard_full': 'Too many rafts are at sea in this world.',
+    'message.raft.vessel.left_helm': 'You left the helm: the raft waits here. Sneak and use the helm to drop anchor.',
     'message.raft.vessel.anchoring': 'Dropping anchor...',
     'message.raft.vessel.anchored': 'Anchor dropped. The raft is blocks again.',
     'message.raft.vessel.no_room': 'No room to drop anchor here. Sail a little away from the shore.',
     'message.raft.vessel.helm_taken': 'Someone is already at the helm.',
     'message.raft.vessel.anchor_first': 'Drop anchor to use this.',
+    'message.raft.vessel.no_sleep': "You can't sleep on a sailing raft.",
+    'message.raft.vessel.too_far_out': "The raft can't grow that far while it sails.",
+    'message.raft.vessel.no_open_water': 'Open water would run off a sailing raft.',
     'message.raft.vessel.motor_fuel': 'Motor fuel: %s',
     'message.raft.vessel.motor_full': "The motor's tank is full.",
     'message.raft.vessel.motor_empty': 'The motor has no fuel. Use coal, charcoal, logs or planks on it.',

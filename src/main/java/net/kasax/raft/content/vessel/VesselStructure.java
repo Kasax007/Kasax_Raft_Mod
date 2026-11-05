@@ -33,29 +33,33 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
- * The blocks of a built raft in its own frame: x/z = 0..size, y = 0 at the lowest hull layer, the helm faces south
- * (+z, the bow). Holds the block states, the block entity data (server only) and what is derived from them:
- * collision boxes, the outer cells that can touch land, keel samples for the water check and the propulsion counts.
- * The pivot (the vessel entity's position) is the centre of the footprint at the bottom.
+ * The blocks of a sailing raft in its own frame, which is its shipyard plot: x/z = 0..{@link VesselShipyard#SIZE_X},
+ * y = 0 at the lowest hull layer, the helm faces south (+z, the bow). The real blocks (with their block entities) are in
+ * the plot; this is the copy the raft collides with and draws, plus what is derived from it: collision boxes, the outer
+ * cells that can touch land, keel samples for the water check and the propulsion counts. The pivot (the vessel
+ * entity's position) stays where it was when the raft set sail, whatever is built or broken later.
  */
 public final class VesselStructure {
+    /** Limits when setting sail (built on the grid). */
     public static final int MAX_BLOCKS = 1024;
     public static final int MAX_SPAN = 32;
     public static final int MAX_HEIGHT = 24;
-    /** Upper bound of the distance between a block corner and the pivot. */
-    public static final double MAX_RADIUS = Math.sqrt(2.0) * MAX_SPAN * 0.5 + 1.0;
+    /** A raft at sea may grow up to this many blocks (and to the edges of its plot). */
+    public static final int MAX_BLOCKS_AT_SEA = 2048;
     private static final AABB FULL_CELL = new AABB(0.0, 0.0, 0.0, 1.0, 1.0, 1.0);
 
-    private final int sizeX;
-    private final int sizeY;
-    private final int sizeZ;
     private final BlockPos helm;
     private final Vec3 pivot;
     private final Long2ObjectOpenHashMap<BlockState> blocks;
-    private final Long2ObjectOpenHashMap<CompoundTag> blockEntities;
 
     // derived
     private final Long2ObjectOpenHashMap<AABB[]> boxes = new Long2ObjectOpenHashMap<>();
+    private final int minX;
+    private final int minY;
+    private final int minZ;
+    private final int maxX;
+    private final int maxY;
+    private final int maxZ;
     private final long[] exterior;
     private final long[] keel;
     private final long[] motors;
@@ -63,28 +67,33 @@ public final class VesselStructure {
     private final int oars;
     private final double radius;
 
-    public VesselStructure(int sizeX, int sizeY, int sizeZ, BlockPos helm, Long2ObjectOpenHashMap<BlockState> blocks,
-                           Long2ObjectOpenHashMap<CompoundTag> blockEntities) {
-        this.sizeX = sizeX;
-        this.sizeY = sizeY;
-        this.sizeZ = sizeZ;
+    public VesselStructure(BlockPos helm, Vec3 pivot, Long2ObjectOpenHashMap<BlockState> blocks) {
         this.helm = helm.immutable();
+        this.pivot = pivot;
         this.blocks = blocks;
-        this.blockEntities = blockEntities;
-        this.pivot = new Vec3(sizeX * 0.5, 0.0, sizeZ * 0.5);
 
         LongArrayList ext = new LongArrayList();
-        LongArrayList bottom = new LongArrayList();
         LongArrayList motorList = new LongArrayList();
         int sailCount = 0;
         int oarCount = 0;
-        double r2 = 0.0;
+        int x0 = Integer.MAX_VALUE;
+        int y0 = Integer.MAX_VALUE;
+        int z0 = Integer.MAX_VALUE;
+        int x1 = Integer.MIN_VALUE;
+        int y1 = Integer.MIN_VALUE;
+        int z1 = Integer.MIN_VALUE;
         for (Long2ObjectMap.Entry<BlockState> e : this.blocks.long2ObjectEntrySet()) {
             long key = e.getLongKey();
             BlockState state = e.getValue();
             int x = BlockPos.getX(key);
             int y = BlockPos.getY(key);
             int z = BlockPos.getZ(key);
+            x0 = Math.min(x0, x);
+            y0 = Math.min(y0, y);
+            z0 = Math.min(z0, z);
+            x1 = Math.max(x1, x + 1);
+            y1 = Math.max(y1, y + 1);
+            z1 = Math.max(z1, z + 1);
             VoxelShape shape = state.getCollisionShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO, CollisionContext.empty());
             if (!shape.isEmpty()) {
                 List<AABB> list = shape.toAabbs();
@@ -98,9 +107,6 @@ public final class VesselStructure {
                     || !this.blocks.containsKey(BlockPos.asLong(x, y, z + 1)) || !this.blocks.containsKey(BlockPos.asLong(x, y, z - 1))) {
                 ext.add(key);
             }
-            if (y == 0) {
-                bottom.add(key);
-            }
             if (state.getBlock() instanceof SailBlock) {
                 sailCount++;
             } else if (state.getBlock() instanceof OarBlock) {
@@ -108,16 +114,26 @@ public final class VesselStructure {
             } else if (state.getBlock() instanceof RaftMotorBlock) {
                 motorList.add(key);
             }
-            for (int cx = x; cx <= x + 1; cx++) {
-                for (int cz = z; cz <= z + 1; cz++) {
-                    double dx = cx - this.pivot.x;
-                    double dz = cz - this.pivot.z;
-                    r2 = Math.max(r2, dx * dx + dz * dz);
-                }
+        }
+        if (this.blocks.isEmpty()) {
+            x0 = y0 = z0 = 0;
+            x1 = y1 = z1 = 1;
+        }
+        this.minX = x0;
+        this.minY = y0;
+        this.minZ = z0;
+        this.maxX = x1;
+        this.maxY = y1;
+        this.maxZ = z1;
+        this.exterior = ext.toLongArray();
+        // at most 24 evenly spread samples of the lowest layer are enough to tell water from land
+        LongArrayList bottom = new LongArrayList();
+        for (long key : this.blocks.keySet()) {
+            if (BlockPos.getY(key) == this.minY) {
+                bottom.add(key);
             }
         }
-        this.exterior = ext.toLongArray();
-        // at most 24 evenly spread keel samples are enough to tell water from land
+        bottom.sort(Long::compare);
         long[] all = bottom.toLongArray();
         int n = Math.min(all.length, 24);
         this.keel = new long[n];
@@ -127,22 +143,32 @@ public final class VesselStructure {
         this.motors = motorList.toLongArray();
         this.sails = sailCount;
         this.oars = oarCount;
+        double r2 = 0.0;
+        for (int cx : new int[]{x0, x1}) {
+            for (int cz : new int[]{z0, z1}) {
+                double dx = cx - pivot.x;
+                double dz = cz - pivot.z;
+                r2 = Math.max(r2, dx * dx + dz * dz);
+            }
+        }
         this.radius = Math.sqrt(r2);
     }
 
+    /** A copy with some blocks changed (air or null removes the block). */
+    public VesselStructure withChanges(Long2ObjectMap<BlockState> changes) {
+        Long2ObjectOpenHashMap<BlockState> copy = new Long2ObjectOpenHashMap<>(this.blocks);
+        for (Long2ObjectMap.Entry<BlockState> e : changes.long2ObjectEntrySet()) {
+            BlockState state = e.getValue();
+            if (state == null || state.isAir()) {
+                copy.remove(e.getLongKey());
+            } else {
+                copy.put(e.getLongKey(), state);
+            }
+        }
+        return new VesselStructure(this.helm, this.pivot, copy);
+    }
+
     // ------------------------------------------------------------------------------------------- access
-    public int sizeX() {
-        return this.sizeX;
-    }
-
-    public int sizeY() {
-        return this.sizeY;
-    }
-
-    public int sizeZ() {
-        return this.sizeZ;
-    }
-
     public BlockPos helm() {
         return this.helm;
     }
@@ -157,6 +183,10 @@ public final class VesselStructure {
 
     public int blockCount() {
         return this.blocks.size();
+    }
+
+    public boolean isEmpty() {
+        return this.blocks.isEmpty();
     }
 
     public int sails() {
@@ -175,6 +205,22 @@ public final class VesselStructure {
         return this.keel;
     }
 
+    public int minX() {
+        return this.minX;
+    }
+
+    public int maxX() {
+        return this.maxX;
+    }
+
+    public int minZ() {
+        return this.minZ;
+    }
+
+    public int maxZ() {
+        return this.maxZ;
+    }
+
     public @Nullable BlockState get(BlockPos pos) {
         return this.blocks.get(pos.asLong());
     }
@@ -187,18 +233,14 @@ public final class VesselStructure {
         return this.blocks;
     }
 
-    /** Block entity data (with "id") by local position; empty on clients. */
-    public Long2ObjectOpenHashMap<CompoundTag> blockEntities() {
-        return this.blockEntities;
-    }
-
-    public VesselPose pose(Vec3 pos, float yaw) {
-        return new VesselPose(pos, yaw, this.pivot);
+    /** The box around all blocks, in the raft's frame. */
+    public AABB localBounds() {
+        return new AABB(this.minX, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ);
     }
 
     /** The world box around the whole raft at a pose. */
     public AABB worldBounds(VesselPose pose) {
-        return pose.toWorld(new AABB(0.0, 0.0, 0.0, this.sizeX, this.sizeY, this.sizeZ));
+        return pose.toWorld(this.localBounds());
     }
 
     // ------------------------------------------------------------------------------------------- collision
@@ -209,12 +251,12 @@ public final class VesselStructure {
     public boolean forEachBox(VesselPose pose, AABB query, Predicate<AABB> out) {
         AABB local = pose.toLocal(query);
         // one cell more around: some shapes reach into the next cell (fences and walls are 1.5 high)
-        int x0 = Math.max(0, (int) Math.floor(local.minX) - 1);
-        int x1 = Math.min(this.sizeX - 1, (int) Math.floor(local.maxX) + 1);
-        int y0 = Math.max(0, (int) Math.floor(local.minY) - 1);
-        int y1 = Math.min(this.sizeY - 1, (int) Math.floor(local.maxY));
-        int z0 = Math.max(0, (int) Math.floor(local.minZ) - 1);
-        int z1 = Math.min(this.sizeZ - 1, (int) Math.floor(local.maxZ) + 1);
+        int x0 = Math.max(this.minX, (int) Math.floor(local.minX) - 1);
+        int x1 = Math.min(this.maxX - 1, (int) Math.floor(local.maxX) + 1);
+        int y0 = Math.max(this.minY, (int) Math.floor(local.minY) - 1);
+        int y1 = Math.min(this.maxY - 1, (int) Math.floor(local.maxY));
+        int z0 = Math.max(this.minZ, (int) Math.floor(local.minZ) - 1);
+        int z1 = Math.min(this.maxZ - 1, (int) Math.floor(local.maxZ) + 1);
         for (int x = x0; x <= x1; x++) {
             for (int y = y0; y <= y1; y++) {
                 for (int z = z0; z <= z1; z++) {
@@ -292,13 +334,20 @@ public final class VesselStructure {
         return x | y << 8 | z << 16;
     }
 
-    private static long unpack(int packed) {
+    public static long unpack(int packed) {
         return BlockPos.asLong(packed & 0xFF, packed >> 8 & 0xFF, packed >> 16 & 0xFF);
     }
 
+    public static int pack(long key) {
+        return pack(BlockPos.getX(key), BlockPos.getY(key), BlockPos.getZ(key));
+    }
+
+    /** The blocks are saved with the raft too, so that it can be stood on and drawn before its plot is loaded again. */
     public void save(ValueOutput out) {
-        out.putIntArray("Size", new int[]{this.sizeX, this.sizeY, this.sizeZ});
         out.putIntArray("Helm", new int[]{this.helm.getX(), this.helm.getY(), this.helm.getZ()});
+        out.putDouble("PivotX", this.pivot.x);
+        out.putDouble("PivotY", this.pivot.y);
+        out.putDouble("PivotZ", this.pivot.z);
         Object2IntOpenHashMap<BlockState> index = new Object2IntOpenHashMap<>();
         List<CompoundTag> palette = new ArrayList<>();
         int[] data = new int[this.blocks.size() * 2];
@@ -309,27 +358,18 @@ public final class VesselStructure {
                 palette.add(NbtUtils.writeBlockState((BlockState) s));
                 return palette.size() - 1;
             });
-            long key = e.getLongKey();
-            data[i++] = pack(BlockPos.getX(key), BlockPos.getY(key), BlockPos.getZ(key));
+            data[i++] = pack(e.getLongKey());
             data[i++] = id;
         }
         out.store("Palette", CompoundTag.CODEC.listOf(), palette);
         out.putIntArray("Blocks", data);
-        ValueOutput.ValueOutputList list = out.childrenList("BlockEntities");
-        for (Long2ObjectMap.Entry<CompoundTag> e : this.blockEntities.long2ObjectEntrySet()) {
-            long key = e.getLongKey();
-            ValueOutput child = list.addChild();
-            child.putInt("Pos", pack(BlockPos.getX(key), BlockPos.getY(key), BlockPos.getZ(key)));
-            child.store("Data", CompoundTag.CODEC, e.getValue());
-        }
     }
 
     public static @Nullable VesselStructure load(ValueInput in) {
-        int[] size = in.getIntArray("Size").orElse(null);
         int[] helm = in.getIntArray("Helm").orElse(null);
         int[] data = in.getIntArray("Blocks").orElse(null);
         List<CompoundTag> palette = in.read("Palette", CompoundTag.CODEC.listOf()).orElse(List.of());
-        if (size == null || size.length != 3 || helm == null || helm.length != 3 || data == null) {
+        if (helm == null || helm.length != 3 || data == null) {
             return null;
         }
         HolderGetter<Block> lookup = in.lookup().lookupOrThrow(Registries.BLOCK);
@@ -344,41 +384,27 @@ public final class VesselStructure {
                 blocks.put(unpack(data[i]), states[id]);
             }
         }
-        Long2ObjectOpenHashMap<CompoundTag> blockEntities = new Long2ObjectOpenHashMap<>();
-        in.childrenListOrEmpty("BlockEntities").forEach(child -> {
-            long key = unpack(child.getIntOr("Pos", 0));
-            child.read("Data", CompoundTag.CODEC).ifPresent(tag -> {
-                if (blocks.containsKey(key)) {
-                    blockEntities.put(key, tag);
-                }
-            });
-        });
-        if (blocks.isEmpty()) {
-            return null;
-        }
-        return new VesselStructure(size[0], size[1], size[2], new BlockPos(helm[0], helm[1], helm[2]), blocks, blockEntities);
+        Vec3 pivot = new Vec3(in.getDoubleOr("PivotX", 0.0), in.getDoubleOr("PivotY", 0.0), in.getDoubleOr("PivotZ", 0.0));
+        return new VesselStructure(new BlockPos(helm[0], helm[1], helm[2]), pivot, blocks);
     }
 
     // ------------------------------------------------------------------------------------------- network
     /** Blocks only (clients need no block entity data to draw and collide). */
     public static final StreamCodec<RegistryFriendlyByteBuf, VesselStructure> CLIENT_CODEC = StreamCodec.of(
             (buf, s) -> {
-                buf.writeVarInt(s.sizeX);
-                buf.writeVarInt(s.sizeY);
-                buf.writeVarInt(s.sizeZ);
                 buf.writeBlockPos(s.helm);
+                buf.writeDouble(s.pivot.x);
+                buf.writeDouble(s.pivot.y);
+                buf.writeDouble(s.pivot.z);
                 buf.writeVarInt(s.blocks.size());
                 for (Long2ObjectMap.Entry<BlockState> e : s.blocks.long2ObjectEntrySet()) {
-                    long key = e.getLongKey();
-                    buf.writeVarInt(pack(BlockPos.getX(key), BlockPos.getY(key), BlockPos.getZ(key)));
+                    buf.writeVarInt(pack(e.getLongKey()));
                     buf.writeVarInt(Block.getId(e.getValue()));
                 }
             },
             buf -> {
-                int sx = Math.min(buf.readVarInt(), 255);
-                int sy = Math.min(buf.readVarInt(), 255);
-                int sz = Math.min(buf.readVarInt(), 255);
                 BlockPos helm = buf.readBlockPos();
+                Vec3 pivot = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
                 int n = buf.readVarInt();
                 if (n < 0 || n > 65536) {
                     throw new IllegalArgumentException("Bad vessel block count " + n);
@@ -391,6 +417,6 @@ public final class VesselStructure {
                         blocks.put(key, state);
                     }
                 }
-                return new VesselStructure(sx, sy, sz, helm, blocks, new Long2ObjectOpenHashMap<>());
+                return new VesselStructure(helm, pivot, blocks);
             });
 }

@@ -28,6 +28,8 @@ import java.util.List;
 public final class VesselPicker {
     private static @Nullable VesselEntity targetVessel;
     private static @Nullable BlockPos targetLocal;
+    /** The hit in the raft's frame (point, side). */
+    private static @Nullable BlockHitResult targetHit;
 
     private VesselPicker() {
     }
@@ -40,9 +42,14 @@ public final class VesselPicker {
         return targetVessel;
     }
 
+    static @Nullable BlockHitResult targetHit() {
+        return targetHit;
+    }
+
     public static void pick(Minecraft mc, float partialTicks) {
         targetVessel = null;
         targetLocal = null;
+        targetHit = null;
         Entity camera = mc.getCameraEntity();
         LocalPlayer player = mc.player;
         if (camera == null || player == null || mc.level == null) {
@@ -79,6 +86,7 @@ public final class VesselPicker {
                 bestHit = world;
                 targetVessel = vessel;
                 targetLocal = hit.getBlockPos();
+                targetHit = hit;
             }
         }
         if (targetVessel != null && bestHit != null) {
