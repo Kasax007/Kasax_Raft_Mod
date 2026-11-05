@@ -200,6 +200,10 @@ public final class VesselClient {
             return;
         }
         miningProgress += perTick;
+        if (miningTicks % 10 == 0) {
+            net.kasax.raft.Raft.LOGGER.info("[vessel] mining {} progress {} (+{}/tick, on ground {})", local.toShortString(), miningProgress,
+                    perTick, player.onGround());
+        }
         Vec3 at = vessel.currentPose().toWorld(hit.getLocation());
         if (miningTicks++ % 4 == 0) {
             SoundType sound = state.getSoundType();

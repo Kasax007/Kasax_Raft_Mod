@@ -187,12 +187,15 @@ public final class VesselInteractions {
     // ------------------------------------------------------------------------------------------- break
     /** A player began breaking a block of the raft (their client counts the progress). */
     static void startBreak(VesselEntity vessel, ServerPlayer player, BlockPos local) {
+        net.kasax.raft.Raft.LOGGER.info("Raft block break start {} by {}", local.toShortString(), player.getName().getString());
         MINING.put(player.getUUID(), new Mining(vessel.getId(), local.asLong(), player.level().getServer().getTickCount(), false));
     }
 
     /** A player's client says the block is broken: check the time it took and break it in the plot. */
     static void finishBreak(VesselEntity vessel, ServerPlayer player, BlockPos local) {
         Mining mining = MINING.remove(player.getUUID());
+        net.kasax.raft.Raft.LOGGER.info("Raft block break finish {} by {} (started {})", local.toShortString(), player.getName().getString(),
+                mining == null ? "never" : BlockPos.of(mining.local()).toShortString() + " at " + mining.startTick());
         if (player.isCreative()) {
             breakNow(vessel, player, local);
         } else if (mining != null && mining.vessel() == vessel.getId() && mining.local() == local.asLong()) {
@@ -234,6 +237,7 @@ public final class VesselInteractions {
         }
         int took = player.level().getServer().getTickCount() - mining.startTick() + 1;
         if (perTick * took < 0.7F) {
+            net.kasax.raft.Raft.LOGGER.info("Raft block break {} waits: {} ticks of {}", local.toShortString(), took, 0.7F / perTick);
             return false;
         }
         breakNow(vessel, player, local);
