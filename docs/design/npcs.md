@@ -36,8 +36,9 @@ line for the calm sea after the Leviathan. Hitting a person only makes them prot
 ## Behaviour
 
 - Home = where the template puts them (or a spawn egg); they wander in a small radius, return when lost (teleport
-  home after 5 s in water or far away), never despawn, cannot be hurt (except by creative players and `/kill`), are
-  not pushed, leashed or targeted by monsters.
+  home after 5 s in water, far away or high above home), never despawn, cannot be hurt (except by creative players
+  and `/kill`), are not pushed, leashed, carried off by boats or portals, or targeted by monsters. Places of interest
+  up high (lanterns, chimes) are tended from the floor below.
 - Idle per person: Fenn walks between desk, radio and stove and now and then watches the sea through his spyglass;
   Tamo fishes from the pier (casts, splashes, bites, sometimes a fish); Voss walks between anvil and storage and reads
   her notes; Kai sits at the camp fire and gets up now and then; Teo, Lund, Okafor and Nalu work at the blocks of
