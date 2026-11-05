@@ -1,0 +1,42 @@
+# Run after raft_3.txt: tools/bctest/run.sh tools/content/vessel/tests/raft_4.txt <outdir>
+# Raft arrival on login: reopen the world kept by t6 (the raft drifts in circles, the player stood on its deck when
+# the world was saved). The player must be on the deck after loading; then the raft is stopped and anchored at the helm.
+open arrivalsave
+rd 5
+gui 2
+wait 20
+settle 120
+swait 40
+log LOGGED_IN
+count raft:raftdim
+where
+cmd data get entity @e[type=raft:vessel,limit=1] Pos
+cmd data get entity @e[type=raft:vessel,limit=1] Rotation
+cmd data get entity @p Pos
+third on
+wait 5 render
+shot 70_after_login
+third off
+swait 40
+where
+cmd data get entity @e[type=raft:vessel,limit=1] Pos
+cmd data get entity @e[type=raft:vessel,limit=1] Rotation
+log ANCHOR_AT_HELM
+cmd data merge entity @e[type=raft:vessel,limit=1] {Autopilot:{Ticks:0}}
+swait 200
+cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-3 run tp @p ~ ~ ~
+swait 3
+where
+cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-3 run tp @p ^1.6 ^-0.4 ^
+swait 10
+face {px} {py+0.3} {pz}
+swait 5
+sneakuse
+swaitfor 600 execute in raft:raftdim unless entity @e[type=raft:vessel]
+count raft:raftdim
+find raft:helm 48
+find minecraft:chest 48
+cmd execute in raft:raftdim positioned {fx} {fy} {fz} run data get block ~ ~ ~ Items
+wait 10 render
+shot 71_anchored
+log DONE
