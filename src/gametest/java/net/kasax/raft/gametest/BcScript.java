@@ -336,7 +336,12 @@ public class BcScript implements FabricClientGameTest {
                 float[] r = aim(pl.getX(), pl.getEyeY(), pl.getZ(), e.position().add(0, e.getBbHeight() * 0.5, 0));
                 setPose(pl, pl.getX(), pl.getY(), pl.getZ(), r[0], r[1], false);
             });
-            case "chat" -> ctx.runOnClient(mc -> mc.options.chatVisibility().set(arg.equals("on") ? ChatVisiblity.FULL : ChatVisiblity.HIDDEN));
+            case "chat" -> ctx.runOnClient(mc -> {
+                mc.options.chatVisibility().set(arg.equals("on") ? ChatVisiblity.FULL : ChatVisiblity.HIDDEN);
+                // tell the server too: it does not send system messages (command feedback, mod messages) to a player
+                // whose chat it believes hidden
+                mc.options.broadcastOptions();
+            });
             case "arrow" -> ctx.getInput().pressKey(switch (arg) {
                 case "left" -> InputConstants.KEY_LEFT;
                 case "up" -> InputConstants.KEY_UP;
