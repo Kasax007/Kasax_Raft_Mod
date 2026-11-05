@@ -1,8 +1,11 @@
 package net.kasax.raft.content.vessel.mixin;
 
 import net.kasax.raft.content.vessel.VesselColliders;
+import net.kasax.raft.content.vessel.VesselEntity;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.PositionMoveRotation;
+import net.minecraft.world.entity.Relative;
 import net.minecraft.server.level.ServerPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -10,6 +13,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Set;
 
 /**
  * A player standing on a sailing raft has no world blocks under their feet (the raft is an entity), so the server
@@ -25,6 +30,15 @@ public abstract class ServerGamePacketListenerImplMixin {
         if (VesselColliders.isAboard(entity)) {
             cir.setReturnValue(false);
         }
+    }
+
+    /**
+     * A player put onto a raft's deck by the server (teleport, login, dimension change, respawn) is told where on the
+     * raft, so that their client does not let them fall through it before its copy of the raft is there.
+     */
+    @Inject(method = "teleport(Lnet/minecraft/world/entity/PositionMoveRotation;Ljava/util/Set;)V", at = @At("TAIL"))
+    private void raft$arrivedOnRaft(PositionMoveRotation destination, Set<Relative> relatives, CallbackInfo ci) {
+        VesselEntity.playerArrived(this.player, null);
     }
 
     /** Nor are the (empty) world blocks under a player on a raft re-sent to their client every 10 seconds. */

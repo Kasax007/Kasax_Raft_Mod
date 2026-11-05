@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.kasax.raft.content.vessel.block.RaftMotorBlockEntity;
+import net.kasax.raft.content.vessel.net.VesselArrivalPayload;
 import net.kasax.raft.content.vessel.net.VesselBlocksPayload;
 import net.kasax.raft.content.vessel.net.VesselDataPayload;
 import net.minecraft.core.BlockPos;
@@ -621,7 +622,10 @@ public class VesselEntity extends Entity {
         double sin = Math.sin(rad);
         for (Entity e : riders) {
             AABB box = e.getBoundingBox();
-            if (!this.structure.isOver(from, box, CARRY_HEIGHT)) {
+            // a client also takes its own player out of the deck when it sank into it (e.g. right after a teleport)
+            double sink = client && e instanceof Player ? 0.6 : 0.4;
+            if (!this.structure.isOver(from, box, CARRY_HEIGHT) && !(client && e instanceof Player
+                    && !Double.isNaN(this.structure.sunkTop(from, box, sink)))) {
                 continue;
             }
             if (moving) {
@@ -648,7 +652,7 @@ public class VesselEntity extends Entity {
                 }
             }
             // never let anything sink into the deck (e.g. in the tick the raft was built under it)
-            double top = this.structure.sunkTop(to, e.getBoundingBox(), 0.4);
+            double top = this.structure.sunkTop(to, e.getBoundingBox(), sink);
             if (!Double.isNaN(top) && this.level().noBlockCollision(e, e.getBoundingBox().move(0.0, top - e.getY(), 0.0))) {
                 double lift = top - e.getY();
                 e.setPos(e.getX(), top, e.getZ());
@@ -827,6 +831,37 @@ public class VesselEntity extends Entity {
         super.startSeenByPlayer(player);
         if (this.structure != null) {
             ServerPlayNetworking.send(player, new VesselDataPayload(this.getId(), this.structure));
+            playerArrived(player, this);
+        }
+    }
+
+    /**
+     * Server: a player has just been put somewhere (teleport, login, dimension change; see
+     * ServerGamePacketListenerImplMixin), or a raft has just come into a player's view ({@code only}). If the player
+     * stands on a raft's deck there, their client is told where on the raft ({@link VesselArrivalPayload}): its copy
+     * of the raft may not be there yet (it comes with the raft entity, a moment later) or lags a few ticks behind, and
+     * the player would fall through the deck in between.
+     */
+    public static void playerArrived(ServerPlayer player, @Nullable VesselEntity only) {
+        if (player.isPassenger() || player.isSpectator()) {
+            return;
+        }
+        AABB box = player.getBoundingBox();
+        for (VesselEntity vessel : only != null ? List.of(only) : VesselColliders.in(player.level())) {
+            VesselStructure structure = vessel.structure();
+            if (structure == null || vessel.isDocked() || vessel.isRemoved() || vessel.level() != player.level()
+                    || !vessel.getBoundingBox().inflate(0.5, CARRY_HEIGHT + 1.0, 0.5).intersects(box)) {
+                continue;
+            }
+            VesselPose pose = vessel.currentPose();
+            // on the deck, or a little in it (then on top of it)
+            double top = structure.sunkTop(pose, box, 0.6);
+            if (Double.isNaN(top) && !structure.isOver(pose, box, CARRY_HEIGHT)) {
+                continue;
+            }
+            Vec3 feet = Double.isNaN(top) ? player.position() : new Vec3(player.getX(), top, player.getZ());
+            ServerPlayNetworking.send(player, new VesselArrivalPayload(vessel.getId(), pose.toLocal(feet)));
+            return;
         }
     }
 

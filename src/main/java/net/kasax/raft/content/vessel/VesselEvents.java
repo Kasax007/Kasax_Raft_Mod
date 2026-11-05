@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.kasax.raft.content.vessel.net.VesselArrivalPayload;
 import net.kasax.raft.content.vessel.net.VesselBlocksPayload;
 import net.kasax.raft.content.vessel.net.VesselBreakPayload;
 import net.kasax.raft.content.vessel.net.VesselDataPayload;
@@ -35,6 +36,7 @@ public final class VesselEvents {
         PayloadTypeRegistry.clientboundPlay().register(VesselDataPayload.TYPE, VesselDataPayload.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(VesselBlocksPayload.TYPE, VesselBlocksPayload.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(VesselUseResultPayload.TYPE, VesselUseResultPayload.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(VesselArrivalPayload.TYPE, VesselArrivalPayload.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(VesselUsePayload.TYPE, VesselUsePayload.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(VesselBreakPayload.TYPE, VesselBreakPayload.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(VesselUsePayload.TYPE, (payload, context) -> {
