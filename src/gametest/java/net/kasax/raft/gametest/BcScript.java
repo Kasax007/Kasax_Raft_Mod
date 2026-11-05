@@ -601,7 +601,9 @@ public class BcScript implements FabricClientGameTest {
                 double[] v = nums(arg);
                 vars.put("hy", (double) need().getServer().computeOnServer(server -> {
                     var pl = server.getPlayerList().getPlayers().getFirst();
-                    return ((ServerLevel) pl.level()).getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.OCEAN_FLOOR,
+                    ServerLevel lv = (ServerLevel) pl.level();
+                    lv.getChunk((int) Math.floor(v[0]) >> 4, (int) Math.floor(v[1]) >> 4);   // generate it first (else: min height)
+                    return lv.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.OCEAN_FLOOR,
                             (int) Math.floor(v[0]), (int) Math.floor(v[1]));
                 }));
                 LOG.info("[bctest] HEIGHT {} -> {}", arg, vars.get("hy"));
