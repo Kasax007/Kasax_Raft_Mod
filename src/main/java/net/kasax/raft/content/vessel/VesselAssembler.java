@@ -152,8 +152,12 @@ public final class VesselAssembler {
         }
     }
 
-    /** Server stopped: forget waiting launches (their plots are free again next time, nothing was moved yet). */
-    static void clearLaunches() {
+    /** Server stopping: give up waiting launches and free their plots (nothing was moved yet). */
+    static void abortLaunches() {
+        for (Launch launch : LAUNCHES) {
+            VesselShipyard.release(launch.level(), launch.plot());
+            VesselShipyard.get(launch.level()).free(launch.plot());
+        }
         LAUNCHES.clear();
     }
 

@@ -103,6 +103,27 @@ public final class VesselColliders {
         return out == null || out.isEmpty() ? null : out;
     }
 
+    /** Is the entity in a climbable block (ladder, vines, scaffolding) of a raft, as it sees the raft? */
+    public static boolean onClimbable(Entity entity) {
+        List<VesselEntity> list = side(entity.level().isClientSide());
+        if (list.isEmpty() || entity.isPassenger()) {
+            return false;
+        }
+        AABB box = entity.getBoundingBox();
+        for (VesselEntity vessel : list) {
+            VesselStructure structure = vessel.structure();
+            if (structure == null || vessel.level() != entity.level() || vessel.isRemoved() || !vessel.getBoundingBox().intersects(box)) {
+                continue;
+            }
+            net.minecraft.world.phys.Vec3 local = vessel.currentPose().toLocal(entity.position());
+            net.minecraft.world.level.block.state.BlockState state = structure.get(net.minecraft.core.BlockPos.containing(local));
+            if (state != null && state.is(net.minecraft.tags.BlockTags.CLIMBABLE)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /** True if the box is on or just above a raft (lenient: the server's raft runs a little ahead of the client's). */
     public static boolean isAboard(Entity entity) {
         List<VesselEntity> list = side(entity.level().isClientSide());

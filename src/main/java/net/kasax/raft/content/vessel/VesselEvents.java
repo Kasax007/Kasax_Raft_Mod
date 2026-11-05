@@ -59,12 +59,13 @@ public final class VesselEvents {
             });
         });
         UseItemCallback.EVENT.register(VesselEvents::placeFoundationOnWater);
-        ServerTickEvents.END_SERVER_TICK.register(server -> VesselAssembler.tickLaunches());
-        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> VesselInteractions.forget(handler.player));
-        ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
-            VesselColliders.clear(false);
-            VesselAssembler.clearLaunches();
+        ServerTickEvents.END_SERVER_TICK.register(server -> {
+            VesselAssembler.tickLaunches();
+            VesselInteractions.tick(server);
         });
+        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> VesselInteractions.forget(handler.player));
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> VesselAssembler.abortLaunches());
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> VesselColliders.clear(false));
     }
 
     /**

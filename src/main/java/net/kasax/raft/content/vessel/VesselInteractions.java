@@ -36,8 +36,11 @@ import java.util.UUID;
  * reach checks of menus map plot positions to the raft (PlayerReachMixin), drops and sounds appear at the raft.
  */
 public final class VesselInteractions {
-    /** The block a player is breaking on a raft, and the server tick they began. */
-    private record Mining(int vessel, long local, int startTick) {
+    /**
+     * The block a player is breaking on a raft, the server tick they began and whether their client says it is broken
+     * (if that comes earlier than the server can follow, e.g. while the server lags, it is broken a little later).
+     */
+    private record Mining(int vessel, long local, int startTick, boolean done) {
     }
 
     private static final Map<UUID, Mining> MINING = new HashMap<>();
@@ -180,12 +183,60 @@ public final class VesselInteractions {
     // ------------------------------------------------------------------------------------------- break
     /** A player began breaking a block of the raft (their client counts the progress). */
     static void startBreak(VesselEntity vessel, ServerPlayer player, BlockPos local) {
-        MINING.put(player.getUUID(), new Mining(vessel.getId(), local.asLong(), player.level().getServer().getTickCount()));
+        MINING.put(player.getUUID(), new Mining(vessel.getId(), local.asLong(), player.level().getServer().getTickCount(), false));
     }
 
     /** A player's client says the block is broken: check the time it took and break it in the plot. */
     static void finishBreak(VesselEntity vessel, ServerPlayer player, BlockPos local) {
         Mining mining = MINING.remove(player.getUUID());
+        if (player.isCreative()) {
+            breakNow(vessel, player, local);
+        } else if (mining != null && mining.vessel() == vessel.getId() && mining.local() == local.asLong()) {
+            if (!tryBreak(vessel, player, mining)) {
+                MINING.put(player.getUUID(), new Mining(mining.vessel(), mining.local(), mining.startTick(), true));
+            }
+        }
+    }
+
+    /** Server tick: breaks that came early are done once enough time has passed (or dropped after a while). */
+    static void tick(net.minecraft.server.MinecraftServer server) {
+        if (MINING.isEmpty()) {
+            return;
+        }
+        MINING.entrySet().removeIf(e -> {
+            Mining mining = e.getValue();
+            if (!mining.done()) {
+                return false;
+            }
+            ServerPlayer player = server.getPlayerList().getPlayer(e.getKey());
+            if (player == null || !(player.level().getEntity(mining.vessel()) instanceof VesselEntity vessel)) {
+                return true;
+            }
+            return tryBreak(vessel, player, mining) || server.getTickCount() - mining.startTick() > 1200;
+        });
+    }
+
+    /** Breaks the block if the time since the player began is enough for it (70 %, as vanilla); true when done with it. */
+    private static boolean tryBreak(VesselEntity vessel, ServerPlayer player, Mining mining) {
+        BlockPos local = BlockPos.of(mining.local());
+        BlockPos at = vessel.level() instanceof ServerLevel level ? plotPos(vessel, level, local) : null;
+        if (at == null) {
+            return true;
+        }
+        BlockState state = vessel.level().getBlockState(at);
+        float perTick = state.getDestroyProgress(player, vessel.level(), at);
+        if (state.isAir() || perTick <= 0.0F) {
+            return true;
+        }
+        int took = player.level().getServer().getTickCount() - mining.startTick() + 1;
+        if (perTick * took < 0.7F) {
+            return false;
+        }
+        breakNow(vessel, player, local);
+        return true;
+    }
+
+    private static void breakNow(VesselEntity vessel, ServerPlayer player, BlockPos local) {
         VesselStructure structure = vessel.structure();
         if (structure == null || vessel.isDocked() || structure.get(local) == null || !inReach(vessel, player, local)
                 || !(player.level() instanceof ServerLevel level)) {
@@ -196,23 +247,8 @@ public final class VesselInteractions {
             return;
         }
         BlockPos at = plotPos(vessel, level, local);
-        if (at == null) {
+        if (at == null || level.getBlockState(at).isAir()) {
             return;
-        }
-        BlockState state = level.getBlockState(at);
-        if (state.isAir()) {
-            return;
-        }
-        if (!player.isCreative()) {
-            float perTick = state.getDestroyProgress(player, level, at);
-            if (perTick <= 0.0F || mining == null || mining.vessel() != vessel.getId() || mining.local() != local.asLong()) {
-                return;
-            }
-            int needed = perTick >= 1.0F ? 0 : Mth.ceil(1.0F / perTick);
-            int took = level.getServer().getTickCount() - mining.startTick();
-            if (took < needed * 0.7F - 1.0F) {
-                return;
-            }
         }
         facingOnRaft(vessel, player, () -> player.gameMode.destroyBlock(at));
     }
