@@ -100,7 +100,14 @@ final class NpcActivityGoal extends Goal {
             return false;
         }
         BlockPos place = places.get(this.npc.getRandom().nextInt(places.size()));
-        return this.walkTo(place, Phase.WORK, 1);
+        // a lantern or chime up high: stand on the floor below it and look up, never climb up to it
+        BlockPos home = this.npc.getHomePosition();
+        BlockPos stand = place.getY() > home.getY() + 1 ? new BlockPos(place.getX(), home.getY(), place.getZ()) : place;
+        if (!this.walkTo(stand, Phase.WORK, 1)) {
+            return false;
+        }
+        this.target = place;
+        return true;
     }
 
     private boolean planGaze() {
@@ -261,7 +268,9 @@ final class NpcActivityGoal extends Goal {
         double reach = this.after == Phase.WORK ? 2.6 : 1.1;
         double d = this.npc.position().distanceToSqr(Vec3.atBottomCenterOf(this.target));
         if (this.after == Phase.WORK) {
-            d = this.npc.getEyePosition().distanceToSqr(Vec3.atCenterOf(this.target));
+            Vec3 c = Vec3.atCenterOf(this.target);
+            double dx = c.x - this.npc.getX(), dz = c.z - this.npc.getZ();
+            d = dx * dx + dz * dz;               // horizontal: places up high are worked on from the floor
         }
         if (d < reach * reach) {
             this.begin(this.after);
