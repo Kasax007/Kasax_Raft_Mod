@@ -2,15 +2,15 @@
   "feature": "raft:bird_of_paradise",
   "placement": [
     {
-      "type": "minecraft:rarity_filter",
-      "chance": 2
+      "type": "minecraft:count",
+      "count": 1
     },
     {
       "type": "minecraft:in_square"
     },
     {
       "type": "minecraft:count",
-      "count": 6
+      "count": 8
     },
     {
       "type": "minecraft:offset",

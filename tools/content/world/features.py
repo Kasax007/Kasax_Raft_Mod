@@ -209,10 +209,10 @@ def island_plants():
     f = feature('hibiscus', simple(st('hibiscus')))
     flower_patch('patch_hibiscus', f, 10, 4, ('count', 1))
     f = feature('bird_of_paradise', simple(st('bird_of_paradise', half='lower')))
-    flower_patch('patch_bird_of_paradise', f, 6, 3, 2)
+    flower_patch('patch_bird_of_paradise', f, 8, 3, ('count', 1))
     f = feature('heliconia', simple(st('heliconia', half='lower')))
     flower_patch('patch_heliconia', f, 6, 3, 2)
-    for name, rar in (('plumeria', 2), ('tropical_orchid', 2), ('spider_lily', 2), ('aloe_vera', 3)):
+    for name, rar in (('plumeria', ('count', 1)), ('tropical_orchid', 2), ('spider_lily', 2), ('aloe_vera', 3)):
         flower_patch(f'patch_{name}', feature(name, simple(st(name))), 8, 3, rar)
     flower_patch('patch_beach_morning_glory', feature('beach_morning_glory', simple(st('beach_morning_glory'))), 10, 4, 2,
                  below=blocks('minecraft:sand', 'raft:shell_sand', offset=(0, -1, 0)))
