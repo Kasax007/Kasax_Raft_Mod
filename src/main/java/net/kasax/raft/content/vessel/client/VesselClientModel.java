@@ -36,6 +36,8 @@ final class VesselClientModel {
     final int[] z;
     final BlockModelRenderState[] models;
     final BlockState[] states;
+    /** Block light from the raft's own lanterns, lamps and torches (the world has no light where the raft is). */
+    final int[] ownLight;
     final int[] light;
     private long lightTick = Long.MIN_VALUE;
 
@@ -54,6 +56,7 @@ final class VesselClientModel {
         }
         this.models = models.toArray(new BlockModelRenderState[0]);
         this.states = states.toArray(new BlockState[0]);
+        this.ownLight = ownLight(structure, this.x, this.y, this.z);
         this.light = new int[n];
     }
 
@@ -89,6 +92,30 @@ final class VesselClientModel {
         return new VesselClientModel(structure, currentModelSet(), positions, models, states);
     }
 
+    /** Light of the raft's own light sources at each drawn block: falls off by one per block (Manhattan distance). */
+    private static int[] ownLight(VesselStructure structure, int[] x, int[] y, int[] z) {
+        int[] light = new int[x.length];
+        List<int[]> sources = new ArrayList<>();
+        for (Long2ObjectMap.Entry<BlockState> e : structure.blocks().long2ObjectEntrySet()) {
+            int emission = e.getValue().getLightEmission();
+            if (emission > 0) {
+                long key = e.getLongKey();
+                sources.add(new int[]{BlockPos.getX(key), BlockPos.getY(key), BlockPos.getZ(key), emission});
+            }
+        }
+        if (sources.isEmpty()) {
+            return light;
+        }
+        for (int i = 0; i < x.length; i++) {
+            int best = 0;
+            for (int[] s : sources) {
+                best = Math.max(best, s[3] - Math.abs(s[0] - x[i]) - Math.abs(s[1] - y[i]) - Math.abs(s[2] - z[i]));
+            }
+            light[i] = best;
+        }
+        return light;
+    }
+
     private static boolean enclosed(VesselStructure structure, int x, int y, int z) {
         for (Direction d : Direction.values()) {
             BlockState n = structure.get(BlockPos.asLong(x + d.getStepX(), y + d.getStepY(), z + d.getStepZ()));
@@ -100,9 +127,8 @@ final class VesselClientModel {
     }
 
     /**
-     * The world light at every block (block and sky light at its centre), refreshed once per game tick. Blocks that give
-     * light (lanterns, lit lamps, a burning furnace) are at least as bright as their own light: the world has no light
-     * source where the raft is.
+     * The world light at every block (block and sky light at its centre), refreshed once per game tick, and at least
+     * the light of the raft's own lanterns, lamps and torches.
      */
     void updateLight(Level level, VesselPose pose, long gameTime) {
         if (gameTime == this.lightTick) {
@@ -113,7 +139,7 @@ final class VesselClientModel {
         for (int i = 0; i < this.models.length; i++) {
             Vec3 c = pose.toWorld(this.x[i] + 0.5, this.y[i] + 0.5, this.z[i] + 0.5);
             cursor.set(c.x, c.y, c.z);
-            int block = Math.max(level.getBrightness(LightLayer.BLOCK, cursor), this.states[i].getLightEmission());
+            int block = Math.max(level.getBrightness(LightLayer.BLOCK, cursor), this.ownLight[i]);
             this.light[i] = LightCoordsUtil.pack(block, level.getBrightness(LightLayer.SKY, cursor));
         }
     }
