@@ -69,6 +69,8 @@ import java.util.function.Function;
  * pcmd &lt;command&gt;         run a command as the player, at the player's position
  * wait &lt;ticks&gt; [render]  wait game ticks (the client does not draw them unless "render" is given)
  * swait &lt;ticks&gt;           wait until the server has run that many ticks (a busy server falls behind the client)
+ * swaitfor &lt;ticks&gt; &lt;command&gt;  wait (server ticks, at most that many) until a server command succeeds, e.g.
+ *                         "execute if entity @e[type=raft:vessel]"; logs how long it took (or that it timed out)
  * settle [seconds]        wait until the client has loaded the level and all chunk sections around the camera are
  *                         drawn (default max 40 s)
  * shot &lt;name&gt;            screenshot to OUT/&lt;name&gt;.png (.jpg while jpg is on)
@@ -276,6 +278,26 @@ public class BcScript implements FabricClientGameTest {
                 skipFrames = true;
                 try {
                     need().getServer().waitFor(server -> server.getTickCount() >= target, Math.max(600, n * 30));
+                } finally {
+                    skipFrames = false;
+                }
+            }
+            case "swaitfor" -> {
+                // swaitfor <ticks> <command>: wait until the command succeeds (result > 0), at most that many server ticks
+                String[] a = arg.split("\\s+", 2);
+                int max = Integer.parseInt(a[0]);
+                skipFrames = true;
+                try {
+                    int took = need().getServer().waitFor(server -> {
+                        try {
+                            return server.getCommands().getDispatcher().execute(a[1], server.createCommandSourceStack().withSuppressedOutput()) > 0;
+                        } catch (Exception e) {
+                            return false;
+                        }
+                    }, max);
+                    LOG.info("[bctest] SWAITFOR {} ticks: {}", took, a[1]);
+                } catch (AssertionError e) {
+                    LOG.warn("[bctest] SWAITFOR timed out after {} ticks: {}", max, a[1]);
                 } finally {
                     skipFrames = false;
                 }
