@@ -11,9 +11,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.FenceBlock;
 import net.minecraft.world.level.block.FenceGateBlock;
 import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.SlabType;
+import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.pathfinder.PathFinder;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.pathfinder.PathfindingContext;
@@ -57,8 +59,9 @@ final class NpcPaths {
     }
 
     /**
-     * A cell a person can stand in to work: a floor with a sturdy top below (no railing, chair or table top), nothing
-     * solid at the feet (a rug, a closed trapdoor or a bottom slab is fine) or at the head, and no water.
+     * A cell a person can stand in to work: nothing solid at the feet (a rug or a closed trapdoor is fine, a chair is
+     * not) or at the head, no water, and a real floor below: a full block, a top slab or upside-down stairs (no table
+     * top, chair or railing).
      */
     static boolean standable(BlockGetter level, BlockPos pos) {
         BlockState feet = level.getBlockState(pos);
@@ -71,14 +74,22 @@ final class NpcPaths {
         }
         VoxelShape f = feet.getCollisionShape(level, pos);
         if (!f.isEmpty() && f.max(Direction.Axis.Y) > 0.2) {
-            // a floor of bottom slabs: standing on the slab itself
-            return feet.getBlock() instanceof SlabBlock && feet.getValue(SlabBlock.TYPE) == SlabType.BOTTOM;
+            return false;
         }
-        BlockState floor = level.getBlockState(pos.below());
-        return !fenceLike(floor) && floor.isFaceSturdy(level, pos.below(), Direction.UP);
+        BlockPos below = pos.below();
+        BlockState floor = level.getBlockState(below);
+        if (floor.isCollisionShapeFullBlock(level, below)) {
+            return true;
+        }
+        return (floor.getBlock() instanceof SlabBlock || floor.getBlock() instanceof StairBlock)
+                && floor.isFaceSturdy(level, below, Direction.UP);
     }
 
-    /** The walk node evaluator of the people of the sea: the cell above a fence, railing or wall is blocked. */
+    /**
+     * The walk node evaluator of the people of the sea: the cell above a fence, railing or wall is blocked, and so are
+     * closed trapdoors that vanilla paths treat as open (a mob walking into them gets stuck): one in the upper half of
+     * the feet cell or the lower half of the head cell, and a bench of trapdoors on the floor to step onto.
+     */
     static final class Evaluator extends WalkNodeEvaluator {
         @Override
         public PathType getPathType(PathfindingContext context, int x, int y, int z) {
@@ -88,6 +99,30 @@ final class NpcPaths {
                 return PathType.BLOCKED;
             }
             return type;
+        }
+
+        @Override
+        public PathType getPathTypeOfMob(PathfindingContext context, int x, int y, int z, Mob mob) {
+            PathType type = super.getPathTypeOfMob(context, x, y, z, mob);
+            if (mob.getPathfindingMalus(type) >= 0.0F && trapdoorInTheWay(context, x, y, z)) {
+                return PathType.BLOCKED;
+            }
+            return type;
+        }
+
+        private static boolean trapdoorInTheWay(PathfindingContext context, int x, int y, int z) {
+            if (closedTrapdoor(context.getBlockState(new BlockPos(x, y, z)), Half.TOP)
+                    || closedTrapdoor(context.getBlockState(new BlockPos(x, y + 1, z)), Half.BOTTOM)) {
+                return true;
+            }
+            BlockPos floor = new BlockPos(x, y - 2, z);
+            return closedTrapdoor(context.getBlockState(new BlockPos(x, y - 1, z)), Half.TOP)
+                    && !context.getBlockState(floor).getCollisionShape(context.level(), floor).isEmpty();
+        }
+
+        private static boolean closedTrapdoor(BlockState state, Half half) {
+            return state.getBlock() instanceof TrapDoorBlock && !state.getValue(TrapDoorBlock.OPEN)
+                    && state.getValue(TrapDoorBlock.HALF) == half;
         }
     }
 }

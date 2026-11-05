@@ -111,13 +111,14 @@ final class NpcActivityGoal extends Goal {
     }
 
     /**
-     * The floor cell to work a place from: right below a lantern or chime up high (never climb up to it), else next to
-     * the place (a chair, a table, a shelf: work it, do not stand on it); the nearest ring around it first, then the
-     * cell nearest to the NPC. Null when no floor cell is close.
+     * The floor cell to work a place from, on the floor of home (or on the place's own floor when that is lower): right
+     * below a lantern or chime up high, else next to the place (a chair, a table, a counter: work it, never climb onto
+     * it); the nearest ring around it first, then a cell near home, picked with a little chance so that a person at a
+     * compact work place still moves between its sides. Null when no floor cell is close.
      */
     private @Nullable BlockPos standFor(BlockPos place) {
         BlockPos home = this.npc.getHomePosition();
-        int y0 = place.getY() > home.getY() + 1 ? home.getY() : place.getY();
+        int y0 = Math.min(place.getY(), home.getY());
         ServerLevel level = this.level();
         BlockPos best = null;
         double bestScore = Double.MAX_VALUE;
@@ -129,7 +130,7 @@ final class NpcActivityGoal extends Goal {
                     if (!NpcPaths.standable(level, c)) {
                         continue;
                     }
-                    double score = ring * 1000.0 + c.distToCenterSqr(this.npc.position());
+                    double score = ring * 1000.0 + Math.sqrt(c.distSqr(home)) + this.npc.getRandom().nextDouble() * 2.0;
                     if (score < bestScore) {
                         bestScore = score;
                         best = c;
@@ -141,7 +142,7 @@ final class NpcActivityGoal extends Goal {
         return best;
     }
 
-    private static final int[] STAND_DY = {0, -1, 1};
+    private static final int[] STAND_DY = {0, -1};
 
     private boolean planGaze() {
         Vec3 eye = this.npc.getEyePosition();
