@@ -138,6 +138,24 @@ public final class VesselClient {
     }
 
     // ------------------------------------------------------------------------------------------- breaking
+    /**
+     * Vanilla attacks the raft entity on a click (see MultiPlayerGameModeAttackMixin): in creative mode that breaks the
+     * block under the crosshair at once, even for a click shorter than a tick (holding the key goes on in tickMining).
+     */
+    public static void attackedRaft(Entity entity) {
+        Minecraft mc = Minecraft.getInstance();
+        LocalPlayer player = mc.player;
+        BlockHitResult hit = VesselPicker.targetHit();
+        if (!(entity instanceof VesselEntity vessel) || player == null || !player.isCreative() || miningCooldown > 0 || hit == null
+                || VesselPicker.targetOf(vessel) == null) {
+            return;
+        }
+        ClientPlayNetworking.send(new VesselBreakPayload(vessel.getId(), hit.getBlockPos(), false));
+        ClientPlayNetworking.send(new VesselBreakPayload(vessel.getId(), hit.getBlockPos(), true));
+        miningCooldown = 5;
+        stopMining();
+    }
+
     private static void stopMining() {
         miningVessel = -1;
         miningLocal = null;
