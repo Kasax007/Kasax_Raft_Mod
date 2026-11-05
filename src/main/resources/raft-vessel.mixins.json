@@ -13,6 +13,7 @@
   ],
   "client": [
     "client.ClientLevelTickMixin",
+    "client.ClientPacketListenerTeleportMixin",
     "client.LocalPlayerTickMixin",
     "client.MinecraftPickMixin",
     "client.MultiPlayerGameModeAttackMixin"

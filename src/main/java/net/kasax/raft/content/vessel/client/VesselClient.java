@@ -148,6 +148,14 @@ public final class VesselClient {
         }
     }
 
+    /**
+     * The server moved the own player (ClientPacketListenerTeleportMixin): a wait from an earlier move ends. A move
+     * onto a raft is followed by its VesselArrivalPayload, which starts the wait again.
+     */
+    public static void movedByServer() {
+        arrival = null;
+    }
+
     /** The use key on a raft block: the server uses the block (or the held item on it) as if it were in the world. */
     private static InteractionResult use(VesselEntity vessel, InteractionHand hand) {
         BlockHitResult hit = VesselPicker.targetHit();
