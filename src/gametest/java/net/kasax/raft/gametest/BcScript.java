@@ -1010,6 +1010,11 @@ public class BcScript implements FabricClientGameTest {
         var holder = reg.get(ResourceKey.create(Registries.STRUCTURE, Identifier.parse(id))).orElse(null);
         if (holder == null) return "unknown structure";
         var found = level.getChunkSource().getGenerator().findNearestMapStructure(level, HolderSet.direct(holder), from != null ? from : pl.blockPosition(), 100, false);
+        if (found == null && level != pl.level()) {
+            // not a structure of the raft dimension (e.g. the driftwood stumps): look in the player's dimension
+            level = (ServerLevel) pl.level();
+            found = level.getChunkSource().getGenerator().findNearestMapStructure(level, HolderSet.direct(holder), from != null ? from : pl.blockPosition(), 100, false);
+        }
         if (found == null) return "none nearby";
         BlockPos bp = found.getFirst();
         StructureStart st = level.getChunk(bp.getX() >> 4, bp.getZ() >> 4, ChunkStatus.STRUCTURE_STARTS).getStartForStructure(holder.value());
