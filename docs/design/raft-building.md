@@ -136,3 +136,7 @@ position without a helmsman, carries a player standing at a corner through a tur
 11.5,0,12.5` prints the player's position in the raft frame), checks that the wheat grew and the furnace smelted in
 the plot and keeps the world. `raft_2.txt` reopens it with the raft at sea, checks the plot (chest, furnace, lamp),
 checks that it is still at sea after a while, drops anchor at the helm (sneak + use) and checks the blocks in the world.
+`raft_3.txt` lets a raft drift (autopilot, nobody at the helm, its sea force-loaded), teleports the player onto its
+deck next to the helm from 300 blocks away and then from the overworld, checks that the player stays on deck, drops
+anchor at the helm and keeps a world with the raft drifting in circles and the player on deck; `raft_4.txt` reopens
+that world (login onto the moving raft), checks the player is on deck and drops anchor at the helm.
