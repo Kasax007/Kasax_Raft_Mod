@@ -75,12 +75,13 @@ third off
 log ANCHOR_AT_HELM
 swait 300
 cmd data get entity @e[type=raft:vessel,limit=1] Pos
-cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-3 run tp @p ~ ~ ~
-swait 3
+# where the helm is: stand on top of it (px/pz = its centre; the deck is at y 100, the helm centre at 100.5)
+cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^2.4 ^-3 run tp @p ~ ~ ~
+swait 5
 where
 cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-3 run tp @p ^1.6 ^-0.4 ^
 swait 10
-face {px} {py+0.3} {pz}
+face {px} 100.6 {pz}
 swait 5
 sneakuse
 swaitfor 600 execute in raft:raftdim unless entity @e[type=raft:vessel]
