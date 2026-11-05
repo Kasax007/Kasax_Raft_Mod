@@ -2,9 +2,9 @@
   "attributes": {
     "minecraft:audio/background_music": {
       "default": {
-        "max_delay": 24000,
-        "min_delay": 12000,
-        "sound": "minecraft:music.overworld.lush_caves"
+        "max_delay": 7200,
+        "min_delay": 2400,
+        "sound": "raft:music.raft.sea_day"
       },
       "underwater": {
         "max_delay": 24000,

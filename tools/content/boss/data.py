@@ -126,7 +126,9 @@ def sounds():
         key = 'subtitles.raft.' + event
         entries[event] = OrderedDict(sounds=files, subtitle=key)
         lang[key] = subtitle
-    assets.sounds(M, entries)
+    # the Leviathan's and tidelings' sounds are synthesised by the audio module (tools/content/audio)
+    from content.audio import events
+    assets.sounds(M, events.apply(M, entries))
     assets.lang(M, lang)
 
 

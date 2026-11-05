@@ -1,5 +1,6 @@
 package net.kasax.raft.content.marine.entity;
 
+import net.kasax.raft.content.audio.AudioSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -237,7 +238,7 @@ public class MorayEelEntity extends AbstractMarineMonster {
 
     @Override
     public void playAttackSound() {
-        this.playSound(SoundEvents.EVOKER_FANGS_ATTACK, 0.6F, 1.8F);
+        this.playSound(AudioSounds.MORAY_BITE, 0.9F, 0.9F + this.random.nextFloat() * 0.2F);
     }
 
     /**

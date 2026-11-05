@@ -1,6 +1,7 @@
 package net.kasax.raft.content.story.block;
 
 import net.kasax.raft.Raft;
+import net.kasax.raft.content.audio.AudioSounds;
 import net.kasax.raft.content.story.StoryContent;
 import net.kasax.raft.content.story.StoryUtil;
 import net.kasax.raft.item.ModItems;
@@ -36,7 +37,6 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
@@ -188,9 +188,7 @@ public class LeviathanAltarBlock extends BaseEntityBlock {
         level.sendParticles(ParticleTypes.BUBBLE_COLUMN_UP, cx, at.getY() + 1.0, cz, 120, 2.5, 2.0, 2.5, 0.2);
         level.sendParticles(ParticleTypes.SPLASH, cx, cy, cz, 200, 3.0, 0.3, 3.0, 0.4);
         level.sendParticles(ParticleTypes.NAUTILUS, pos.getX() + 0.5, pos.getY() + 1.2, pos.getZ() + 0.5, 60, 0.3, 0.3, 0.3, 1.0);
-        level.playSound(null, at, SoundEvents.ELDER_GUARDIAN_CURSE, SoundSource.HOSTILE, 2.0F, 0.6F);
-        level.playSound(null, at, SoundEvents.WARDEN_EMERGE, SoundSource.HOSTILE, 3.0F, 0.7F);
-        level.playSound(null, pos, SoundEvents.CONDUIT_ACTIVATE, SoundSource.BLOCKS, 2.0F, 0.5F);
+        level.playSound(null, at, AudioSounds.LEVIATHAN_SUMMON, SoundSource.HOSTILE, 4.0F, 1.0F);
         for (ServerPlayer p : level.getEntitiesOfClass(ServerPlayer.class, new AABB(pos).inflate(ALIVE_RADIUS))) {
             p.sendSystemMessage(Component.translatable("message.raft.leviathan_altar.summon")
                     .withStyle(ChatFormatting.DARK_AQUA, ChatFormatting.BOLD));

@@ -2,6 +2,7 @@ package net.kasax.raft.block.custom;
 
 import net.kasax.raft.block.entity.ModBlockEntities;
 import net.kasax.raft.block.entity.SimpleGrillBlockEntity;
+import net.kasax.raft.content.audio.AudioSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -137,6 +138,12 @@ public class SimpleGrillBlock extends BaseEntityBlock {
             if (random.nextInt(10) == 0) {
                 level.playLocalSound(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
                         SoundEvents.CAMPFIRE_CRACKLE, SoundSource.BLOCKS, 0.5f + random.nextFloat(), random.nextFloat() * 0.7f + 0.6f, false);
+            }
+            // food on the hot grill sizzles (a 2 s sizzle every ~7 s)
+            if (random.nextInt(3) == 0 && level.getBlockEntity(pos) instanceof SimpleGrillBlockEntity grill
+                    && grill.getItems().stream().anyMatch(s -> !s.isEmpty())) {
+                level.playLocalSound(pos.getX() + 0.5, pos.getY() + 0.7, pos.getZ() + 0.5, AudioSounds.GRILL_SIZZLE,
+                        SoundSource.BLOCKS, 0.3f + random.nextFloat() * 0.2f, 0.9f + random.nextFloat() * 0.2f, false);
             }
             if (random.nextInt(5) == 0) {
                 for (int i = 0; i < random.nextInt(1) + 1; i++) {

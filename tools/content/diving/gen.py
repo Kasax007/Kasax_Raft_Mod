@@ -174,7 +174,9 @@ def sounds():
         return {'sounds': [dict({'name': s}, **kw) if isinstance(s, str) else s for s in sounds],
                 'subtitle': 'subtitles.raft.' + subtitle}
 
-    assets.sounds(M, {
+    # the harpoon gun, compressor, scooter and tank sounds are synthesised by the audio module (tools/content/audio)
+    from content.audio import events
+    assets.sounds(M, events.apply(M, {
         'item.armor.equip_diving_gear': ev(['minecraft:mob/turtle/armor', 'minecraft:item/armor/equip_iron1'],
                                            'item.armor.equip_diving_gear'),
         'item.harpoon_gun.fire': ev(['minecraft:item/crossbow/shoot1', 'minecraft:item/crossbow/shoot2',
@@ -197,7 +199,7 @@ def sounds():
                                        'minecraft:block/bubble_column/upwards_ambient2'], 'item.oxygen_tank.refill',
                                       pitch=1.4),
         'item.oxygen_tank.low': ev(['minecraft:note/bit'], 'item.oxygen_tank.low', volume=0.7),
-    })
+    }))
 
 
 def lang():

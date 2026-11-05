@@ -2,24 +2,16 @@
   "entity.crab.ambient": {
     "sounds": [
       {
-        "name": "minecraft:mob/silverfish/step1",
-        "volume": 0.5,
-        "pitch": 0.75
+        "name": "raft:sfx/crab/ambient1"
       },
       {
-        "name": "minecraft:mob/silverfish/step2",
-        "volume": 0.5,
-        "pitch": 0.75
+        "name": "raft:sfx/crab/ambient2"
       },
       {
-        "name": "minecraft:mob/silverfish/step3",
-        "volume": 0.5,
-        "pitch": 0.75
+        "name": "raft:sfx/crab/ambient3"
       },
       {
-        "name": "minecraft:mob/silverfish/step4",
-        "volume": 0.5,
-        "pitch": 0.75
+        "name": "raft:sfx/crab/ambient4"
       }
     ],
     "subtitle": "subtitles.raft.entity.crab.ambient"
@@ -101,14 +93,13 @@
   "entity.crab.pinch": {
     "sounds": [
       {
-        "name": "minecraft:mob/armadillo/scute_drop1",
-        "volume": 0.9,
-        "pitch": 1.55
+        "name": "raft:sfx/crab/pinch1"
       },
       {
-        "name": "minecraft:mob/armadillo/scute_drop2",
-        "volume": 0.9,
-        "pitch": 1.55
+        "name": "raft:sfx/crab/pinch2"
+      },
+      {
+        "name": "raft:sfx/crab/pinch3"
       }
     ],
     "subtitle": "subtitles.raft.entity.crab.pinch"
@@ -141,19 +132,13 @@
   "entity.ember_crab.ambient": {
     "sounds": [
       {
-        "name": "minecraft:random/fizz",
-        "volume": 0.4,
-        "pitch": 0.8
+        "name": "raft:sfx/ember_crab/ambient1"
       },
       {
-        "name": "minecraft:mob/silverfish/step1",
-        "volume": 0.4,
-        "pitch": 0.8
+        "name": "raft:sfx/ember_crab/ambient2"
       },
       {
-        "name": "minecraft:mob/silverfish/step2",
-        "volume": 0.4,
-        "pitch": 0.8
+        "name": "raft:sfx/ember_crab/ambient3"
       }
     ],
     "subtitle": "subtitles.raft.entity.ember_crab.ambient"
@@ -211,34 +196,16 @@
   "entity.seagull.ambient": {
     "sounds": [
       {
-        "name": "minecraft:mob/parrot/idle1",
-        "volume": 0.9,
-        "pitch": 0.78
+        "name": "raft:sfx/seagull/call1"
       },
       {
-        "name": "minecraft:mob/parrot/idle2",
-        "volume": 0.9,
-        "pitch": 0.78
+        "name": "raft:sfx/seagull/call2"
       },
       {
-        "name": "minecraft:mob/parrot/idle3",
-        "volume": 0.9,
-        "pitch": 0.78
+        "name": "raft:sfx/seagull/call3"
       },
       {
-        "name": "minecraft:mob/parrot/idle4",
-        "volume": 0.9,
-        "pitch": 0.78
-      },
-      {
-        "name": "minecraft:mob/parrot/idle5",
-        "volume": 0.9,
-        "pitch": 0.78
-      },
-      {
-        "name": "minecraft:mob/parrot/idle6",
-        "volume": 0.9,
-        "pitch": 0.78
+        "name": "raft:sfx/seagull/call4"
       }
     ],
     "subtitle": "subtitles.raft.entity.seagull.ambient"
@@ -246,14 +213,10 @@
   "entity.seagull.hurt": {
     "sounds": [
       {
-        "name": "minecraft:mob/parrot/hurt1",
-        "volume": 0.9,
-        "pitch": 0.85
+        "name": "raft:sfx/seagull/hurt1"
       },
       {
-        "name": "minecraft:mob/parrot/hurt2",
-        "volume": 0.9,
-        "pitch": 0.85
+        "name": "raft:sfx/seagull/hurt2"
       }
     ],
     "subtitle": "subtitles.raft.entity.seagull.hurt"
@@ -261,24 +224,7 @@
   "entity.seagull.death": {
     "sounds": [
       {
-        "name": "minecraft:mob/parrot/death1",
-        "volume": 0.9,
-        "pitch": 0.85
-      },
-      {
-        "name": "minecraft:mob/parrot/death2",
-        "volume": 0.9,
-        "pitch": 0.85
-      },
-      {
-        "name": "minecraft:mob/parrot/death3",
-        "volume": 0.9,
-        "pitch": 0.85
-      },
-      {
-        "name": "minecraft:mob/parrot/death4",
-        "volume": 0.9,
-        "pitch": 0.85
+        "name": "raft:sfx/seagull/death1"
       }
     ],
     "subtitle": "subtitles.raft.entity.seagull.death"
@@ -341,19 +287,10 @@
   "entity.seagull.steal": {
     "sounds": [
       {
-        "name": "minecraft:mob/parrot/idle1",
-        "volume": 1.0,
-        "pitch": 1.05
+        "name": "raft:sfx/seagull/steal1"
       },
       {
-        "name": "minecraft:mob/parrot/idle2",
-        "volume": 1.0,
-        "pitch": 1.05
-      },
-      {
-        "name": "minecraft:mob/parrot/idle3",
-        "volume": 1.0,
-        "pitch": 1.05
+        "name": "raft:sfx/seagull/steal2"
       }
     ],
     "subtitle": "subtitles.raft.entity.seagull.steal"

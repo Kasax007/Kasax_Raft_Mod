@@ -1,13 +1,13 @@
 package net.kasax.raft.content.marine.entity;
 
 import net.kasax.raft.block.ModBlocks;
+import net.kasax.raft.content.audio.AudioSounds;
 import net.kasax.raft.content.marine.MarineGameRules;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
@@ -220,9 +220,8 @@ public class SharkRaftGoal extends Goal {
         this.bites++;
         level.broadcastEntityEvent(this.shark, AbstractMarineMonster.EVENT_BITE);
         BlockState state = level.getBlockState(this.edge);
-        level.playSound(null, this.edge, SoundEvents.ZOMBIE_ATTACK_WOODEN_DOOR, SoundSource.HOSTILE, 0.7F,
-                1.2F + this.shark.getRandom().nextFloat() * 0.3F);
-        level.playSound(null, this.edge, SoundEvents.EVOKER_FANGS_ATTACK, SoundSource.HOSTILE, 0.6F, 1.4F);
+        level.playSound(null, this.edge, AudioSounds.SHARK_GNAW, SoundSource.HOSTILE, 1.0F,
+                0.9F + this.shark.getRandom().nextFloat() * 0.2F);
         level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, state), c.x, c.y - 0.3, c.z, 14, 0.35, 0.25, 0.35, 0.1);
         level.sendParticles(ParticleTypes.BUBBLE, c.x, c.y - 0.6, c.z, 8, 0.4, 0.2, 0.4, 0.05);
         // a little tug on each bite
@@ -230,7 +229,8 @@ public class SharkRaftGoal extends Goal {
         if (this.bites >= BITES_TO_BREAK) {
             level.destroyBlockProgress(this.shark.getId(), this.edge, -1);
             level.destroyBlock(this.edge, false, this.shark);
-            level.playSound(null, this.edge, SoundEvents.ZOMBIE_BREAK_WOODEN_DOOR, SoundSource.HOSTILE, 0.6F, 1.1F);
+            level.playSound(null, this.edge, AudioSounds.SHARK_RAFT_BREAK, SoundSource.HOSTILE, 1.0F,
+                    0.95F + this.shark.getRandom().nextFloat() * 0.1F);
             this.raftBlocks.remove(this.edge);
             this.edge = null;
             this.backToCircle(500 + this.shark.getRandom().nextInt(500));

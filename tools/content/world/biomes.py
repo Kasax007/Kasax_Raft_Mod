@@ -30,20 +30,25 @@ NAMES = {
 # when one channel is exactly 0, so with red = 0 the fog keeps the colour written here: bright turquoise in the
 # shallows, deep blue in the open sea, near-black navy in the trench (where only glowing life lights the way).
 # All biomes use it, so blending at biome borders never switches between scaled and unscaled fog.
+SEA_DELAY = (2400, 7200)      # ticks of silence between two sea themes (vanilla: 12000..24000)
+DEEP_DELAY = (1200, 4800)
 LOOK = {
+    # music: the open sea plays the calm sea theme of the audio module (by night the client swaps in the night theme),
+    # the trench its own deep theme (also under water); the other biomes keep vanilla tracks
     'raft_ocean_biome': dict(t=0.7, d=0.5, water='#2a86d8', wfog='#0052b8', fog='#22a1e6', sky='#6cbaea',
-                             music='minecraft:music.overworld.cherry_grove'),
+                             music='raft:music.raft.sea_day', music_delay=SEA_DELAY),
     'kelp_forest': dict(t=0.6, d=0.6, water='#2b9a92', wfog='#00866f', fog='#2aa3d6', sky='#6cbaea', wfog_dist=0.85,
-                        music='minecraft:music.overworld.lush_caves'),
+                        music='raft:music.raft.sea_day', music_delay=SEA_DELAY),
     'coral_shallows': dict(t=0.9, d=0.5, water='#3ad9e6', wfog='#00d2f5', fog='#3ab2ea', sky='#6cc4f0', wfog_dist=1.6,
-                           music='minecraft:music.overworld.flower_forest'),
+                           music='raft:music.raft.sea_day', music_delay=SEA_DELAY),
     'glowing_lagoon': dict(t=0.85, d=0.6, water='#18a7a3', wfog='#00a3ad', fog='#3aa8c8', sky='#6cbaea',
                            wfog_dist=0.9, particles=[('minecraft:glow', 0.006)],
                            music='minecraft:music.overworld.lush_caves'),
     'drowned_shelf': dict(t=0.6, d=0.5, water='#4e7468', wfog='#00644f', fog='#7fa6b8', sky='#7bb4dc', wfog_dist=0.6,
                           music='minecraft:music.overworld.deep_dark'),
     'abyssal_trench': dict(t=0.5, d=0.5, water='#12305c', wfog='#001634', fog='#2a7fc0', sky='#6cbaea',
-                           wfog_dist=0.4, music='minecraft:music.overworld.deep_dark'),
+                           wfog_dist=0.4, music='raft:music.raft.abyss', music_delay=DEEP_DELAY,
+                           underwater_music='raft:music.raft.abyss'),
     'wreck_graveyard': dict(t=0.6, d=0.5, water='#4a6d8e', wfog='#00405a', fog='#9fb1c0', sky='#90abc4',
                             wfog_dist=0.7, music='minecraft:music.overworld.old_growth_taiga'),
     'frost_floes': dict(t=0.2, d=0.5, water='#3d8fd6', wfog='#0078c8', fog='#c4dcf2', sky='#9ccaee',
@@ -226,8 +231,12 @@ def spawns_of(biome, available=None):
 def biome_json(b, feature_ok=None, entity_ok=None):
     L = LOOK[b]
     attrs = OrderedDict()
-    music = OrderedDict(default=OrderedDict(max_delay=24000, min_delay=12000, sound=L['music']))
-    music['underwater'] = OrderedDict(max_delay=24000, min_delay=12000, sound='minecraft:music.under_water')
+    lo, hi = L.get('music_delay', (12000, 24000))
+    music = OrderedDict(default=OrderedDict(max_delay=hi, min_delay=lo, sound=L['music']))
+    if L.get('underwater_music'):
+        music['underwater'] = OrderedDict(max_delay=hi, min_delay=lo, sound=L['underwater_music'])
+    else:
+        music['underwater'] = OrderedDict(max_delay=24000, min_delay=12000, sound='minecraft:music.under_water')
     attrs['minecraft:audio/background_music'] = music
     attrs['minecraft:gameplay/natural_mob_spawns'] = OrderedDict(
         argument=OrderedDict(spawn_costs={}, spawns_by_category=spawns_of(b, entity_ok)), modifier='overlay')

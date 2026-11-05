@@ -1,12 +1,12 @@
 package net.kasax.raft.content.story.block;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.kasax.raft.content.audio.AudioSounds;
 import net.kasax.raft.content.story.net.OpenLogPayload;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
@@ -78,8 +78,7 @@ public class ResearchTerminalBlock extends BaseEntityBlock implements SimpleWate
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (player instanceof ServerPlayer sp && level.getBlockEntity(pos) instanceof ResearchTerminalBlockEntity be) {
-            level.playSound(null, pos, SoundEvents.STONE_BUTTON_CLICK_ON, SoundSource.BLOCKS, 0.6F, 1.6F);
-            level.playSound(null, pos, SoundEvents.BEACON_POWER_SELECT, SoundSource.BLOCKS, 0.25F, 2.0F);
+            level.playSound(null, pos, AudioSounds.TERMINAL_USE, SoundSource.BLOCKS, 0.8F, 1.0F);
             ServerPlayNetworking.send(sp, new OpenLogPayload(be.logId()));
         }
         return InteractionResult.SUCCESS;

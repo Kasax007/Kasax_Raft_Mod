@@ -1,5 +1,6 @@
 package net.kasax.raft.content.marine.entity;
 
+import net.kasax.raft.content.audio.AudioSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -70,27 +71,28 @@ public class AnglerfishEntity extends AbstractMarineMonster {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return null;
+        // the hum of the glowing lure, now and then (quiet, carries only a few blocks)
+        return this.isInWater() && this.random.nextInt(3) == 0 ? AudioSounds.ANGLERFISH_AMBIENT : null;
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.PUFFER_FISH_HURT;
+        return AudioSounds.ANGLERFISH_HURT;
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.PUFFER_FISH_DEATH;
+        return AudioSounds.ANGLERFISH_DEATH;
     }
 
     @Override
     public void playAttackSound() {
-        this.playSound(SoundEvents.EVOKER_FANGS_ATTACK, 0.7F, 1.6F);
+        this.playSound(AudioSounds.ANGLERFISH_BITE, 1.0F, 0.9F + this.random.nextFloat() * 0.2F);
     }
 
     @Override
     public float getVoicePitch() {
-        return 0.6F + this.random.nextFloat() * 0.15F;
+        return 0.9F + this.random.nextFloat() * 0.2F;
     }
 
     /** Natural spawning: deep water only (45+ blocks below the surface), never in peaceful. */

@@ -1,11 +1,13 @@
 package net.kasax.raft.content.decor.block;
 
+import net.kasax.raft.content.audio.AudioSounds;
 import net.kasax.raft.content.decor.entity.SeatEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.attribute.BedRule;
 import net.minecraft.world.attribute.EnvironmentAttribute;
@@ -75,6 +77,7 @@ public class HammockBlock extends AbstractBedBlock {
         BedRule rule = getBedRule(level, head);
         if (rule.canSleep(level) || rule.destroyOnUse()) {
             // night: sleep like in a bed (sets the spawn point too)
+            level.playSound(null, pos, AudioSounds.HAMMOCK_CREAK, SoundSource.BLOCKS, 0.8F, 0.9F + level.getRandom().nextFloat() * 0.2F);
             return super.useWithoutItem(state, level, pos, player, hit);
         }
         if (rule.canSetSpawn(level) && player instanceof ServerPlayer serverPlayer && level instanceof ServerLevel serverLevel) {
@@ -84,6 +87,7 @@ public class HammockBlock extends AbstractBedBlock {
             serverPlayer.setRespawnPosition(config, old == null || !old.isSamePosition(config));
         }
         if (SeatEntity.sit(level, pos, player, REST_HEIGHT)) {
+            level.playSound(null, pos, AudioSounds.HAMMOCK_CREAK, SoundSource.BLOCKS, 0.8F, 0.9F + level.getRandom().nextFloat() * 0.2F);
             player.sendOverlayMessage(Component.translatable("message.raft.hammock.rest"));
         }
         return InteractionResult.SUCCESS_SERVER;

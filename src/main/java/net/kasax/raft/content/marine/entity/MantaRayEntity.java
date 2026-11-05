@@ -1,5 +1,6 @@
 package net.kasax.raft.content.marine.entity;
 
+import net.kasax.raft.content.audio.AudioSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -149,12 +150,12 @@ public class MantaRayEntity extends WaterAnimal {
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.GUARDIAN_HURT;
+        return AudioSounds.MANTA_HURT;
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.GUARDIAN_DEATH;
+        return AudioSounds.MANTA_DEATH;
     }
 
     @Override
@@ -164,7 +165,7 @@ public class MantaRayEntity extends WaterAnimal {
 
     @Override
     public float getVoicePitch() {
-        return 0.7F + this.random.nextFloat() * 0.2F;
+        return 0.9F + this.random.nextFloat() * 0.2F;
     }
 
     /** Natural spawning: shallow water, 2–15 blocks below the surface. */

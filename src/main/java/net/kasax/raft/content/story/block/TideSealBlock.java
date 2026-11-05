@@ -1,5 +1,6 @@
 package net.kasax.raft.content.story.block;
 
+import net.kasax.raft.content.audio.AudioSounds;
 import net.kasax.raft.content.story.StoryContent;
 import net.kasax.raft.content.story.StoryUtil;
 import net.minecraft.core.BlockPos;
@@ -111,7 +112,7 @@ public class TideSealBlock extends Block {
         }
         if (!level.isClientSide()) {
             StoryUtil.tell(player, "seal.locked");
-            level.playSound(null, pos, SoundEvents.AMETHYST_BLOCK_RESONATE, SoundSource.BLOCKS, 0.8F, 0.6F);
+            level.playSound(null, pos, AudioSounds.SEAL_LOCKED, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
         return InteractionResult.SUCCESS;
     }
@@ -136,8 +137,7 @@ public class TideSealBlock extends Block {
             }
         }
         dist.forEach((p, d) -> level.scheduleTick(p, this, 1 + d * 3));
-        level.playSound(null, start, SoundEvents.CONDUIT_ACTIVATE, SoundSource.BLOCKS, 2.0F, 0.8F);
-        level.playSound(null, start, SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 1.5F, 0.6F);
+        level.playSound(null, start, AudioSounds.SEAL_OPEN, SoundSource.BLOCKS, 3.0F, 1.0F);
     }
 
     @Override

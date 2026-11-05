@@ -5,20 +5,15 @@
       "mood": {
         "block_search_extent": 8,
         "offset": 2.0,
-        "sound": "minecraft:ambient.cave",
+        "sound": "raft:ambient.raft.deep",
         "tick_delay": 6000
       }
     },
     "minecraft:audio/background_music": {
-      "creative": {
-        "max_delay": 24000,
-        "min_delay": 12000,
-        "sound": "minecraft:music.creative"
-      },
       "default": {
-        "max_delay": 24000,
-        "min_delay": 12000,
-        "sound": "minecraft:music.game"
+        "max_delay": 7200,
+        "min_delay": 2400,
+        "sound": "raft:music.raft.sea_day"
       }
     },
     "minecraft:gameplay/bed_rule": {

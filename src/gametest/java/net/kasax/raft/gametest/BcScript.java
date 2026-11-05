@@ -113,6 +113,8 @@ import java.util.function.Function;
  *                         the box center cx cy cz, find sets fx fy fz of the nearest hit, height &lt;x&gt; &lt;z&gt; sets hy)
  * freecam x y z yaw pitch | off   detached camera at that eye position (rec: cam=x,y,z,yaw,pitch with to/by/orbit/look)
  * respawn                 if the player is dead (a world saved like that): respawn and close the death screen
+ * sounds &lt;name&gt; | off  log every sound the client starts to OUT/&lt;name&gt;/sounds.jsonl (like rec, without frames)
+ * music [constant]       log the music the game would choose now (MUSIC); constant: no pauses between pieces
  * log &lt;text&gt;
  * </pre>
  */
@@ -431,6 +433,36 @@ public class BcScript implements FabricClientGameTest {
                 ctx.getInput().holdKeyFor(key(a[0]), Integer.parseInt(a[1]));
             }
             case "log" -> LOG.info("[bctest] LOG {}", arg);
+            case "sounds" -> {
+                // sounds <name> | off: log every sound the client starts to OUT/<name>/sounds.jsonl (no frames)
+                if (arg.equals("off")) {
+                    FilmSound.stop();
+                } else {
+                    long g0 = ctx.computeOnClient(mc -> mc.level == null ? 0L : mc.level.getGameTime());
+                    FilmSound.start(out.resolve(arg), 20.0, g0);
+                }
+            }
+            case "music" -> {
+                // music [constant]: log the music the game would choose now (and the audio module's state);
+                // "constant" plays music without pauses between pieces (to see it quickly in the sound log)
+                if (arg.equals("constant")) {
+                    ctx.runOnClient(mc -> {
+                        mc.options.musicFrequency().set(net.minecraft.client.sounds.MusicManager.MusicFrequency.CONSTANT);
+                        mc.getMusicManager().setMinutesBetweenSongs(net.minecraft.client.sounds.MusicManager.MusicFrequency.CONSTANT);
+                    });
+                }
+                String res = ctx.computeOnClient(mc -> {
+                    var music = mc.getSituationalMusic();
+                    return String.format(Locale.ROOT, "situational=%s place=%s fight=%s openSea=%.2f night=%s playing=%s",
+                            music == null ? "none" : music.sound().unwrapKey().map(k -> k.identifier().toString()).orElse("?"),
+                            net.kasax.raft.content.audio.client.MusicDirector.place(),
+                            net.kasax.raft.content.audio.client.MusicDirector.inFight(),
+                            net.kasax.raft.content.audio.client.AudioClient.openSea(),
+                            mc.level != null && net.kasax.raft.content.audio.client.MusicDirector.isNight(mc.level),
+                            mc.getMusicManager().getCurrentMusicTranslationKey());
+                });
+                LOG.info("[bctest] MUSIC {}", res);
+            }
             case "count" -> {
                 // count <dimension>: entities per type loaded in that dimension (written to the log)
                 String dim = arg.isEmpty() ? "raft:raftdim" : arg;

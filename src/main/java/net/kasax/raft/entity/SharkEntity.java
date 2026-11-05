@@ -1,5 +1,6 @@
 package net.kasax.raft.entity;
 
+import net.kasax.raft.content.audio.AudioSounds;
 import net.kasax.raft.content.marine.entity.AbstractMarineMonster;
 import net.kasax.raft.content.marine.entity.SharkRaftGoal;
 import net.minecraft.core.BlockPos;
@@ -86,17 +87,17 @@ public class SharkEntity extends AbstractMarineMonster {
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.DOLPHIN_HURT;
+        return AudioSounds.SHARK_HURT;
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.DOLPHIN_DEATH;
+        return AudioSounds.SHARK_DEATH;
     }
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return this.isInWater() ? SoundEvents.DOLPHIN_AMBIENT_WATER : null;
+        return this.isInWater() ? AudioSounds.SHARK_AMBIENT : null;
     }
 
     @Override
@@ -106,12 +107,13 @@ public class SharkEntity extends AbstractMarineMonster {
 
     @Override
     public float getVoicePitch() {
-        return super.getVoicePitch() * 0.7F;
+        // the shark's own sounds are made for its size (the vanilla dolphin sounds it used before were pitched down)
+        return super.getVoicePitch() * 0.95F;
     }
 
     @Override
     public void playAttackSound() {
-        this.playSound(SoundEvents.EVOKER_FANGS_ATTACK, 0.8F, 1.3F + this.random.nextFloat() * 0.2F);
+        this.playSound(AudioSounds.SHARK_BITE, 1.0F, 0.9F + this.random.nextFloat() * 0.2F);
     }
 
     /** Natural spawning: in the water in the upper part of the ocean, never in peaceful. */

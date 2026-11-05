@@ -1,5 +1,6 @@
 package net.kasax.raft.content.story.block;
 
+import net.kasax.raft.content.audio.AudioSounds;
 import net.kasax.raft.content.story.StoryContent;
 import net.kasax.raft.content.story.StoryUtil;
 import net.minecraft.ChatFormatting;
@@ -144,8 +145,9 @@ public class TidewardenAltarBlock extends HorizontalDirectionalBlock implements 
             server.setBlock(pos, next, Block.UPDATE_ALL);
             Component name = stack.getHoverName();
             stack.consume(1, player);
-            server.playSound(null, pos, SoundEvents.END_PORTAL_FRAME_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
-            server.playSound(null, pos, SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.BLOCKS, 1.0F, 0.8F + count(next) * 0.15F);
+            server.playSound(null, pos, SoundEvents.END_PORTAL_FRAME_FILL, SoundSource.BLOCKS, 0.6F, 1.0F);
+            // the sigil's chime rises with every sigil in the altar
+            server.playSound(null, pos, AudioSounds.ALTAR_INSERT, SoundSource.BLOCKS, 1.0F, 0.85F + count(next) * 0.1F);
             server.sendParticles(ParticleTypes.GLOW, pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5, 12, 0.3, 0.1, 0.3, 0.02);
             StoryUtil.tell(player, "altar.inserted", name);
             if (count(next) == 4) {
@@ -195,9 +197,7 @@ public class TidewardenAltarBlock extends HorizontalDirectionalBlock implements 
         level.sendParticles(ParticleTypes.END_ROD, x, y + 0.3, z, 40, 0.2, 0.6, 0.2, 0.12);
         level.sendParticles(ParticleTypes.GLOW, x, y, z, 30, 0.6, 0.4, 0.6, 0.05);
         level.sendParticles(ParticleTypes.TOTEM_OF_UNDYING, x, y + 0.5, z, 30, 0.3, 0.3, 0.3, 0.3);
-        level.playSound(null, pos, SoundEvents.BEACON_POWER_SELECT, SoundSource.BLOCKS, 1.5F, 1.0F);
-        level.playSound(null, pos, SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 1.5F, 0.8F);
-        level.playSound(null, pos, SoundEvents.AMETHYST_BLOCK_RESONATE, SoundSource.BLOCKS, 2.0F, 0.5F);
+        level.playSound(null, pos, AudioSounds.ALTAR_FORGE, SoundSource.BLOCKS, 2.0F, 1.0F);
         for (ServerPlayer p : level.getEntitiesOfClass(ServerPlayer.class, new AABB(pos).inflate(24))) {
             p.sendSystemMessage(Component.translatable("message.raft.altar.forged").withStyle(ChatFormatting.GOLD, ChatFormatting.ITALIC));
         }

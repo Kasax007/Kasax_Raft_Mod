@@ -24,6 +24,8 @@ Script commands (one per line, `#` comments):
 | `slot <1-9>` | select a hotbar slot |
 | `tab <id> [rows]` | open the creative inventory on a tab (`raft:bc_decor`, `raft:raft`, ...), scrolled down by rows, and log its items (`TAB` line) |
 | `count [dim]` | log loaded entities per type (`COUNT` line in latest.log) |
+| `sounds <name>` / `sounds off` | log every sound the client starts (event, file, volume, pitch, position) to `<outdir>/<name>/sounds.jsonl`, without recording frames |
+| `music [constant]` | log the music the game would pick now and the audio module's state (`MUSIC` line: situational music, key place, Leviathan fight, open sea, night, playing piece); `constant` removes the pauses between pieces |
 | `log <text>` | marker in the log |
 
 Example:

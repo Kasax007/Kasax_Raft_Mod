@@ -624,6 +624,11 @@ Salts: use 314159xx with a distinct number per structure set.
 Vanilla sound events are fine everywhere. Custom ones (ogg, mono, 44.1 kHz) only if they sound good (e.g.
 synthesised whale song); put them in `assets/raft/sounds/<module>/...` and the module's `sounds.json` fragment.
 
+Module `audio` (see `docs/design/sound-assessment.md`): the synthesised sound effects (`assets/raft/sounds/sfx/`,
+made by `tools/content/audio`) and the music (`assets/raft/sounds/music/`, Kevin MacLeod, CC BY 4.0,
+`CREDITS_MUSIC.txt`). Events that other modules define (Leviathan, tidelings, seagulls, crabs, diving gear) keep their
+definition and subtitle there; their generators take the file lists from `content.audio.events`.
+
 ## 13. Testing checklist (lead, at integration)
 
 Build + datagen-free resources load without errors (`latest.log`: no missing model/texture/loot/tag warnings);
@@ -655,6 +660,7 @@ server start (dedicated) without client classes loading.
 - guide: raft:seafarers_almanac recipe = book + kelp / dried kelp / driftwood log / driftwood planks (shapeless); given once on first entry into raft:raftdim (player attachment raft:almanac_given) and in the castaway chest; item custom_data {almanac:"<chapter>[/<section>][+N]"} opens a page (for quests).
 - boss (integration): at most 5 tidelings alive at once.
 - structures_side (integration): wreck sails and rugs are wool, not carpet (carpets wash away under water).
+- audio: the raft dimension's default music is `raft:music.raft.sea_day` (2..6 min pauses) and its mood sound in the dark `raft:ambient.raft.deep` (was the overworld's music and cave sounds); `raft_ocean_biome`, `coral_shallows` and `kelp_forest` play the sea theme, `abyssal_trench` `raft:music.raft.abyss` (also under water). Port Solace, Saltmere, Helix Station, the Old Lighthouse, the Abyssal Sanctum and the Coral Temple get their themes from the client's music director (payload `raft:audio_place`), the Leviathan's theme plays while its boss bar is shown.
 
 ## 15. Guide book (module `guide`, built after the other modules are integrated)
 

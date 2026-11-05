@@ -267,7 +267,9 @@ def sounds():
                                                   ('mob/drowned/idle3', 0.9, 0.8), ('mob/zombie/say1', 0.7, 0.75),
                                                   ('mob/zombie/say2', 0.7, 0.75)], s + 'drowned_corsair.ambient'),
     }
-    assets.sounds(MOD, data)
+    # seagull calls, crab clicks and the ember crab's sizzle are synthesised by the audio module (tools/content/audio)
+    from content.audio import events
+    assets.sounds(MOD, events.apply(MOD, data))
 
 
 def build():

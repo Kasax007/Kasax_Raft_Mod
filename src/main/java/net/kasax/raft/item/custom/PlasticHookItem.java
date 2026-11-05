@@ -1,12 +1,13 @@
 package net.kasax.raft.item.custom;
 
+import net.kasax.raft.content.audio.AudioSounds;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.level.Level;
@@ -62,6 +63,10 @@ public class PlasticHookItem extends TooltipItem {
             // the small upward push cancels gravity, so the item does not sink while it is pulled
             item.setDeltaMovement(item.getDeltaMovement().scale(0.4).add(wanted.scale(0.6)).add(0.0, 0.04, 0.0));
             item.needsSync = true;
+        }
+        if (!items.isEmpty() && remainingUseTicks % 10 == 0) {
+            serverLevel.playSound(null, user.getX(), user.getY(), user.getZ(), AudioSounds.PLASTIC_HOOK_REEL, SoundSource.PLAYERS,
+                    0.7F, 0.9F + user.getRandom().nextFloat() * 0.2F);
         }
         if (!items.isEmpty() && remainingUseTicks % 20 == 0) {
             stack.hurtAndBreak(1, user, user.getUsedItemHand());

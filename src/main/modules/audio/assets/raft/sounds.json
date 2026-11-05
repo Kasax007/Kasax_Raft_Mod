@@ -1,0 +1,493 @@
+{
+  "entity.shark.ambient": {
+    "sounds": [
+      {
+        "name": "raft:sfx/shark/ambient1"
+      },
+      {
+        "name": "raft:sfx/shark/ambient2"
+      },
+      {
+        "name": "raft:sfx/shark/ambient3"
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.shark.ambient"
+  },
+  "entity.shark.hurt": {
+    "sounds": [
+      {
+        "name": "raft:sfx/shark/hurt1"
+      },
+      {
+        "name": "raft:sfx/shark/hurt2"
+      },
+      {
+        "name": "raft:sfx/shark/hurt3"
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.shark.hurt"
+  },
+  "entity.shark.death": {
+    "sounds": [
+      {
+        "name": "raft:sfx/shark/death1"
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.shark.death"
+  },
+  "entity.shark.bite": {
+    "sounds": [
+      {
+        "name": "raft:sfx/shark/bite1"
+      },
+      {
+        "name": "raft:sfx/shark/bite2"
+      },
+      {
+        "name": "raft:sfx/shark/bite3"
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.shark.bite"
+  },
+  "entity.shark.gnaw": {
+    "sounds": [
+      {
+        "name": "raft:sfx/shark/gnaw1"
+      },
+      {
+        "name": "raft:sfx/shark/gnaw2"
+      },
+      {
+        "name": "raft:sfx/shark/gnaw3"
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.shark.gnaw"
+  },
+  "entity.shark.raft_break": {
+    "sounds": [
+      {
+        "name": "raft:sfx/shark/raft_break1"
+      },
+      {
+        "name": "raft:sfx/shark/raft_break2"
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.shark.raft_break"
+  },
+  "entity.whale.hurt": {
+    "sounds": [
+      {
+        "name": "raft:sfx/whale/hurt1",
+        "attenuation_distance": 32
+      },
+      {
+        "name": "raft:sfx/whale/hurt2",
+        "attenuation_distance": 32
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.whale.hurt"
+  },
+  "entity.whale.death": {
+    "sounds": [
+      {
+        "name": "raft:sfx/whale/death1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.whale.death"
+  },
+  "entity.manta_ray.hurt": {
+    "sounds": [
+      {
+        "name": "raft:sfx/manta_ray/hurt1"
+      },
+      {
+        "name": "raft:sfx/manta_ray/hurt2"
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.manta_ray.hurt"
+  },
+  "entity.manta_ray.death": {
+    "sounds": [
+      {
+        "name": "raft:sfx/manta_ray/death1"
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.manta_ray.death"
+  },
+  "entity.jellyfish.sting": {
+    "sounds": [
+      {
+        "name": "raft:sfx/jellyfish/sting1"
+      },
+      {
+        "name": "raft:sfx/jellyfish/sting2"
+      },
+      {
+        "name": "raft:sfx/jellyfish/sting3"
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.jellyfish.sting"
+  },
+  "entity.jellyfish.hurt": {
+    "sounds": [
+      {
+        "name": "raft:sfx/jellyfish/hurt1"
+      },
+      {
+        "name": "raft:sfx/jellyfish/hurt2"
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.jellyfish.hurt"
+  },
+  "entity.jellyfish.death": {
+    "sounds": [
+      {
+        "name": "raft:sfx/jellyfish/death1"
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.jellyfish.death"
+  },
+  "entity.anglerfish.ambient": {
+    "sounds": [
+      {
+        "name": "raft:sfx/anglerfish/lure1",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "raft:sfx/anglerfish/lure2",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "raft:sfx/anglerfish/lure3",
+        "attenuation_distance": 12
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.anglerfish.ambient"
+  },
+  "entity.anglerfish.bite": {
+    "sounds": [
+      {
+        "name": "raft:sfx/anglerfish/bite1"
+      },
+      {
+        "name": "raft:sfx/anglerfish/bite2"
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.anglerfish.bite"
+  },
+  "entity.anglerfish.hurt": {
+    "sounds": [
+      {
+        "name": "raft:sfx/anglerfish/hurt1"
+      },
+      {
+        "name": "raft:sfx/anglerfish/hurt2"
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.anglerfish.hurt"
+  },
+  "entity.anglerfish.death": {
+    "sounds": [
+      {
+        "name": "raft:sfx/anglerfish/death1"
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.anglerfish.death"
+  },
+  "entity.moray_eel.bite": {
+    "sounds": [
+      {
+        "name": "raft:sfx/moray_eel/bite1"
+      },
+      {
+        "name": "raft:sfx/moray_eel/bite2"
+      },
+      {
+        "name": "raft:sfx/moray_eel/bite3"
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.moray_eel.bite"
+  },
+  "block.water_purifier.boil": {
+    "sounds": [
+      {
+        "name": "raft:sfx/water_purifier/boil1",
+        "attenuation_distance": 10
+      },
+      {
+        "name": "raft:sfx/water_purifier/boil2",
+        "attenuation_distance": 10
+      },
+      {
+        "name": "raft:sfx/water_purifier/boil3",
+        "attenuation_distance": 10
+      }
+    ],
+    "subtitle": "subtitles.raft.block.water_purifier.boil"
+  },
+  "block.grill.sizzle": {
+    "sounds": [
+      {
+        "name": "raft:sfx/grill/sizzle1",
+        "attenuation_distance": 10
+      },
+      {
+        "name": "raft:sfx/grill/sizzle2",
+        "attenuation_distance": 10
+      },
+      {
+        "name": "raft:sfx/grill/sizzle3",
+        "attenuation_distance": 10
+      }
+    ],
+    "subtitle": "subtitles.raft.block.grill.sizzle"
+  },
+  "block.wind_turbine.spin": {
+    "sounds": [
+      {
+        "name": "raft:sfx/wind_turbine/loop",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "block.ship_cannon.fire": {
+    "sounds": [
+      {
+        "name": "raft:sfx/ship_cannon/fire1",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "raft:sfx/ship_cannon/fire2",
+        "attenuation_distance": 64
+      }
+    ],
+    "subtitle": "subtitles.raft.block.ship_cannon.fire"
+  },
+  "block.research_terminal.use": {
+    "sounds": [
+      {
+        "name": "raft:sfx/research_terminal/use1"
+      },
+      {
+        "name": "raft:sfx/research_terminal/use2"
+      },
+      {
+        "name": "raft:sfx/research_terminal/use3"
+      }
+    ],
+    "subtitle": "subtitles.raft.block.research_terminal.use"
+  },
+  "block.control_panel.beep": {
+    "sounds": [
+      {
+        "name": "raft:sfx/control_panel/beep1"
+      },
+      {
+        "name": "raft:sfx/control_panel/beep2"
+      },
+      {
+        "name": "raft:sfx/control_panel/beep3"
+      },
+      {
+        "name": "raft:sfx/control_panel/beep4"
+      }
+    ],
+    "subtitle": "subtitles.raft.block.control_panel.beep"
+  },
+  "block.hammock.creak": {
+    "sounds": [
+      {
+        "name": "raft:sfx/hammock/creak1"
+      },
+      {
+        "name": "raft:sfx/hammock/creak2"
+      }
+    ],
+    "subtitle": "subtitles.raft.block.hammock.creak"
+  },
+  "block.tidewarden_altar.insert": {
+    "sounds": [
+      {
+        "name": "raft:sfx/tidewarden_altar/insert1",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "raft:sfx/tidewarden_altar/insert2",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.raft.block.tidewarden_altar.insert"
+  },
+  "block.tidewarden_altar.forge": {
+    "sounds": [
+      {
+        "name": "raft:sfx/tidewarden_altar/forge1",
+        "attenuation_distance": 32
+      }
+    ],
+    "subtitle": "subtitles.raft.block.tidewarden_altar.forge"
+  },
+  "block.tide_seal.open": {
+    "sounds": [
+      {
+        "name": "raft:sfx/tide_seal/open1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.raft.block.tide_seal.open"
+  },
+  "block.tide_seal.locked": {
+    "sounds": [
+      {
+        "name": "raft:sfx/tide_seal/locked1"
+      },
+      {
+        "name": "raft:sfx/tide_seal/locked2"
+      }
+    ],
+    "subtitle": "subtitles.raft.block.tide_seal.locked"
+  },
+  "block.leviathan_altar.summon": {
+    "sounds": [
+      {
+        "name": "raft:sfx/leviathan_altar/summon1",
+        "attenuation_distance": 64
+      }
+    ],
+    "subtitle": "subtitles.raft.block.leviathan_altar.summon"
+  },
+  "item.plastic_hook.reel": {
+    "sounds": [
+      {
+        "name": "raft:sfx/plastic_hook/reel1"
+      },
+      {
+        "name": "raft:sfx/plastic_hook/reel2"
+      },
+      {
+        "name": "raft:sfx/plastic_hook/reel3"
+      }
+    ],
+    "subtitle": "subtitles.raft.item.plastic_hook.reel"
+  },
+  "ambient.raft.sea": {
+    "sounds": [
+      {
+        "name": "raft:sfx/ambient/sea_loop",
+        "stream": true
+      }
+    ]
+  },
+  "ambient.raft.gulls": {
+    "sounds": [
+      {
+        "name": "raft:sfx/ambient/gulls_far1"
+      },
+      {
+        "name": "raft:sfx/ambient/gulls_far2"
+      },
+      {
+        "name": "raft:sfx/ambient/gulls_far3"
+      }
+    ],
+    "subtitle": "subtitles.raft.ambient.raft.gulls"
+  },
+  "ambient.raft.deep": {
+    "sounds": [
+      {
+        "name": "raft:sfx/ambient/deep1"
+      },
+      {
+        "name": "raft:sfx/ambient/deep2"
+      },
+      {
+        "name": "raft:sfx/ambient/deep3"
+      },
+      {
+        "name": "raft:sfx/ambient/deep4"
+      }
+    ],
+    "subtitle": "subtitles.raft.ambient.raft.deep"
+  },
+  "music.raft.sea_day": {
+    "sounds": [
+      {
+        "name": "raft:music/morning",
+        "stream": true
+      },
+      {
+        "name": "raft:music/clear_waters",
+        "stream": true
+      }
+    ]
+  },
+  "music.raft.sea_night": {
+    "sounds": [
+      {
+        "name": "raft:music/with_the_sea",
+        "stream": true
+      },
+      {
+        "name": "raft:music/decline",
+        "stream": true
+      }
+    ]
+  },
+  "music.raft.port_solace": {
+    "sounds": [
+      {
+        "name": "raft:music/shores_of_avalon",
+        "stream": true
+      }
+    ]
+  },
+  "music.raft.saltmere": {
+    "sounds": [
+      {
+        "name": "raft:music/port_horizon",
+        "stream": true
+      }
+    ]
+  },
+  "music.raft.abyss": {
+    "sounds": [
+      {
+        "name": "raft:music/shadowlands_horizon",
+        "stream": true
+      }
+    ]
+  },
+  "music.raft.helix": {
+    "sounds": [
+      {
+        "name": "raft:music/static_motion",
+        "stream": true
+      }
+    ]
+  },
+  "music.raft.lighthouse": {
+    "sounds": [
+      {
+        "name": "raft:music/on_the_shore",
+        "stream": true
+      }
+    ]
+  },
+  "music.raft.sanctum": {
+    "sounds": [
+      {
+        "name": "raft:music/night_vigil",
+        "stream": true
+      }
+    ]
+  },
+  "music.raft.leviathan": {
+    "sounds": [
+      {
+        "name": "raft:music/black_vortex",
+        "stream": true
+      }
+    ]
+  }
+}
