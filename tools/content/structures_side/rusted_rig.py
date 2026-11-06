@@ -290,7 +290,8 @@ def crane(s, rnd, px, pz, tip, broken=False):
         beam_line(s, (a[0], a[1] + 1, a[2]), (tip[0], tip[1] + 1, tip[2]))
         for y in range(tip[1] - 8, tip[1]):
             s.set(tip[0], y, tip[2], 'minecraft:iron_chain[axis=y]')
-        s.set(tip[0], tip[1] - 9, tip[2], 'minecraft:anvil[facing=north]')
+        # a heavy core as the crane's weight: an anvil would fall at the first block update next to it
+        s.set(tip[0], tip[1] - 9, tip[2], 'minecraft:heavy_core[waterlogged=false]')
 
 
 def extras(s, rnd):

@@ -3,6 +3,7 @@ package net.kasax.raft.content.world;
 import com.mojang.serialization.MapCodec;
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.world.feature.BubbleVentFeature;
+import net.kasax.raft.content.world.feature.ClearOfStructuresFilter;
 import net.kasax.raft.content.world.feature.CraterLavaFeature;
 import net.kasax.raft.content.world.feature.GravitySupportFeature;
 import net.kasax.raft.content.world.feature.IceFloeFeature;
@@ -26,5 +27,7 @@ public final class WorldFeatures {
         register("rubble", RubbleFeature.CODEC);
         register("ice_floe", IceFloeFeature.CODEC);
         register("gravity_support", GravitySupportFeature.CODEC);
+        // placement filter: keeps features (basalt columns, ash, lava, boulders...) out of structures
+        Registry.register(BuiltInRegistries.PLACEMENT_MODIFIER_TYPE, Raft.id("clear_of_structures"), ClearOfStructuresFilter.CODEC);
     }
 }

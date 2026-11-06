@@ -18,7 +18,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 /**
  * Site checks for Beach Craft structures, so they blend into the world: island buildings only start where the
  * ground under their whole footprint is land (never as a square pillar in the sea), the Coral Temple only where the
- * sea floor is deep enough for all of it to stay under water.
+ * sea floor is deep enough for all of it to stay under water. Then no structure may grow into one of a higher rank
+ * (StructurePriority).
  */
 @Mixin(Structure.class)
 public abstract class StructureSiteMixin {
@@ -54,6 +55,10 @@ public abstract class StructureSiteMixin {
             if (mm[0] < RAFT$TEMPLE_MIN_FLOOR || mm[1] > sea - RAFT$TEMPLE_CLEARANCE) {
                 cir.setReturnValue(Optional.empty());
             }
+        }
+        // a structure must not grow into a structure of a higher rank (story places, places with a person)
+        if (cir.getReturnValue().isPresent()) {
+            cir.setReturnValue(net.kasax.raft.content.world.StructurePriority.check((Structure) (Object) this, context, cir.getReturnValue().get()));
         }
     }
 

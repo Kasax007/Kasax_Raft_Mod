@@ -63,6 +63,10 @@
           }
         ]
       }
+    },
+    {
+      "type": "raft:clear_of_structures",
+      "distance": 0
     }
   ]
 }

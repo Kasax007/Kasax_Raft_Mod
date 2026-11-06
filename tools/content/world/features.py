@@ -112,6 +112,37 @@ def water_depth(n):
     return OrderedDict(type='minecraft:surface_water_depth_filter', max_water_depth=n)
 
 
+def clear(d):
+    """raft:clear_of_structures (ClearOfStructuresFilter): no feature within d blocks of a structure piece, so nothing
+    grows into the rooms of a structure (basalt columns filled the Ashen Forge, trees grew into the lighthouse)."""
+    return OrderedDict(type='raft:clear_of_structures', distance=d)
+
+
+# vanilla placed features the biomes use as raft:<name> copies with clear(d) at the end (biomes.guarded): every
+# feature that builds or replaces blocks next to structures. Distances: the reach of the feature from its position.
+GUARDED_VANILLA = OrderedDict([
+    ('lake_lava_surface', 9), ('iceberg_packed', 6), ('iceberg_blue', 6), ('blue_ice', 2),
+    ('small_basalt_columns', 10), ('large_basalt_columns', 10),
+    ('ore_dirt', 4), ('ore_gravel', 4), ('ore_granite_upper', 4), ('ore_granite_lower', 4), ('ore_diorite_upper', 4),
+    ('ore_diorite_lower', 4), ('ore_andesite_upper', 4), ('ore_andesite_lower', 4), ('ore_tuff', 4),
+    ('ore_coal_upper', 3), ('ore_coal_lower', 3), ('ore_iron_upper', 3), ('ore_iron_middle', 3), ('ore_iron_small', 2),
+    ('ore_gold', 3), ('ore_gold_lower', 3), ('ore_redstone', 3), ('ore_redstone_lower', 3), ('ore_diamond', 2),
+    ('ore_diamond_medium', 3), ('ore_diamond_large', 3), ('ore_diamond_buried', 3), ('ore_lapis', 2),
+    ('ore_lapis_buried', 2), ('ore_copper', 3), ('ore_magma', 4), ('underwater_magma', 2),
+    ('disk_sand', 4), ('disk_clay', 3), ('disk_gravel', 3),
+    ('spring_water', 2), ('spring_lava', 2),
+    ('bamboo_light', 1), ('trees_jungle', 6), ('trees_mangrove', 6),
+    ('patch_grass_jungle', 0), ('patch_grass_normal', 0), ('patch_melon', 0), ('vines', 0), ('patch_waterlily', 0),
+    ('kelp_warm', 0), ('kelp_cold', 0),
+])
+
+
+def guarded_vanilla():
+    for name, d in GUARDED_VANILLA.items():
+        v = vanilla('placed_feature/' + name)
+        placed(name, v['feature'], list(v['placement']) + [clear(d)])
+
+
 def feature(name, data):
     FEATURES[name] = data
     return 'raft:' + name
@@ -130,6 +161,7 @@ def land_patch(name, feat, tries, xz=7, y=3, per_chunk=None, below=None):
         pl.append(count(per_chunk[1]))
     pl += [IN_SQUARE, heightmap('WORLD_SURFACE_WG'), BIOME, count(tries), offset(xz, y)]
     pl.append(predicate(all_of(AIR, below) if below else AIR))
+    pl.append(clear(0))
     placed(name, feat, pl)
 
 
@@ -138,7 +170,7 @@ def flower_patch(name, feat, tries, xz, per_chunk, below=None):
     pl = [rarity(per_chunk)] if isinstance(per_chunk, int) and per_chunk > 1 else [count(per_chunk[1])] if isinstance(per_chunk, tuple) else []
     tz = OrderedDict(type='minecraft:trapezoid', max=xz, min=-xz, plateau=0)
     pl += [IN_SQUARE, count(tries), OrderedDict(type='minecraft:offset', x=tz, y=0, z=tz),
-           heightmap('MOTION_BLOCKING_NO_LEAVES'), BIOME, predicate(all_of(AIR, below) if below else AIR)]
+           heightmap('MOTION_BLOCKING_NO_LEAVES'), BIOME, predicate(all_of(AIR, below) if below else AIR), clear(0)]
     placed(name, feat, pl)
 
 
@@ -175,15 +207,16 @@ def trees():
     on_ground = predicate(all_of(AIR, blocks(*ISLAND_GROUND, offset=(0, -1, 0))))
     placed('palm_trees', f, [count(OrderedDict(type='minecraft:weighted_list', distribution=[
         OrderedDict(data=1, weight=3), OrderedDict(data=2, weight=4), OrderedDict(data=3, weight=2)])),
-        IN_SQUARE, water_depth(0), heightmap('OCEAN_FLOOR'), BIOME, on_ground])
-    placed('palm_trees_sparse', f, [rarity(3), IN_SQUARE, water_depth(0), heightmap('OCEAN_FLOOR'), BIOME, on_ground])
+        IN_SQUARE, water_depth(0), heightmap('OCEAN_FLOOR'), BIOME, on_ground, clear(4)])
+    placed('palm_trees_sparse', f, [rarity(3), IN_SQUARE, water_depth(0), heightmap('OCEAN_FLOOR'), BIOME, on_ground,
+                                    clear(4)])
 
     # bleached driftwood logs washed up on the beach
     f = feature('fallen_driftwood', OrderedDict(
         type='minecraft:fallen_tree', log_decorators=[], log_length=uniform(3, 7), stump_decorators=[],
         trunk_provider=st('driftwood_log', axis='y')))
     placed('fallen_driftwood', f, [rarity(5), IN_SQUARE, water_depth(0), heightmap('OCEAN_FLOOR'), BIOME,
-                                   predicate(all_of(AIR, blocks(*BEACH_GROUND, offset=(0, -1, 0))))])
+                                   predicate(all_of(AIR, blocks(*BEACH_GROUND, offset=(0, -1, 0)))), clear(7)])
 
 
 def vanilla_raft_palm():
@@ -233,7 +266,7 @@ def island_plants():
     beach_spot = predicate(all_of(any_of(AIR, WATER), blocks(*BEACH_GROUND, offset=(0, -1, 0))))
     for name, feat, tries, rar in (('patch_seashells', f, 10, 1), ('patch_sea_glass', g, 6, 3)):
         placed(name, feat, ([rarity(rar)] if rar > 1 else []) + [
-            IN_SQUARE, count(tries), offset(6, 0), heightmap('OCEAN_FLOOR'), water_depth(2), beach_spot, BIOME])
+            IN_SQUARE, count(tries), offset(6, 0), heightmap('OCEAN_FLOOR'), water_depth(2), beach_spot, BIOME, clear(0)])
     sea_patch('seashells_reef', f, 6, xz=6, per_chunk=2, extra=[blocks(*BEACH_GROUND, 'minecraft:clay', offset=(0, -1, 0))])
     sea_patch('sea_glass_reef', g, 4, xz=6, per_chunk=4, extra=[blocks(*BEACH_GROUND, offset=(0, -1, 0))])
 
@@ -244,7 +277,7 @@ def island_plants():
             ('boulder_pumice', 'raft:pumice', ['raft:volcanic_ash', 'raft:black_sand', 'minecraft:basalt',
                                                'minecraft:blackstone', 'minecraft:smooth_basalt'], 3)):
         f = feature(name, OrderedDict(type='minecraft:block_blob', can_place_on=blocks(*ground), state=st(block)))
-        placed(name, f, [rarity(rar), IN_SQUARE, water_depth(0), heightmap('MOTION_BLOCKING'), BIOME])
+        placed(name, f, [rarity(rar), IN_SQUARE, water_depth(0), heightmap('MOTION_BLOCKING'), BIOME, clear(4)])
 
     # volcanic ash drifts over the black sand / basalt
     # (pumice where the ash would have nothing solid below it, so it cannot fall)
@@ -253,7 +286,8 @@ def island_plants():
     f = feature('volcanic_ash_dunes', OrderedDict(
         type='minecraft:disk', half_height=1, radius=uniform(2, 5), state_provider=ash_or_pumice,
         target=blocks('raft:black_sand', 'minecraft:basalt', 'minecraft:blackstone', 'minecraft:smooth_basalt')))
-    placed('patch_volcanic_ash_dunes', f, [count(2), IN_SQUARE, heightmap('WORLD_SURFACE_WG'), water_depth(0), BIOME])
+    placed('patch_volcanic_ash_dunes', f, [count(2), IN_SQUARE, heightmap('WORLD_SURFACE_WG'), water_depth(0), BIOME,
+                                           clear(6)])
 
     # crater lava lake of the big volcanoes (one pass per chunk)
     f = feature('crater_lava', OrderedDict(type='raft:crater_lava', floor_y=164))
@@ -274,7 +308,7 @@ def sea_life():
                             IN_SQUARE, heightmap('OCEAN_FLOOR'),
                             predicate(all_of(WATER, blocks('minecraft:water', offset=(0, 1, 0)), STURDY_BELOW,
                                              not_(tag_pred('minecraft:cannot_support_kelp', offset=(0, -1, 0))))),
-                            BIOME])
+                            BIOME, clear(0)])
     glow = OrderedDict(type='minecraft:block_column', allowed_placement=all_of(WATER, blocks('minecraft:water', offset=(0, 1, 0))),
                        direction='up', layers=[
                            OrderedDict(height=uniform(3, 14), provider=st('glow_kelp_plant')),
@@ -283,7 +317,7 @@ def sea_life():
     f = feature('glow_kelp', glow)
     sea_patch('glow_kelp_patch', f, 10, xz=5, per_chunk=2,
               extra=[blocks('minecraft:water', offset=(0, 1, 0)),
-                     not_(tag_pred('minecraft:cannot_support_kelp', offset=(0, -1, 0)))])
+                     not_(tag_pred('minecraft:cannot_support_kelp', offset=(0, -1, 0))), clear(0)])
 
     # coral reef: the vanilla warm ocean reef shapes, decorated with our anemones, starfish and urchins as well
     deco = vanilla('feature/coral/block_decoration')
@@ -305,12 +339,13 @@ def sea_life():
     text = json.dumps(reef).replace('"minecraft:coral/', '"raft:coral/')
     f = feature('coral_reef', json.loads(text, object_pairs_hook=OrderedDict))
     placed('coral_reef', f, [OrderedDict(type='minecraft:noise_based_count', noise_factor=400.0, noise_offset=0.1,
-                                         noise_to_count_ratio=22), IN_SQUARE, heightmap('OCEAN_FLOOR_WG'), BIOME])
+                                         noise_to_count_ratio=22), IN_SQUARE, heightmap('OCEAN_FLOOR_WG'), BIOME,
+                             clear(6)])
     # rare tube coral heads on the open sea floor
     tube = vanilla('feature/warm_ocean_vegetation')
     tube['features'] = [e for e in tube['features'] if 'tube_block' in json.dumps(e)]
     f = feature('tube_coral', tube)
-    placed('rare_tube_coral', f, [rarity(10), IN_SQUARE, heightmap('OCEAN_FLOOR_WG'), BIOME])
+    placed('rare_tube_coral', f, [rarity(10), IN_SQUARE, heightmap('OCEAN_FLOOR_WG'), BIOME, clear(4)])
 
     # anemones, glowing anemones, tube worms, clams, starfish, urchins
     f = feature('anemones', simple(weighted([(st('sea_anemone_red', **wet), 1), (st('sea_anemone_purple', **wet), 1)])))
@@ -348,8 +383,8 @@ def sea_life():
     # bubble vents (with their bubble columns) in small clusters
     f = feature('bubble_vents', OrderedDict(type='raft:bubble_vents', count=uniform(1, 3), spread=2,
                                             vent='raft:bubble_vent'))
-    placed('bubble_vents', f, [rarity(6), IN_SQUARE, BIOME])
-    placed('bubble_vents_sparse', f, [rarity(18), IN_SQUARE, BIOME])
+    placed('bubble_vents', f, [rarity(6), IN_SQUARE, BIOME, clear(3)])
+    placed('bubble_vents_sparse', f, [rarity(18), IN_SQUARE, BIOME, clear(3)])
 
     # rubble of the drowned city and wreck debris
     rubble = OrderedDict(type='raft:rubble', optional_blocks=['raft:cracked_concrete', 'raft:mossy_concrete',
@@ -361,7 +396,7 @@ def sea_life():
     f = feature('concrete_rubble', rubble)
     placed('concrete_rubble', f, [count(OrderedDict(type='minecraft:weighted_list', distribution=[
         OrderedDict(data=0, weight=1), OrderedDict(data=1, weight=2), OrderedDict(data=2, weight=1)])),
-        IN_SQUARE, BIOME])
+        IN_SQUARE, BIOME, clear(4)])
     debris = OrderedDict(type='raft:rubble', optional_blocks=['raft:weathered_planks', 'raft:teak_planks',
                                                               'raft:rusty_hull', 'raft:riveted_hull'],
                          optional_chance=0.35, pieces=uniform(2, 7), spread=3, stack_chance=0.25,
@@ -371,11 +406,11 @@ def sea_life():
                                                   (st('minecraft:barrel', facing='up'), 1),
                                                   (st('minecraft:iron_chain', axis='x', waterlogged=True), 1)]))
     f = feature('wreck_debris', debris)
-    placed('wreck_debris', f, [rarity(2), IN_SQUARE, BIOME])
+    placed('wreck_debris', f, [rarity(2), IN_SQUARE, BIOME, clear(4)])
 
     # ice floes and snow on the cold sea
     f = feature('ice_floe', OrderedDict(type='raft:ice_floe', radius=uniform(3, 8), ridge_chance=0.3))
-    placed('ice_floe', f, [count(uniform(0, 2)), IN_SQUARE, BIOME])
+    placed('ice_floe', f, [count(uniform(0, 2)), IN_SQUARE, BIOME, clear(9)])
 
 
 def ground_support():
@@ -400,6 +435,7 @@ def write(module):
     island_plants()
     sea_life()
     ground_support()
+    guarded_vanilla()
     for name, data in FEATURES.items():
         assets.write_json(module, f'data/raft/worldgen/feature/{name}.json', data)
     for name, data in PLACED.items():

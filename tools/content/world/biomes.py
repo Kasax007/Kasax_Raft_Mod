@@ -201,11 +201,19 @@ FEATURES = {
 }
 
 
+def guarded(f):
+    """minecraft:<name> -> raft:<name> for the vanilla features that get a structure filter (features.GUARDED_VANILLA)."""
+    from content.world.features import GUARDED_VANILLA
+    if f.startswith('minecraft:') and f[10:] in GUARDED_VANILLA:
+        return 'raft:' + f[10:]
+    return f
+
+
 def features_of(biome, available=None):
     steps = []
     last = max(FEATURES)
     for step in range(last + 1):
-        lst = [f for f, bs in FEATURES.get(step, []) if biome in bs and (available is None or available(f))]
+        lst = [guarded(f) for f, bs in FEATURES.get(step, []) if biome in bs and (available is None or available(f))]
         steps.append(lst)
     while steps and not steps[-1]:
         steps.pop()
@@ -287,6 +295,13 @@ BIOME_TAGS = {
 }
 
 
+PRIORITY = OrderedDict([
+    ('raft:priority/story', ['port_solace', 'abyssal_sanctum', 'coral_temple', 'helix_station', 'ashen_forge',
+                             'old_lighthouse', 'saltmere_village']),
+    ('raft:priority/people', ['rusted_rig', 'iceberg_outpost', 'beach_shack', 'castaway_camp', 'pirate_cove']),
+])
+
+
 def write(module, feature_ok=None, entity_ok=None):
     from bclib import assets
     for b in ALL:
@@ -295,4 +310,7 @@ def write(module, feature_ok=None, entity_ok=None):
         if not bs:
             continue
         assets.tag(module, 'worldgen/biome', tag, ['raft:' + x for x in bs])
+    # ranks of the structures (StructurePriority): a structure never grows into one of a higher rank
+    for tag, ids in PRIORITY.items():
+        assets.tag(module, 'worldgen/structure', tag, [OrderedDict(id='raft:' + x, required=False) for x in ids])
     assets.lang(module, {f'biome.raft.{b}': n for b, n in NAMES.items()})

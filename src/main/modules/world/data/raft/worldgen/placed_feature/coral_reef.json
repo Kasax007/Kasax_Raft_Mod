@@ -16,6 +16,10 @@
     },
     {
       "type": "minecraft:biome"
+    },
+    {
+      "type": "raft:clear_of_structures",
+      "distance": 6
     }
   ]
 }

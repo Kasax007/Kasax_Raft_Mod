@@ -109,6 +109,13 @@ import java.util.function.Function;
  * faceblock &lt;block&gt; [radius]   turn to the nearest such block
  * nearblock &lt;block&gt; &lt;radius&gt; &lt;dx&gt; &lt;dy&gt; &lt;dz&gt;   stand at that offset from the nearest such block, facing it
  * where                   log the player's position, rotation and biome (WHERE); sets {px} {py} {pz}
+ * audit &lt;structure&gt; [x z] [label]   compare the nearest such structure with its templates block by block and
+ *                         check its people (StructAudit): AUDIT line, OUT/audit/&lt;label&gt;.txt; sets the box like scout
+ *                         and nx ny nz (first person found)
+ * npcview &lt;entity type&gt;   free camera spot with a clear view of the face of the nearest such person to {cx} {cz}:
+ *                         sets camx camy (feet) camz camyaw campitch
+ * overview [0-3]          camera above the terrain beside the last audited box, looking at it: ovx ovy ovz ovyaw ovpitch
+ * clouds on|off           show or hide the clouds
  * set &lt;name&gt; &lt;value&gt;     a script variable: {name} or {name+5} anywhere in later lines (scout sets x0 y0 z0 x1 y1 z1 and
  *                         the box center cx cy cz, find sets fx fy fz of the nearest hit, height &lt;x&gt; &lt;z&gt; sets hy)
  * freecam x y z yaw pitch | off   detached camera at that eye position (rec: cam=x,y,z,yaw,pitch with to/by/orbit/look)
@@ -131,7 +138,7 @@ public class BcScript implements FabricClientGameTest {
 
     private String subst(String line) {
         if (line.indexOf('{') < 0) return line;
-        java.util.regex.Matcher m = java.util.regex.Pattern.compile("\\{([a-z][a-z0-9]*)([+-][0-9.]+)?\\}").matcher(line);
+        java.util.regex.Matcher m = java.util.regex.Pattern.compile("\\{([a-z][a-z0-9]*)([+-][0-9.]+)?(:i)?\\}").matcher(line);
         StringBuilder sb = new StringBuilder();
         while (m.find()) {
             Double v = vars.get(m.group(1));
@@ -140,7 +147,8 @@ public class BcScript implements FabricClientGameTest {
                 v = 0.0;
             }
             double d = v + (m.group(2) == null ? 0 : Double.parseDouble(m.group(2)));
-            m.appendReplacement(sb, String.format(Locale.ROOT, "%.2f", d));
+            // {name:i}: a whole number (block coordinates for commands such as forceload)
+            m.appendReplacement(sb, m.group(3) != null ? Long.toString((long) Math.floor(d)) : String.format(Locale.ROOT, "%.2f", d));
         }
         m.appendTail(sb);
         return sb.toString();
@@ -148,6 +156,13 @@ public class BcScript implements FabricClientGameTest {
 
     private ClientGameTestContext ctx;
     private TestSingleplayerContext sp;
+    /** The box of the last audited structure (for overview). */
+    private BoundingBox lastBox;
+
+    private static double horiz(Vec3 a, Vec3 b) {
+        double dx = a.x - b.x, dz = a.z - b.z;
+        return dx * dx + dz * dz;
+    }
     private Path out;
     private String keep;
     private boolean jpg = true;
@@ -344,6 +359,7 @@ public class BcScript implements FabricClientGameTest {
                 mc.resizeGui();
             });
             case "rd" -> ctx.runOnClient(mc -> mc.options.renderDistance().set(Integer.parseInt(arg)));
+            case "clouds" -> ctx.runOnClient(mc -> mc.options.cloudStatus().set(arg.equals("off") ? net.minecraft.client.CloudStatus.OFF : net.minecraft.client.CloudStatus.FANCY));
             case "sim" -> ctx.runOnClient(mc -> mc.options.simulationDistance().set(Integer.parseInt(arg)));
             case "fov" -> ctx.runOnClient(mc -> mc.options.fov().set(Integer.parseInt(arg)));
             case "gamma" -> ctx.runOnClient(mc -> mc.options.gamma().set(Double.parseDouble(arg)));
@@ -602,6 +618,79 @@ public class BcScript implements FabricClientGameTest {
                     vars.put("cy", (vars.get("y0") + vars.get("y1") + 1) / 2);
                     vars.put("cz", (vars.get("z0") + vars.get("z1") + 1) / 2);
                 }
+            }
+            case "audit" -> {
+                // audit <structure> [x z] [label]: compare the nearest such structure (Endless Sea, from x z or the
+                // player) with its templates and check its people (StructAudit); sets the box like scout and nx ny nz
+                String[] a = arg.split("\\s+");
+                String label = a.length >= 4 ? a[3] : a[0].replace(':', '_');
+                StructAudit.Result r = need().getServer().computeOnServer(server -> StructAudit.audit(server, a[0],
+                        a.length >= 3 ? new BlockPos(Integer.parseInt(a[1]), 64, Integer.parseInt(a[2]))
+                                : server.getPlayerList().getPlayers().getFirst().blockPosition(), out, label));
+                LOG.info("[bctest] {}", r.summary());
+                if (r.box() != null) {
+                    lastBox = r.box();
+                    BoundingBox b = r.box();
+                    vars.put("x0", (double) b.minX());
+                    vars.put("y0", (double) b.minY());
+                    vars.put("z0", (double) b.minZ());
+                    vars.put("x1", (double) b.maxX());
+                    vars.put("y1", (double) b.maxY());
+                    vars.put("z1", (double) b.maxZ());
+                    vars.put("cx", (b.minX() + b.maxX() + 1) / 2.0);
+                    vars.put("cy", (b.minY() + b.maxY() + 1) / 2.0);
+                    vars.put("cz", (b.minZ() + b.maxZ() + 1) / 2.0);
+                }
+                if (!r.npcs().isEmpty()) {
+                    vars.put("nx", r.npcs().getFirst()[0]);
+                    vars.put("ny", r.npcs().getFirst()[1]);
+                    vars.put("nz", r.npcs().getFirst()[2]);
+                }
+            }
+            case "npcview" -> {
+                // npcview <entity type>: a free camera spot with a clear view of the face of the nearest such person
+                // to {cx} {cz} (else the player): sets camx camy (feet) camz camyaw campitch
+                String type = arg.strip();
+                double fx = vars.getOrDefault("cx", Double.NaN), fz = vars.getOrDefault("cz", Double.NaN);
+                double[] cam = need().getServer().computeOnServer(server -> {
+                    ServerLevel level = StructAudit.sea(server);
+                    var et = BuiltInRegistries.ENTITY_TYPE.getOptional(Identifier.parse(type)).orElse(null);
+                    if (et == null) return null;
+                    Vec3 from = Double.isNaN(fx) ? server.getPlayerList().getPlayers().getFirst().position() : new Vec3(fx, 64, fz);
+                    Entity best = null;
+                    for (Entity e : level.getEntities(et, e -> true)) {
+                        if (best == null || horiz(e.position(), from) < horiz(best.position(), from)) best = e;
+                    }
+                    if (best == null) return null;
+                    double[] c = StructAudit.npcCamera(level, best);
+                    LOG.info("[bctest] NPCVIEW {} at {} camera {}", type, best.blockPosition().toShortString(),
+                            c == null ? "NONE (no free spot with a clear view)" : String.format(Locale.ROOT, "%.2f %.2f %.2f %.1f %.1f", c[0], c[1], c[2], c[3], c[4]));
+                    return c;
+                });
+                if (cam != null) {
+                    vars.put("camx", cam[0]);
+                    vars.put("camy", cam[1] - 1.62);
+                    vars.put("camz", cam[2]);
+                    vars.put("camyaw", cam[3]);
+                    vars.put("campitch", cam[4]);
+                }
+            }
+            case "overview" -> {
+                // overview [0-3]: a camera above the terrain, out from the last audited box along a diagonal, looking
+                // at its center: sets ovx ovy (feet) ovz ovyaw ovpitch
+                if (lastBox == null) {
+                    LOG.warn("[bctest] overview: no audited box");
+                    break;
+                }
+                int dir = arg.isEmpty() ? 0 : Integer.parseInt(arg);
+                BoundingBox b = lastBox;
+                double[] c = need().getServer().computeOnServer(server -> StructAudit.overview(StructAudit.sea(server), b, dir));
+                vars.put("ovx", c[0]);
+                vars.put("ovy", c[1] - 1.62);
+                vars.put("ovz", c[2]);
+                vars.put("ovyaw", c[3]);
+                vars.put("ovpitch", c[4]);
+                LOG.info("[bctest] OVERVIEW {} {}", dir, String.format(Locale.ROOT, "%.1f %.1f %.1f %.1f %.1f", c[0], c[1], c[2], c[3], c[4]));
             }
             case "chests" -> {
                 int r = arg.isEmpty() ? 64 : Integer.parseInt(arg);

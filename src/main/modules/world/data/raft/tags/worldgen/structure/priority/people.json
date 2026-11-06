@@ -1,0 +1,24 @@
+{
+  "values": [
+    {
+      "id": "raft:rusted_rig",
+      "required": false
+    },
+    {
+      "id": "raft:iceberg_outpost",
+      "required": false
+    },
+    {
+      "id": "raft:beach_shack",
+      "required": false
+    },
+    {
+      "id": "raft:castaway_camp",
+      "required": false
+    },
+    {
+      "id": "raft:pirate_cove",
+      "required": false
+    }
+  ]
+}

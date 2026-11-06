@@ -1,0 +1,16 @@
+{
+  "feature": "minecraft:large_basalt_columns",
+  "placement": [
+    {
+      "type": "minecraft:count_on_every_layer",
+      "count": 2
+    },
+    {
+      "type": "minecraft:biome"
+    },
+    {
+      "type": "raft:clear_of_structures",
+      "distance": 10
+    }
+  ]
+}
