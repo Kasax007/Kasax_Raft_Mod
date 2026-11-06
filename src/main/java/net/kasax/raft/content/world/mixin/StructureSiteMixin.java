@@ -30,6 +30,11 @@ public abstract class StructureSiteMixin {
     /** Coral Temple: 23 blocks high, sits one block into the floor; the floor must lie between these heights. */
     @Unique
     private static final int RAFT$TEMPLE_RADIUS = 11, RAFT$TEMPLE_MIN_FLOOR = 50, RAFT$TEMPLE_CLEARANCE = 25;
+    /** Small island places whose ground the terrain adaptation flattens: on a slope that cut a sharp rectangle with
+     * a step into the hill (Teo's sand plaza). They only start where the ground under them is almost flat:
+     * radius and the largest height difference of nine points (center, edges, corners). */
+    @Unique
+    private static final Map<String, int[]> RAFT$FLAT = Map.of("beach_shack", new int[] {10, 3}, "castaway_camp", new int[] {7, 3});
     /** Sunken Plane: 15 blocks high, sits 3 blocks into the floor; the floor must be this deep, else its top (and the
      * kelp and seagrass on it) stood out of the sea. */
     @Unique
@@ -54,6 +59,10 @@ public abstract class StructureSiteMixin {
             if (raft$minMax(context, pos, land)[0] < sea) {
                 cir.setReturnValue(Optional.empty());
             }
+            int[] flat = RAFT$FLAT.get(id.getPath());
+            if (flat != null && cir.getReturnValue().isPresent() && raft$spread(context, pos, flat[0]) > flat[1]) {
+                cir.setReturnValue(Optional.empty());
+            }
         } else if ("sunken_plane".equals(id.getPath())) {
             if (raft$minMax(context, pos, RAFT$PLANE_RADIUS)[1] > sea - RAFT$PLANE_CLEARANCE) {
                 cir.setReturnValue(Optional.empty());
@@ -68,6 +77,22 @@ public abstract class StructureSiteMixin {
         if (cir.getReturnValue().isPresent()) {
             cir.setReturnValue(net.kasax.raft.content.world.StructurePriority.check((Structure) (Object) this, context, cir.getReturnValue().get()));
         }
+    }
+
+    /** height difference of the ground (top solid block, fluids ignored) over the center, edges and corners at r. */
+    @Unique
+    private static int raft$spread(Structure.GenerationContext context, BlockPos pos, int r) {
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+        for (int dx = -r; dx <= r; dx += r) {
+            for (int dz = -r; dz <= r; dz += r) {
+                int h = context.chunkGenerator().getFirstOccupiedHeight(pos.getX() + dx, pos.getZ() + dz,
+                        Heightmap.Types.OCEAN_FLOOR_WG, context.heightAccessor(), context.randomState());
+                min = Math.min(min, h);
+                max = Math.max(max, h);
+            }
+        }
+        return max - min;
     }
 
     /** lowest and highest top solid block (fluids ignored) at the center and four points at distance r. */

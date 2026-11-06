@@ -317,7 +317,8 @@ def sea_life():
     f = feature('glow_kelp', glow)
     sea_patch('glow_kelp_patch', f, 10, xz=5, per_chunk=2,
               extra=[blocks('minecraft:water', offset=(0, 1, 0)),
-                     not_(tag_pred('minecraft:cannot_support_kelp', offset=(0, -1, 0))), clear(0)])
+                     not_(tag_pred('minecraft:cannot_support_kelp', offset=(0, -1, 0)))])
+    PLACED['glow_kelp_patch']['placement'].append(clear(0))
 
     # coral reef: the vanilla warm ocean reef shapes, decorated with our anemones, starfish and urchins as well
     deco = vanilla('feature/coral/block_decoration')
