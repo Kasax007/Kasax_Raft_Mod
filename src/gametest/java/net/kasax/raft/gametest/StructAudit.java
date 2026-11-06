@@ -283,7 +283,9 @@ public final class StructAudit {
             }
             Entity n = near.getFirst();
             BlockPos np = n.blockPosition();
-            boolean free = level.noCollision(n);
+            // free: nothing in the body; a carpet or rug under the feet (1/16 block) does not count, the person
+            // stands on it as soon as they move
+            boolean free = level.noCollision(n, n.getBoundingBox().move(0, 0.13, 0));
             BlockState floor = level.getBlockState(np.below());
             boolean onFloor = !floor.getCollisionShape(level, np.below()).isEmpty() || n.onGround();
             boolean wet = n.isInWater();
