@@ -31,7 +31,9 @@ public final class FilmSound {
         stop();
         try {
             Files.createDirectories(dir);
-            Files.writeString(dir.resolve("shot.json"), String.format(Locale.ROOT, "{\"fps\": %s}%n", fps));
+            // realtime: recorded with the world held while each frame is read back, so a clip second is a game second
+            // (clips without it ran three times faster than the game: two ticks per frame at 30 fps)
+            Files.writeString(dir.resolve("shot.json"), String.format(Locale.ROOT, "{\"fps\": %s, \"realtime\": true}%n", fps));
             out = Files.newBufferedWriter(dir.resolve("sounds.jsonl"), StandardCharsets.UTF_8);
             startTick = gameTime;
         } catch (IOException e) {

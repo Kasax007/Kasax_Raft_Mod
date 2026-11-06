@@ -130,6 +130,9 @@ public class BcScript implements FabricClientGameTest {
     public static final Logger LOG = LoggerFactory.getLogger("bctest");
     /** While true the client skips drawing its per-tick frames (screenshots still render): see NoRenderMixin. */
     public static volatile boolean skipFrames;
+    /** While true the world stands still on server and client (HoldWorldMixin, HoldPlayerMixin): set while a recorded
+     *  frame is read back, so a clip shows exactly fps frames per second of game time. */
+    public static volatile boolean holdWorld;
     /** While above 0 the client draws a frame at most every throttleMs milliseconds (settle). */
     public static volatile long throttleMs;
     /** Detached camera (x, eye y, z, yaw, pitch) while not null: see FreeCamMixin. The player stays where it is. */
@@ -996,8 +999,17 @@ public class BcScript implements FabricClientGameTest {
                     final int fi = i;
                     ctx.runOnClient(mc -> cam.apply(mc, fi, frames, delta));
                 }
-                save(ctx.takeScreenshot(TestScreenshotOptions.of(String.format(Locale.ROOT, "f%05d", i)).withDeltaTicks(delta)
-                        .disableCounterPrefix().withDestinationDir(dir)), 0.93f);
+                // the framework renders the frame at once, then runs ticks until the GPU has copied it out (two per
+                // frame): hold the world meanwhile, else every frame cost two game ticks and a 30 fps clip ran 3x fast
+                holdWorld = true;
+                Path shot;
+                try {
+                    shot = ctx.takeScreenshot(TestScreenshotOptions.of(String.format(Locale.ROOT, "f%05d", i)).withDeltaTicks(delta)
+                            .disableCounterPrefix().withDestinationDir(dir));
+                } finally {
+                    holdWorld = false;
+                }
+                save(shot, 0.93f);
                 if (i % 30 == 29) LOG.info("[bctest] rec {}: {}/{} frames, {} ms per frame", name, i + 1, frames, (System.nanoTime() - w0) / 1_000_000 / (i + 1));
             }
         } finally {
