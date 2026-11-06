@@ -37,6 +37,7 @@ Build your own raft and sail it, meet the people who stayed on the Endless Sea, 
 - **Structures blend in**: island places (castaway camps, beach shacks, the Old Lighthouse, the Ashen Forge) only appear on real land, so no more square blocks of sand and gravel standing in the sea. No more box-shaped terrain cuts around big places.
 - **Structures stay whole**: nothing of the world grows into them any more. Basalt columns had filled the rooms of the Ashen Forge (Dr. Voss stood in the rock and its ember crabs suffocated), volcanic ash ate into its walls and a lava lake could cut into it; jungle and mangrove trees grew into the Old Lighthouse and Saltmere, ore veins into walls and floors, kelp into the Coral Temple.
 - **Places no longer overlap**: a place never grows into a story place or into a place where someone lives (a Rusted Rig could stand on the Abyssal Sanctum and flood it). Treasure maps and /locate always lead to a place that is really there.
+- **Port Solace** is always built whole: in about one city in six a building at its edge reached too far from the city's center and was cut off.
 - **Tiki bars and castaway camps** only stand on almost flat ground, so they no longer cut a sharp sand rectangle into a hillside.
 - **Sunken Plane**: only in water deep enough to cover the whole plane.
 - **Fishing boat wrecks**: their nets hold up under water (the sea no longer washes them away into floating string). **Rusted Rig**: the weight on the crane no longer falls down.
