@@ -8,6 +8,9 @@ import random
 
 from .lib import (Side, NO_SPILL_PLANTS, contact, overgrow, pick, resample, save, silt, write_structure)
 
+# the nets: cobwebs were washed away by the sea at once (and left string floating around), the cargo net holds water
+NET = 'raft:cargo_net[facing=north,waterlogged=true]'
+
 
 def hull(s, rnd, L, hw, depth, paint, keel_rise=2, stern=0.8, wood='minecraft:spruce_planks', deck=True,
          top_paint='minecraft:white_concrete', floor_block='minecraft:spruce_planks'):
@@ -61,7 +64,7 @@ def net(s, rnd, x0, y0, z0, x1, z1, chance=0.6):
     for x in range(min(x0, x1), max(x0, x1) + 1):
         for z in range(min(z0, z1), max(z0, z1) + 1):
             if rnd.random() < chance and s.get(x, y0, z) in (None, 'minecraft:water'):
-                s.set(x, y0, z, 'minecraft:cobweb')
+                s.set(x, y0, z, NET)
 
 
 def normalise(s):
@@ -119,7 +122,7 @@ def trawler(rnd):
     s.set(0, D + 5, 0, 'minecraft:iron_chain[axis=y]')
     for x in range(-2, 3):
         s.set(x, D, 8, 'minecraft:stripped_dark_oak_log[axis=x]')
-        s.set(x, D + 1, 8, 'minecraft:cobweb' if rnd.random() < 0.7 else 'minecraft:water')
+        s.set(x, D + 1, 8, NET if rnd.random() < 0.7 else 'minecraft:water')
     # mast with boom
     for y in range(D, D + 7):
         s.set(0, y, 12, 'raft:steel_beam[axis=y]')
@@ -159,7 +162,7 @@ def sloop(rnd):
     s.chest(0, 1, 2, 'raft:chests/wreck_fishing', facing='south', block='minecraft:barrel')
     s.set(-1, 1, 6, 'raft:wooden_crate[facing=east,open=false]')
     s.set(1, 1, 6, 'raft:rope_coil')
-    s.set(0, 1, 10, 'minecraft:cobweb')
+    s.set(0, 1, 10, NET)
     s.set(1, 2, 3, 'minecraft:lantern[hanging=false]')
     for y in range(1, 3):
         s.set(0, y, 7, 'minecraft:spruce_log[axis=y]')            # mast stump
@@ -231,7 +234,7 @@ def capsized(rnd):
     # crab traps and buoys around
     for i, (dx, dz) in enumerate(((-3, 2), (-2, 6), (x1 - x0 + 2, 4), (x1 - x0 + 3, 9), (2, z1 - z0 + 2))):
         x, z = x0 + dx, z0 + dz
-        s.set(x, 3, z, 'raft:wooden_crate[facing=north,open=false]' if i % 2 == 0 else 'minecraft:cobweb')
+        s.set(x, 3, z, 'raft:wooden_crate[facing=north,open=false]' if i % 2 == 0 else NET)
         if i in (1, 3):
             s.set(x, 4, z, 'minecraft:iron_chain[axis=y]')
             s.set(x, 5, z, 'raft:buoy_green' if i == 1 else 'raft:buoy_red')

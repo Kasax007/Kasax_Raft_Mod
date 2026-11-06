@@ -336,6 +336,12 @@ public class BcScript implements FabricClientGameTest {
                 settle(arg.isEmpty() ? 40 : Integer.parseInt(arg));
                 LOG.info("[bctest] settle took {} s", (System.currentTimeMillis() - t0) / 1000);
             }
+            case "shotif" -> {
+                // shotif <variable> <name>: the shot only when the variable is set (npcview found a camera spot)
+                String[] a = arg.split("\\s+", 2);
+                if (vars.containsKey(a[0])) save(ctx.takeScreenshot(TestScreenshotOptions.of(a[1]).disableCounterPrefix().withDestinationDir(out)), 0.95f);
+                else LOG.warn("[bctest] shotif: no {}, no shot {}", a[0], a[1]);
+            }
             case "shot" -> save(ctx.takeScreenshot(TestScreenshotOptions.of(arg).disableCounterPrefix().withDestinationDir(out)), 0.95f);
             case "still" -> {
                 String[] a = arg.split("\\s+");
@@ -667,6 +673,7 @@ public class BcScript implements FabricClientGameTest {
                             c == null ? "NONE (no free spot with a clear view)" : String.format(Locale.ROOT, "%.2f %.2f %.2f %.1f %.1f", c[0], c[1], c[2], c[3], c[4]));
                     return c;
                 });
+                for (String k : new String[]{"camx", "camy", "camz", "camyaw", "campitch"}) vars.remove(k);
                 if (cam != null) {
                     vars.put("camx", cam[0]);
                     vars.put("camy", cam[1] - 1.62);
