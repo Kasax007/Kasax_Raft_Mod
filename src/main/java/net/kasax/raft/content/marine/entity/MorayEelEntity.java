@@ -2,6 +2,7 @@ package net.kasax.raft.content.marine.entity;
 
 import net.kasax.raft.content.audio.AudioSounds;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -165,7 +166,16 @@ public class MorayEelEntity extends AbstractMarineMonster {
                 }
             }
         }
-        return best != null ? best : start;
+        return best != null ? best : floorBelow(level, start);
+    }
+
+    /** Without a crevice nearby the eel lies on the sea floor (a water block right above solid ground). */
+    private static BlockPos floorBelow(LevelReader level, BlockPos start) {
+        BlockPos.MutableBlockPos m = start.mutable();
+        for (int i = 0; i < 12 && level.getFluidState(m.below()).is(FluidTags.WATER) && m.getY() > level.getMinY() + 1; i++) {
+            m.move(Direction.DOWN);
+        }
+        return m.immutable();
     }
 
     /** Direction from the hole to open water (where the head should point). */
@@ -193,6 +203,15 @@ public class MorayEelEntity extends AbstractMarineMonster {
     @Override
     public void aiStep() {
         super.aiStep();
+        // the body hangs on the head, which takes the pitch of the swim: keep it flat (at most 30 degrees while
+        // swimming up or down) and level it out while the eel waits in its hole or drifts slowly; 3.1.0 kept the last
+        // pitch (up to 40 degrees) and the eel hung slanted or upright in the water
+        float pitch = Mth.clamp(this.getXRot(), -30.0F, 30.0F);
+        if (this.getTarget() == null && this.getDeltaMovement().lengthSqr() < 0.004) {
+            pitch *= 0.8F;
+        }
+        this.setXRot(pitch);
+        this.xRotO = Mth.clamp(this.xRotO, -30.0F, 30.0F);
         if (this.level().isClientSide()) {
             if (this.lungeAnim > 0) {
                 this.lungeAnim--;

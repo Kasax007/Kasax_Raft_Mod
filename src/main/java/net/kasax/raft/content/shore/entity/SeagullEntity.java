@@ -114,7 +114,10 @@ public class SeagullEntity extends Animal {
         this.setPathfindingMalus(PathType.FIRE, -1.0F);
         this.setPathfindingMalus(PathType.LEAVES, 4.0F);
         RandomSource r = this.random;
-        this.flockOffset = new Vec3((r.nextFloat() - 0.5F) * 7.0F, (r.nextFloat() - 0.3F) * 3.0F, (r.nextFloat() - 0.5F) * 7.0F);
+        // a place in a loose V behind the leader, in the leader's frame (x to the side, z forward): it turns with the
+        // leader, so the flock keeps its shape in curves
+        this.flockOffset = new Vec3((r.nextBoolean() ? 1.0 : -1.0) * (1.6 + r.nextFloat() * 2.6), (r.nextFloat() - 0.4F) * 2.0F,
+                -(1.2 + r.nextFloat() * 4.0));
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -245,8 +248,8 @@ public class SeagullEntity extends Animal {
         this.flapPower = Mth.approach(this.flapPower, targetPower, 0.1F);
         this.flapPhase += 0.25F + 0.55F * this.flapPower;
         float turn = Mth.wrapDegrees(this.getYRot() - this.yRotO);
-        float targetRoll = flying ? Mth.clamp(turn * 3.0F, -40.0F, 40.0F) : 0.0F;
-        this.roll += (targetRoll - this.roll) * 0.15F;
+        float targetRoll = flying ? Mth.clamp(turn * 2.2F, -25.0F, 25.0F) : 0.0F;
+        this.roll += (targetRoll - this.roll) * 0.1F;
     }
 
     public float getFlyAmount(float partialTicks) {
@@ -387,6 +390,11 @@ public class SeagullEntity extends Animal {
         this.nextFlap = this.flyDist + 1.2F;
     }
 
+    /** This gull's place in its leader's flock right now (the offset turned with the leader's heading). */
+    private Vec3 flockSlot(SeagullEntity lead) {
+        return lead.position().add(this.flockOffset.yRot(-lead.getYRot() * Mth.DEG_TO_RAD));
+    }
+
     private void flyTo(Vec3 target, double speed) {
         this.getNavigation().moveTo(target.x, target.y, target.z, speed);
     }
@@ -419,7 +427,7 @@ public class SeagullEntity extends Animal {
     private Vec3 pickWanderTarget() {
         RandomSource r = this.random;
         if (this.leader != null) {
-            return this.leader.position().add(this.flockOffset).add(0.0, 1.0, 0.0);
+            return this.flockSlot(this.leader).add(0.0, 1.0, 0.0);
         }
         Player raftPlayer = r.nextInt(4) == 0 ? this.raftPlayerNear() : null;
         if (raftPlayer != null) {
@@ -912,7 +920,13 @@ public class SeagullEntity extends Animal {
         }
     }
 
-    /** Flock members stay close to their leader in the air and land when it lands. */
+    /**
+     * Flock members fly in formation: while the leader flies, each gull steers every tick towards a point a few blocks
+     * ahead of its place in the V (so it flies wide, smooth curves instead of turning on the spot), a bit faster when
+     * it lags behind and a bit slower when it is ahead. When the leader lands they land near it. 3.1.0 gave every
+     * gull a new path to a fixed point next to the leader every 8 ticks and stopped following within 4 blocks: the
+     * flock kept turning away and catching up, and banked hard at every jerk.
+     */
     private class FollowFlockGoal extends Goal {
         FollowFlockGoal() {
             this.setFlags(EnumSet.of(Goal.Flag.MOVE));
@@ -929,25 +943,47 @@ public class SeagullEntity extends Animal {
                 // leader sits: take off only if far away
                 return gull.distanceToSqr(lead) > 14 * 14;
             }
-            return gull.distanceToSqr(lead.position().add(gull.flockOffset)) > 4.0 * 4.0 || !gull.isFlying();
+            return gull.distanceToSqr(lead) < 40 * 40;
+        }
+
+        @Override
+        public boolean requiresUpdateEveryTick() {
+            return true;
+        }
+
+        @Override
+        public void start() {
+            SeagullEntity.this.getNavigation().stop();
         }
 
         @Override
         public void tick() {
             SeagullEntity gull = SeagullEntity.this;
             SeagullEntity lead = gull.leader;
-            // a new path every 8 ticks, or every 4 once the last one is used up (pathfinding in the air is costly)
-            if (lead != null && (gull.aiTick(8) || gull.getNavigation().isDone() && gull.aiTick(4))) {
-                Vec3 target = lead.position().add(gull.flockOffset).add(0.0, lead.isFlying() ? 0.5 : 3.0, 0.0);
-                gull.flyTo(target, lead.isFlying() ? 1.25 : 1.0);
+            if (lead == null) {
+                return;
             }
+            if (!lead.isFlying()) {
+                if (gull.aiTick(8) || gull.getNavigation().isDone() && gull.aiTick(4)) {
+                    gull.flyTo(gull.flockSlot(lead).add(0.0, 3.0, 0.0), 1.0);
+                }
+                return;
+            }
+            Vec3 slot = gull.flockSlot(lead).add(0.0, 0.5, 0.0);
+            Vec3 heading = Vec3.directionFromRotation(0.0F, lead.getYRot());
+            Vec3 toSlot = slot.subtract(gull.position());
+            double along = toSlot.dot(heading);                 // > 0: the gull is behind its place
+            double speed = Mth.clamp(1.0 + along * 0.08, 0.8, 1.45);
+            Vec3 aim = slot.add(heading.scale(6.0));
+            gull.getNavigation().stop();
+            gull.getMoveControl().setWantedPosition(aim.x, aim.y, aim.z, speed);
         }
 
         @Override
         public boolean canContinueToUse() {
             SeagullEntity lead = SeagullEntity.this.leader;
-            return lead != null && lead.isAlive() && SeagullEntity.this.distanceToSqr(lead) > 3.0 * 3.0
-                    && (lead.isFlying() || SeagullEntity.this.distanceToSqr(lead) > 10 * 10);
+            return lead != null && lead.isAlive()
+                    && (lead.isFlying() ? SeagullEntity.this.distanceToSqr(lead) < 40 * 40 : SeagullEntity.this.distanceToSqr(lead) > 10 * 10);
         }
     }
 

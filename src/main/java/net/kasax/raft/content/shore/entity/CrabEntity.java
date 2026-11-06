@@ -277,7 +277,21 @@ public class CrabEntity extends Animal implements CrabAnimated {
         if (this.level().isClientSide()) {
             this.burrowO = this.burrow;
             this.sidewaysO = this.sideways;
-            this.burrow = Mth.approach(this.burrow, this.isHidden() ? 1.0F : 0.0F, this.isHidden() ? 0.14F : 0.2F);
+            // digging in takes almost a second, with sand flying the whole time, so it can be seen (3.1.0: a third
+            // of a second and one puff); coming out stays quick
+            this.burrow = Mth.approach(this.burrow, this.isHidden() ? 1.0F : 0.0F, this.isHidden() ? 0.06F : 0.2F);
+            if (this.isHidden() && this.burrow < 1.0F) {
+                BlockState below = this.level().getBlockState(this.blockPosition().below());
+                if (!below.isAir()) {
+                    for (int i = 0; i < 3; i++) {
+                        this.level().addParticle(new BlockParticleOption(ParticleTypes.BLOCK, below),
+                                this.getX() + (this.random.nextDouble() - 0.5) * 0.6, this.getY() + 0.1,
+                                this.getZ() + (this.random.nextDouble() - 0.5) * 0.6,
+                                (this.random.nextDouble() - 0.5) * 0.3, 0.25 + this.random.nextDouble() * 0.2,
+                                (this.random.nextDouble() - 0.5) * 0.3);
+                    }
+                }
+            }
             double dx = this.getX() - this.xo;
             double dz = this.getZ() - this.zo;
             boolean moving = dx * dx + dz * dz > 2.0E-5;
