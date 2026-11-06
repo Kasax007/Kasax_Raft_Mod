@@ -14,6 +14,7 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.level.levelgen.placement.PlacementContext;
 import net.minecraft.world.level.levelgen.placement.PlacementFilter;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
@@ -31,22 +32,33 @@ import net.minecraft.world.level.levelgen.structure.StructureStart;
  */
 public final class ClearOfStructuresFilter implements PlacementFilter {
     public static final MapCodec<ClearOfStructuresFilter> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-            Codec.intRange(0, 32).fieldOf("distance").forGetter(f -> f.distance)
+            Codec.intRange(0, 32).fieldOf("distance").forGetter(f -> f.distance),
+            Codec.BOOL.optionalFieldOf("whole_column", false).forGetter(f -> f.wholeColumn)
     ).apply(i, ClearOfStructuresFilter::new));
 
     private final int distance;
+    /** for features placed without a height (their position is at the bottom of the world, they look for the sea
+     * floor or the sea surface themselves: bubble vents, rubble, ice floes, icebergs): only x and z count. */
+    private final boolean wholeColumn;
 
-    public ClearOfStructuresFilter(int distance) {
+    public ClearOfStructuresFilter(int distance, boolean wholeColumn) {
         this.distance = distance;
+        this.wholeColumn = wholeColumn;
     }
 
     @Override
     public boolean shouldPlace(PlacementContext context, RandomSource random, BlockPos origin) {
-        return clear(context.getLevel(), origin, this.distance);
+        return clear(context.getLevel(), origin, this.distance, this.wholeColumn);
     }
 
-    /** true when no structure piece (grown by distance) contains pos. */
-    public static boolean clear(WorldGenLevel level, BlockPos pos, int distance) {
+    private static boolean inside(BoundingBox box, BlockPos pos, int distance, boolean wholeColumn) {
+        BoundingBox b = box.inflatedBy(distance);
+        return wholeColumn ? pos.getX() >= b.minX() && pos.getX() <= b.maxX() && pos.getZ() >= b.minZ() && pos.getZ() <= b.maxZ()
+                : b.isInside(pos);
+    }
+
+    /** true when no structure piece (grown by distance) contains pos (with wholeColumn: its x and z). */
+    public static boolean clear(WorldGenLevel level, BlockPos pos, int distance, boolean wholeColumn) {
         // during generation only some chunks around the generating one may be read: references within 1 chunk
         // (carvers status or later), starts within 8 chunks (structure_starts status)
         ChunkPos center = level instanceof WorldGenRegion region ? region.getCenter() : null;
@@ -72,11 +84,11 @@ public final class ClearOfStructuresFilter implements PlacementFilter {
                             continue;
                         }
                         StructureStart st = startChunk.getStartForStructure(e.getKey());
-                        if (st == null || !st.isValid() || !st.getBoundingBox().inflatedBy(distance).isInside(pos)) {
+                        if (st == null || !st.isValid() || !inside(st.getBoundingBox(), pos, distance, wholeColumn)) {
                             continue;
                         }
                         for (StructurePiece piece : st.getPieces()) {
-                            if (piece.getBoundingBox().inflatedBy(distance).isInside(pos)) {
+                            if (inside(piece.getBoundingBox(), pos, distance, wholeColumn)) {
                                 return false;
                             }
                         }

@@ -112,16 +112,20 @@ def water_depth(n):
     return OrderedDict(type='minecraft:surface_water_depth_filter', max_water_depth=n)
 
 
-def clear(d):
+def clear(d, column=False):
     """raft:clear_of_structures (ClearOfStructuresFilter): no feature within d blocks of a structure piece, so nothing
-    grows into the rooms of a structure (basalt columns filled the Ashen Forge, trees grew into the lighthouse)."""
-    return OrderedDict(type='raft:clear_of_structures', distance=d)
+    grows into the rooms of a structure (basalt columns filled the Ashen Forge, trees grew into the lighthouse).
+    column: for features placed without a height (they find the sea floor or surface themselves): x and z only."""
+    f = OrderedDict(type='raft:clear_of_structures', distance=d)
+    if column:
+        f['whole_column'] = True
+    return f
 
 
 # vanilla placed features the biomes use as raft:<name> copies with clear(d) at the end (biomes.guarded): every
 # feature that builds or replaces blocks next to structures. Distances: the reach of the feature from its position.
 GUARDED_VANILLA = OrderedDict([
-    ('lake_lava_surface', 9), ('iceberg_packed', 6), ('iceberg_blue', 6), ('blue_ice', 2),
+    ('lake_lava_surface', 9), ('iceberg_packed', (8, True)), ('iceberg_blue', (8, True)), ('blue_ice', 2),
     ('small_basalt_columns', 10), ('large_basalt_columns', 10),
     # the big blobs of dirt, gravel and stone kinds (size 33-64) reach up to ~7 blocks from their position
     ('ore_dirt', 7), ('ore_gravel', 7), ('ore_granite_upper', 7), ('ore_granite_lower', 7), ('ore_diorite_upper', 7),
@@ -141,7 +145,7 @@ GUARDED_VANILLA = OrderedDict([
 def guarded_vanilla():
     for name, d in GUARDED_VANILLA.items():
         v = vanilla('placed_feature/' + name)
-        placed(name, v['feature'], list(v['placement']) + [clear(d)])
+        placed(name, v['feature'], list(v['placement']) + [clear(*d) if isinstance(d, tuple) else clear(d)])
 
 
 def feature(name, data):
@@ -385,8 +389,8 @@ def sea_life():
     # bubble vents (with their bubble columns) in small clusters
     f = feature('bubble_vents', OrderedDict(type='raft:bubble_vents', count=uniform(1, 3), spread=2,
                                             vent='raft:bubble_vent'))
-    placed('bubble_vents', f, [rarity(6), IN_SQUARE, BIOME, clear(3)])
-    placed('bubble_vents_sparse', f, [rarity(18), IN_SQUARE, BIOME, clear(3)])
+    placed('bubble_vents', f, [rarity(6), IN_SQUARE, BIOME, clear(4, column=True)])
+    placed('bubble_vents_sparse', f, [rarity(18), IN_SQUARE, BIOME, clear(4, column=True)])
 
     # rubble of the drowned city and wreck debris
     rubble = OrderedDict(type='raft:rubble', optional_blocks=['raft:cracked_concrete', 'raft:mossy_concrete',
@@ -398,7 +402,7 @@ def sea_life():
     f = feature('concrete_rubble', rubble)
     placed('concrete_rubble', f, [count(OrderedDict(type='minecraft:weighted_list', distribution=[
         OrderedDict(data=0, weight=1), OrderedDict(data=1, weight=2), OrderedDict(data=2, weight=1)])),
-        IN_SQUARE, BIOME, clear(4)])
+        IN_SQUARE, BIOME, clear(6, column=True)])
     debris = OrderedDict(type='raft:rubble', optional_blocks=['raft:weathered_planks', 'raft:teak_planks',
                                                               'raft:rusty_hull', 'raft:riveted_hull'],
                          optional_chance=0.35, pieces=uniform(2, 7), spread=3, stack_chance=0.25,
@@ -408,11 +412,11 @@ def sea_life():
                                                   (st('minecraft:barrel', facing='up'), 1),
                                                   (st('minecraft:iron_chain', axis='x', waterlogged=True), 1)]))
     f = feature('wreck_debris', debris)
-    placed('wreck_debris', f, [rarity(2), IN_SQUARE, BIOME, clear(4)])
+    placed('wreck_debris', f, [rarity(2), IN_SQUARE, BIOME, clear(6, column=True)])
 
     # ice floes and snow on the cold sea
     f = feature('ice_floe', OrderedDict(type='raft:ice_floe', radius=uniform(3, 8), ridge_chance=0.3))
-    placed('ice_floe', f, [count(uniform(0, 2)), IN_SQUARE, BIOME, clear(9)])
+    placed('ice_floe', f, [count(uniform(0, 2)), IN_SQUARE, BIOME, clear(9, column=True)])
 
 
 def ground_support():
