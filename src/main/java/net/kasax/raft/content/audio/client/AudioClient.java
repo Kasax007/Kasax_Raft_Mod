@@ -32,6 +32,9 @@ public final class AudioClient {
     private static SeaAmbience sea;
     private static long seaStarted;
     private static final List<TurbineSound> TURBINES = new ArrayList<>();
+    private static final List<MotorSound> MOTORS = new ArrayList<>();
+    /** Rafts whose motor ran in the last tick (the start sound only plays when a motor starts, not on coming near). */
+    private static final java.util.Set<Integer> MOTOR_WAS_ON = new java.util.HashSet<>();
     private static float openSea;
 
     private AudioClient() {
@@ -43,6 +46,8 @@ public final class AudioClient {
             MusicDirector.reset();
             sea = null;
             TURBINES.clear();
+            MOTORS.clear();
+            MOTOR_WAS_ON.clear();
         });
         ClientTickEvents.END_CLIENT_TICK.register(AudioClient::tick);
     }
@@ -60,6 +65,7 @@ public final class AudioClient {
             return;
         }
         boolean raftDim = level.dimension().identifier().equals(RAFT_DIMENSION);
+        motors(mc, level, player);
         if (level.getGameTime() % 10 == 0) {
             openSea = raftDim ? measureOpenSea(level, player) : 0.0F;
             turbines(mc, level, player);
@@ -109,6 +115,33 @@ public final class AudioClient {
         float near = (float) Mth.clamp(1.0 - Math.abs(height - 2.0) / 40.0, 0.0, 1.0);
         float sky = level.getBrightness(LightLayer.SKY, BlockPos.containing(player.getEyePosition())) / 15.0F;
         return around * near * (0.25F + 0.75F * sky);
+    }
+
+    /** A motor sound for each raft within 48 blocks whose motor runs (it stops itself when the motor stops); the pull
+     * cord and the engine catching when a motor starts. */
+    private static void motors(Minecraft mc, ClientLevel level, LocalPlayer player) {
+        MOTORS.removeIf(s -> s.isStopped() || level.getGameTime() - s.started > 100 && !mc.getSoundManager().isActive(s));
+        java.util.Set<Integer> on = new java.util.HashSet<>();
+        for (net.minecraft.world.entity.Entity e : level.entitiesForRendering()) {
+            if (!(e instanceof net.kasax.raft.content.vessel.VesselEntity || e instanceof net.kasax.raft.content.voyage.ExpeditionRaft)
+                    || !MotorSound.running(e)) {
+                continue;
+            }
+            on.add(e.getId());
+            if (e.distanceToSqr(player) > 48.0 * 48.0 || MOTORS.stream().anyMatch(s -> s.isFor(e))) {
+                continue;
+            }
+            MotorSound sound = new MotorSound(e);
+            sound.started = level.getGameTime();
+            MOTORS.add(sound);
+            mc.getSoundManager().play(sound);
+            if (!MOTOR_WAS_ON.contains(e.getId())) {
+                mc.getSoundManager().play(new SimpleSoundInstance(AudioSounds.MOTOR_START, net.minecraft.sounds.SoundSource.NEUTRAL,
+                        0.8F, 1.0F, net.minecraft.client.resources.sounds.SoundInstance.createUnseededRandom(), e.getX(), e.getY() + 0.5, e.getZ()));
+            }
+        }
+        MOTOR_WAS_ON.clear();
+        MOTOR_WAS_ON.addAll(on);
     }
 
     /** A rotor sound for each wind turbine within 24 blocks that turns (the sound stops itself when it does not). */

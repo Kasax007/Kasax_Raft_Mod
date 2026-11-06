@@ -474,10 +474,6 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
             this.propellerO -= Mth.TWO_PI * 8;
         }
         if (running) {
-            if (this.tickCount % 4 == 0) {
-                this.level().playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.NOTE_BLOCK_BASEDRUM.value(),
-                        SoundSource.NEUTRAL, 0.35F, 0.5F + this.random.nextFloat() * 0.08F, false);
-            }
             if (this.tickCount % 3 == 0) {
                 Vec3 exhaust = this.local(-1.0, 1.4, -1.7);
                 this.level().addParticle(ParticleTypes.SMOKE, exhaust.x, exhaust.y, exhaust.z, 0.0, 0.04, 0.0);

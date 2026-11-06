@@ -32,6 +32,8 @@ public abstract class AbstractMarineMonster extends Monster {
 
     /** Client-side countdown of the bite animation (ticks). */
     public int biteAnimation;
+    /** A stranded sea monster jumps at every landing; its flop sound plays at most once a second. */
+    private int lastFlopSound = -100;
 
     protected AbstractMarineMonster(EntityType<? extends AbstractMarineMonster> type, Level level, int maxTurnX, int maxTurnY) {
         super(type, level);
@@ -121,7 +123,10 @@ public abstract class AbstractMarineMonster extends Monster {
                     (this.random.nextFloat() * 2.0F - 1.0F) * 0.05F));
             this.setOnGround(false);
             this.needsSync = true;
-            this.playSound(this.getFlopSound(), this.getSoundVolume(), this.getVoicePitch());
+            if (this.tickCount - this.lastFlopSound >= 20) {
+                this.lastFlopSound = this.tickCount;
+                this.playSound(this.getFlopSound(), this.getSoundVolume(), this.getVoicePitch());
+            }
         }
         super.aiStep();
         if (this.biteAnimation > 0) {

@@ -133,6 +133,39 @@ def manta_hurt():
     return out
 
 
+def manta_glide():
+    """A manta ray gliding past (its ambient sound, 3.1.0 had none and a dolphin's swim): the slow beat of its
+    wings as two soft swells of moving water, a low push of the wings and a few bubbles from the wing tips.
+    Calm and airy, no voice."""
+    out = []
+    for k in range(3):
+        rng = dsp.rng_of(3700 + k)
+        beat = 1.0 + 0.15 * k
+        dur = 2 * beat + 0.4
+        o = dsp.zeros(dur)
+        for st, g in ((0.0, 1.0), (beat, 0.7)):
+            dsp.place(o, lib.water_rush(beat * 0.95, rng, rise=beat * 0.45, hold=beat * 0.1, lo=110, hi=850), st, g)
+            ln = 0.7
+            push = dsp.sine(np.interp(dsp.times(ln), [0, ln], [82 - 6 * k, 55]), ln)
+            push = (push + 0.35 * dsp.sine(np.interp(dsp.times(ln), [0, ln], [164 - 12 * k, 110]), ln))
+            dsp.place(o, push * dsp.env([(0, 0), (0.18, 1), (ln, 0)], ln), st + beat * 0.2, 0.35 * g)
+        tips = lib.bubble_burst(dur, rng, rate=7, lo=500, hi=1700, shape=np.full(dsp.n_of(dur), 0.5))
+        dsp.place(o, tips, 0.25, 0.22)
+        out.append(dsp.underwater(o, 1300, rng))
+    return out
+
+
+def manta_swim():
+    """One soft wing stroke (played while the manta swims, instead of the dolphin's splashy swim)."""
+    out = []
+    for k in range(2):
+        rng = dsp.rng_of(3750 + k)
+        dur = 0.9
+        o = lib.water_rush(dur, rng, rise=0.32, hold=0.08, lo=140, hi=900)
+        out.append(dsp.underwater(o, 1300, rng))
+    return out
+
+
 def manta_death():
     rng = dsp.rng_of(3900)
     dur = 1.4

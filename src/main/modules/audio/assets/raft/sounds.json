@@ -96,6 +96,30 @@
     ],
     "subtitle": "subtitles.raft.entity.whale.death"
   },
+  "entity.manta_ray.ambient": {
+    "sounds": [
+      {
+        "name": "raft:sfx/manta_ray/glide1"
+      },
+      {
+        "name": "raft:sfx/manta_ray/glide2"
+      },
+      {
+        "name": "raft:sfx/manta_ray/glide3"
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.manta_ray.ambient"
+  },
+  "entity.manta_ray.swim": {
+    "sounds": [
+      {
+        "name": "raft:sfx/manta_ray/swim1"
+      },
+      {
+        "name": "raft:sfx/manta_ray/swim2"
+      }
+    ]
+  },
   "entity.manta_ray.hurt": {
     "sounds": [
       {
@@ -250,6 +274,24 @@
         "attenuation_distance": 16
       }
     ]
+  },
+  "block.raft_motor.run": {
+    "sounds": [
+      {
+        "name": "raft:sfx/raft_motor/run",
+        "attenuation_distance": 32
+      }
+    ],
+    "subtitle": "subtitles.raft.block.raft_motor.run"
+  },
+  "block.raft_motor.start": {
+    "sounds": [
+      {
+        "name": "raft:sfx/raft_motor/start1",
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.raft.block.raft_motor.start"
   },
   "block.ship_cannon.fire": {
     "sounds": [

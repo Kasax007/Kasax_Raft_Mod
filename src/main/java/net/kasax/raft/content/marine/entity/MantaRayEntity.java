@@ -145,7 +145,13 @@ public class MantaRayEntity extends WaterAnimal {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return null;
+        // the slow beat of its wings (3.1.0 had none)
+        return this.isInWater() ? AudioSounds.MANTA_AMBIENT : null;
+    }
+
+    @Override
+    public int getAmbientSoundInterval() {
+        return 160;
     }
 
     @Override
@@ -160,7 +166,7 @@ public class MantaRayEntity extends WaterAnimal {
 
     @Override
     protected SoundEvent getSwimSound() {
-        return SoundEvents.DOLPHIN_SWIM;
+        return AudioSounds.MANTA_SWIM;
     }
 
     @Override

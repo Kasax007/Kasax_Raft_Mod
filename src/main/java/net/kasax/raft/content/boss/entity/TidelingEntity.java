@@ -247,15 +247,26 @@ public class TidelingEntity extends Monster {
         this.setDeltaMovement(dir.x * 0.38, 0.42, dir.z * 0.38);
         this.hopCooldown = 8 + this.random.nextInt(6);
         this.faceDirection(dir);
-        this.playSound(BossSounds.TIDELING_FLOP, 0.7F, 1.1F + this.random.nextFloat() * 0.2F);
+        this.flopSound(0.7F, 1.1F + this.random.nextFloat() * 0.2F);
         level.sendParticles(ParticleTypes.SPLASH, this.getX(), this.getY() + 0.1, this.getZ(), 6, 0.2, 0.1, 0.2, 0.1);
+    }
+
+    /** Game time of the last flop sound: a tideling hops every half second, a sound for every hop of every tideling
+     * flooded the fight (dozens of flops in a few seconds), so one tideling flops audibly at most every 1.2 s. */
+    private int lastFlopSound = -100;
+
+    private void flopSound(float volume, float pitch) {
+        if (this.tickCount - this.lastFlopSound >= 24) {
+            this.lastFlopSound = this.tickCount;
+            this.playSound(BossSounds.TIDELING_FLOP, volume, pitch);
+        }
     }
 
     private void flop(ServerLevel level) {
         if (this.onGround() && this.hopCooldown == 0) {
             this.setDeltaMovement((this.random.nextFloat() * 2.0F - 1.0F) * 0.06, 0.32, (this.random.nextFloat() * 2.0F - 1.0F) * 0.06);
             this.hopCooldown = 10 + this.random.nextInt(14);
-            this.playSound(BossSounds.TIDELING_FLOP, 0.6F, 0.9F + this.random.nextFloat() * 0.3F);
+            this.flopSound(0.6F, 0.9F + this.random.nextFloat() * 0.3F);
         }
         // stranded: it slowly dries out
         if (this.landTicks > LAND_HUNT_TICKS + 200 && this.tickCount % 20 == 0) {

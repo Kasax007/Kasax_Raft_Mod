@@ -13,6 +13,35 @@ def _big_space(x, rng, rt=1.8, mix=0.22):
     return dsp.reverb(x, rt60=rt, mix=mix, predelay=0.03, damp=3500, rng=rng, early=0.8)
 
 
+def _envelope(x, smooth=0.995):
+    """Smoothed amplitude of x (0..1)."""
+    e = dsp.onepole_lp(np.abs(x), smooth)
+    return e / (np.max(e) + 1e-12)
+
+
+def _presence(y, rng, amount=0.7, rasp=0.0, flutter=48.0, low_cut=45.0):
+    """Makes a deep monster sound readable on small speakers (phones, laptops), where everything below ~200 Hz is lost:
+    the lows are saturated into harmonics from 350 Hz up (heard as the same pitch), an optional rasp (noise in the
+    1-3.5 kHz range following the sound's envelope, fluttering like a growl in the throat) gives it a rough edge,
+    and the sub rumble below low_cut, which only cost headroom (the limiter turned these sounds down), is removed.
+    3.1.0 had 40-90 % of the energy of the roars, the slam and the death below 150 Hz."""
+    rms = lambda a: np.sqrt(np.mean(a ** 2)) + 1e-12
+    low = dsp.lowpass(y, 320)
+    ex = dsp.saturate(low / (np.max(np.abs(low)) + 1e-12) * 2.5, drive=3.0)
+    ex = dsp.highpass(ex, 350)
+    ex = dsp.peak_eq(ex, 1500, 5.0, 0.7)
+    out = y + amount * ex * (rms(y) / rms(ex))
+    if rasp > 0:
+        e = _envelope(y)
+        t = dsp.times(len(y) / SR)[:len(y)]
+        fl = 0.55 + 0.45 * np.sin(2 * np.pi * flutter * t * (1 + 0.08 * dsp.smooth_random(len(y) / SR, 3, rng, -1, 1)[:len(y)]))
+        n = dsp.bandpass(dsp.white(len(y) / SR, rng)[:len(y)], 900, 3500)
+        n = dsp.formants(n, [(1100, 4, 0), (2400, 5, -3)])
+        r = n * e ** 1.5 * fl
+        out = out + rasp * r * (rms(y) / rms(r))
+    return dsp.highpass(out, low_cut, order=2)
+
+
 def roar():
     out = []
     for k, (dur, lo, hi, att) in enumerate([(3.0, 42, 92, 0.35), (2.6, 48, 104, 0.25), (3.4, 38, 84, 0.45)]):
@@ -20,7 +49,7 @@ def roar():
         y = lib.roar(dur, rng, f_lo=lo, f_hi=hi, size=2.6, wet=0.6, rough=0.85, attack=att)
         # a throat full of sea water: a burst of large bubbles as the roar starts
         dsp.place(y, lib.bubble_burst(0.9, rng, rate=60, lo=90, hi=600) * 0.5, 0.05)
-        out.append(_big_space(y, rng))
+        out.append(_big_space(_presence(y, rng, 0.85, rasp=0.45, flutter=44 + 6 * k), rng))
     return out
 
 
@@ -42,7 +71,7 @@ def ambient():
             y = dsp.lowpass(y, 1600)
         y = y + 0.35 * dsp.lowpass(lib.bubble_burst(dur, rng, rate=18, lo=70, hi=300,
                                                      shape=np.full(dsp.n_of(dur), 0.7)), 700)
-        out.append(dsp.underwater(y, 1600, rng))
+        out.append(dsp.underwater(_presence(y, rng, 0.6, rasp=0.15, flutter=30), 1900, rng))
     return out
 
 
@@ -55,7 +84,7 @@ def hurt():
         y = lib.roar(dur, rng, size=2.2, wet=0.4, rough=0.95, attack=0.08,
                      shape=[(0, hi * 0.7), (0.08, hi), (0.35, hi * 0.95), (dur, hi * 0.45)])
         dsp.place(y, lib.thrash(0.7, rng, 0.8), 0.0, 0.35)
-        out.append(_big_space(y, rng, 1.2, 0.18))
+        out.append(_big_space(_presence(y, rng, 0.8, rasp=0.5, flutter=56), rng, 1.2, 0.18))
     return out
 
 
@@ -69,7 +98,7 @@ def death():
     dsp.place(out, y, 0.0)
     dsp.place(out, lib.moan(2.8, 62, 30, rng, shape=0.8, vib=0.01, growl=0.6, harm=(1, 0.6, 0.35, 0.2)) * 0.6, 2.4)
     dsp.place(out, lib.bubble_burst(3.0, rng, rate=70, lo=60, hi=500, shape=np.linspace(1, 0, dsp.n_of(3.0))) * 0.6, 2.3)
-    return [_big_space(out, rng, 2.4, 0.3)]
+    return [_big_space(_presence(out, rng, 0.8, rasp=0.4, flutter=40), rng, 2.4, 0.3)]
 
 
 def charge():
@@ -151,10 +180,18 @@ def slam():
         o = dsp.zeros(dur)
         dsp.place(o, lib.boom(rng, 1.3, dur), 0.0, 1.0)
         stone = dsp.modal(rng.uniform(150, 1400, 8), rng.uniform(0.03, 0.12, 8), rng.uniform(0.3, 1.0, 8), 0.5, rng)
-        dsp.place(o, stone, 0.0, 0.6)
-        dsp.place(o, lib.crunch(0.5, rng, 300, 0.7), 0.02, 0.4)
-        dsp.place(o, lib.splash(1.0, rng, 1.0), 0.03, 0.6)
-        out.append(_big_space(o, rng, 1.8, 0.2))
+        dsp.place(o, stone, 0.0, 0.9)
+        # the stone ring cracks under the weight: a sharp split and grit trickling down
+        crack = dsp.highpass(dsp.white(0.05, rng), 1200) * dsp.decay_env(0.05, 0.01, 0.0003)
+        dsp.place(o, crack, 0.0, 1.0)
+        dsp.place(o, lib.crunch(0.7, rng, 420, 1.1), 0.01, 0.8)
+        grit = dsp.highpass(dsp.crackle(1.2, 300, rng, 0.0008), 1800) * dsp.env([(0, 0), (0.1, 1), (1.2, 0)], 1.2)
+        dsp.place(o, grit, 0.15, 0.35)
+        # a wet body: the scales slap the stone and the water around it splashes up
+        slap = dsp.bandpass(dsp.white(0.12, rng), 300, 5000) * dsp.decay_env(0.12, 0.025, 0.0005)
+        dsp.place(o, slap, 0.005, 0.9)
+        dsp.place(o, lib.splash(1.4, rng, 1.2), 0.03, 0.8)
+        out.append(_big_space(_presence(o, rng, 0.7), rng, 1.8, 0.2))
     return out
 
 
@@ -170,7 +207,7 @@ def flop():
         thud = dsp.sine(np.interp(dsp.times(0.35), [0, 0.35], [90, 45]), 0.35) * dsp.decay_env(0.35, 0.08, 0.002)
         dsp.place(o, thud, 0.0, 1.0)
         dsp.place(o, lib.splash(0.5, rng, 0.6), 0.01, 0.5)
-        out.append(_big_space(o, rng, 1.0, 0.12))
+        out.append(_big_space(_presence(o, rng, 0.6), rng, 1.0, 0.12))
     return out
 
 
@@ -214,7 +251,10 @@ def bite():
         dsp.place(o, lib.crunch(0.25, rng, 250, 0.7), 0.01, 0.5)
         growl = lib.growl_voice(np.interp(dsp.times(0.5), [0, 0.5], [70, 50]), 0.5, rng, size=2.5, rough=0.9, breath=0.4)
         dsp.place(o, growl * dsp.env([(0, 0), (0.03, 1), (0.5, 0)], 0.5), 0.0, 0.4)
-        out.append(_big_space(o, rng, 1.0, 0.12))
+        # rows of teeth meeting: a hard, bony double clack on top of the snap
+        for i, d in enumerate((0.0, 0.035)):
+            dsp.place(o, lib.metal_click(rng, 1700 + 300 * k + 250 * i, 0.08, 0.015), d, 0.7)
+        out.append(_big_space(_presence(o, rng, 0.7, rasp=0.2), rng, 1.0, 0.12))
     return out
 
 

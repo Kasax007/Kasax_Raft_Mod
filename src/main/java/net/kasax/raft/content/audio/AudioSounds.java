@@ -19,6 +19,8 @@ public final class AudioSounds {
     public static SoundEvent SHARK_RAFT_BREAK;
     public static SoundEvent WHALE_HURT;
     public static SoundEvent WHALE_DEATH;
+    public static SoundEvent MANTA_AMBIENT;
+    public static SoundEvent MANTA_SWIM;
     public static SoundEvent MANTA_HURT;
     public static SoundEvent MANTA_DEATH;
     public static SoundEvent JELLYFISH_STING;
@@ -33,6 +35,8 @@ public final class AudioSounds {
     public static SoundEvent PURIFIER_BOIL;
     public static SoundEvent GRILL_SIZZLE;
     public static SoundEvent WIND_TURBINE_SPIN;
+    public static SoundEvent MOTOR_RUN;
+    public static SoundEvent MOTOR_START;
     public static SoundEvent CANNON_FIRE;
     public static SoundEvent TERMINAL_USE;
     public static SoundEvent CONTROL_PANEL_BEEP;
@@ -71,6 +75,8 @@ public final class AudioSounds {
         SHARK_RAFT_BREAK = BcReg.sound("entity.shark.raft_break");
         WHALE_HURT = BcReg.sound("entity.whale.hurt");
         WHALE_DEATH = BcReg.sound("entity.whale.death");
+        MANTA_AMBIENT = BcReg.sound("entity.manta_ray.ambient");
+        MANTA_SWIM = BcReg.sound("entity.manta_ray.swim");
         MANTA_HURT = BcReg.sound("entity.manta_ray.hurt");
         MANTA_DEATH = BcReg.sound("entity.manta_ray.death");
         JELLYFISH_STING = BcReg.sound("entity.jellyfish.sting");
@@ -84,6 +90,8 @@ public final class AudioSounds {
         PURIFIER_BOIL = BcReg.sound("block.water_purifier.boil");
         GRILL_SIZZLE = BcReg.sound("block.grill.sizzle");
         WIND_TURBINE_SPIN = BcReg.sound("block.wind_turbine.spin");
+        MOTOR_RUN = BcReg.sound("block.raft_motor.run");
+        MOTOR_START = BcReg.sound("block.raft_motor.start");
         CANNON_FIRE = BcReg.sound("block.ship_cannon.fire");
         TERMINAL_USE = BcReg.sound("block.research_terminal.use");
         CONTROL_PANEL_BEEP = BcReg.sound("block.control_panel.beep");

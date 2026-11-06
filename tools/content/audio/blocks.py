@@ -168,3 +168,70 @@ def hammock_creak():
         y *= dsp.env([(0, 0), (0.1, 1), (0.6, 0.7), (dur, 0)], dur)
         out.append(_room(y, rng, 0.08))
     return out
+
+
+# ------------------------------------------------------------------------------------------------ raft motor
+def _seamless(y, loop, over):
+    """y has loop + over seconds: crossfades the overlap at the end into the start (a seamless loop of loop s)."""
+    n, m = dsp.n_of(loop), dsp.n_of(over)
+    w = np.linspace(0, 1, m)
+    head = y[:m] * w + y[n:n + m] * (1 - w)
+    return np.concatenate([head, y[m:n]])
+
+
+def _engine_pop(rng, size=1.0):
+    """One firing of a small two-stroke engine: a burst of exhaust noise and a short low thump."""
+    pl = 0.035 * size
+    pop = dsp.lowpass(dsp.white(pl, rng), 2400 / size) * dsp.decay_env(pl, 0.006 * size, 0.0004)
+    tl = 0.045 * size
+    thump = dsp.sine(np.interp(dsp.times(tl), [0, tl], [150 / size, 70 / size]), tl) * dsp.decay_env(tl, 0.012 * size, 0.0005)
+    tick = lib.metal_click(rng, 2600 * rng.uniform(0.95, 1.05), 0.04, 0.008)
+    return dsp.pad(pop, tl) * 1.0 + thump * 0.45 + dsp.pad(tick, tl) * 0.12
+
+
+def motor_run():
+    """The raft motor running (seamless 2 s loop; the game raises pitch and volume with the speed): a small two-stroke
+    outboard popping 30 times a second through its exhaust, with a slight lope, a whirring flywheel, a faint gear
+    whine and the propeller churning the water (3.1.0 played a note block bass drum every few ticks)."""
+    rng = dsp.rng_of(6600)
+    loop, fire = 2.0, 30.0
+    n = dsp.n_of(loop)
+    buf = np.zeros(n + dsp.n_of(0.2))
+    for i in range(int(loop * fire)):
+        st = (i + rng.uniform(-0.05, 0.05)) / fire
+        a = rng.uniform(0.82, 1.08) * (1.0 if i % 2 == 0 else 0.9)
+        dsp.place(buf, _engine_pop(rng) * a, max(0.0, st))
+    buf[:len(buf) - n] += buf[n:]                       # the pops past the end wrap around: seamless
+    y = buf[:n]
+    y = 0.5 * y + 1.3 * dsp.formants(y, [(380, 3, 0), (760, 4, -3), (1500, 5, -8)])    # the exhaust pipe
+    t = np.arange(n) / SR
+    whirr = (np.sin(2 * np.pi * 120 * t) * 0.3 + np.sin(2 * np.pi * 240 * t + 0.5) * 0.15) * (0.6 + 0.4 * np.sin(2 * np.pi * fire * t))
+    gear = np.sin(2 * np.pi * 1050 * t) * (0.7 + 0.3 * np.sin(2 * np.pi * 2 * t))   # whole cycles in 2 s
+    rms = np.sqrt(np.mean(y ** 2)) + 1e-12
+    y = y + rms * (1.2 * whirr / 0.33 + 0.12 * gear)
+    over = 0.3
+    wash = dsp.bandpass(dsp.pink(loop + over, rng), 180, 1600) * (0.7 + 0.3 * np.sin(2 * np.pi * 6 * dsp.times(loop + over)))
+    wash = wash + 0.5 * dsp.lowpass(lib.bubble_burst(loop + over, rng, rate=30, lo=150, hi=900,
+                                                      shape=np.full(dsp.n_of(loop + over), 0.6)), 1200)
+    wash = _seamless(wash, loop, over)
+    y = y + 0.45 * wash * rms / (np.sqrt(np.mean(wash ** 2)) + 1e-12)
+    return [y]
+
+
+def motor_start():
+    """Starting the raft motor: the pull cord's ratchet, two coughs and the engine catching."""
+    rng = dsp.rng_of(6650)
+    dur = 1.5
+    o = dsp.zeros(dur)
+    dsp.place(o, lib.ratchet(10, 30, rng, f=1700), 0.0, 0.55)
+    for st, g in ((0.42, 0.8), (0.66, 0.9)):
+        c = _engine_pop(rng, 1.6)
+        c = 0.6 * c + 0.8 * dsp.formants(c, [(300, 3, 0), (650, 4, -4)])
+        dsp.place(o, c, st, g)
+    t, gap = 0.86, 0.075
+    while t < dur - 0.05:
+        c = _engine_pop(rng)
+        dsp.place(o, 0.55 * c + 0.9 * dsp.formants(c, [(360, 3, 0), (720, 4, -5)]), t, rng.uniform(0.8, 1.0))
+        t += gap
+        gap = max(1 / 30, gap * 0.9)
+    return [dsp.fade(o, 0.002, 0.15)]

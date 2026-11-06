@@ -727,10 +727,6 @@ public class VesselEntity extends Entity {
                 Vec3 p = pose.toWorld(BlockPos.getX(key) + 0.5, BlockPos.getY(key) + 1.0, BlockPos.getZ(key) + 0.5);
                 this.level().addParticle(ParticleTypes.SMOKE, p.x, p.y, p.z, 0.0, 0.05, 0.0);
             }
-            if (this.tickCount % 6 == 0) {
-                this.level().playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.NOTE_BLOCK_BASEDRUM.value(),
-                        SoundSource.NEUTRAL, 0.3F, 0.5F + this.random.nextFloat() * 0.08F, false);
-            }
         }
     }
 
