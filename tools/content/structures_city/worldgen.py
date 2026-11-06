@@ -58,8 +58,11 @@ def write_all():
                            ('raft:moray_eel', 2, 1, 1)]),
         'water_ambient': spawns([('raft:moray_eel', 2, 1, 1), ('minecraft:cod', 6, 2, 4)]),
     }
+    # max_distance 104: the game hands pieces only to chunks up to 8 chunks (128 blocks) from the start chunk; the
+    # 47-block plaza puts its center up to 23 blocks from the start, so 112 let 1 in 6 cities reach a 9th chunk
+    # whose part was never built (layout.py: 0 of 60 cities beyond 8 chunks with 104, same number of pieces)
     files.append(structure_json(SID, f'{P}/plaza', 'surface_structures', 'beard_thin', -2, heightmap='OCEAN_FLOOR_WG',
-                                size=6, max_distance=112, spawn_overrides=overrides, liquid='apply_waterlogging'))
+                                size=6, max_distance=104, spawn_overrides=overrides, liquid='apply_waterlogging'))
     files.append(structure_set(SID, 36, 14, 31415931))
     files.append(biome_tag(SID, ['drowned_shelf']))
     return files

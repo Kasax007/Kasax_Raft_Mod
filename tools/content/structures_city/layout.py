@@ -110,7 +110,7 @@ def _pools():
     return pools
 
 
-def simulate(seed, t=None, J=None, pools=None, max_depth=6, max_dist=112):
+def simulate(seed, t=None, J=None, pools=None, max_depth=6, max_dist=104):
     """A simplified copy of the game's jigsaw assembly (bounding-box collisions, weighted shuffles, fallbacks)."""
     import random
     rnd = random.Random(seed)
