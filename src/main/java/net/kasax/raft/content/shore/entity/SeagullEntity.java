@@ -104,6 +104,12 @@ public class SeagullEntity extends Animal {
     private int fleeTicks;
     private @Nullable BlockPos home;
     private final Vec3 flockOffset;
+    private final float flockPhase;
+    /** This gull's place in its leader's flock: 0 and 1 fly right and left behind the leader, 2 and 3 further out, ... */
+    private int flockRank;
+    /** The heading of the formation frame this gull keeps its place in: follows the leader's heading, but turns
+     *  at most a few degrees per tick, so the V swings round smoothly instead of flipping when the leader turns. */
+    private float slotYaw;
     private float nextFlap = 1.0F;
 
     public SeagullEntity(EntityType<? extends SeagullEntity> type, Level level) {
@@ -114,10 +120,9 @@ public class SeagullEntity extends Animal {
         this.setPathfindingMalus(PathType.FIRE, -1.0F);
         this.setPathfindingMalus(PathType.LEAVES, 4.0F);
         RandomSource r = this.random;
-        // a place in a loose V behind the leader, in the leader's frame (x to the side, z forward): it turns with the
-        // leader, so the flock keeps its shape in curves
-        this.flockOffset = new Vec3((r.nextBoolean() ? 1.0 : -1.0) * (1.6 + r.nextFloat() * 2.6), (r.nextFloat() - 0.4F) * 2.0F,
-                -(1.2 + r.nextFloat() * 4.0));
+        // a little personal offset from the exact place in the V, and the phase of its slow drift around it
+        this.flockOffset = new Vec3((r.nextFloat() - 0.5F) * 0.8F, (r.nextFloat() - 0.5F) * 0.6F, (r.nextFloat() - 0.5F) * 0.8F);
+        this.flockPhase = r.nextFloat() * Mth.TWO_PI;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -321,6 +326,16 @@ public class SeagullEntity extends Animal {
                 }
             }
         }
+        if (this.leader != null) {
+            // the place in the V: by id among the leader's followers (stable while the flock stays the same)
+            int rank = 0;
+            for (SeagullEntity g : near) {
+                if (g.leader == this.leader && g.getId() < this.getId()) {
+                    rank++;
+                }
+            }
+            this.flockRank = rank;
+        }
     }
 
     private void eat(ServerLevel level, ItemStack held) {
@@ -390,9 +405,18 @@ public class SeagullEntity extends Animal {
         this.nextFlap = this.flyDist + 1.2F;
     }
 
-    /** This gull's place in its leader's flock right now (the offset turned with the leader's heading). */
+    /**
+     * This gull's place in its leader's flock right now: a V behind the leader (pairs right and left, each pair 1.5
+     * blocks further back, 1.6 further out and a bit higher), plus a small personal offset and a slow drift, so the
+     * flock looks loose and alive. In the frame of the formation's heading, so the V turns with the flock.
+     */
     private Vec3 flockSlot(SeagullEntity lead) {
-        return lead.position().add(this.flockOffset.yRot(-lead.getYRot() * Mth.DEG_TO_RAD));
+        int row = this.flockRank / 2 + 1;
+        double w = this.tickCount * 0.05 + this.flockPhase;
+        double side = (this.flockRank % 2 == 0 ? 1.0 : -1.0) * 1.6 * row + this.flockOffset.x + Math.sin(w) * 0.35;
+        double up = 0.3 * row + this.flockOffset.y + Math.sin(w * 0.6) * 0.25;
+        double along = -1.5 * row + this.flockOffset.z + Math.cos(w * 0.8) * 0.4;
+        return lead.position().add(new Vec3(side, up, along).yRot(-this.slotYaw * Mth.DEG_TO_RAD));
     }
 
     private void flyTo(Vec3 target, double speed) {
@@ -442,13 +466,28 @@ public class SeagullEntity extends Animal {
         }
         double cx = this.getX();
         double cz = this.getZ();
-        if (this.home != null && this.home.distSqr(this.blockPosition()) > 56 * 56) {
-            cx = (cx + this.home.getX()) * 0.5;
-            cz = (cz + this.home.getZ()) * 0.5;
+        if (!this.isFlying()) {
+            if (this.home != null && this.home.distSqr(this.blockPosition()) > 56 * 56) {
+                cx = (cx + this.home.getX()) * 0.5;
+                cz = (cz + this.home.getZ()) * 0.5;
+            }
+            double a = r.nextDouble() * Math.PI * 2.0;
+            double dist = 8.0 + r.nextDouble() * 14.0;
+            return this.airAbove(cx + Math.cos(a) * dist, cz + Math.sin(a) * dist, 5.0, 14.0);
         }
-        double a = r.nextDouble() * Math.PI * 2.0;
-        double dist = 8.0 + r.nextDouble() * 14.0;
-        return this.airAbove(cx + Math.cos(a) * dist, cz + Math.sin(a) * dist, 5.0, 14.0);
+        // in the air: fly on in long, gentle sweeps (the next point up to 65 degrees left or right of the heading,
+        // back towards home when far out) instead of zigzagging between random points around the gull
+        float yaw = this.getYRot();
+        if (this.home != null && this.home.distSqr(this.blockPosition()) > 40 * 40) {
+            yaw = (float) (Mth.atan2(this.home.getZ() + 0.5 - cz, this.home.getX() + 0.5 - cx) * Mth.RAD_TO_DEG) - 90.0F;
+        }
+        yaw += (r.nextFloat() - 0.5F) * 130.0F;
+        Vec3 dir = Vec3.directionFromRotation(0.0F, yaw);
+        double dist = 14.0 + r.nextDouble() * 14.0;
+        Vec3 next = this.airAbove(cx + dir.x * dist, cz + dir.z * dist, 6.0, 15.0);
+        // climb or sink only a little per leg
+        double y = Mth.clamp(next.y, this.getY() - 3.0, this.getY() + 3.0);
+        return new Vec3(next.x, Math.max(y, this.airAbove(next.x, next.z, 5.0, 5.0).y), next.z);
     }
 
     /** Finds a spot to land: raft blocks and posts first, then beaches, roofs and rocks; null over open water. */
@@ -602,8 +641,9 @@ public class SeagullEntity extends Animal {
                 }
                 boolean air = !gull.onGround() || dy > 0.7 || horizontal > 3.0;
                 float yRotD = (float) (Mth.atan2(dz, dx) * Mth.RAD_TO_DEG) - 90.0F;
-                // wide curves in open flight, tight turns when swooping onto a spot close by
-                gull.setYRot(this.rotlerp(gull.getYRot(), yRotD, !air ? 30.0F : horizontal < 4.0 ? 28.0F : 12.0F));
+                // wide, slow curves in open flight, tighter ones closer to the point, sharp turns when swooping onto a
+                // spot close by (12 degrees per tick when the point is 4 to 10 blocks away: no circling round it)
+                gull.setYRot(this.rotlerp(gull.getYRot(), yRotD, !air ? 30.0F : horizontal < 4.0 ? 28.0F : horizontal < 10.0 ? 12.0F : 6.0F));
                 gull.yBodyRot = gull.getYRot();
                 if (air) {
                     gull.setNoGravity(true);
@@ -953,7 +993,11 @@ public class SeagullEntity extends Animal {
 
         @Override
         public void start() {
-            SeagullEntity.this.getNavigation().stop();
+            SeagullEntity gull = SeagullEntity.this;
+            gull.getNavigation().stop();
+            if (gull.leader != null) {
+                gull.slotYaw = gull.leader.getYRot();
+            }
         }
 
         @Override
@@ -963,14 +1007,15 @@ public class SeagullEntity extends Animal {
             if (lead == null) {
                 return;
             }
+            gull.slotYaw += Mth.clamp(Mth.wrapDegrees(lead.getYRot() - gull.slotYaw), -4.0F, 4.0F);
             if (!lead.isFlying()) {
                 if (gull.aiTick(8) || gull.getNavigation().isDone() && gull.aiTick(4)) {
                     gull.flyTo(gull.flockSlot(lead).add(0.0, 3.0, 0.0), 1.0);
                 }
                 return;
             }
-            Vec3 slot = gull.flockSlot(lead).add(0.0, 0.5, 0.0);
-            Vec3 heading = Vec3.directionFromRotation(0.0F, lead.getYRot());
+            Vec3 slot = gull.flockSlot(lead);
+            Vec3 heading = Vec3.directionFromRotation(0.0F, gull.slotYaw);
             Vec3 toSlot = slot.subtract(gull.position());
             double along = toSlot.dot(heading);                 // > 0: the gull is behind its place
             double speed = Mth.clamp(1.0 + along * 0.08, 0.8, 1.45);

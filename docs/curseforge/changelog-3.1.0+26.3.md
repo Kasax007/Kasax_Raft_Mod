@@ -25,12 +25,18 @@ Build your own raft and sail it, meet the people who stayed on the Endless Sea, 
 - New advancements **A Friendly Face** and **Every Soul Aboard** (meet all eight), a "People of the Sea" section with a page for each of them in the Almanac, and spawn eggs in the Creatures tab.
 
 ### Sounds and music
-- **Every creature has its own voice**: sharks thrash and gnaw at your raft, seagulls laugh when they steal your fish, whales groan, jellyfish crackle when they sting, and the anglerfish's lure hums in the dark. The Leviathan roars, splashes, slams and dives with sounds made for it.
-- **Machines sound like what they are**: water boiling in the purifier, food sizzling on the grill, the wind turbine's rotor, the hand crank of the air compressor, the boom of the ship cannon, the air burst of the harpoon gun, the motor of the sea scooter and the reel of the plastic hook. Hammocks creak.
+- **Every creature has its own voice**: sharks thrash and gnaw at your raft, seagulls laugh when they steal your fish, whales groan, manta rays sweep through the water with a soft hum, jellyfish crackle when they sting, and the anglerfish's lure hums in the dark. The Leviathan roars, splashes, slams and dives with sounds made for it, and its roar, bite and slam carry even on small speakers.
+- **Machines sound like what they are**: the Raft Motor's engine (it starts up when you sail off and runs louder and higher the faster you go), water boiling in the purifier, food sizzling on the grill, the wind turbine's rotor, the hand crank of the air compressor, the boom of the ship cannon, the air burst of the harpoon gun, the motor of the sea scooter and the reel of the plastic hook. Hammocks creak.
 - **Story moments**: the Tidewarden Key being forged, the Tide Seal opening and the Leviathan answering from the abyss.
 - **Sea ambience**: waves lapping at your raft and gulls far away. In the dark deep you may hear things you would rather not.
 - **Music**: a calm sea theme by day and another one at night, own themes for Port Solace, Saltmere, Helix Station, the Old Lighthouse, the Abyssal Trench and the Tidewarden temples, and a battle theme while the Leviathan's boss bar is shown. At sea the music comes back more often than in the overworld.
 - All sound effects are made for Beach Craft. The music is by Kevin MacLeod (incompetech.com), licensed under CC BY 4.0; the credits are on the mod page and in CREDITS_MUSIC.txt in the jar.
+
+### Creatures
+- **Seagull flocks** fly in a loose V behind their leader, in long, smooth curves (they kept turning away and catching up again).
+- **Moray eels** stay level: they no longer hang slanted or upright in the water, and without a hole nearby they lie on the sea floor.
+- **Crabs** visibly dig themselves in when you sprint at them: it takes almost a second, with sand flying the whole time.
+- Sea creatures stranded on land and the Leviathan's tidelings no longer flop with a sound every few ticks.
 
 ### World
 - **Day and night**: the Endless Sea now has the same day/night cycle as the overworld, with sunrise, sunset, moon and stars. Bring lights for the night. Solar panels only work by day.

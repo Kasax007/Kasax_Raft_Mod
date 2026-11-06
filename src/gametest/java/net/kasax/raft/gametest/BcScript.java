@@ -97,6 +97,7 @@ import java.util.function.Function;
  * chat on|off             show or hide the chat;  arrow left|right|up|down  press an arrow key
  * slot &lt;1-9&gt;              select a hotbar slot
  * count [dimension]       log the loaded entities per type (COUNT line in latest.log)
+ * track &lt;type&gt; [radius]  log game time and id:x,y,z,yaw,pitch of each such entity near the player (TRACK)
  * hold &lt;use|attack|forward|jump|sneak&gt; &lt;ticks&gt;
  * scout &lt;structure&gt; [x z] log the nearest structure of that id (raft dimension, from the player or x z): start,
  *                         bounding box, pieces and rotation (SCOUT)
@@ -503,6 +504,25 @@ public class BcScript implements FabricClientGameTest {
                     return counts.toString();
                 });
                 LOG.info("[bctest] COUNT {} {}", dim, res);
+            }
+            case "track" -> {
+                // track <entity type> [radius]: game time, then id:x,y,z,yaw,pitch of each such entity near the player
+                // (TRACK line; put it on every frame of a rec to measure how creatures move)
+                String[] a = arg.split(" ");
+                double r = a.length > 1 ? Double.parseDouble(a[1]) : 96.0;
+                String res = need().getServer().computeOnServer(server -> {
+                    var pl = server.getPlayerList().getPlayers().getFirst();
+                    var level = (ServerLevel) pl.level();
+                    var type = BuiltInRegistries.ENTITY_TYPE.getOptional(Identifier.parse(a[0])).orElse(null);
+                    if (type == null) return "no type " + a[0];
+                    StringBuilder sb = new StringBuilder().append(level.getGameTime());
+                    for (var e : level.getEntities(type, pl.getBoundingBox().inflate(r), x -> true)) {
+                        sb.append(String.format(Locale.ROOT, " %d:%.2f,%.2f,%.2f,%.1f,%.1f", e.getId(), e.getX(), e.getY(), e.getZ(),
+                                e.getYRot(), e.getXRot()));
+                    }
+                    return sb.toString();
+                });
+                LOG.info("[bctest] TRACK {} {}", a[0], res);
             }
             case "where" -> {
                 String res = need().getServer().computeOnServer(server -> {
