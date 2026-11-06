@@ -205,6 +205,17 @@ public final class StructAudit {
             }
         }
 
+        // pieces the game never builds: structure references reach only 8 chunks from the start chunk
+        int beyond = 0;
+        net.minecraft.world.level.ChunkPos sc = st.getChunkPos();
+        for (StructurePiece pc : st.getPieces()) {
+            BoundingBox b = pc.getBoundingBox();
+            if ((b.minX() >> 4) < sc.x() - 8 || (b.maxX() >> 4) > sc.x() + 8 || (b.minZ() >> 4) < sc.z() - 8 || (b.maxZ() >> 4) > sc.z() + 8) {
+                beyond++;
+                lines.add("piece beyond 8 chunks of the start " + sc + ": " + box(b));
+            }
+        }
+
         // compare
         Map<String, Integer> solid = new TreeMap<>(), fluid = new TreeMap<>(), deco = new TreeMap<>();
         Map<String, Integer> missing = new TreeMap<>(), replaced = new TreeMap<>();
@@ -302,10 +313,10 @@ public final class StructAudit {
         worst.sort(Map.Entry.<String, Integer>comparingByValue().reversed());
 
         StringBuilder sum = new StringBuilder();
-        sum.append(String.format(Locale.ROOT, "AUDIT %s %s at %s rot %s pieces %d (%d follow the terrain) checked %d | solid %d [%s] | fluid %d [%s] | deco %d [%s] | missing %d [%s] | replaced %d [%s] | loose %d [%s] | items %d [%s] falling %d | npc %d/%d ok",
+        sum.append(String.format(Locale.ROOT, "AUDIT %s %s at %s rot %s pieces %d (%d follow the terrain, %d beyond 8 chunks) checked %d | solid %d [%s] | fluid %d [%s] | deco %d [%s] | missing %d [%s] | replaced %d [%s] | loose %d [%s] | items %d [%s] falling %d | npc %d/%d ok",
                 label, id, bb.getCenter().toShortString(),
                 st.getPieces().isEmpty() || !(st.getPieces().getFirst() instanceof PoolElementStructurePiece p0) ? "?" : p0.getRotation(),
-                st.getPieces().size(), skipped, checked,
+                st.getPieces().size(), skipped, beyond, checked,
                 sum(solid), top(solid, 5), sum(fluid), top(fluid, 3), sum(deco), top(deco, 5), sum(missing), top(missing, 5),
                 sum(replaced), top(replaced, 6), sum(loose), top(loose, 4), sum(items), top(items, 5), falling,
                 npcSpots.size() - npcBad, npcSpots.size()));
