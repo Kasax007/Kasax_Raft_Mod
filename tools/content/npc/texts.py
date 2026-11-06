@@ -257,7 +257,7 @@ ALMANAC = {
     'teo': "Teo runs the beach bar on the palm isles and waits for his sweetheart Ana, who was lost on the night "
            "of the flood.\n"
            "# Trades\nDrinks and island food. He buys pineapples, coconuts and good rum.",
-    'kai': "Kai is a cheerful castaway who lives in a tent camp on a palm isle and waits for a rescue ship.\n"
+    'kai': "Kai is a cheerful castaway who lives in the castaway camps on the palm isles and waits for a rescue ship.\n"
            "# Trades\nEverything that washes up on his beach, for cookies. He would also love a fishing net.",
     'dr_lund': "Dr. Elin Lund studies the weather and wildlife of the Endless Sea from her outpost on the ice "
                "floes of the far north.\n"

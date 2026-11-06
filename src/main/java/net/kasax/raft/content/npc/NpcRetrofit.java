@@ -53,6 +53,8 @@ public final class NpcRetrofit {
             new Spot("raft:ashen_forge/hall", NpcCharacter.DR_VOSS, 4.5, 5.0, 24.5, 90.0F),
             new Spot("raft:beach_shack/tiki_bar", NpcCharacter.TEO, 9.5, 2.0, 16.5, 180.0F),
             new Spot("raft:castaway_camp/tent", NpcCharacter.KAI, 3.5, 1.0, 9.5, -90.0F),
+            new Spot("raft:castaway_camp/lean_to", NpcCharacter.KAI, 3.5, 1.0, 7.5, -90.0F),
+            new Spot("raft:castaway_camp/boat_shelter", NpcCharacter.KAI, 7.5, 1.0, 8.5, 0.0F),
             new Spot("raft:iceberg_outpost/outpost_0", NpcCharacter.DR_LUND, 21.5, 21.0, 18.5, 180.0F),
             new Spot("raft:rusted_rig/rig_0", NpcCharacter.OKAFOR, 34.5, 91.0, 12.5, 180.0F));
 

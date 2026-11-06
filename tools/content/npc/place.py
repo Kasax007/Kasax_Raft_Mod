@@ -131,8 +131,10 @@ SPOTS = [
     ('structures_surface', 'ashen_forge/hall', 'dr_voss', block('minecraft:raw_gold_block'), (2.5, 0, 1.5), 90.0),
     # Teo behind the counter of the tiki bar
     ('structures_side', 'beach_shack/tiki_bar', 'teo', loot('raft:chests/beach_shack'), (-2.5, 0, -1.5), 180.0),
-    # Kai at the camp fire of the tent camp
+    # Kai at the camp fire, in all three kinds of castaway camp (the tent, the lean-to and the boat shelter)
     ('structures_side', 'castaway_camp/tent', 'kai', loot('raft:chests/castaway_camp'), (-0.5, 0, 4.5), -90.0),
+    ('structures_side', 'castaway_camp/lean_to', 'kai', block('minecraft:campfire'), (-0.5, 0, 0.5), -90.0),
+    ('structures_side', 'castaway_camp/boat_shelter', 'kai', block('minecraft:campfire'), (0.5, 0, -1.5), 0.0),
     # Dr. Lund in her hut on the ice floe
     ('structures_side', 'iceberg_outpost/outpost_0', 'dr_lund', loot('raft:chests/iceberg_outpost'), (-2.5, 0, 2.5), 180.0),
     # Okafor in the control room of the rig
