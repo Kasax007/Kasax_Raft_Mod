@@ -123,8 +123,9 @@ def clear(d):
 GUARDED_VANILLA = OrderedDict([
     ('lake_lava_surface', 9), ('iceberg_packed', 6), ('iceberg_blue', 6), ('blue_ice', 2),
     ('small_basalt_columns', 10), ('large_basalt_columns', 10),
-    ('ore_dirt', 4), ('ore_gravel', 4), ('ore_granite_upper', 4), ('ore_granite_lower', 4), ('ore_diorite_upper', 4),
-    ('ore_diorite_lower', 4), ('ore_andesite_upper', 4), ('ore_andesite_lower', 4), ('ore_tuff', 4),
+    # the big blobs of dirt, gravel and stone kinds (size 33-64) reach up to ~7 blocks from their position
+    ('ore_dirt', 7), ('ore_gravel', 7), ('ore_granite_upper', 7), ('ore_granite_lower', 7), ('ore_diorite_upper', 7),
+    ('ore_diorite_lower', 7), ('ore_andesite_upper', 7), ('ore_andesite_lower', 7), ('ore_tuff', 7),
     ('ore_coal_upper', 3), ('ore_coal_lower', 3), ('ore_iron_upper', 3), ('ore_iron_middle', 3), ('ore_iron_small', 2),
     ('ore_gold', 3), ('ore_gold_lower', 3), ('ore_redstone', 3), ('ore_redstone_lower', 3), ('ore_diamond', 2),
     ('ore_diamond_medium', 3), ('ore_diamond_large', 3), ('ore_diamond_buried', 3), ('ore_lapis', 2),

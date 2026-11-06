@@ -35,6 +35,11 @@ Build your own raft and sail it, meet the people who stayed on the Endless Sea, 
 ### World
 - **Day and night**: the Endless Sea now has the same day/night cycle as the overworld, with sunrise, sunset, moon and stars. Bring lights for the night. Solar panels only work by day.
 - **Structures blend in**: island places (castaway camps, beach shacks, the Old Lighthouse, the Ashen Forge) only appear on real land, so no more square blocks of sand and gravel standing in the sea. No more box-shaped terrain cuts around big places.
+- **Structures stay whole**: nothing of the world grows into them any more. Basalt columns had filled the rooms of the Ashen Forge (Dr. Voss stood in the rock and its ember crabs suffocated), volcanic ash ate into its walls and a lava lake could cut into it; jungle and mangrove trees grew into the Old Lighthouse and Saltmere, ore veins into walls and floors, kelp into the Coral Temple.
+- **Places no longer overlap**: a place never grows into a story place or into a place where someone lives (a Rusted Rig could stand on the Abyssal Sanctum and flood it). Treasure maps and /locate always lead to a place that is really there.
+- **Tiki bars and castaway camps** only stand on almost flat ground, so they no longer cut a sharp sand rectangle into a hillside.
+- **Sunken Plane**: only in water deep enough to cover the whole plane.
+- **Fishing boat wrecks**: their nets hold up under water (the sea no longer washes them away into floating string). **Rusted Rig**: the weight on the crane no longer falls down.
 - **Coral Temple**: always rests on a reef floor deep enough to keep the whole temple under water.
 - **Iceberg Outpost**: the hut now stands on a real iceberg with a jagged peak and a deep keel; the roof, lantern and antenna no longer float.
 - **No floating blocks**: fixed loose blocks above sunken ruins and around the camps; the upturned lifeboat of the castaway camp rests on its props.

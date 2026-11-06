@@ -25,7 +25,7 @@
     },
     {
       "type": "raft:clear_of_structures",
-      "distance": 4
+      "distance": 7
     }
   ]
 }
