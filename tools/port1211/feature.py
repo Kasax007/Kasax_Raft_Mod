@@ -97,10 +97,8 @@ def modifier(m):
     m = dict(m)
     t = m.get('type')
     if t == 'minecraft:offset':
-        x, y, z = m.get('x', 0), m.get('y', 0), m.get('z', 0)
-        if x != z:
-            raise ValueError('offset with different x and z spread: %r' % m)
-        return {'type': 'minecraft:random_offset', 'xz_spread': x, 'y_spread': y}
+        # 26.3's fixed offset; 1.21.1 only has random_offset: the mod registers raft:offset (OffsetPlacement)
+        return {'type': 'raft:offset', 'x': m.get('x', 0), 'y': m.get('y', 0), 'z': m.get('z', 0)}
     if t == 'minecraft:block_predicate_filter':
         m['predicate'] = block_predicate(m['predicate'])
     if t == 'minecraft:environment_scan':

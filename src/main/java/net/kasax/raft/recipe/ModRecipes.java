@@ -32,6 +32,7 @@ public class ModRecipes {
             });
 
     public static void registerRecipes() {
-        // static initializers do the registration
+        // static initializers do the registration; raft:crafting_transmute stands in for the newer game's recipe type
+        net.kasax.raft.compat.recipe.TransmuteRecipe.register();
     }
 }

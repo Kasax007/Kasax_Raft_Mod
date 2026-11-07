@@ -27,6 +27,11 @@ public final class WorldFeatures {
         register("rubble", RubbleFeature.CODEC);
         register("ice_floe", IceFloeFeature.CODEC);
         register("gravity_support", GravitySupportFeature.CODEC);
+        // features and placement of the newer game that 1.21.1 lacks (the resource converter maps them to raft:*)
+        register("overlay", net.kasax.raft.compat.worldgen.OverlayFeature.CODEC);
+        register("block_blob", net.kasax.raft.compat.worldgen.BlockBlobFeature.CODEC);
+        register("fallen_tree", net.kasax.raft.compat.worldgen.FallenTreeFeature.CODEC);
+        Registry.register(BuiltInRegistries.PLACEMENT_MODIFIER_TYPE, Raft.id("offset"), net.kasax.raft.compat.worldgen.OffsetPlacement.TYPE);
         // placement filter: keeps features (basalt columns, ash, lava, boulders...) out of structures
         Registry.register(BuiltInRegistries.PLACEMENT_MODIFIER_TYPE, Raft.id("clear_of_structures"), ClearOfStructuresFilter.TYPE);
     }
