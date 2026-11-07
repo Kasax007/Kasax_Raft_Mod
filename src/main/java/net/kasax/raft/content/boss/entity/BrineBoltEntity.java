@@ -24,10 +24,17 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * A glowing blob of brine spat by the Leviathan: 5 damage and Slowness II for 2 s on hit, bursts into spray on blocks
+ * A glowing blob of brine spat by the Leviathan: 7 damage (9 in the last phase) and Slowness II for 2 s on hit, bursts into spray on blocks
  * and water. Flies in a shallow arc and leaves a teal trail.
  */
 public class BrineBoltEntity extends Projectile {
+    /** Damage on hit (3.2: 7, 9 in the last phase; was 5), set by the Leviathan when it spits. */
+    private float damage = 5.0F;
+
+    public void setDamage(float damage) {
+        this.damage = damage;
+    }
+
     public static final double GRAVITY = 0.025;
     private static final int TEAL = 0x45F0E0;
 
@@ -89,7 +96,7 @@ public class BrineBoltEntity extends Projectile {
             Entity target = hitResult.getEntity();
             LivingEntity owner = this.getOwner() instanceof LivingEntity living ? living : null;
             DamageSource source = this.damageSources().mobProjectile(this, owner);
-            if (target.hurt(source, 5.0F)) {
+            if (target.hurt(source, this.damage)) {
                 EnchantmentHelper.doPostAttackEffects(serverLevel, target, source);
                 if (target instanceof LivingEntity living) {
                     living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 1), owner);

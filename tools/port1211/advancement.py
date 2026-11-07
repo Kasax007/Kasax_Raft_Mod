@@ -12,7 +12,8 @@ def context(v):
     if isinstance(v, str):
         return [loot.condition(v)]
     if isinstance(v, list):
-        return [context(x)[0] if isinstance(x, (dict, str)) and not isinstance(x, list) else x for x in v]
+        # entries already in the 1.21.1 form ({"condition": ...}) stay as they are
+        return [x if isinstance(x, dict) and 'condition' in x else context(x)[0] if isinstance(x, (dict, str)) else x for x in v]
     return v
 
 

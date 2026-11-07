@@ -90,13 +90,23 @@ SPAWNS = {
     'wreck_graveyard': [('monster', 'raft:drowned_corsair', 3, 1, 3), ('water_creature', 'raft:shark', 3, 1, 1),
                         ('monster', 'minecraft:drowned', 5, 1, 2)],
     'frost_floes': [('creature', 'raft:penguin', 6, 2, 5), ('creature', 'minecraft:polar_bear', 1, 1, 2),
+                    ('creature', 'minecraft:fox', 2, 1, 2), ('creature', 'minecraft:rabbit', 3, 2, 3),
                     ('water_ambient', 'minecraft:salmon', 15, 1, 5), ('water_creature', 'raft:whale', 1, 1, 1)],
-    'palm_isle': [('creature', 'raft:crab', 8, 2, 4), ('creature', 'raft:seagull', 6, 2, 5)],
+    # 3.2: islands are alive: crabs and gulls on every beach, turtles laying on the sand, parrots in the palms,
+    # rabbits in the dunes, chickens and pigs on the bigger green islands, reef fish in the lagoons
+    'palm_isle': [('creature', 'raft:crab', 8, 2, 4), ('creature', 'raft:seagull', 6, 2, 5),
+                  ('creature', 'minecraft:turtle', 5, 2, 4), ('creature', 'minecraft:parrot', 6, 1, 2),
+                  ('creature', 'minecraft:rabbit', 4, 2, 3), ('creature', 'minecraft:chicken', 3, 2, 3),
+                  ('water_ambient', 'minecraft:tropical_fish', 15, 3, 6)],
     'jungle_isle': [('creature', 'minecraft:parrot', 40, 1, 2), ('creature', 'minecraft:ocelot', 2, 1, 3),
-                    ('creature', 'raft:seagull', 2, 1, 3), ('creature', 'raft:crab', 3, 1, 3)],
+                    ('creature', 'raft:seagull', 2, 1, 3), ('creature', 'raft:crab', 3, 1, 3),
+                    ('creature', 'minecraft:chicken', 8, 2, 4), ('creature', 'minecraft:pig', 4, 2, 3),
+                    ('creature', 'minecraft:turtle', 3, 2, 3)],
     'mangrove_isle': [('creature', 'minecraft:frog', 10, 2, 5), ('creature', 'raft:crab', 4, 1, 3),
-                      ('monster', 'minecraft:slime', 1, 1, 1)],
-    'volcanic_isle': [('monster', 'raft:ember_crab', 5, 1, 3), ('creature', 'raft:seagull', 1, 1, 2)],
+                      ('creature', 'minecraft:chicken', 4, 2, 3), ('monster', 'minecraft:slime', 1, 1, 1),
+                      ('water_ambient', 'minecraft:tropical_fish', 10, 2, 4)],
+    'volcanic_isle': [('monster', 'raft:ember_crab', 5, 1, 3), ('creature', 'raft:seagull', 3, 1, 3),
+                      ('creature', 'raft:crab', 2, 1, 2)],
 }
 
 CARVERS = {b: ['minecraft:cave'] for b in ALL}
@@ -222,6 +232,11 @@ def features_of(biome, available=None):
 
 JSON_SPAWNS = {'raft:shark'}
 
+# chance per chunk (repeated while it hits) that a group of creatures is placed when the chunk is generated (vanilla
+# default 0.1): islands start with their animals instead of filling up slowly
+WORLDGEN_CREATURES = {'palm_isle': 0.35, 'jungle_isle': 0.4, 'mangrove_isle': 0.3, 'volcanic_isle': 0.25,
+                      'frost_floes': 0.3}
+
 
 def spawns_of(biome, available=None):
     by = OrderedDict()
@@ -246,6 +261,8 @@ def biome_json(b, feature_ok=None, entity_ok=None):
     else:
         music['underwater'] = OrderedDict(max_delay=24000, min_delay=12000, sound='minecraft:music.under_water')
     attrs['minecraft:audio/background_music'] = music
+    if b in WORLDGEN_CREATURES:
+        attrs['minecraft:gameplay/creature_world_gen_spawn_probability'] = WORLDGEN_CREATURES[b]
     attrs['minecraft:gameplay/natural_mob_spawns'] = OrderedDict(
         argument=OrderedDict(spawn_costs={}, spawns_by_category=spawns_of(b, entity_ok)), modifier='overlay')
     if L.get('particles'):
@@ -292,6 +309,9 @@ BIOME_TAGS = {
     'minecraft:polar_bears_spawn_on_alternate_blocks': ['frost_floes'],  # polar bears on ice floes
     'minecraft:spawns_warm_variant_frogs': ['mangrove_isle', 'jungle_isle'],
     'minecraft:allows_surface_slime_spawns': ['mangrove_isle'],
+    'minecraft:spawns_snow_foxes': ['frost_floes'],
+    'minecraft:spawns_white_rabbits': ['frost_floes'],
+    'minecraft:spawns_gold_rabbits': ['palm_isle'],
 }
 
 

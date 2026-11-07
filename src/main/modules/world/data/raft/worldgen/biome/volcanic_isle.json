@@ -94,5 +94,6 @@
     [
       "raft:gravity_support"
     ]
-  ]
+  ],
+  "creature_spawn_probability": 0.25
 }

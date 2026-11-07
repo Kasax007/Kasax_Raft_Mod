@@ -668,6 +668,7 @@ def lang():
         'leviathan_altar.need_key': 'The altar waits for the Tidewarden Key.',
         'leviathan_altar.alive': 'The Leviathan is already awake!',
         'leviathan_altar.need_crystal': 'The altar hungers for an Ancient Crystal before it calls again.',
+        'leviathan_altar.not_ready': 'The pool is not ready: the altar cannot call the Leviathan here.',
         'leviathan_altar.silent': 'The altar stays silent.',
         'leviathan_altar.summon': 'The Leviathan rises from the deep!',
         'radio.prefix': 'Radio',

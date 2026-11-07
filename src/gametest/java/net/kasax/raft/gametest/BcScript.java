@@ -97,6 +97,7 @@ import java.util.function.Function;
  * chat on|off             show or hide the chat;  arrow left|right|up|down  press an arrow key
  * slot &lt;1-9&gt;              select a hotbar slot
  * count [dimension]       log the loaded entities per type (COUNT line in latest.log)
+ * near [radius]          log living entities per type (health of hostiles) and items around the player (NEAR)
  * track &lt;type&gt; [radius]  log game time and id:x,y,z,yaw,pitch of each such entity near the player (TRACK)
  * hold &lt;use|attack|forward|jump|sneak&gt; &lt;ticks&gt;
  * scout &lt;structure&gt; [x z] log the nearest structure of that id (raft dimension, from the player or x z): start,
@@ -162,6 +163,13 @@ public class BcScript implements FabricClientGameTest {
     private TestSingleplayerContext sp;
     /** The box of the last audited structure (for overview). */
     private BoundingBox lastBox;
+
+    /** near: list the health of hostile mobs only. */
+    private static boolean e0(String type) {
+        return !(type.contains("scavenger") || type.contains("guardian") || type.contains("corsair") || type.contains("drowned")
+                || type.contains("blaze") || type.contains("crab") && type.contains("ember") || type.contains("stray")
+                || type.contains("magma") || type.contains("player"));
+    }
 
     private static double horiz(Vec3 a, Vec3 b) {
         double dx = a.x - b.x, dz = a.z - b.z;
@@ -568,6 +576,32 @@ public class BcScript implements FabricClientGameTest {
                     return counts.toString();
                 });
                 LOG.info("[bctest] COUNT {} {}", dim, res);
+            }
+            case "near" -> {
+                // near [radius]: living entities per type around the player (health of each in brackets for monsters)
+                // and the items lying there (NEAR line): guards of a structure, animals of an island, loot drops
+                double r = arg.isEmpty() ? 48.0 : Double.parseDouble(arg.split(" ")[0]);
+                String res = need().getServer().computeOnServer(server -> {
+                    var pl = server.getPlayerList().getPlayers().getFirst();
+                    var level = (ServerLevel) pl.level();
+                    Map<String, List<String>> by = new TreeMap<>();
+                    Map<String, Integer> items = new TreeMap<>();
+                    for (var e : level.getEntities((Entity) null, pl.getBoundingBox().inflate(r), x -> x != pl)) {
+                        if (e instanceof net.minecraft.world.entity.item.ItemEntity it) {
+                            items.merge(BuiltInRegistries.ITEM.getKey(it.getItem().getItem()).toString(), it.getItem().getCount(), Integer::sum);
+                        } else if (e instanceof net.minecraft.world.entity.LivingEntity le) {
+                            String name = BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()).toString()
+                                    + (e.hasCustomName() ? "(" + e.getCustomName().getString() + ")" : "");
+                            by.computeIfAbsent(name, k -> new ArrayList<>()).add(String.format(Locale.ROOT, "%.0f/%.0f",
+                                    le.getHealth(), le.getMaxHealth()));
+                        }
+                    }
+                    StringBuilder sb = new StringBuilder();
+                    by.forEach((k, v) -> sb.append(k).append('=').append(v.size())
+                            .append(e0(k) ? "" : v.toString()).append(' '));
+                    return sb + "items=" + items;
+                });
+                LOG.info("[bctest] NEAR {} {}", (int) r, res);
             }
             case "track" -> {
                 // track <entity type> [radius]: game time, then id:x,y,z,yaw,pitch of each such entity near the player

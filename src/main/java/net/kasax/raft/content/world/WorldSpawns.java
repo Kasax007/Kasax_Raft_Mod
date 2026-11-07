@@ -49,7 +49,8 @@ public final class WorldSpawns {
             new Spawn(ModBiomes.JUNGLE_ISLE, "crab", 3, 1, 3),
             new Spawn(ModBiomes.MANGROVE_ISLE, "crab", 4, 1, 3),
             new Spawn(ModBiomes.VOLCANIC_ISLE, "ember_crab", 5, 1, 3),
-            new Spawn(ModBiomes.VOLCANIC_ISLE, "seagull", 1, 1, 2));
+            new Spawn(ModBiomes.VOLCANIC_ISLE, "seagull", 3, 1, 3),
+            new Spawn(ModBiomes.VOLCANIC_ISLE, "crab", 2, 1, 2));
 
     /**
      * Spawn costs (vanilla "spawn_costs", the potential-based density limit of the Nether's soul sand valley): a mob

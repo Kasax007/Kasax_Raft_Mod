@@ -80,6 +80,10 @@ def biome(b, extras):
     }
     if 'temperature_modifier' in b:
         out['temperature_modifier'] = b['temperature_modifier']
+    gen = attrs.get('minecraft:gameplay/creature_world_gen_spawn_probability')
+    if gen is not None:
+        # 1.21.1 keeps the chance of creatures placed with a new chunk in the biome itself
+        out['creature_spawn_probability'] = gen['argument'] if isinstance(gen, dict) else gen
     return out
 
 

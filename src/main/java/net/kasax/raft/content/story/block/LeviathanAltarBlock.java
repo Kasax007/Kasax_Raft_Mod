@@ -55,8 +55,8 @@ import net.minecraft.world.ItemInteractionResult;
  * The Leviathan altar at the rim of the sanctum's pool. <b>Contract</b> (docs/design/beachcraft3.md, 9.2): it stands
  * on the arena floor, {@code facing} points to the pool centre {@value #POOL_DISTANCE} blocks away, and the boss
  * spawns there {@value #POOL_DEPTH} blocks below the altar. Use with the Tidewarden Key: summons {@code raft:leviathan}
- * (looked up by id at runtime), not while one is alive within {@value #ALIVE_RADIUS} blocks; every call after the
- * first costs one Ancient Crystal. {@code active} is true while the Leviathan is awake.
+ * (looked up by id at runtime), not while one is alive within {@value #ALIVE_RADIUS} blocks and not when the pool is
+ * not there; every call spends the key (3.2; not in creative mode). {@code active} is true while the Leviathan is awake.
  */
 public class LeviathanAltarBlock extends BaseEntityBlock {
     @Override
@@ -132,8 +132,9 @@ public class LeviathanAltarBlock extends BaseEntityBlock {
         if (!stack.is(StoryContent.TIDEWARDEN_KEY)) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
-        if (level instanceof ServerLevel server) {
-            summon(server, pos, state, player);
+        if (level instanceof ServerLevel server && summon(server, pos, state, player)) {
+            // 3.2: the key is spent on the call (another fight needs a new key: four new sigils); not in creative
+            stack.consume(1, player);
         }
         return ItemInteractionResult.SUCCESS;
     }
@@ -147,38 +148,29 @@ public class LeviathanAltarBlock extends BaseEntityBlock {
         return InteractionResult.SUCCESS;
     }
 
-    private void summon(ServerLevel level, BlockPos pos, BlockState state, Player player) {
+    /** Calls the Leviathan; true if it came (then the key is spent). */
+    private boolean summon(ServerLevel level, BlockPos pos, BlockState state, Player player) {
         Optional<EntityType<?>> type = leviathanType();
         if (type.isEmpty()) {
             StoryUtil.tell(player, "leviathan_altar.silent");
-            return;
+            return false;
         }
         if (findLeviathan(level, pos) != null) {
             StoryUtil.tell(player, "leviathan_altar.alive");
-            return;
-        }
-        LeviathanAltarBlockEntity be = level.getBlockEntity(pos) instanceof LeviathanAltarBlockEntity b ? b : null;
-        if (be != null && be.summons() > 0 && !player.hasInfiniteMaterials()) {
-            int slot = -1;
-            for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
-                if (player.getInventory().getItem(i).is(ModItems.ANCIENT_CRYSTAL)) {
-                    slot = i;
-                    break;
-                }
-            }
-            if (slot < 0) {
-                StoryUtil.tell(player, "leviathan_altar.need_crystal");
-                level.playSound(null, pos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 1.0F, 0.7F);
-                return;
-            }
-            player.getInventory().getItem(slot).shrink(1);
+            return false;
         }
         Direction facing = state.getValue(FACING);
         BlockPos at = spawnPos(pos, facing);
+        if (!arenaReady(level, at)) {
+            StoryUtil.tell(player, "leviathan_altar.not_ready");
+            level.playSound(null, pos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 1.0F, 0.7F);
+            return false;
+        }
+        LeviathanAltarBlockEntity be = level.getBlockEntity(pos) instanceof LeviathanAltarBlockEntity b ? b : null;
         Entity boss = type.get().create(level);
         if (boss == null) {
             StoryUtil.tell(player, "leviathan_altar.silent");
-            return;
+            return false;
         }
         boss.moveTo(at.getX() + 0.5, at.getY(), at.getZ() + 0.5, facing.getOpposite().toYRot(), 0.0F);
         if (boss instanceof Mob mob) {
@@ -198,6 +190,18 @@ public class LeviathanAltarBlock extends BaseEntityBlock {
             p.sendSystemMessage(Component.translatable("message.raft.leviathan_altar.summon")
                     .withStyle(ChatFormatting.DARK_AQUA, ChatFormatting.BOLD));
         }
+        return true;
+    }
+
+    /** The pool must be there: water at the spawn point and in a 5 x 5 x 4 column around it (no drained or broken arena). */
+    public static boolean arenaReady(ServerLevel level, BlockPos at) {
+        int water = 0;
+        for (BlockPos p : BlockPos.betweenClosed(at.offset(-2, 0, -2), at.offset(2, 3, 2))) {
+            if (level.getFluidState(p).is(net.minecraft.tags.FluidTags.WATER)) {
+                water++;
+            }
+        }
+        return water >= 5 * 5 * 4 * 3 / 4;
     }
 
     @Override

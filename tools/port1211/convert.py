@@ -277,11 +277,16 @@ def main():
     finish_equipment(extras, stats)
     # facts other parts of the mod need
     world = os.path.join(SRC, 'modules', 'world')
+    # biomes converted in an earlier run are skipped: add to what is there instead of replacing it
     if extras.get('underwater_music'):
-        save(os.path.join(world, 'data', 'minecraft', 'tags', 'worldgen', 'biome', 'plays_underwater_music.json'),
-             {'values': sorted(extras['underwater_music'])})
+        p = os.path.join(world, 'data', 'minecraft', 'tags', 'worldgen', 'biome', 'plays_underwater_music.json')
+        old = load(p).get('values', []) if os.path.exists(p) else []
+        save(p, {'values': sorted(set(old) | set(extras['underwater_music']))})
     if extras.get('water_fog'):
-        save(os.path.join(world, 'assets', 'raft', 'port1211', 'water_fog.json'), extras['water_fog'])
+        p = os.path.join(world, 'assets', 'raft', 'port1211', 'water_fog.json')
+        old = load(p) if os.path.exists(p) else {}
+        old.update(extras['water_fog'])
+        save(p, dict(sorted(old.items())))
     print(json.dumps(stats))
     if extras.get('special_items'):
         print('items with special models (need Java item properties):', json.dumps(extras['special_items'])[:2000])

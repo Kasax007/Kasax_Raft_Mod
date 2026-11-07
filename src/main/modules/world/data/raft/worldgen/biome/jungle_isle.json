@@ -33,6 +33,24 @@
         "weight": 2,
         "minCount": 1,
         "maxCount": 3
+      },
+      {
+        "type": "minecraft:chicken",
+        "weight": 8,
+        "minCount": 2,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:pig",
+        "weight": 4,
+        "minCount": 2,
+        "maxCount": 3
+      },
+      {
+        "type": "minecraft:turtle",
+        "weight": 3,
+        "minCount": 2,
+        "maxCount": 3
       }
     ]
   },
@@ -108,5 +126,6 @@
     [
       "raft:gravity_support"
     ]
-  ]
+  ],
+  "creature_spawn_probability": 0.4
 }

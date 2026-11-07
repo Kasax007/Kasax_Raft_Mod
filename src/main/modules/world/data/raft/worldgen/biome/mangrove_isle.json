@@ -29,6 +29,12 @@
         "weight": 10,
         "minCount": 2,
         "maxCount": 5
+      },
+      {
+        "type": "minecraft:chicken",
+        "weight": 4,
+        "minCount": 2,
+        "maxCount": 3
       }
     ],
     "monster": [
@@ -37,6 +43,14 @@
         "weight": 1,
         "minCount": 1,
         "maxCount": 1
+      }
+    ],
+    "water_ambient": [
+      {
+        "type": "minecraft:tropical_fish",
+        "weight": 10,
+        "minCount": 2,
+        "maxCount": 4
       }
     ]
   },
@@ -99,5 +113,6 @@
     [
       "raft:gravity_support"
     ]
-  ]
+  ],
+  "creature_spawn_probability": 0.3
 }

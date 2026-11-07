@@ -26,17 +26,25 @@ public class CorsairRenderer extends AbstractZombieRenderer<DrownedCorsairEntity
     private static final ResourceLocation COAT = Raft.id("textures/entity/drowned_corsair/drowned_corsair_coat.png");
     private static final ResourceLocation HAT = Raft.id("textures/entity/drowned_corsair/drowned_corsair_hat.png");
 
+    private final ResourceLocation texture;
+
     public CorsairRenderer(EntityRendererProvider.Context context) {
+        this(context, TEXTURE, COAT, HAT);
+    }
+
+    /** A corsair with other clothes (the captain of the encounters module). */
+    protected CorsairRenderer(EntityRendererProvider.Context context, ResourceLocation texture, ResourceLocation coat, ResourceLocation hat) {
         super(context, new CorsairModel(context.bakeLayer(ModelLayers.DROWNED)),
                 new CorsairModel(context.bakeLayer(ModelLayers.DROWNED_INNER_ARMOR)),
                 new CorsairModel(context.bakeLayer(ModelLayers.DROWNED_OUTER_ARMOR)));
-        this.addLayer(new CoatLayer(this, context.getModelSet()));
-        this.addLayer(new HatLayer(this, context.getModelSet()));
+        this.texture = texture;
+        this.addLayer(new CoatLayer(this, context.getModelSet(), coat));
+        this.addLayer(new HatLayer(this, context.getModelSet(), hat));
     }
 
     @Override
     public ResourceLocation getTextureLocation(Zombie zombie) {
-        return TEXTURE;
+        return this.texture;
     }
 
     @Override
@@ -53,16 +61,18 @@ public class CorsairRenderer extends AbstractZombieRenderer<DrownedCorsairEntity
     /** Ragged coat, sash and boots on a slightly bigger copy of the body. */
     private static class CoatLayer extends RenderLayer<DrownedCorsairEntity, CorsairModel> {
         private final CorsairModel model;
+        private final ResourceLocation coat;
 
-        CoatLayer(RenderLayerParent<DrownedCorsairEntity, CorsairModel> parent, EntityModelSet models) {
+        CoatLayer(RenderLayerParent<DrownedCorsairEntity, CorsairModel> parent, EntityModelSet models, ResourceLocation coat) {
             super(parent);
             this.model = new CorsairModel(models.bakeLayer(ModelLayers.DROWNED_OUTER_LAYER));
+            this.coat = coat;
         }
 
         @Override
         public void render(PoseStack poseStack, MultiBufferSource buffers, int light, DrownedCorsairEntity corsair, float limbSwing,
                            float limbSwingAmount, float partialTick, float ageInTicks, float netHeadYaw, float headPitch) {
-            coloredCutoutModelCopyLayerRender(this.getParentModel(), this.model, COAT, poseStack, buffers, light, corsair, limbSwing,
+            coloredCutoutModelCopyLayerRender(this.getParentModel(), this.model, this.coat, poseStack, buffers, light, corsair, limbSwing,
                     limbSwingAmount, ageInTicks, netHeadYaw, headPitch, partialTick, -1);
         }
     }
@@ -70,17 +80,19 @@ public class CorsairRenderer extends AbstractZombieRenderer<DrownedCorsairEntity
     /** The tricorn. */
     private static class HatLayer extends RenderLayer<DrownedCorsairEntity, CorsairModel> {
         private final CorsairModel model;
+        private final ResourceLocation hat;
 
-        HatLayer(RenderLayerParent<DrownedCorsairEntity, CorsairModel> parent, EntityModelSet models) {
+        HatLayer(RenderLayerParent<DrownedCorsairEntity, CorsairModel> parent, EntityModelSet models, ResourceLocation hat) {
             super(parent);
             this.model = new CorsairModel(models.bakeLayer(CorsairModel.HAT_LAYER));
+            this.hat = hat;
         }
 
         @Override
         public void render(PoseStack poseStack, MultiBufferSource buffers, int light, DrownedCorsairEntity corsair, float limbSwing,
                            float limbSwingAmount, float partialTick, float ageInTicks, float netHeadYaw, float headPitch) {
             if (corsair.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
-                coloredCutoutModelCopyLayerRender(this.getParentModel(), this.model, HAT, poseStack, buffers, light, corsair, limbSwing,
+                coloredCutoutModelCopyLayerRender(this.getParentModel(), this.model, this.hat, poseStack, buffers, light, corsair, limbSwing,
                         limbSwingAmount, ageInTicks, netHeadYaw, headPitch, partialTick, -1);
             }
         }
