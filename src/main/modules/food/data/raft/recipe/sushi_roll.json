@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "food",
+  "ingredients": [
+    "raft:cooked_rice",
+    [
+      "minecraft:cod",
+      "minecraft:salmon",
+      "minecraft:tropical_fish"
+    ],
+    "minecraft:dried_kelp"
+  ],
+  "result": {
+    "count": 3,
+    "id": "raft:sushi_roll"
+  }
+}

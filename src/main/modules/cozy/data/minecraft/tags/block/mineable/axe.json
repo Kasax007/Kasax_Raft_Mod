@@ -1,0 +1,22 @@
+{
+  "values": [
+    "raft:palm_bench",
+    "raft:teak_bench",
+    "raft:bar_stool",
+    "raft:sun_lounger",
+    "raft:rattan_armchair",
+    "raft:teak_table",
+    "raft:bamboo_table",
+    "raft:palm_shelf",
+    "raft:teak_shelf",
+    "raft:weathered_shelf",
+    "raft:wicker_basket",
+    "raft:driftwood_sconce",
+    "raft:flower_box",
+    "raft:fishing_net",
+    "raft:fish_trophy",
+    "raft:bamboo_blinds",
+    "raft:thatch_parasol",
+    "raft:driftwood_lattice"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "values": [
+    "minecraft:campfire",
+    "minecraft:soul_campfire",
+    {
+      "id": "raft:brazier",
+      "required": false
+    },
+    {
+      "id": "raft:tiki_torch",
+      "required": false
+    },
+    {
+      "id": "raft:simple_grill",
+      "required": false
+    },
+    {
+      "id": "raft:cooking_pot",
+      "required": false
+    }
+  ]
+}

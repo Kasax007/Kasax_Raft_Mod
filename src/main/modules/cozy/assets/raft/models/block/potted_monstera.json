@@ -1,0 +1,224 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "p": "raft:block/terracotta_pot",
+    "s": "raft:block/pot_soil",
+    "l": "raft:block/monstera_leaves",
+    "particle": "raft:block/terracotta_pot"
+  },
+  "elements": [
+    {
+      "from": [
+        4.0,
+        0.0,
+        4.0
+      ],
+      "to": [
+        12.0,
+        6.0,
+        12.0
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            4.0,
+            4.0,
+            12.0,
+            12.0
+          ],
+          "texture": "#p"
+        },
+        "north": {
+          "uv": [
+            4.0,
+            10.0,
+            12.0,
+            16.0
+          ],
+          "texture": "#p"
+        },
+        "south": {
+          "uv": [
+            4.0,
+            10.0,
+            12.0,
+            16.0
+          ],
+          "texture": "#p"
+        },
+        "west": {
+          "uv": [
+            4.0,
+            10.0,
+            12.0,
+            16.0
+          ],
+          "texture": "#p"
+        },
+        "east": {
+          "uv": [
+            4.0,
+            10.0,
+            12.0,
+            16.0
+          ],
+          "texture": "#p"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        5.0,
+        3.5
+      ],
+      "to": [
+        12.5,
+        7.0,
+        12.5
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            3.5,
+            3.5,
+            12.5,
+            12.5
+          ],
+          "texture": "#p"
+        },
+        "up": {
+          "uv": [
+            3.5,
+            3.5,
+            12.5,
+            12.5
+          ],
+          "texture": "#p"
+        },
+        "north": {
+          "uv": [
+            3.5,
+            9.0,
+            12.5,
+            11.0
+          ],
+          "texture": "#p"
+        },
+        "south": {
+          "uv": [
+            3.5,
+            9.0,
+            12.5,
+            11.0
+          ],
+          "texture": "#p"
+        },
+        "west": {
+          "uv": [
+            3.5,
+            9.0,
+            12.5,
+            11.0
+          ],
+          "texture": "#p"
+        },
+        "east": {
+          "uv": [
+            3.5,
+            9.0,
+            12.5,
+            11.0
+          ],
+          "texture": "#p"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        6.0,
+        8.0
+      ],
+      "to": [
+        15.5,
+        16.0,
+        8.0
+      ],
+      "rotation": {
+        "origin": [
+          8.0,
+          6.0,
+          8.0
+        ],
+        "axis": "y",
+        "angle": 45,
+        "rescale": true
+      },
+      "shade_direction_override": "up",
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#l"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#l"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        6.0,
+        8.0
+      ],
+      "to": [
+        15.5,
+        16.0,
+        8.0
+      ],
+      "rotation": {
+        "origin": [
+          8.0,
+          6.0,
+          8.0
+        ],
+        "axis": "y",
+        "angle": -45,
+        "rescale": true
+      },
+      "shade_direction_override": "up",
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#l"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#l"
+        }
+      }
+    }
+  ]
+}

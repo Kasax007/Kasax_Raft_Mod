@@ -1,0 +1,11 @@
+{
+  "values": [
+    {
+      "id": "raft:aquarium",
+      "required": false
+    },
+    "raft:bamboo_blinds",
+    "raft:driftwood_lattice",
+    "#raft:sea_glass_panes"
+  ]
+}

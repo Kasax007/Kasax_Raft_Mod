@@ -1,0 +1,68 @@
+{
+  "values": [
+    {
+      "id": "raft:paper_lantern_white",
+      "required": false
+    },
+    {
+      "id": "raft:paper_lantern_red",
+      "required": false
+    },
+    {
+      "id": "raft:paper_lantern_orange",
+      "required": false
+    },
+    {
+      "id": "raft:paper_lantern_yellow",
+      "required": false
+    },
+    {
+      "id": "raft:paper_lantern_lime",
+      "required": false
+    },
+    {
+      "id": "raft:paper_lantern_cyan",
+      "required": false
+    },
+    {
+      "id": "raft:paper_lantern_blue",
+      "required": false
+    },
+    {
+      "id": "raft:paper_lantern_purple",
+      "required": false
+    },
+    {
+      "id": "raft:paper_lantern_pink",
+      "required": false
+    },
+    {
+      "id": "raft:ship_lantern",
+      "required": false
+    },
+    {
+      "id": "raft:jelly_lamp",
+      "required": false
+    },
+    {
+      "id": "raft:driftwood_lamp",
+      "required": false
+    },
+    {
+      "id": "raft:seashell_lamp",
+      "required": false
+    },
+    {
+      "id": "raft:neon_tube_cyan",
+      "required": false
+    },
+    {
+      "id": "raft:neon_tube_pink",
+      "required": false
+    },
+    {
+      "id": "raft:lighthouse_lens",
+      "required": false
+    }
+  ]
+}

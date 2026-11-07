@@ -23,7 +23,9 @@ import java.util.function.Supplier;
  */
 public final class BcTabs {
     public enum Tab {
-        BUILDING("building"), DECOR("decor"), NATURE("nature"), VOYAGE("voyage"), CREATURES("creatures"), STORY("story");
+        BUILDING("building"), DECOR("decor"), NATURE("nature"), VOYAGE("voyage"), CREATURES("creatures"), STORY("story"),
+        // Beach Craft 3.3
+        COZY("cozy"), KITCHEN("kitchen"), GEAR("gear");
 
         public final String id;
 

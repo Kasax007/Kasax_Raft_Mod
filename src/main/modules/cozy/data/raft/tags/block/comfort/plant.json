@@ -1,0 +1,13 @@
+{
+  "values": [
+    "raft:potted_monstera",
+    "raft:coconut_planter",
+    "raft:flower_box",
+    "raft:coral_vase",
+    {
+      "id": "raft:hanging_planter",
+      "required": false
+    },
+    "#minecraft:flower_pots"
+  ]
+}

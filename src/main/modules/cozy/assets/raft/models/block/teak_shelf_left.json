@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_shelf_left",
+  "textures": {
+    "all": "raft:block/teak_shelf",
+    "particle": "raft:block/teak_shelf"
+  }
+}

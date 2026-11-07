@@ -1,0 +1,28 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:registry_contains",
+      "registry": "minecraft:item",
+      "values": [
+        "raft:teak_planks",
+        "raft:teak_slab"
+      ]
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "P": "raft:teak_planks",
+    "S": "raft:teak_slab"
+  },
+  "pattern": [
+    "  P",
+    "SSS",
+    "P P"
+  ],
+  "result": {
+    "count": 2,
+    "id": "raft:teak_bench"
+  },
+  "group": "cozy_bench"
+}

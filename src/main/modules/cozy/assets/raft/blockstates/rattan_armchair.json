@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "raft:block/rattan_armchair"
+    },
+    "facing=east": {
+      "model": "raft:block/rattan_armchair",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "raft:block/rattan_armchair",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "raft:block/rattan_armchair",
+      "y": 270
+    }
+  }
+}

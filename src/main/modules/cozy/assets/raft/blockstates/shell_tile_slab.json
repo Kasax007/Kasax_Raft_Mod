@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "raft:block/shell_tile_slab"
+    },
+    "type=top": {
+      "model": "raft:block/shell_tile_slab_top"
+    },
+    "type=double": {
+      "model": "raft:block/shell_tiles"
+    }
+  }
+}

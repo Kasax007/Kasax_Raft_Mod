@@ -1,0 +1,25 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:registry_contains",
+      "registry": "minecraft:item",
+      "values": [
+        "raft:tropical_fern"
+      ]
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "F": "raft:tropical_fern",
+    "P": "minecraft:flower_pot"
+  },
+  "pattern": [
+    "FF",
+    "PF"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:potted_monstera"
+  }
+}

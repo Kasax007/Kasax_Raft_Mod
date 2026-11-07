@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "N": "minecraft:copper_nugget",
+    "G": "minecraft:glass_pane",
+    "T": "minecraft:torch",
+    "I": "minecraft:copper_ingot"
+  },
+  "pattern": [
+    " N ",
+    "GTG",
+    "NIN"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:hurricane_lantern"
+  }
+}

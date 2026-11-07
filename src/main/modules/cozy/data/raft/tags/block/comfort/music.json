@@ -1,0 +1,16 @@
+{
+  "values": [
+    "raft:steel_drum",
+    "raft:conch_shell",
+    {
+      "id": "raft:wind_chime",
+      "required": false
+    },
+    {
+      "id": "raft:ship_bell",
+      "required": false
+    },
+    "minecraft:jukebox",
+    "minecraft:note_block"
+  ]
+}

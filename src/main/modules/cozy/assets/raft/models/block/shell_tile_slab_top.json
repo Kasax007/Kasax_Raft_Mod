@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "raft:block/shell_tiles",
+    "top": "raft:block/shell_tiles",
+    "side": "raft:block/shell_tiles"
+  }
+}

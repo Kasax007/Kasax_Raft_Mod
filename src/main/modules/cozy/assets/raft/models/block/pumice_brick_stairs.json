@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "raft:block/pumice_bricks",
+    "side": "raft:block/pumice_bricks",
+    "top": "raft:block/pumice_bricks"
+  }
+}

@@ -1,0 +1,258 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "base": "raft:block/stripped_driftwood_log",
+    "shade": "raft:block/sea_glass_lamp_shade_lit",
+    "particle": "raft:block/stripped_driftwood_log"
+  },
+  "elements": [
+    {
+      "from": [
+        5.0,
+        0.0,
+        5.0
+      ],
+      "to": [
+        11.0,
+        1.5,
+        11.0
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            5.0,
+            5.0,
+            11.0,
+            11.0
+          ],
+          "texture": "#base"
+        },
+        "up": {
+          "uv": [
+            5.0,
+            5.0,
+            11.0,
+            11.0
+          ],
+          "texture": "#base"
+        },
+        "north": {
+          "uv": [
+            5.0,
+            14.5,
+            11.0,
+            16.0
+          ],
+          "texture": "#base"
+        },
+        "south": {
+          "uv": [
+            5.0,
+            14.5,
+            11.0,
+            16.0
+          ],
+          "texture": "#base"
+        },
+        "west": {
+          "uv": [
+            5.0,
+            14.5,
+            11.0,
+            16.0
+          ],
+          "texture": "#base"
+        },
+        "east": {
+          "uv": [
+            5.0,
+            14.5,
+            11.0,
+            16.0
+          ],
+          "texture": "#base"
+        }
+      }
+    },
+    {
+      "from": [
+        7.0,
+        1.5,
+        7.0
+      ],
+      "to": [
+        9.0,
+        7.0,
+        9.0
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            7.0,
+            9.0,
+            9.0,
+            14.5
+          ],
+          "texture": "#base"
+        },
+        "south": {
+          "uv": [
+            7.0,
+            9.0,
+            9.0,
+            14.5
+          ],
+          "texture": "#base"
+        },
+        "west": {
+          "uv": [
+            7.0,
+            9.0,
+            9.0,
+            14.5
+          ],
+          "texture": "#base"
+        },
+        "east": {
+          "uv": [
+            7.0,
+            9.0,
+            9.0,
+            14.5
+          ],
+          "texture": "#base"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        7.0,
+        3.5
+      ],
+      "to": [
+        12.5,
+        14.0,
+        12.5
+      ],
+      "light_emission": 14,
+      "faces": {
+        "down": {
+          "uv": [
+            3.5,
+            3.5,
+            12.5,
+            12.5
+          ],
+          "texture": "#shade"
+        },
+        "up": {
+          "uv": [
+            3.5,
+            3.5,
+            12.5,
+            12.5
+          ],
+          "texture": "#shade"
+        },
+        "north": {
+          "uv": [
+            3.5,
+            2.0,
+            12.5,
+            9.0
+          ],
+          "texture": "#shade"
+        },
+        "south": {
+          "uv": [
+            3.5,
+            2.0,
+            12.5,
+            9.0
+          ],
+          "texture": "#shade"
+        },
+        "west": {
+          "uv": [
+            3.5,
+            2.0,
+            12.5,
+            9.0
+          ],
+          "texture": "#shade"
+        },
+        "east": {
+          "uv": [
+            3.5,
+            2.0,
+            12.5,
+            9.0
+          ],
+          "texture": "#shade"
+        }
+      }
+    },
+    {
+      "from": [
+        5.0,
+        14.0,
+        5.0
+      ],
+      "to": [
+        11.0,
+        15.0,
+        11.0
+      ],
+      "light_emission": 14,
+      "faces": {
+        "up": {
+          "uv": [
+            5.0,
+            5.0,
+            11.0,
+            11.0
+          ],
+          "texture": "#shade"
+        },
+        "north": {
+          "uv": [
+            5.0,
+            1.0,
+            11.0,
+            2.0
+          ],
+          "texture": "#shade"
+        },
+        "south": {
+          "uv": [
+            5.0,
+            1.0,
+            11.0,
+            2.0
+          ],
+          "texture": "#shade"
+        },
+        "west": {
+          "uv": [
+            5.0,
+            1.0,
+            11.0,
+            2.0
+          ],
+          "texture": "#shade"
+        },
+        "east": {
+          "uv": [
+            5.0,
+            1.0,
+            11.0,
+            2.0
+          ],
+          "texture": "#shade"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "B": "minecraft:bamboo",
+    "C": "minecraft:chest"
+  },
+  "pattern": [
+    "B B",
+    "BCB",
+    "BBB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:wicker_basket"
+  }
+}

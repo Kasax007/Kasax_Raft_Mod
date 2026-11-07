@@ -1,0 +1,16 @@
+{
+  "values": [
+    {
+      "id": "raft:aqua_sea_glass_pane",
+      "required": false
+    },
+    {
+      "id": "raft:green_sea_glass_pane",
+      "required": false
+    },
+    {
+      "id": "raft:blue_sea_glass_pane",
+      "required": false
+    }
+  ]
+}

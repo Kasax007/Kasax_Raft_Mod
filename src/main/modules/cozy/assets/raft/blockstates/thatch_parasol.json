@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "raft:block/thatch_parasol_lower"
+    },
+    "half=upper": {
+      "model": "raft:block/thatch_parasol_upper"
+    }
+  }
+}

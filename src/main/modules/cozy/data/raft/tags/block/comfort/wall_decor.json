@@ -1,0 +1,43 @@
+{
+  "values": [
+    "raft:shell_garland",
+    "raft:fishing_net",
+    "raft:fish_trophy",
+    "raft:surfboard_red",
+    "raft:surfboard_blue",
+    "raft:surfboard_yellow",
+    {
+      "id": "raft:life_ring",
+      "required": false
+    },
+    {
+      "id": "raft:figurehead",
+      "required": false
+    },
+    {
+      "id": "raft:jolly_roger",
+      "required": false
+    },
+    {
+      "id": "raft:bunting_red_white",
+      "required": false
+    },
+    {
+      "id": "raft:bunting_rainbow",
+      "required": false
+    },
+    {
+      "id": "raft:string_lights_warm",
+      "required": false
+    },
+    {
+      "id": "raft:string_lights_colorful",
+      "required": false
+    },
+    {
+      "id": "raft:shark_jaw_trophy",
+      "required": false
+    },
+    "minecraft:painting"
+  ]
+}

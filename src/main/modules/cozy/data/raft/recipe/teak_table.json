@@ -1,0 +1,27 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:registry_contains",
+      "registry": "minecraft:item",
+      "values": [
+        "raft:teak_planks",
+        "raft:teak_slab"
+      ]
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "P": "raft:teak_planks",
+    "S": "raft:teak_slab"
+  },
+  "pattern": [
+    "PPP",
+    " S ",
+    "SSS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:teak_table"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "block.steel_drum.note": {
+    "sounds": [
+      "raft:cozy/steel_drum"
+    ],
+    "subtitle": "subtitles.raft.block.steel_drum.note"
+  },
+  "block.conch_shell.blow": {
+    "sounds": [
+      {
+        "name": "raft:cozy/conch_horn",
+        "attenuation_distance": 64
+      }
+    ],
+    "subtitle": "subtitles.raft.block.conch_shell.blow"
+  },
+  "cozy.rested": {
+    "sounds": [
+      "raft:cozy/rested"
+    ],
+    "subtitle": "subtitles.raft.cozy.rested"
+  }
+}
