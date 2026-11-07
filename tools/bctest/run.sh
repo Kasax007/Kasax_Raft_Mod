@@ -6,7 +6,8 @@ SCRIPT=$(readlink -f "$1"); OUT=$(readlink -f "$2")
 mkdir -p "$OUT"
 cd "$(dirname "$0")/../.." || exit 1
 LOCK=${BC_LOCK:-/tmp/claude-0/-home-user/4ca9508b-4f8c-5a8e-91dc-6059d6cc887c/scratchpad/ref/build.lock}
-export JAVA_HOME=/opt/jdk25/jdk-25.0.5+8
+# Minecraft 1.21.1 runs on Java 21
+export JAVA_HOME=${BC_JAVA_HOME:-/usr/lib/jvm/java-21-openjdk-amd64}
 flock "$LOCK" sh -c "
   Xvfb :97 -screen 0 1920x1080x24 >/dev/null 2>&1 &
   XPID=\$!
