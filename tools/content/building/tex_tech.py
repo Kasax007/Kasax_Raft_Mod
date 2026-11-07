@@ -17,7 +17,7 @@ LED = {'g': pal('#1e5c2a', '#46e06a', '#c9ffd2'), 'r': pal('#5c1e1e', '#ff4a3d',
 def control_panel_side():
     p = CONSOLE
     img = new()
-    shade_fill(img, p, 2, 3, 301, cell=8, contrast=0.6)
+    fill(img, 0, 0, 15, 15, p[3])
     bevel(img, 0, 0, 15, 15, p[4], p[0])
     for y in (11, 13):  # vent slots
         for x in range(3, 13):
@@ -34,7 +34,7 @@ def control_panel_front():
     """Cabinet front (rows 8..15 are used): two doors with chrome pulls and a vented kick plate."""
     p = CONSOLE
     img = new()
-    shade_fill(img, p, 2, 3, 302, cell=8, contrast=0.6)
+    fill(img, 0, 0, 15, 15, p[3])
     for half in (0, 8):
         bevel(img, 0, half, 15, half + 7, p[4], p[0])
         for (x0, x1) in ((1, 7), (8, 14)):
@@ -52,7 +52,7 @@ def control_panel_top():
     """The sloped desk (rows 3..12 are used): dark slate with toggle switches, two dials, knobs and keys."""
     p = DARK
     img = new()
-    shade_fill(img, p, 2, 3, 303, cell=8, contrast=0.5)
+    fill(img, 0, 0, 15, 15, p[2])
     bevel(img, 0, 0, 15, 15, p[4], p[0])
     for x in range(16):
         put(img, x, 3, CREAM[2])
@@ -102,7 +102,7 @@ def control_panel_screen():
     """Screen housing face (rows 1..7 used): cream bezel with two dark CRT screens and a brass label."""
     p = CONSOLE
     img = new()
-    shade_fill(img, p, 2, 3, 304, cell=8, contrast=0.6)
+    fill(img, 0, 0, 15, 15, p[3])
     bevel(img, 0, 0, 15, 8, p[4], p[0])
     for (x0, x1) in ((1, 7), (9, 14)):
         fill(img, x0, 2, x1, 6, CRT[1])
@@ -226,38 +226,79 @@ def server_rack_top():
 DISH = pal('#7d8486', '#a3a9a9', '#c3c7c4', '#dcdedb', '#f0f0ec')
 
 
-def satellite_dish():
-    """Dish face (cutout circle): concave shading, lit rim, darker towards the top-left inside."""
-    img = new()
+# The dish is a pixel circle 14 px across (rows 1..14). The model builds it from one band per run of equal rows
+# (DISH_BANDS), so the front and back pictures fill each band exactly and the rim faces need no cut-out pixels.
+DISH_ROWS = {1: (5, 10), 2: (3, 12), 3: (2, 13), 4: (2, 13), 11: (2, 13), 12: (2, 13), 13: (3, 12), 14: (5, 10)}
+DISH_ROWS.update({r: (1, 14) for r in range(5, 11)})
+# (first row, last row, first column, last column)
+DISH_BANDS = [(1, 1, 5, 10), (2, 2, 3, 12), (3, 4, 2, 13), (5, 10, 1, 14), (11, 12, 2, 13), (13, 13, 3, 12),
+              (14, 14, 5, 10)]
+# Plain pixels outside the circle that the rim faces of the dish sample: top, sides, bottom.
+DISH_EDGE_UV = {'up': [0, 0, 1, 1], 'side': [15, 0, 16, 1], 'down': [0, 15, 1, 16]}
 
-    def shade(x, y, a, d):
-        if d > 6.9:
-            return DISH[3] if math.sin(a) < 0.3 else DISH[2]  # rim
-        # inside of a bowl: the far (lower-right) wall catches the light from the top-left
-        v = math.cos(a - math.radians(45)) * (d / 7.0)
-        i = 2 + round(v * 1.6)
-        return DISH[max(0, min(4, i))]
-    ring(img, 8, 8, 0, 7.9, shade)
+
+def _in_dish(x, y):
+    r = DISH_ROWS.get(y)
+    return r is not None and r[0] <= x <= r[1]
+
+
+def _dish_rim(x, y):
+    return _in_dish(x, y) and not all(_in_dish(x + dx, y + dy) for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)))
+
+
+def _dish_edges(img):
+    put(img, 0, 0, DISH[3])
+    put(img, 15, 0, DISH[2])
+    put(img, 0, 15, DISH[1])
+
+
+def satellite_dish():
+    """Dish face: a raised rim lit from the top-left, the bowl's far (lower-right) wall in the light, the near wall
+    in shade, a receiver ring and the dark feed point in the middle."""
+    img = new()
+    for y in range(16):
+        for x in range(16):
+            if not _in_dish(x, y):
+                continue
+            a = math.atan2(y + 0.5 - 8, x + 0.5 - 8)
+            if _dish_rim(x, y):
+                c = lit(a, DISH, 3, 1)
+            else:
+                c = DISH[3] if x + y >= 16 else DISH[2]
+            put(img, x, y, c)
     ring(img, 8, 8, 2.2, 2.9, lambda x, y, a, d: DISH[1])
     fill(img, 7, 7, 8, 8, DARK[3])
+    _dish_edges(img)
     return img
 
 
 def satellite_dish_back():
+    """Back of the dish: convex shell lit from the top-left, two stiffening ribs, steel hub plate."""
     img = new()
-    ring(img, 8, 8, 0, 7.9, lambda x, y, a, d: lit(a, DISH, 1, 1))
-    for k in range(6):
-        a = k * math.pi / 3
-        for r in range(2, 8):
-            put(img, int(8 + math.cos(a) * r), int(8 + math.sin(a) * r), DISH[0])
+    for y in range(16):
+        for x in range(16):
+            if not _in_dish(x, y):
+                continue
+            a = math.atan2(y + 0.5 - 8, x + 0.5 - 8)
+            if _dish_rim(x, y):
+                c = DISH[1]
+            elif x == y or x == 15 - y:
+                c = DISH[1]
+            else:
+                c = DISH[3] if x + y < 15 else DISH[2]
+            put(img, x, y, c)
     fill(img, 6, 6, 9, 9, STEEL[3])
+    bevel(img, 6, 6, 9, 9, STEEL[5], STEEL[1])
+    _dish_edges(img)
     return img
 
 
 def satellite_dish_mount():
+    """Galvanised base plate: flat steel with a bevel and four bolts."""
     p = STEEL
     img = new()
-    shade_fill(img, p, 3, 4, 321, cell=4, contrast=0.6)
+    fill(img, 0, 0, 15, 15, p[4])
+    fill(img, 2, 2, 13, 13, p[3])
     bevel(img, 0, 0, 15, 15, p[5], p[1])
     for (x, y) in [(3, 3), (12, 3), (3, 12), (12, 12)]:
         put(img, x, y, p[6])

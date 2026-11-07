@@ -4,7 +4,7 @@ import math
 import random
 
 from bclib import assets as A
-from bclib import tex
+from bclib import extrude, tex
 
 from content.decor import art
 from content.decor.art import P, fill
@@ -51,7 +51,8 @@ def ship_cannon():
     m.box((3, 2, 11), (5, 6, 15), 'wood')
     m.box((11, 2, 11), (13, 6, 15), 'wood')
     m.box((5, 2, 4), (11, 4, 15), 'wood')
-    m.box((1.5, 2, 5), (14.5, 3.5, 6.5), 'fittings', collide=False)
+    m.box((1.5, 1.5, 5), (14.5, 3, 6.5), 'fittings', collide=False)   # front axle, like the rear one (its bottom is not
+                                                                     # in the plane of the carriage bottom)
     m.box((1.5, 1.5, 12), (14.5, 3, 13.5), 'fittings', collide=False)
     whf = {'west': ('wheel', [0, 0, 16, 16]), 'east': ('wheel', [0, 0, 16, 16])}
     for x0 in (1, 13):
@@ -388,9 +389,8 @@ def wanted_poster():
     P(im, 13, 13, p[1])
     art.save(im, 'block/wanted_poster')
     m = Model({'paper': 'block/wanted_poster'})
-    m.box((2, 1, 15.5), (14, 15, 15.95), 'paper', faces={'north': ('paper', [2, 1, 14, 15]), 'south': ('paper', [14, 1, 2, 15]),
-                                                         'west': ('paper', [2, 1, 2.5, 15]), 'east': ('paper', [13.5, 1, 14, 15]),
-                                                         'up': ('paper', [2, 1, 14, 1.5]), 'down': ('paper', [2, 14.5, 14, 15])})
+    # the paper is extruded row by row, so its thin edges follow the torn corner instead of sampling a strip
+    m.elements += extrude.vertical('raft:block/wanted_poster', '#paper', region=(2, 1, 14, 15), z=(15.5, 15.95))
     m.write('wanted_poster')
     shape('wanted_poster', [(2, 1, 15, 14, 15, 16)])
     A.blockstate(M, 'wanted_poster', facing_variants('block/wanted_poster'))
@@ -790,7 +790,7 @@ def figurehead():
     m = Model({'board': 'block/decor_teak_vertical', 'skin': 'block/figurehead_skin', 'face': 'block/figurehead_face',
                'hair': 'block/figurehead_hair', 'tail': 'block/figurehead_scales', 'gold': 'block/decor_brass'},
               particle='block/decor_teak')
-    m.box((5, 0, 14.5), (11, 16, 16), 'board')
+    m.box((5, 0, 14.5), (11, 15, 16), 'board')                     # ends under the gold cap (no coplanar faces)
     m.box((4.5, 15, 14), (11.5, 16, 16), 'gold', collide=False)
     # tail curling down with a fin
     m.box((6.5, 2, 11), (9.5, 7, 14.5), 'tail')

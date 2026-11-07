@@ -93,7 +93,8 @@ def deck_chair():
     for x0 in (1, 13.5):
         m.box((x0, 0, 1), (x0 + 1.5, 6, 2.5), 'wood')                         # front legs
         m.box((x0, 4, 1), (x0 + 1.5, 5.5, 10.5), 'wood', collide=False)        # seat rails
-        m.box((x0, 4, 9.5), (x0 + 1.5, 5.5, 20), 'wood', rot=('x', -50, (x0, 4.75, 9.5)), collide=False)
+        # back rails 1 px wide, set in from the frame so their sides never lie in the plane of the legs (z-fighting)
+        m.box((x0 + 0.25, 4, 9.5), (x0 + 1.25, 5.5, 20), 'wood', rot=('x', -50, (x0, 4.75, 9.5)), collide=False)
         m.box((x0, 0, 12.5), (x0 + 1.5, 7, 14), 'wood', collide=False)        # rear legs
         ax = x0 - 0.5 if x0 < 8 else x0
         m.box((ax, 7.5, 2), (ax + 2, 8.5, 10), 'wood', collide=False)         # arm rests
@@ -137,7 +138,7 @@ def beach_umbrellas():
         tx = {'canopy': f'block/{name}', 'valance': f'block/{name}_valance', 'pole': 'block/decor_palm',
               'iron': 'block/decor_iron'}
         m = Model(tx, particle=f'block/{name}')
-        m.box((7.25, 0, 7.25), (8.75, 16, 8.75), 'pole')
+        m.box((7.25, 1.5, 7.25), (8.75, 16, 8.75), 'pole')            # stands on the iron foot
         m.box((5, 0, 5), (11, 1.5, 11), 'iron')
         m.write(f'{name}_lower')
         m = Model(tx, particle=f'block/{name}')
@@ -215,7 +216,7 @@ def cushions():
         m.box((1, 2.9, 1), (15, 3, 15), 'top', only=('up',), collide=False)
         m.box((7.5, 4, 7.5), (8.5, 4.3, 8.5), 'side', faces={'up': ('top', [7, 7, 8, 8])}, collide=False)
         for (x, z) in ((0.5, 0.5), (14.5, 0.5), (0.5, 14.5), (14.5, 14.5)):
-            m.box((x, 0, z), (x + 1, 1.5, z + 1), 'tassel', collide=False)
+            m.box((x, 0, z), (x + 1, 1.5, z + 1), 'tassel', skip=('down',), collide=False)  # bottom lies on the floor
         m.write(name)
         shape(name, [(1, 0, 1, 15, 4, 15)])
         A.blockstate(M, name, {'': {'model': rid(f'block/{name}')}})

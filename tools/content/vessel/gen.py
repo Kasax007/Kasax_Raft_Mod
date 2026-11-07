@@ -17,7 +17,7 @@ if __package__ in (None, ''):
     sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
     __package__ = 'content.vessel'
 
-from bclib import assets as A, tex  # noqa: E402
+from bclib import assets as A, extrude, tex  # noqa: E402
 from bclib.paths import NS  # noqa: E402
 
 M = 'vessel'
@@ -53,9 +53,8 @@ def motor_texture():
                 if x in (0, 15) and y not in (4, 5):
                     c = tex.darker(c, 0.85)
             elif y < 12:
+                # plain bands (no seams): the shaft and clamp squeeze this strip onto narrow faces
                 c = steel[3] if y == 8 else steel[2] if y < 11 else steel[1]
-                if x % 4 == 3:
-                    c = steel[1] if y < 11 else steel[0]
             else:
                 c = dark[2] if y == 12 else dark[1] if y < 15 else dark[0]
                 if 12 <= x <= 15 and y in (13, 14):
@@ -229,13 +228,14 @@ def model(name, textures, elements, parent='minecraft:block/block', extra=None):
 
 # ------------------------------------------------------------------------------------------------- models
 def helm_elements():
-    wheel_uv = {'north': [16, 0, 0, 16], 'south': [0, 0, 16, 16], 'east': [7, 0, 8, 16], 'west': [8, 0, 9, 16],
-                'up': [0, 7, 16, 8], 'down': [0, 8, 16, 9]}
+    # the wheel is the ship_wheel sprite extruded pixel row by pixel row (its sides follow the ring and spokes),
+    # 16 px across from y 4 to 20, seen unmirrored by the helmsman on the stool (south)
+    wheel = extrude.vertical('raft:block/ship_wheel', '#wheel', at=(0, 20), z=(7.5, 8.5), front='south')
     return [
         el((5, 0, 3), (11, 2, 8), 'wood'),
         el((6.5, 2, 4), (9.5, 12, 7), 'post'),
         el((7, 11, 6), (9, 13, 7.5), 'post'),
-        el((0, 4, 7.5), (16, 20, 8.5), 'wheel', uv=wheel_uv),
+        *wheel,
         el((4, 6, 10), (12, 7.5, 15.5), 'wood'),
         el((4.5, 0, 10.5), (6, 6, 12), 'post'),
         el((10, 0, 10.5), (11.5, 6, 12), 'post'),
@@ -278,7 +278,7 @@ def oar_elements():
     return [
         el((5.5, 0, 0.5), (10.5, 2, 5.5), 'lock'),
         el((7, 2, 2), (9, 7, 4), 'lock'),
-        el((7.5, 7, -14), (8.5, 8, 16), 'loom', uv=loom_uv, rot=rot),
+        el((7.5, 7, -14), (8.5, 8, 12.5), 'loom', uv=loom_uv, rot=rot),        # ends inside the grip
         el((6, 6.75, -16), (10, 8.25, -9), 'blade', uv=blade_uv, rot=rot),
         el((7.25, 6.75, 12.5), (8.75, 8.25, 16), 'grip', uv=grip_uv, rot=rot),
     ]
