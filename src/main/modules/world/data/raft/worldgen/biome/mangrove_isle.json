@@ -12,6 +12,7 @@
         "sound": "minecraft:music.under_water"
       }
     },
+    "minecraft:gameplay/creature_world_gen_spawn_probability": 0.3,
     "minecraft:gameplay/natural_mob_spawns": {
       "argument": {
         "spawn_costs": {},
@@ -25,6 +26,15 @@
                 "min_inclusive": 2
               },
               "weight": 10
+            },
+            {
+              "type": "minecraft:chicken",
+              "count": {
+                "type": "minecraft:uniform",
+                "max_inclusive": 3,
+                "min_inclusive": 2
+              },
+              "weight": 4
             }
           ],
           "monster": [
@@ -32,6 +42,17 @@
               "type": "minecraft:slime",
               "count": 1,
               "weight": 1
+            }
+          ],
+          "water_ambient": [
+            {
+              "type": "minecraft:tropical_fish",
+              "count": {
+                "type": "minecraft:uniform",
+                "max_inclusive": 4,
+                "min_inclusive": 2
+              },
+              "weight": 10
             }
           ]
         }

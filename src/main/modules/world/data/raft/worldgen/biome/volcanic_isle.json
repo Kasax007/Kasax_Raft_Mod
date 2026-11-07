@@ -12,6 +12,7 @@
         "sound": "minecraft:music.under_water"
       }
     },
+    "minecraft:gameplay/creature_world_gen_spawn_probability": 0.25,
     "minecraft:gameplay/natural_mob_spawns": {
       "argument": {
         "spawn_costs": {},
