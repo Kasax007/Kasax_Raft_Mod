@@ -1,7 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "S": "raft:titanium_nugget"
+    "S": {
+      "item": "raft:titanium_nugget"
+    }
   },
   "pattern": [
     "SSS",

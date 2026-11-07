@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:net"
+        "recipe": "raft:net"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

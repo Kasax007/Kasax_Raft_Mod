@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:steel_beam"
+        "recipe": "raft:steel_beam"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -93,6 +93,6 @@ def main(preview=False):
             print('  preview', contact(s, f'buoy_field_{fn.__name__}', scale=8, ne=False))
     write_structure('buoy_field', [(p, 1) for p, _ in out], None,
                     step='surface_structures', terrain='none', start_height=95, heightmap=None,
-                    biomes=['coral_shallows', 'raft_ocean_biome'], spacing=14, separation=5, salt=31415912,
+                    biomes=['coral_shallows', 'raft_ocean_biome'], spacing=24, separation=10, salt=31415912,
                     max_distance=32)
     return out

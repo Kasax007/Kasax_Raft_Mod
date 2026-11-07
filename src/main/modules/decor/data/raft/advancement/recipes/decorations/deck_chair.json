@@ -25,7 +25,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:deck_chair"
+        "recipe": "raft:deck_chair"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

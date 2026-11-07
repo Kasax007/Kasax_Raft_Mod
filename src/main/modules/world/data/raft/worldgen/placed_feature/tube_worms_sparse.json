@@ -13,7 +13,7 @@
       "count": 10
     },
     {
-      "type": "minecraft:offset",
+      "type": "raft:offset",
       "x": {
         "type": "minecraft:trapezoid",
         "max": 4,

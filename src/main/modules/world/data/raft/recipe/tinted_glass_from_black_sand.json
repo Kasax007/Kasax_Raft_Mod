@@ -3,7 +3,9 @@
   "category": "blocks",
   "cookingtime": 200,
   "experience": 0.1,
-  "ingredient": "raft:black_sand",
+  "ingredient": {
+    "item": "raft:black_sand"
+  },
   "result": {
     "id": "minecraft:tinted_glass"
   }

@@ -1,9 +1,9 @@
 {
-  "type": "minecraft:cache",
-  "input": {
+  "type": "minecraft:cache_once",
+  "argument": {
     "type": "minecraft:add",
-    "left": "raft:raftdim/continents_base",
-    "right": {
+    "argument1": "raft:raftdim/continents_base",
+    "argument2": {
       "type": "minecraft:spline",
       "spline": {
         "coordinate": "raft:raftdim/temperature",

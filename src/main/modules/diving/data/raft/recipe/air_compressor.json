@@ -2,11 +2,21 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "I": "minecraft:iron_ingot",
-    "P": "minecraft:piston",
-    "C": "minecraft:copper_ingot",
-    "B": "minecraft:bucket",
-    "R": "raft:circuit_board"
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    },
+    "C": {
+      "item": "minecraft:copper_ingot"
+    },
+    "B": {
+      "item": "minecraft:bucket"
+    },
+    "R": {
+      "item": "raft:circuit_board"
+    }
   },
   "pattern": [
     "IPI",

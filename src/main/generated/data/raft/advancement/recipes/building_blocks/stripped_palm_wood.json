@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:stripped_palm_wood"
+        "recipe": "raft:stripped_palm_wood"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

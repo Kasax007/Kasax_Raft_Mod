@@ -1,60 +1,43 @@
 {
-  "attributes": {
-    "minecraft:audio/background_music": {
-      "default": {
-        "max_delay": 24000,
-        "min_delay": 12000,
-        "sound": "minecraft:music.overworld.lush_caves"
-      },
-      "underwater": {
-        "max_delay": 24000,
-        "min_delay": 12000,
-        "sound": "minecraft:music.under_water"
-      }
-    },
-    "minecraft:gameplay/natural_mob_spawns": {
-      "argument": {
-        "spawn_costs": {},
-        "spawns_by_category": {
-          "underground_water_creature": [
-            {
-              "type": "minecraft:glow_squid",
-              "count": {
-                "type": "minecraft:uniform",
-                "max_inclusive": 4,
-                "min_inclusive": 2
-              },
-              "weight": 10
-            }
-          ]
-        }
-      },
-      "modifier": "overlay"
-    },
-    "minecraft:visual/ambient_particles": {
-      "argument": [
-        {
-          "particle": {
-            "type": "minecraft:glow"
-          },
-          "probability": 0.006
-        }
-      ],
-      "modifier": "append"
-    },
-    "minecraft:visual/fog_color": "#3aa8c8",
-    "minecraft:visual/sky_color": "#6cbaea",
-    "minecraft:visual/water_fog_color": "#00a3ad",
-    "minecraft:visual/water_fog_end_distance": {
-      "argument": 0.9,
-      "modifier": "multiply"
-    }
-  },
-  "carvers": [],
+  "has_precipitation": false,
+  "temperature": 0.85,
   "downfall": 0.6,
   "effects": {
-    "water_color": "#18a7a3"
+    "water_color": 1615779,
+    "fog_color": 3844296,
+    "sky_color": 7125738,
+    "water_fog_color": 41901,
+    "music": {
+      "sound": "minecraft:music.overworld.lush_caves",
+      "min_delay": 12000,
+      "max_delay": 24000,
+      "replace_current_music": false
+    },
+    "mood_sound": {
+      "sound": "raft:ambient.raft.deep",
+      "tick_delay": 6000,
+      "block_search_extent": 8,
+      "offset": 2.0
+    },
+    "particle": {
+      "options": {
+        "type": "minecraft:glow"
+      },
+      "probability": 0.006
+    }
   },
+  "spawners": {
+    "underground_water_creature": [
+      {
+        "type": "minecraft:glow_squid",
+        "weight": 10,
+        "minCount": 2,
+        "maxCount": 4
+      }
+    ]
+  },
+  "spawn_costs": {},
+  "carvers": {},
   "features": [
     [],
     [],
@@ -108,7 +91,5 @@
     [
       "raft:gravity_support"
     ]
-  ],
-  "has_precipitation": false,
-  "temperature": 0.85
+  ]
 }

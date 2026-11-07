@@ -3,7 +3,9 @@
   "cookingtime": 100,
   "experience": 0.7,
   "group": "misc",
-  "ingredient": "raft:ancient_broken_ring",
+  "ingredient": {
+    "item": "raft:ancient_broken_ring"
+  },
   "result": {
     "id": "raft:ancient_energy"
   }

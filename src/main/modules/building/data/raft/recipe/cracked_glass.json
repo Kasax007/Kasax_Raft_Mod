@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shapeless",
   "category": "building",
   "ingredients": [
-    "minecraft:glass",
-    "minecraft:gravel"
+    {
+      "item": "minecraft:glass"
+    },
+    {
+      "item": "minecraft:gravel"
+    }
   ],
   "result": {
     "count": 1,

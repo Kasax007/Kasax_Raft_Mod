@@ -11,9 +11,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "N": "minecraft:iron_nugget",
-    "G": "minecraft:glass",
-    "J": "raft:glow_jelly"
+    "N": {
+      "item": "minecraft:iron_nugget"
+    },
+    "G": {
+      "item": "minecraft:glass"
+    },
+    "J": {
+      "item": "raft:glow_jelly"
+    }
   },
   "pattern": [
     " N ",

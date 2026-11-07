@@ -2,7 +2,8 @@
   "multipart": [
     {
       "when": {
-        "facing": "north"
+        "facing": "north",
+        "furled": "false"
       },
       "apply": {
         "model": "raft:block/sail"
@@ -10,7 +11,8 @@
     },
     {
       "when": {
-        "facing": "east"
+        "facing": "east",
+        "furled": "false"
       },
       "apply": {
         "model": "raft:block/sail",
@@ -19,7 +21,8 @@
     },
     {
       "when": {
-        "facing": "south"
+        "facing": "south",
+        "furled": "false"
       },
       "apply": {
         "model": "raft:block/sail",
@@ -28,7 +31,8 @@
     },
     {
       "when": {
-        "facing": "west"
+        "facing": "west",
+        "furled": "false"
       },
       "apply": {
         "model": "raft:block/sail",
@@ -38,78 +42,340 @@
     {
       "when": {
         "facing": "north",
-        "top": "true"
+        "up": "false"
       },
       "apply": {
-        "model": "raft:block/sail_yard"
+        "model": "raft:block/sail_hem_up"
       }
     },
     {
       "when": {
         "facing": "east",
-        "top": "true"
+        "up": "false"
       },
       "apply": {
-        "model": "raft:block/sail_yard",
+        "model": "raft:block/sail_hem_up",
         "y": 90
       }
     },
     {
       "when": {
         "facing": "south",
-        "top": "true"
+        "up": "false"
       },
       "apply": {
-        "model": "raft:block/sail_yard",
+        "model": "raft:block/sail_hem_up",
         "y": 180
       }
     },
     {
       "when": {
         "facing": "west",
-        "top": "true"
+        "up": "false"
       },
       "apply": {
-        "model": "raft:block/sail_yard",
+        "model": "raft:block/sail_hem_up",
         "y": 270
       }
     },
     {
       "when": {
         "facing": "north",
-        "bottom": "true"
+        "down": "false",
+        "furled": "false"
       },
       "apply": {
-        "model": "raft:block/sail_boom"
+        "model": "raft:block/sail_hem_down"
       }
     },
     {
       "when": {
         "facing": "east",
-        "bottom": "true"
+        "down": "false",
+        "furled": "false"
       },
       "apply": {
-        "model": "raft:block/sail_boom",
+        "model": "raft:block/sail_hem_down",
         "y": 90
       }
     },
     {
       "when": {
         "facing": "south",
-        "bottom": "true"
+        "down": "false",
+        "furled": "false"
       },
       "apply": {
-        "model": "raft:block/sail_boom",
+        "model": "raft:block/sail_hem_down",
         "y": 180
       }
     },
     {
       "when": {
         "facing": "west",
-        "bottom": "true"
+        "down": "false",
+        "furled": "false"
       },
       "apply": {
-        "model": "raft:block/sail_boom",
+        "model": "raft:block/sail_hem_down",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "left": "none",
+        "furled": "false"
+      },
+      "apply": {
+        "model": "raft:block/sail_hem_left"
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "left": "none",
+        "furled": "false"
+      },
+      "apply": {
+        "model": "raft:block/sail_hem_left",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "left": "none",
+        "furled": "false"
+      },
+      "apply": {
+        "model": "raft:block/sail_hem_left",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "left": "none",
+        "furled": "false"
+      },
+      "apply": {
+        "model": "raft:block/sail_hem_left",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "right": "none",
+        "furled": "false"
+      },
+      "apply": {
+        "model": "raft:block/sail_hem_right"
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "right": "none",
+        "furled": "false"
+      },
+      "apply": {
+        "model": "raft:block/sail_hem_right",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "right": "none",
+        "furled": "false"
+      },
+      "apply": {
+        "model": "raft:block/sail_hem_right",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "right": "none",
+        "furled": "false"
+      },
+      "apply": {
+        "model": "raft:block/sail_hem_right",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "left": "mast",
+        "furled": "false"
+      },
+      "apply": {
+        "model": "raft:block/sail_mast_left"
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "left": "mast",
+        "furled": "false"
+      },
+      "apply": {
+        "model": "raft:block/sail_mast_left",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "left": "mast",
+        "furled": "false"
+      },
+      "apply": {
+        "model": "raft:block/sail_mast_left",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "left": "mast",
+        "furled": "false"
+      },
+      "apply": {
+        "model": "raft:block/sail_mast_left",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "right": "mast",
+        "furled": "false"
+      },
+      "apply": {
+        "model": "raft:block/sail_mast_right"
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "right": "mast",
+        "furled": "false"
+      },
+      "apply": {
+        "model": "raft:block/sail_mast_right",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "right": "mast",
+        "furled": "false"
+      },
+      "apply": {
+        "model": "raft:block/sail_mast_right",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "right": "mast",
+        "furled": "false"
+      },
+      "apply": {
+        "model": "raft:block/sail_mast_right",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "up": "false",
+        "furled": "true"
+      },
+      "apply": {
+        "model": "raft:block/sail_furled"
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "up": "false",
+        "furled": "true"
+      },
+      "apply": {
+        "model": "raft:block/sail_furled",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "up": "false",
+        "furled": "true"
+      },
+      "apply": {
+        "model": "raft:block/sail_furled",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "up": "false",
+        "furled": "true"
+      },
+      "apply": {
+        "model": "raft:block/sail_furled",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "facing": "north",
+        "up": "true",
+        "furled": "true"
+      },
+      "apply": {
+        "model": "raft:block/sail_brails"
+      }
+    },
+    {
+      "when": {
+        "facing": "east",
+        "up": "true",
+        "furled": "true"
+      },
+      "apply": {
+        "model": "raft:block/sail_brails",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "facing": "south",
+        "up": "true",
+        "furled": "true"
+      },
+      "apply": {
+        "model": "raft:block/sail_brails",
+        "y": 180
+      }
+    },
+    {
+      "when": {
+        "facing": "west",
+        "up": "true",
+        "furled": "true"
+      },
+      "apply": {
+        "model": "raft:block/sail_brails",
         "y": 270
       }
     }

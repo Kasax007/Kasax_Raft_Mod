@@ -1,0 +1,26 @@
+{
+  "type": "raft:overlay",
+  "config": {
+    "features": [
+      {
+        "feature": {
+          "type": "minecraft:simple_block",
+          "config": {
+            "to_place": {
+              "type": "minecraft:simple_state_provider",
+              "state": {
+                "Name": "minecraft:bubble_coral_block"
+              }
+            },
+            "schedule_tick": false
+          }
+        },
+        "placement": []
+      },
+      {
+        "feature": "raft:coral/reef_decoration",
+        "placement": []
+      }
+    ]
+  }
+}

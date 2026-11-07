@@ -608,7 +608,8 @@ def junction_l():
     s.set(5, DY + 1, 4, FENCE); s.set(5, DY + 2, 4, FENCE)
     s.set(5, DY + 2, 3, ROPE)
     s.set(5, DY + 1, 3, 'minecraft:dried_kelp_block')
-    s.set(5, DY + 1, 5, 'raft:deck_chair[facing=south]')
+    # the chair's tilted back reaches into the next block: lean it over the open deck, not into the railing
+    s.set(5, DY + 1, 5, 'raft:deck_chair[facing=west]')
     entry(s, 3)
     exit_(s, 0, 3, 'west', 'huts')
     exit_(s, 3, 6, 'south', 'huts')
@@ -1285,7 +1286,7 @@ def build_all(preview=True):
                           el('hut_house_b', 2), el('hut_house_c', 2), el('hut_market', 1)], fallback=f'raft:{P}/ends')
     wg.pool(f'{P}/ends', [el('end_cap')])
     wg.structure('saltmere_village', f'raft:{P}/plaza', 'surface_structures', 'none', 73, None, size=6, max_dist=80)
-    wg.structure_set('saltmere_village', 28, 10, 31415922)
+    wg.structure_set('saltmere_village', 36, 16, 31415922)
     wg.biome_tag('saltmere_village', ['coral_shallows', 'glowing_lagoon'])
     return out
 

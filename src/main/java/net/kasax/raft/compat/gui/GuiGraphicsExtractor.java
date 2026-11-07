@@ -120,6 +120,11 @@ public final class GuiGraphicsExtractor {
         this.g.blit(texture, x, y, width, height, u, v, srcWidth, srcHeight, textureWidth, textureHeight);
     }
 
+    public void blitSprite(RenderPipelines pipeline, ResourceLocation sprite, int textureWidth, int textureHeight, int u, int v,
+                           int x, int y, int width, int height) {
+        this.g.blitSprite(sprite, textureWidth, textureHeight, u, v, x, y, width, height);
+    }
+
     public void blitSprite(RenderPipelines pipeline, ResourceLocation sprite, int x, int y, int width, int height) {
         this.g.blitSprite(sprite, x, y, width, height);
     }

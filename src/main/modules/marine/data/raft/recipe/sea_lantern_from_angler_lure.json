@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "S": "minecraft:prismarine_shard",
-    "L": "raft:angler_lure"
+    "S": {
+      "item": "minecraft:prismarine_shard"
+    },
+    "L": {
+      "item": "raft:angler_lure"
+    }
   },
   "pattern": [
     " S ",

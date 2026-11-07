@@ -2,9 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "P": "raft:driftwood_planks",
-    "I": "minecraft:iron_nugget",
-    "G": "minecraft:gunpowder"
+    "P": {
+      "item": "raft:driftwood_planks"
+    },
+    "I": {
+      "item": "minecraft:iron_nugget"
+    },
+    "G": {
+      "item": "minecraft:gunpowder"
+    }
   },
   "pattern": [
     "PIP",

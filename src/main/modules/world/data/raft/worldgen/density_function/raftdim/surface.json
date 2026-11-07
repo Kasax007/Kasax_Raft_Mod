@@ -1,12 +1,12 @@
 {
-  "type": "minecraft:cache",
-  "input": {
+  "type": "minecraft:cache_once",
+  "argument": {
     "type": "minecraft:add",
-    "left": "raft:raftdim/height",
-    "right": {
+    "argument1": "raft:raftdim/height",
+    "argument2": {
       "type": "minecraft:mul",
-      "left": "raft:raftdim/relief_amplitude",
-      "right": {
+      "argument1": "raft:raftdim/relief_amplitude",
+      "argument2": {
         "type": "minecraft:noise",
         "noise": "raft:raftdim/relief",
         "xz_scale": 1.0,

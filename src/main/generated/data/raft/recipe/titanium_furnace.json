@@ -1,8 +1,12 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "B": "raft:brick_furnace",
-    "T": "raft:titanium_block"
+    "B": {
+      "item": "raft:brick_furnace"
+    },
+    "T": {
+      "item": "raft:titanium_block"
+    }
   },
   "pattern": [
     "TTT",

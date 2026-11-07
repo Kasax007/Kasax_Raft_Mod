@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "C": "#minecraft:concrete",
-    "G": "minecraft:gravel"
+    "C": {
+      "tag": "minecraft:concrete"
+    },
+    "G": {
+      "item": "minecraft:gravel"
+    }
   },
   "pattern": [
     "CG",

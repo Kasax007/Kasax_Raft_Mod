@@ -33,7 +33,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:energy_staff"
+        "recipe": "raft:energy_staff"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

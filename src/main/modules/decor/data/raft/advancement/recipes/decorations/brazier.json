@@ -25,7 +25,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:brazier"
+        "recipe": "raft:brazier"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

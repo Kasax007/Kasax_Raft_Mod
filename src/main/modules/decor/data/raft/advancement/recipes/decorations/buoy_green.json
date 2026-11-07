@@ -17,7 +17,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:buoy_green"
+        "recipe": "raft:buoy_green"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

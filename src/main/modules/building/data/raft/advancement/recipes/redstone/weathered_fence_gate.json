@@ -16,7 +16,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:weathered_fence_gate"
+        "recipe": "raft:weathered_fence_gate"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

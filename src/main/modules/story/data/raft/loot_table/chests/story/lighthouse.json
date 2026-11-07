@@ -5,15 +5,15 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "modifier": [
+          "functions": [
             {
-              "type": "minecraft:set_book_cover",
+              "function": "minecraft:set_book_cover",
               "author": "Tobias Fenn",
               "generation": 0,
               "title": "Fenn's Logbook"
             },
             {
-              "type": "minecraft:set_written_book_pages",
+              "function": "minecraft:set_written_book_pages",
               "mode": "replace_all",
               "pages": [
                 {
@@ -37,7 +37,7 @@
               ]
             },
             {
-              "type": "minecraft:set_custom_data",
+              "function": "minecraft:set_custom_data",
               "tag": "{raft_log:\"fenn_logbook\"}"
             }
           ],
@@ -50,16 +50,16 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "modifier": [
+          "functions": [
             {
-              "type": "minecraft:set_name",
+              "function": "minecraft:set_name",
               "name": {
                 "translate": "filled_map.raft.saltmere"
               },
               "target": "item_name"
             },
             {
-              "type": "minecraft:exploration_map",
+              "function": "minecraft:exploration_map",
               "decoration": "minecraft:target_x",
               "destination": "#raft:on_saltmere_maps",
               "search_radius": 120,
@@ -67,14 +67,14 @@
               "zoom": 2
             },
             {
-              "type": "minecraft:filtered",
+              "function": "minecraft:filtered",
+              "on_fail": {
+                "function": "minecraft:discard"
+              },
               "item_filter": {
                 "predicates": {
                   "minecraft:map_id": {}
                 }
-              },
-              "on_fail": {
-                "type": "minecraft:discard"
               }
             }
           ],
@@ -87,79 +87,91 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 2
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
             }
-          },
+          ],
           "name": "minecraft:lantern",
           "weight": 4
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 2,
-              "max": 4
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 4
+              }
             }
-          },
+          ],
           "name": "minecraft:candle",
           "weight": 4
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 4,
-              "max": 8
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 4,
+                "max": 8
+              }
             }
-          },
+          ],
           "name": "minecraft:torch",
           "weight": 5
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 2
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
             }
-          },
+          ],
           "name": "raft:coconut_lantern",
           "weight": 3
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 2,
-              "max": 5
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 5
+              }
             }
-          },
+          ],
           "name": "minecraft:glowstone_dust",
           "weight": 2
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 2,
-              "max": 5
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 5
+              }
             }
-          },
+          ],
           "name": "minecraft:coal",
           "weight": 3
         }
@@ -174,14 +186,16 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 2,
-              "max": 5
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 5
+              }
             }
-          },
+          ],
           "name": "raft:rope"
         }
       ],
@@ -201,27 +215,31 @@
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 2,
-              "max": 4
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 4
+              }
             }
-          },
+          ],
           "name": "minecraft:cooked_cod",
           "weight": 5
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 2
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
             }
-          },
+          ],
           "name": "raft:fresh_water",
           "weight": 4
         },

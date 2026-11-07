@@ -3,15 +3,17 @@
   "criteria": {
     "sail": {
       "conditions": {
-        "player": {
-          "type": "minecraft:entity_properties",
-          "entity": "this",
-          "predicate": {
-            "minecraft:vehicle": {
-              "minecraft:entity_type": "raft:vessel"
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "vehicle": {
+                "type": "raft:vessel"
+              }
             }
           }
-        }
+        ]
       },
       "trigger": "minecraft:started_riding"
     }

@@ -17,7 +17,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:treasure_chest"
+        "recipe": "raft:treasure_chest"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -2,9 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "M": "minecraft:paper",
-    "P": "raft:driftwood_planks",
-    "S": "minecraft:stick"
+    "M": {
+      "item": "minecraft:paper"
+    },
+    "P": {
+      "item": "raft:driftwood_planks"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
   },
   "pattern": [
     "MMM",

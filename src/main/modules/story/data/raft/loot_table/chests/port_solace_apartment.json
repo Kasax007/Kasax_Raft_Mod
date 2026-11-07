@@ -5,66 +5,76 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 3
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
             }
-          },
+          ],
           "name": "minecraft:bread",
           "weight": 4
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 2,
-              "max": 6
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 6
+              }
             }
-          },
+          ],
           "name": "minecraft:cookie",
           "weight": 3
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 3
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
             }
-          },
+          ],
           "name": "minecraft:candle",
           "weight": 3
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 3
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
             }
-          },
+          ],
           "name": "minecraft:glass_bottle",
           "weight": 3
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 4
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 4
+              }
             }
-          },
+          ],
           "name": "minecraft:string",
           "weight": 3
         },
@@ -75,40 +85,46 @@
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 2
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
             }
-          },
+          ],
           "name": "minecraft:emerald",
           "weight": 2
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 3
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
             }
-          },
+          ],
           "name": "minecraft:white_wool",
           "weight": 3
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 2
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
             }
-          },
+          ],
           "name": "minecraft:book",
           "weight": 2
         },
@@ -128,10 +144,12 @@
       "entries": [
         {
           "type": "minecraft:loot_table",
-          "condition": {
-            "type": "minecraft:random_chance",
-            "chance": 0.2
-          },
+          "conditions": [
+            {
+              "condition": "minecraft:random_chance",
+              "chance": 0.2
+            }
+          ],
           "value": "raft:story/bottle_letters"
         }
       ],

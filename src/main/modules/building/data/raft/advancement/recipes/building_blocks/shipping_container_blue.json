@@ -17,7 +17,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:shipping_container_blue"
+        "recipe": "raft:shipping_container_blue"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

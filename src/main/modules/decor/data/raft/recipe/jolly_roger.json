@@ -2,10 +2,18 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "R": "raft:rope",
-    "S": "minecraft:stick",
-    "B": "minecraft:black_wool",
-    "W": "minecraft:bone"
+    "R": {
+      "item": "raft:rope"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "B": {
+      "item": "minecraft:black_wool"
+    },
+    "W": {
+      "item": "minecraft:bone"
+    }
   },
   "pattern": [
     "RSR",

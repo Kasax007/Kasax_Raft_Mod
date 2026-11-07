@@ -87,7 +87,6 @@
         5.0,
         11.0
       ],
-      "light_emission": 12,
       "faces": {
         "down": {
           "uv": [
@@ -147,7 +146,6 @@
         12.0,
         12.0
       ],
-      "light_emission": 12,
       "faces": {
         "north": {
           "uv": [
@@ -198,7 +196,6 @@
         5.0,
         12.0
       ],
-      "light_emission": 12,
       "faces": {
         "down": {
           "uv": [
@@ -222,7 +219,6 @@
         12.0,
         12.0
       ],
-      "light_emission": 12,
       "faces": {
         "up": {
           "uv": [
@@ -246,7 +242,6 @@
         13.0,
         11.0
       ],
-      "light_emission": 12,
       "faces": {
         "up": {
           "uv": [

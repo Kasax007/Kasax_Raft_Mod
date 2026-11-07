@@ -5,15 +5,15 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "modifier": [
+          "functions": [
             {
-              "type": "minecraft:set_book_cover",
+              "function": "minecraft:set_book_cover",
               "author": "A castaway",
               "generation": 0,
               "title": "A Letter in a Bottle"
             },
             {
-              "type": "minecraft:set_written_book_pages",
+              "function": "minecraft:set_written_book_pages",
               "mode": "replace_all",
               "pages": [
                 {
@@ -25,7 +25,7 @@
               ]
             },
             {
-              "type": "minecraft:set_custom_data",
+              "function": "minecraft:set_custom_data",
               "tag": "{raft_log:\"letter_gerald\"}"
             }
           ],
@@ -33,15 +33,15 @@
         },
         {
           "type": "minecraft:item",
-          "modifier": [
+          "functions": [
             {
-              "type": "minecraft:set_book_cover",
+              "function": "minecraft:set_book_cover",
               "author": "Mia, 8 years",
               "generation": 0,
               "title": "Dear Sea"
             },
             {
-              "type": "minecraft:set_written_book_pages",
+              "function": "minecraft:set_written_book_pages",
               "mode": "replace_all",
               "pages": [
                 {
@@ -50,7 +50,7 @@
               ]
             },
             {
-              "type": "minecraft:set_custom_data",
+              "function": "minecraft:set_custom_data",
               "tag": "{raft_log:\"letter_mia\"}"
             }
           ],
@@ -58,15 +58,15 @@
         },
         {
           "type": "minecraft:item",
-          "modifier": [
+          "functions": [
             {
-              "type": "minecraft:set_book_cover",
+              "function": "minecraft:set_book_cover",
               "author": "Eng. P. Okafor",
               "generation": 0,
               "title": "Note from Rig 7"
             },
             {
-              "type": "minecraft:set_written_book_pages",
+              "function": "minecraft:set_written_book_pages",
               "mode": "replace_all",
               "pages": [
                 {
@@ -78,7 +78,7 @@
               ]
             },
             {
-              "type": "minecraft:set_custom_data",
+              "function": "minecraft:set_custom_data",
               "tag": "{raft_log:\"letter_okafor\"}"
             }
           ],
@@ -86,15 +86,15 @@
         },
         {
           "type": "minecraft:item",
-          "modifier": [
+          "functions": [
             {
-              "type": "minecraft:set_book_cover",
+              "function": "minecraft:set_book_cover",
               "author": "Pilot J. Reyes",
               "generation": 0,
               "title": "Flight Twelve"
             },
             {
-              "type": "minecraft:set_written_book_pages",
+              "function": "minecraft:set_written_book_pages",
               "mode": "replace_all",
               "pages": [
                 {
@@ -106,7 +106,7 @@
               ]
             },
             {
-              "type": "minecraft:set_custom_data",
+              "function": "minecraft:set_custom_data",
               "tag": "{raft_log:\"letter_reyes\"}"
             }
           ],
@@ -114,15 +114,15 @@
         },
         {
           "type": "minecraft:item",
-          "modifier": [
+          "functions": [
             {
-              "type": "minecraft:set_book_cover",
+              "function": "minecraft:set_book_cover",
               "author": "Dr. E. Lund",
               "generation": 0,
               "title": "From the Ice"
             },
             {
-              "type": "minecraft:set_written_book_pages",
+              "function": "minecraft:set_written_book_pages",
               "mode": "replace_all",
               "pages": [
                 {
@@ -134,7 +134,7 @@
               ]
             },
             {
-              "type": "minecraft:set_custom_data",
+              "function": "minecraft:set_custom_data",
               "tag": "{raft_log:\"letter_lund\"}"
             }
           ],
@@ -142,15 +142,15 @@
         },
         {
           "type": "minecraft:item",
-          "modifier": [
+          "functions": [
             {
-              "type": "minecraft:set_book_cover",
+              "function": "minecraft:set_book_cover",
               "author": "Teo",
               "generation": 0,
               "title": "Dearest Ana"
             },
             {
-              "type": "minecraft:set_written_book_pages",
+              "function": "minecraft:set_written_book_pages",
               "mode": "replace_all",
               "pages": [
                 {
@@ -162,7 +162,7 @@
               ]
             },
             {
-              "type": "minecraft:set_custom_data",
+              "function": "minecraft:set_custom_data",
               "tag": "{raft_log:\"letter_teo\"}"
             }
           ],
@@ -170,15 +170,15 @@
         },
         {
           "type": "minecraft:item",
-          "modifier": [
+          "functions": [
             {
-              "type": "minecraft:set_book_cover",
+              "function": "minecraft:set_book_cover",
               "author": "A former pirate",
               "generation": 0,
               "title": "Arr!"
             },
             {
-              "type": "minecraft:set_written_book_pages",
+              "function": "minecraft:set_written_book_pages",
               "mode": "replace_all",
               "pages": [
                 {
@@ -187,7 +187,7 @@
               ]
             },
             {
-              "type": "minecraft:set_custom_data",
+              "function": "minecraft:set_custom_data",
               "tag": "{raft_log:\"letter_pirate\"}"
             }
           ],
@@ -195,15 +195,15 @@
         },
         {
           "type": "minecraft:item",
-          "modifier": [
+          "functions": [
             {
-              "type": "minecraft:set_book_cover",
+              "function": "minecraft:set_book_cover",
               "author": "Capt. Rhea Marlow",
               "generation": 0,
               "title": "Marlow's Second Note"
             },
             {
-              "type": "minecraft:set_written_book_pages",
+              "function": "minecraft:set_written_book_pages",
               "mode": "replace_all",
               "pages": [
                 {
@@ -215,7 +215,7 @@
               ]
             },
             {
-              "type": "minecraft:set_custom_data",
+              "function": "minecraft:set_custom_data",
               "tag": "{raft_log:\"letter_marlow\"}"
             }
           ],
@@ -223,15 +223,15 @@
         },
         {
           "type": "minecraft:item",
-          "modifier": [
+          "functions": [
             {
-              "type": "minecraft:set_book_cover",
+              "function": "minecraft:set_book_cover",
               "author": "A lonely sailor",
               "generation": 0,
               "title": "Whale Song"
             },
             {
-              "type": "minecraft:set_written_book_pages",
+              "function": "minecraft:set_written_book_pages",
               "mode": "replace_all",
               "pages": [
                 {
@@ -240,7 +240,7 @@
               ]
             },
             {
-              "type": "minecraft:set_custom_data",
+              "function": "minecraft:set_custom_data",
               "tag": "{raft_log:\"letter_whale\"}"
             }
           ],
@@ -248,15 +248,15 @@
         },
         {
           "type": "minecraft:item",
-          "modifier": [
+          "functions": [
             {
-              "type": "minecraft:set_book_cover",
+              "function": "minecraft:set_book_cover",
               "author": "T. Fenn",
               "generation": 0,
               "title": "A Favour"
             },
             {
-              "type": "minecraft:set_written_book_pages",
+              "function": "minecraft:set_written_book_pages",
               "mode": "replace_all",
               "pages": [
                 {
@@ -265,7 +265,7 @@
               ]
             },
             {
-              "type": "minecraft:set_custom_data",
+              "function": "minecraft:set_custom_data",
               "tag": "{raft_log:\"letter_fenn\"}"
             }
           ],
@@ -273,15 +273,15 @@
         },
         {
           "type": "minecraft:item",
-          "modifier": [
+          "functions": [
             {
-              "type": "minecraft:set_book_cover",
+              "function": "minecraft:set_book_cover",
               "author": "I. Voss",
               "generation": 0,
               "title": "An Apology"
             },
             {
-              "type": "minecraft:set_written_book_pages",
+              "function": "minecraft:set_written_book_pages",
               "mode": "replace_all",
               "pages": [
                 {
@@ -290,7 +290,7 @@
               ]
             },
             {
-              "type": "minecraft:set_custom_data",
+              "function": "minecraft:set_custom_data",
               "tag": "{raft_log:\"letter_voss\"}"
             }
           ],
@@ -298,15 +298,15 @@
         },
         {
           "type": "minecraft:item",
-          "modifier": [
+          "functions": [
             {
-              "type": "minecraft:set_book_cover",
+              "function": "minecraft:set_book_cover",
               "author": "Office of the Mayor",
               "generation": 0,
               "title": "Memo 118"
             },
             {
-              "type": "minecraft:set_written_book_pages",
+              "function": "minecraft:set_written_book_pages",
               "mode": "replace_all",
               "pages": [
                 {
@@ -315,7 +315,7 @@
               ]
             },
             {
-              "type": "minecraft:set_custom_data",
+              "function": "minecraft:set_custom_data",
               "tag": "{raft_log:\"letter_memo\"}"
             }
           ],
@@ -323,15 +323,15 @@
         },
         {
           "type": "minecraft:item",
-          "modifier": [
+          "functions": [
             {
-              "type": "minecraft:set_book_cover",
+              "function": "minecraft:set_book_cover",
               "author": "Raft Club of Saltmere",
               "generation": 0,
               "title": "Warning!"
             },
             {
-              "type": "minecraft:set_written_book_pages",
+              "function": "minecraft:set_written_book_pages",
               "mode": "replace_all",
               "pages": [
                 {
@@ -340,7 +340,7 @@
               ]
             },
             {
-              "type": "minecraft:set_custom_data",
+              "function": "minecraft:set_custom_data",
               "tag": "{raft_log:\"letter_bruce\"}"
             }
           ],
@@ -348,15 +348,15 @@
         },
         {
           "type": "minecraft:item",
-          "modifier": [
+          "functions": [
             {
-              "type": "minecraft:set_book_cover",
+              "function": "minecraft:set_book_cover",
               "author": "Kai",
               "generation": 0,
               "title": "SOS"
             },
             {
-              "type": "minecraft:set_written_book_pages",
+              "function": "minecraft:set_written_book_pages",
               "mode": "replace_all",
               "pages": [
                 {
@@ -365,7 +365,7 @@
               ]
             },
             {
-              "type": "minecraft:set_custom_data",
+              "function": "minecraft:set_custom_data",
               "tag": "{raft_log:\"letter_kai\"}"
             }
           ],

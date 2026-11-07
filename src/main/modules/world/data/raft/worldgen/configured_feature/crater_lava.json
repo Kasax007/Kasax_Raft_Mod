@@ -1,0 +1,6 @@
+{
+  "type": "raft:crater_lava",
+  "config": {
+    "floor_y": 164
+  }
+}

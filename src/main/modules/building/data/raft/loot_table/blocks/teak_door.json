@@ -2,19 +2,23 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "condition": {
-        "type": "minecraft:survives_explosion"
-      },
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
-          "condition": {
-            "type": "minecraft:match_block",
-            "blocks": "raft:teak_door",
-            "state": {
-              "half": "lower"
+          "conditions": [
+            {
+              "condition": "minecraft:block_state_property",
+              "block": "raft:teak_door",
+              "properties": {
+                "half": "lower"
+              }
             }
-          },
+          ],
           "name": "raft:teak_door"
         }
       ],

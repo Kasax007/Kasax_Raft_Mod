@@ -1,7 +1,9 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    "raft:titanium_block"
+    {
+      "item": "raft:titanium_block"
+    }
   ],
   "result": {
     "count": 9,

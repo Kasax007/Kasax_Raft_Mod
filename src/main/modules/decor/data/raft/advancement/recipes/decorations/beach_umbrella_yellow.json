@@ -16,7 +16,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:beach_umbrella_yellow"
+        "recipe": "raft:beach_umbrella_yellow"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

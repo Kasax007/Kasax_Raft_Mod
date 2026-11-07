@@ -17,7 +17,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:glowing_tidestone"
+        "recipe": "raft:glowing_tidestone"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

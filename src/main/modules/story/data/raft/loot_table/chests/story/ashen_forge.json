@@ -5,15 +5,15 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "modifier": [
+          "functions": [
             {
-              "type": "minecraft:set_book_cover",
+              "function": "minecraft:set_book_cover",
               "author": "Meridian Expedition",
               "generation": 0,
               "title": "Tablet of the Forge"
             },
             {
-              "type": "minecraft:set_written_book_pages",
+              "function": "minecraft:set_written_book_pages",
               "mode": "replace_all",
               "pages": [
                 {
@@ -34,7 +34,7 @@
               ]
             },
             {
-              "type": "minecraft:set_custom_data",
+              "function": "minecraft:set_custom_data",
               "tag": "{raft_log:\"forge_tablet\"}"
             }
           ],
@@ -47,16 +47,16 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "modifier": [
+          "functions": [
             {
-              "type": "minecraft:set_name",
+              "function": "minecraft:set_name",
               "name": {
                 "translate": "filled_map.raft.coral_temple"
               },
               "target": "item_name"
             },
             {
-              "type": "minecraft:exploration_map",
+              "function": "minecraft:exploration_map",
               "decoration": "minecraft:target_x",
               "destination": "#raft:on_coral_temple_maps",
               "search_radius": 120,
@@ -64,14 +64,14 @@
               "zoom": 2
             },
             {
-              "type": "minecraft:filtered",
+              "function": "minecraft:filtered",
+              "on_fail": {
+                "function": "minecraft:discard"
+              },
               "item_filter": {
                 "predicates": {
                   "minecraft:map_id": {}
                 }
-              },
-              "on_fail": {
-                "type": "minecraft:discard"
               }
             }
           ],
@@ -84,67 +84,77 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 3
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
             }
-          },
+          ],
           "name": "minecraft:obsidian",
           "weight": 3
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 3
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
             }
-          },
+          ],
           "name": "minecraft:magma_cream",
           "weight": 3
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 2,
-              "max": 5
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 5
+              }
             }
-          },
+          ],
           "name": "minecraft:iron_ingot",
           "weight": 4
         },
         {
           "type": "minecraft:tag",
-          "expand": false,
-          "items": "#raft:loot/ember_shell",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 2
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
             }
-          },
-          "weight": 3
+          ],
+          "expand": false,
+          "weight": 3,
+          "name": "raft:loot/ember_shell"
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 3,
-              "max": 8
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 3,
+                "max": 8
+              }
             }
-          },
+          ],
           "name": "minecraft:coal",
           "weight": 4
         }

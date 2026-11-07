@@ -157,7 +157,6 @@
         11.5,
         11.0
       ],
-      "light_emission": 6,
       "faces": {
         "down": {
           "uv": [
@@ -342,10 +341,9 @@
           8.0
         ],
         "axis": "y",
-        "angle": 45,
+        "angle": 45.0,
         "rescale": true
       },
-      "light_emission": 15,
       "shade_direction_override": "up",
       "faces": {
         "north": {
@@ -386,10 +384,9 @@
           8.0
         ],
         "axis": "y",
-        "angle": -45,
+        "angle": -45.0,
         "rescale": true
       },
-      "light_emission": 15,
       "shade_direction_override": "up",
       "faces": {
         "north": {

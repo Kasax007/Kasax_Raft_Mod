@@ -1,7 +1,9 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    "raft:titanium_ingot"
+    {
+      "item": "raft:titanium_ingot"
+    }
   ],
   "result": {
     "count": 9,

@@ -33,7 +33,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:chunk_destroyer"
+        "recipe": "raft:chunk_destroyer"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

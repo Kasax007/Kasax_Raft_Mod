@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:corrugated_metal_slab"
+        "recipe": "raft:corrugated_metal_slab"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

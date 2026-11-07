@@ -17,7 +17,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:buoy_red"
+        "recipe": "raft:buoy_red"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

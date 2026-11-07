@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:rope_from_rope_coil"
+        "recipe": "raft:rope_from_rope_coil"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

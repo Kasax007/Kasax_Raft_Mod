@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:coconut_milk"
+        "recipe": "raft:coconut_milk"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

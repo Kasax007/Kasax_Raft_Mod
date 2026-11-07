@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:teak_stairs"
+        "recipe": "raft:teak_stairs"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

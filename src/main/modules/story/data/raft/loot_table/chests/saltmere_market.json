@@ -5,138 +5,158 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 3
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
             }
-          },
+          ],
           "name": "minecraft:emerald",
           "weight": 3
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 2,
-              "max": 5
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 5
+              }
             }
-          },
+          ],
           "name": "minecraft:cod",
           "weight": 4
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 4
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 4
+              }
             }
-          },
+          ],
           "name": "minecraft:salmon",
           "weight": 4
         },
         {
           "type": "minecraft:tag",
-          "expand": false,
-          "items": "#raft:loot/pineapple",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 3
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
             }
-          },
-          "weight": 4
+          ],
+          "expand": false,
+          "weight": 4,
+          "name": "raft:loot/pineapple"
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 3
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
             }
-          },
+          ],
           "name": "raft:coconut",
           "weight": 4
         },
         {
           "type": "minecraft:tag",
-          "expand": false,
-          "items": "#raft:loot/seashell",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 2,
-              "max": 5
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 5
+              }
             }
-          },
-          "weight": 4
+          ],
+          "expand": false,
+          "weight": 4,
+          "name": "raft:loot/seashell"
         },
         {
           "type": "minecraft:tag",
-          "expand": false,
-          "items": "#raft:loot/sea_glass_shard",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 4
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 4
+              }
             }
-          },
-          "weight": 3
+          ],
+          "expand": false,
+          "weight": 3,
+          "name": "raft:loot/sea_glass_shard"
         },
         {
           "type": "minecraft:tag",
-          "expand": false,
-          "items": "#raft:loot/pearl",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 2
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
             }
-          },
-          "weight": 2
+          ],
+          "expand": false,
+          "weight": 2,
+          "name": "raft:loot/pearl"
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 2,
-              "max": 8
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 8
+              }
             }
-          },
+          ],
           "name": "minecraft:kelp",
           "weight": 3
         },
         {
           "type": "minecraft:tag",
-          "expand": false,
-          "items": "#raft:loot/crab_claw",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 3
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
             }
-          },
-          "weight": 3
+          ],
+          "expand": false,
+          "weight": 3,
+          "name": "raft:loot/crab_claw"
         }
       ],
       "rolls": {
@@ -149,10 +169,12 @@
       "entries": [
         {
           "type": "minecraft:loot_table",
-          "condition": {
-            "type": "minecraft:random_chance",
-            "chance": 0.1
-          },
+          "conditions": [
+            {
+              "condition": "minecraft:random_chance",
+              "chance": 0.1
+            }
+          ],
           "value": "raft:story/bottle_letters"
         }
       ],

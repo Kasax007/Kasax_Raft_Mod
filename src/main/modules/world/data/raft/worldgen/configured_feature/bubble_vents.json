@@ -1,0 +1,12 @@
+{
+  "type": "raft:bubble_vents",
+  "config": {
+    "count": {
+      "type": "minecraft:uniform",
+      "max_inclusive": 3,
+      "min_inclusive": 1
+    },
+    "spread": 2,
+    "vent": "raft:bubble_vent"
+  }
+}

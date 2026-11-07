@@ -423,9 +423,8 @@
           8
         ],
         "axis": "y",
-        "angle": 45
+        "angle": 45.0
       },
-      "light_emission": 15,
       "faces": {
         "north": {
           "uv": [
@@ -501,9 +500,8 @@
           8
         ],
         "axis": "y",
-        "angle": 45
+        "angle": 45.0
       },
-      "light_emission": 15,
       "faces": {
         "north": {
           "uv": [
@@ -570,9 +568,8 @@
           8
         ],
         "axis": "y",
-        "angle": 45
+        "angle": 45.0
       },
-      "light_emission": 15,
       "faces": {
         "north": {
           "uv": [

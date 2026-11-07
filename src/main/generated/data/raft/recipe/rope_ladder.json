@@ -1,8 +1,12 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "R": "raft:rope",
-    "S": "minecraft:stick"
+    "R": {
+      "item": "raft:rope"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
   },
   "pattern": [
     "RSR",

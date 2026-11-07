@@ -1,6 +1,8 @@
 {
   "type": "raft:item_catching",
-  "ingredient": "raft:net",
+  "ingredient": {
+    "item": "raft:net"
+  },
   "output": {
     "id": "raft:unrefined_ocean_garbage"
   }

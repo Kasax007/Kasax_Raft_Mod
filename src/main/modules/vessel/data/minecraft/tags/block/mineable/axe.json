@@ -2,6 +2,7 @@
   "values": [
     "raft:helm",
     "raft:sail",
+    "raft:mast",
     "raft:oar"
   ]
 }

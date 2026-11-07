@@ -1,7 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "L": "raft:palm_leaves"
+    "L": {
+      "item": "raft:palm_leaves"
+    }
   },
   "pattern": [
     "L",

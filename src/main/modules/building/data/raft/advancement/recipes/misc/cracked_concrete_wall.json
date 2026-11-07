@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:cracked_concrete_wall"
+        "recipe": "raft:cracked_concrete_wall"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

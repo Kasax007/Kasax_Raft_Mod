@@ -2,10 +2,18 @@
   "type": "minecraft:crafting_shaped",
   "category": "redstone",
   "key": {
-    "A": "minecraft:copper_ingot",
-    "S": "raft:scrap_metal",
-    "N": "minecraft:note_block",
-    "C": "raft:circuit_board"
+    "A": {
+      "item": "minecraft:copper_ingot"
+    },
+    "S": {
+      "item": "raft:scrap_metal"
+    },
+    "N": {
+      "item": "minecraft:note_block"
+    },
+    "C": {
+      "item": "raft:circuit_board"
+    }
   },
   "pattern": [
     " A ",

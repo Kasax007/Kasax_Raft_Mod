@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:titanium_cable"
+        "recipe": "raft:titanium_cable"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

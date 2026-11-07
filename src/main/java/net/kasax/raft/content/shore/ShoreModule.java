@@ -17,6 +17,7 @@ public class ShoreModule implements ContentModule {
         ShoreSounds.register();
         ShoreEntities.register();
         ShoreItems.register();
+        SeagullSky.register();
     }
 
     @Override

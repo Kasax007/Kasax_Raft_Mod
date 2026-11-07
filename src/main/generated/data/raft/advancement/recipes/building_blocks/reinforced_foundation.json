@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:reinforced_foundation"
+        "recipe": "raft:reinforced_foundation"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

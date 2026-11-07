@@ -2,9 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "P": "minecraft:paper",
-    "T": "minecraft:torch",
-    "L": "raft:stripped_driftwood_log"
+    "P": {
+      "item": "minecraft:paper"
+    },
+    "T": {
+      "item": "minecraft:torch"
+    },
+    "L": {
+      "item": "raft:stripped_driftwood_log"
+    }
   },
   "pattern": [
     "PPP",

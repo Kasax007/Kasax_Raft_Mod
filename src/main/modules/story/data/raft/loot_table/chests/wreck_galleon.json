@@ -5,103 +5,117 @@
       "entries": [
         {
           "type": "minecraft:tag",
-          "expand": false,
-          "items": "#raft:loot/gold_coin",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 2,
-              "max": 9
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 9
+              }
             }
-          },
-          "weight": 6
+          ],
+          "expand": false,
+          "weight": 6,
+          "name": "raft:loot/gold_coin"
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 3
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
             }
-          },
+          ],
           "name": "minecraft:gold_ingot",
           "weight": 3
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 3
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
             }
-          },
+          ],
           "name": "minecraft:emerald",
           "weight": 3
         },
         {
           "type": "minecraft:tag",
-          "expand": false,
-          "items": "#raft:loot/cannonball",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 2,
-              "max": 6
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 6
+              }
             }
-          },
-          "weight": 4
+          ],
+          "expand": false,
+          "weight": 4,
+          "name": "raft:loot/cannonball"
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 2,
-              "max": 6
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 6
+              }
             }
-          },
+          ],
           "name": "minecraft:gunpowder",
           "weight": 4
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 2,
-              "max": 5
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 5
+              }
             }
-          },
+          ],
           "name": "raft:rope",
           "weight": 4
         },
         {
           "type": "minecraft:tag",
-          "expand": false,
-          "items": "#raft:loot/rum_bottles",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 2
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
             }
-          },
-          "weight": 2
+          ],
+          "expand": false,
+          "weight": 2,
+          "name": "raft:loot/rum_bottles"
         },
         {
           "type": "minecraft:tag",
           "expand": false,
-          "items": "#raft:loot/cutlass",
-          "weight": 1
+          "weight": 1,
+          "name": "raft:loot/cutlass"
         },
         {
           "type": "minecraft:item",
@@ -110,14 +124,16 @@
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 4
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 4
+              }
             }
-          },
+          ],
           "name": "minecraft:bone",
           "weight": 3
         }
@@ -132,20 +148,22 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "condition": {
-            "type": "minecraft:random_chance",
-            "chance": 0.35
-          },
-          "modifier": [
+          "conditions": [
             {
-              "type": "minecraft:set_name",
+              "condition": "minecraft:random_chance",
+              "chance": 0.35
+            }
+          ],
+          "functions": [
+            {
+              "function": "minecraft:set_name",
               "name": {
                 "translate": "filled_map.raft.pirate"
               },
               "target": "item_name"
             },
             {
-              "type": "minecraft:exploration_map",
+              "function": "minecraft:exploration_map",
               "decoration": "minecraft:red_x",
               "destination": "#raft:on_pirate_maps",
               "search_radius": 120,
@@ -153,14 +171,14 @@
               "zoom": 2
             },
             {
-              "type": "minecraft:filtered",
+              "function": "minecraft:filtered",
+              "on_fail": {
+                "function": "minecraft:discard"
+              },
               "item_filter": {
                 "predicates": {
                   "minecraft:map_id": {}
                 }
-              },
-              "on_fail": {
-                "type": "minecraft:discard"
               }
             }
           ],
@@ -173,10 +191,12 @@
       "entries": [
         {
           "type": "minecraft:loot_table",
-          "condition": {
-            "type": "minecraft:random_chance",
-            "chance": 0.2
-          },
+          "conditions": [
+            {
+              "condition": "minecraft:random_chance",
+              "chance": 0.2
+            }
+          ],
           "value": "raft:story/bottle_letters"
         }
       ],

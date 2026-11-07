@@ -27,7 +27,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:hanging_planter"
+        "recipe": "raft:hanging_planter"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

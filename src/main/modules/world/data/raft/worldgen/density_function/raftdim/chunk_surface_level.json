@@ -1,10 +1,8 @@
 {
   "type": "minecraft:interpolated",
-  "cell_size_xz": 16,
-  "cell_size_y": 1,
-  "input": {
+  "argument": {
     "type": "minecraft:add",
-    "left": "raft:raftdim/surface",
-    "right": -16.0
+    "argument1": "raft:raftdim/surface",
+    "argument2": -16.0
   }
 }

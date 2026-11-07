@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:aqua_sea_glass_pane"
+        "recipe": "raft:aqua_sea_glass_pane"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

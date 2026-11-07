@@ -17,7 +17,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:ship_cannon"
+        "recipe": "raft:ship_cannon"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

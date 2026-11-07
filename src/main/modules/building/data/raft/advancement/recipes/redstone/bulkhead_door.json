@@ -16,7 +16,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:bulkhead_door"
+        "recipe": "raft:bulkhead_door"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

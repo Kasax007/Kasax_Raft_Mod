@@ -2,7 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "C": "raft:polished_coral_stone"
+    "C": {
+      "item": "raft:polished_coral_stone"
+    }
   },
   "pattern": [
     "CC",

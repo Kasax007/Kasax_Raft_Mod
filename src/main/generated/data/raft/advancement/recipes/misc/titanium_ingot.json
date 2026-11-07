@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:titanium_ingot"
+        "recipe": "raft:titanium_ingot"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

@@ -1,7 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "S": "raft:driftwood_log"
+    "S": {
+      "item": "raft:driftwood_log"
+    }
   },
   "pattern": [
     "SSS",

@@ -1,9 +1,15 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "B": "minecraft:bowl",
-    "C": "raft:coconut",
-    "S": "minecraft:sugar"
+    "B": {
+      "item": "minecraft:bowl"
+    },
+    "C": {
+      "item": "raft:coconut"
+    },
+    "S": {
+      "item": "minecraft:sugar"
+    }
   },
   "pattern": [
     " S ",

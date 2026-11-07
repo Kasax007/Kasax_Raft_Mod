@@ -18,7 +18,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:mossy_concrete"
+        "recipe": "raft:mossy_concrete"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

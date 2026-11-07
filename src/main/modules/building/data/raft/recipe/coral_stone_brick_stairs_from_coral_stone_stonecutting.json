@@ -1,6 +1,8 @@
 {
   "type": "minecraft:stonecutting",
-  "ingredient": "raft:coral_stone",
+  "ingredient": {
+    "item": "raft:coral_stone"
+  },
   "result": {
     "count": 1,
     "id": "raft:coral_stone_brick_stairs"

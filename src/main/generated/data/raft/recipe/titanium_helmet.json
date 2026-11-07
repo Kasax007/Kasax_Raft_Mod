@@ -2,7 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "S": "raft:titanium_ingot"
+    "S": {
+      "item": "raft:titanium_ingot"
+    }
   },
   "pattern": [
     "SSS",

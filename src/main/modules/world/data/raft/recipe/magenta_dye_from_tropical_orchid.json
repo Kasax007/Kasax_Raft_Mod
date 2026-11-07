@@ -2,7 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "raft:tropical_orchid"
+    {
+      "item": "raft:tropical_orchid"
+    }
   ],
   "result": {
     "count": 1,

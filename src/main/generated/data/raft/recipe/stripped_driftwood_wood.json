@@ -3,7 +3,9 @@
   "category": "building",
   "group": "bark",
   "key": {
-    "#": "raft:stripped_driftwood_log"
+    "#": {
+      "item": "raft:stripped_driftwood_log"
+    }
   },
   "pattern": [
     "##",

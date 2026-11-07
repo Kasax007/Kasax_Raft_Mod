@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:tidestone_bricks"
+        "recipe": "raft:tidestone_bricks"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

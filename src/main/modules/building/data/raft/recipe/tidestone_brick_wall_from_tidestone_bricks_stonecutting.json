@@ -1,6 +1,8 @@
 {
   "type": "minecraft:stonecutting",
-  "ingredient": "raft:tidestone_bricks",
+  "ingredient": {
+    "item": "raft:tidestone_bricks"
+  },
   "result": {
     "count": 1,
     "id": "raft:tidestone_brick_wall"

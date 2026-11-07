@@ -2,10 +2,18 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "S": "minecraft:string",
-    "P": "minecraft:paper",
-    "T": "minecraft:torch",
-    "D": "minecraft:purple_dye"
+    "S": {
+      "item": "minecraft:string"
+    },
+    "P": {
+      "item": "minecraft:paper"
+    },
+    "T": {
+      "item": "minecraft:torch"
+    },
+    "D": {
+      "item": "minecraft:purple_dye"
+    }
   },
   "pattern": [
     " S ",

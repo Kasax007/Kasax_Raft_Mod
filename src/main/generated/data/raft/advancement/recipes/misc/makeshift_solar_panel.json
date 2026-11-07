@@ -33,7 +33,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:makeshift_solar_panel"
+        "recipe": "raft:makeshift_solar_panel"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

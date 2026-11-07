@@ -23,8 +23,8 @@
             "block": "minecraft:water"
           },
           "output_state": {
-            "id": "raft:buoy_red",
-            "properties": {
+            "Name": "raft:buoy_red",
+            "Properties": {
               "waterlogged": "true"
             }
           }
@@ -42,7 +42,9 @@
           "location_predicate": {
             "predicate_type": "minecraft:always_true"
           },
-          "output_state": "minecraft:structure_void"
+          "output_state": {
+            "Name": "minecraft:structure_void"
+          }
         },
         {
           "input_predicate": {
@@ -59,8 +61,8 @@
             "block": "minecraft:water"
           },
           "output_state": {
-            "id": "raft:buoy_green",
-            "properties": {
+            "Name": "raft:buoy_green",
+            "Properties": {
               "waterlogged": "true"
             }
           }
@@ -78,7 +80,9 @@
           "location_predicate": {
             "predicate_type": "minecraft:always_true"
           },
-          "output_state": "minecraft:structure_void"
+          "output_state": {
+            "Name": "minecraft:structure_void"
+          }
         },
         {
           "input_predicate": {
@@ -96,8 +100,8 @@
             "block": "minecraft:water"
           },
           "output_state": {
-            "id": "raft:palm_slab",
-            "properties": {
+            "Name": "raft:palm_slab",
+            "Properties": {
               "type": "bottom",
               "waterlogged": "true"
             }
@@ -117,7 +121,9 @@
           "location_predicate": {
             "predicate_type": "minecraft:always_true"
           },
-          "output_state": "minecraft:structure_void"
+          "output_state": {
+            "Name": "minecraft:structure_void"
+          }
         },
         {
           "input_predicate": {
@@ -137,8 +143,8 @@
             "block": "minecraft:water"
           },
           "output_state": {
-            "id": "raft:palm_stairs",
-            "properties": {
+            "Name": "raft:palm_stairs",
+            "Properties": {
               "facing": "east",
               "half": "bottom",
               "shape": "straight",
@@ -162,7 +168,9 @@
           "location_predicate": {
             "predicate_type": "minecraft:always_true"
           },
-          "output_state": "minecraft:structure_void"
+          "output_state": {
+            "Name": "minecraft:structure_void"
+          }
         },
         {
           "input_predicate": {
@@ -182,8 +190,8 @@
             "block": "minecraft:water"
           },
           "output_state": {
-            "id": "raft:palm_stairs",
-            "properties": {
+            "Name": "raft:palm_stairs",
+            "Properties": {
               "facing": "west",
               "half": "bottom",
               "shape": "straight",
@@ -207,7 +215,9 @@
           "location_predicate": {
             "predicate_type": "minecraft:always_true"
           },
-          "output_state": "minecraft:structure_void"
+          "output_state": {
+            "Name": "minecraft:structure_void"
+          }
         }
       ]
     },

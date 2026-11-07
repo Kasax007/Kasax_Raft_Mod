@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:palm_button"
+        "recipe": "raft:palm_button"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

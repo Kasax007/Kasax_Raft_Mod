@@ -1,10 +1,18 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "B": "minecraft:iron_block",
-    "C": "minecraft:diamond_pickaxe",
-    "S": "raft:circuit_board",
-    "T": "raft:titanium_ingot"
+    "B": {
+      "item": "minecraft:iron_block"
+    },
+    "C": {
+      "item": "minecraft:diamond_pickaxe"
+    },
+    "S": {
+      "item": "raft:circuit_board"
+    },
+    "T": {
+      "item": "raft:titanium_ingot"
+    }
   },
   "pattern": [
     "BSB",

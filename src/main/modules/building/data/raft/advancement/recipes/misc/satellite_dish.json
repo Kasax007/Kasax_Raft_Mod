@@ -17,7 +17,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:satellite_dish"
+        "recipe": "raft:satellite_dish"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

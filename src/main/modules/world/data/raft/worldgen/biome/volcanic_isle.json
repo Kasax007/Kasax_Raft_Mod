@@ -1,47 +1,39 @@
 {
-  "attributes": {
-    "minecraft:audio/background_music": {
-      "default": {
-        "max_delay": 24000,
-        "min_delay": 12000,
-        "sound": "minecraft:music.overworld.badlands"
-      },
-      "underwater": {
-        "max_delay": 24000,
-        "min_delay": 12000,
-        "sound": "minecraft:music.under_water"
-      }
-    },
-    "minecraft:gameplay/natural_mob_spawns": {
-      "argument": {
-        "spawn_costs": {},
-        "spawns_by_category": {}
-      },
-      "modifier": "overlay"
-    },
-    "minecraft:visual/ambient_particles": {
-      "argument": [
-        {
-          "particle": {
-            "type": "minecraft:white_ash"
-          },
-          "probability": 0.025
-        }
-      ],
-      "modifier": "append"
-    },
-    "minecraft:visual/fog_color": "#b4aca8",
-    "minecraft:visual/sky_color": "#a2b6c8",
-    "minecraft:visual/water_fog_color": "#007ab4"
-  },
-  "carvers": [
-    "minecraft:cave"
-  ],
+  "has_precipitation": false,
+  "temperature": 1.2,
   "downfall": 0.2,
   "effects": {
-    "foliage_color": "#8a9a48",
-    "grass_color": "#9aa05a",
-    "water_color": "#3a8cc0"
+    "water_color": 3837120,
+    "foliage_color": 9083464,
+    "grass_color": 10133594,
+    "fog_color": 11840680,
+    "sky_color": 10663624,
+    "water_fog_color": 31412,
+    "music": {
+      "sound": "minecraft:music.overworld.badlands",
+      "min_delay": 12000,
+      "max_delay": 24000,
+      "replace_current_music": false
+    },
+    "mood_sound": {
+      "sound": "raft:ambient.raft.deep",
+      "tick_delay": 6000,
+      "block_search_extent": 8,
+      "offset": 2.0
+    },
+    "particle": {
+      "options": {
+        "type": "minecraft:white_ash"
+      },
+      "probability": 0.025
+    }
+  },
+  "spawners": {},
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave"
+    ]
   },
   "features": [
     [],
@@ -102,7 +94,5 @@
     [
       "raft:gravity_support"
     ]
-  ],
-  "has_precipitation": false,
-  "temperature": 1.2
+  ]
 }

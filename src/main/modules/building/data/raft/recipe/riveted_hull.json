@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "S": "raft:scrap_metal",
-    "I": "minecraft:iron_ingot"
+    "S": {
+      "item": "raft:scrap_metal"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    }
   },
   "pattern": [
     " S ",

@@ -2,12 +2,22 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "minecraft:book",
+    {
+      "item": "minecraft:book"
+    },
     [
-      "minecraft:kelp",
-      "minecraft:dried_kelp",
-      "raft:driftwood_log",
-      "raft:driftwood_planks"
+      {
+        "item": "minecraft:kelp"
+      },
+      {
+        "item": "minecraft:dried_kelp"
+      },
+      {
+        "item": "raft:driftwood_log"
+      },
+      {
+        "item": "raft:driftwood_planks"
+      }
     ]
   ],
   "result": {

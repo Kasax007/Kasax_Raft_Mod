@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:cargo_net"
+        "recipe": "raft:cargo_net"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

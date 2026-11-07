@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "N": "minecraft:iron_nugget",
-    "S": "raft:scrap_metal"
+    "N": {
+      "item": "minecraft:iron_nugget"
+    },
+    "S": {
+      "item": "raft:scrap_metal"
+    }
   },
   "pattern": [
     "NNN",

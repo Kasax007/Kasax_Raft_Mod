@@ -3,20 +3,22 @@
   "criteria": {
     "wear": {
       "conditions": {
-        "player": {
-          "type": "minecraft:entity_properties",
-          "entity": "this",
-          "predicate": {
-            "minecraft:equipment": {
-              "head": {
-                "items": "#raft:adv/diving_helmets"
-              },
-              "chest": {
-                "items": "#raft:adv/oxygen_tanks"
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "equipment": {
+                "head": {
+                  "items": "#raft:adv/diving_helmets"
+                },
+                "chest": {
+                  "items": "#raft:adv/oxygen_tanks"
+                }
               }
             }
           }
-        }
+        ]
       },
       "trigger": "minecraft:tick"
     }

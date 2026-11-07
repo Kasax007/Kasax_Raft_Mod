@@ -26,7 +26,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:wind_chime"
+        "recipe": "raft:wind_chime"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

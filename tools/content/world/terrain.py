@@ -53,15 +53,15 @@ NOISES = {
 
 # --------------------------------------------------------------------------------------------- thresholds
 # Continents thresholds were chosen with sim.py so that the zone shares match the spec (section 4.1):
-# islands ~15 %, shallows ~12 %, mid sea ~15 %, the rest deep (open sea, shelf, trench).
-C_MID = 0.05      # deep -> mid sea (kelp)
-C_SH = 0.205      # mid -> shallows (reef edge)
-C_BEACH = 0.34    # shallows -> land (waterline)
+# islands ~8 % (3.2: half of 3.1, more open sea), shallows ~12 %, mid sea ~16 %, the rest deep (open sea, shelf, trench).
+C_MID = 0.09      # deep -> mid sea (kelp)
+C_SH = 0.28       # mid -> shallows (reef edge)
+C_BEACH = 0.48    # shallows -> land (waterline)
 C_TB = C_MID - 0.07   # trench biome only below this (trenches fade out towards the mid sea)
 T_COLD = -0.46    # colder: frost floes
 T_WRECK = 0.30    # warmer deep sea: wreck graveyard
 V_VOLC = -0.42    # drier: volcanic isles
-V_JUNGLE = 0.15   # wetter: jungle isles
+V_JUNGLE = 0.42   # wetter: jungle isles (3.2: rarer, most islands are palm beach isles)
 E_SHELF = 0.32    # erosion above: drowned shelf (deep) / mangrove isle (land)
 W_TRENCH = 0.075  # |ridges| below: abyssal trench (deep only)
 W_GLOW = 0.38     # ridges above: glowing lagoon (shallows only)

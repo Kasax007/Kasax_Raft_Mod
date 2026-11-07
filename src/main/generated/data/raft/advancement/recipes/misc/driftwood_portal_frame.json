@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:driftwood_portal_frame"
+        "recipe": "raft:driftwood_portal_frame"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -16,7 +16,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:driftwood_chair"
+        "recipe": "raft:driftwood_chair"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

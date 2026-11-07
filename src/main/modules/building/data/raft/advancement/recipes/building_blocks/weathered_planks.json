@@ -17,7 +17,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:weathered_planks"
+        "recipe": "raft:weathered_planks"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -4,7 +4,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipes": "raft:seafarers_almanac"
+        "recipe": "raft:seafarers_almanac"
       }
     },
     "has_book": {

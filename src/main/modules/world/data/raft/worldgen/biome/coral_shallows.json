@@ -1,65 +1,51 @@
 {
-  "attributes": {
-    "minecraft:audio/background_music": {
-      "default": {
-        "max_delay": 7200,
-        "min_delay": 2400,
-        "sound": "raft:music.raft.sea_day"
-      },
-      "underwater": {
-        "max_delay": 24000,
-        "min_delay": 12000,
-        "sound": "minecraft:music.under_water"
-      }
-    },
-    "minecraft:gameplay/natural_mob_spawns": {
-      "argument": {
-        "spawn_costs": {},
-        "spawns_by_category": {
-          "creature": [
-            {
-              "type": "minecraft:turtle",
-              "count": {
-                "type": "minecraft:uniform",
-                "max_inclusive": 5,
-                "min_inclusive": 2
-              },
-              "weight": 5
-            }
-          ],
-          "water_ambient": [
-            {
-              "type": "minecraft:tropical_fish",
-              "count": 8,
-              "weight": 25
-            },
-            {
-              "type": "minecraft:pufferfish",
-              "count": {
-                "type": "minecraft:uniform",
-                "max_inclusive": 3,
-                "min_inclusive": 1
-              },
-              "weight": 15
-            }
-          ]
-        }
-      },
-      "modifier": "overlay"
-    },
-    "minecraft:visual/fog_color": "#3ab2ea",
-    "minecraft:visual/sky_color": "#6cc4f0",
-    "minecraft:visual/water_fog_color": "#00d2f5",
-    "minecraft:visual/water_fog_end_distance": {
-      "argument": 1.6,
-      "modifier": "multiply"
-    }
-  },
-  "carvers": [],
+  "has_precipitation": false,
+  "temperature": 0.9,
   "downfall": 0.5,
   "effects": {
-    "water_color": "#3ad9e6"
+    "water_color": 3856870,
+    "fog_color": 3846890,
+    "sky_color": 7128304,
+    "water_fog_color": 54005,
+    "music": {
+      "sound": "raft:music.raft.sea_day",
+      "min_delay": 2400,
+      "max_delay": 7200,
+      "replace_current_music": false
+    },
+    "mood_sound": {
+      "sound": "raft:ambient.raft.deep",
+      "tick_delay": 6000,
+      "block_search_extent": 8,
+      "offset": 2.0
+    }
   },
+  "spawners": {
+    "creature": [
+      {
+        "type": "minecraft:turtle",
+        "weight": 5,
+        "minCount": 2,
+        "maxCount": 5
+      }
+    ],
+    "water_ambient": [
+      {
+        "type": "minecraft:tropical_fish",
+        "weight": 25,
+        "minCount": 8,
+        "maxCount": 8
+      },
+      {
+        "type": "minecraft:pufferfish",
+        "weight": 15,
+        "minCount": 1,
+        "maxCount": 3
+      }
+    ]
+  },
+  "spawn_costs": {},
+  "carvers": {},
   "features": [
     [],
     [],
@@ -112,7 +98,5 @@
     [
       "raft:gravity_support"
     ]
-  ],
-  "has_precipitation": false,
-  "temperature": 0.9
+  ]
 }

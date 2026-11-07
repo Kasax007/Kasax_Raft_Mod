@@ -3,7 +3,9 @@
   "category": "building",
   "group": "bark",
   "key": {
-    "#": "raft:driftwood_log"
+    "#": {
+      "item": "raft:driftwood_log"
+    }
   },
   "pattern": [
     "##",

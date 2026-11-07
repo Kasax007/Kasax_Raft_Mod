@@ -17,7 +17,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:neon_tube_pink"
+        "recipe": "raft:neon_tube_pink"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

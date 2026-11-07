@@ -3,7 +3,9 @@
   "category": "food",
   "cookingtime": 100,
   "experience": 0.35,
-  "ingredient": "raft:eel_fillet",
+  "ingredient": {
+    "item": "raft:eel_fillet"
+  },
   "result": {
     "id": "raft:cooked_eel_fillet"
   }

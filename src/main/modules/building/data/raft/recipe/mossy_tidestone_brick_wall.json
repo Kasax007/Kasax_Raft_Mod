@@ -2,7 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": "raft:mossy_tidestone_bricks"
+    "B": {
+      "item": "raft:mossy_tidestone_bricks"
+    }
   },
   "pattern": [
     "BBB",

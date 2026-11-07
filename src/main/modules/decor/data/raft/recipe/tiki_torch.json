@@ -2,9 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "C": "#minecraft:coals",
-    "R": "raft:rope",
-    "B": "minecraft:bamboo"
+    "C": {
+      "tag": "minecraft:coals"
+    },
+    "R": {
+      "item": "raft:rope"
+    },
+    "B": {
+      "item": "minecraft:bamboo"
+    }
   },
   "pattern": [
     "C",

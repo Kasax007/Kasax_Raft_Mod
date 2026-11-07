@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:mossy_tidestone_brick_stairs_from_mossy_tidestone_bricks_stonecutting"
+        "recipe": "raft:mossy_tidestone_brick_stairs_from_mossy_tidestone_bricks_stonecutting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

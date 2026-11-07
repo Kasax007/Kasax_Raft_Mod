@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "P": "raft:plastic",
-    "R": "minecraft:red_dye"
+    "P": {
+      "item": "raft:plastic"
+    },
+    "R": {
+      "item": "minecraft:red_dye"
+    }
   },
   "pattern": [
     "PRP",

@@ -25,7 +25,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:green_sea_glass"
+        "recipe": "raft:green_sea_glass"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

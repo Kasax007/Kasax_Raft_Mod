@@ -1,6 +1,8 @@
 {
   "type": "minecraft:stonecutting",
-  "ingredient": "raft:asphalt",
+  "ingredient": {
+    "item": "raft:asphalt"
+  },
   "result": {
     "count": 1,
     "id": "raft:asphalt_stairs"

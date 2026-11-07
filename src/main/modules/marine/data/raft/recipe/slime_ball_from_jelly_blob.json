@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "raft:jelly_blob",
-    "raft:jelly_blob"
+    {
+      "item": "raft:jelly_blob"
+    },
+    {
+      "item": "raft:jelly_blob"
+    }
   ],
   "result": {
     "count": 1,

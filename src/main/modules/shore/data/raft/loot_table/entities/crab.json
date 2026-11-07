@@ -5,10 +5,9 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "raft:crab_claw",
-          "modifier": [
+          "functions": [
             {
-              "type": "minecraft:set_count",
+              "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
                 "max": 2.0,
@@ -16,41 +15,43 @@
               }
             },
             {
-              "type": "minecraft:furnace_smelt",
-              "condition": {
-                "type": "minecraft:any_of",
-                "terms": [
-                  {
-                    "type": "minecraft:entity_properties",
-                    "entity": "this",
-                    "predicate": {
-                      "minecraft:flags": {
-                        "is_on_fire": true
+              "function": "minecraft:furnace_smelt",
+              "conditions": [
+                {
+                  "condition": "minecraft:any_of",
+                  "terms": [
+                    {
+                      "condition": "minecraft:entity_properties",
+                      "entity": "this",
+                      "predicate": {
+                        "flags": {
+                          "is_on_fire": true
+                        }
                       }
-                    }
-                  },
-                  {
-                    "type": "minecraft:entity_properties",
-                    "entity": "direct_attacker",
-                    "predicate": {
-                      "minecraft:equipment": {
-                        "mainhand": {
-                          "predicates": {
-                            "minecraft:enchantments": [
-                              {
-                                "enchantments": "#minecraft:smelts_loot"
-                              }
-                            ]
+                    },
+                    {
+                      "condition": "minecraft:entity_properties",
+                      "entity": "direct_attacker",
+                      "predicate": {
+                        "equipment": {
+                          "mainhand": {
+                            "predicates": {
+                              "minecraft:enchantments": [
+                                {
+                                  "enchantments": "#minecraft:smelts_loot"
+                                }
+                              ]
+                            }
                           }
                         }
                       }
                     }
-                  }
-                ]
-              }
+                  ]
+                }
+              ]
             },
             {
-              "type": "minecraft:enchanted_count_increase",
+              "function": "minecraft:enchanted_count_increase",
               "count": {
                 "type": "minecraft:uniform",
                 "max": 1.0,
@@ -58,21 +59,24 @@
               },
               "enchantment": "minecraft:looting"
             }
-          ]
+          ],
+          "name": "raft:crab_claw"
         }
       ],
       "rolls": 1
     },
     {
-      "condition": {
-        "type": "minecraft:random_chance",
-        "chance": 0.08
-      },
+      "conditions": [
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.08
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:tag",
           "expand": false,
-          "items": "#raft:loot/seashell"
+          "name": "raft:loot/seashell"
         }
       ],
       "rolls": 1

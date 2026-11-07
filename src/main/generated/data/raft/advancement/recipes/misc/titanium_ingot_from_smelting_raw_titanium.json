@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:titanium_ingot_from_smelting_raw_titanium"
+        "recipe": "raft:titanium_ingot_from_smelting_raw_titanium"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

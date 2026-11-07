@@ -1,6 +1,6 @@
 {
-  "type": "minecraft:cache",
-  "input": {
+  "type": "minecraft:cache_2d",
+  "argument": {
     "type": "minecraft:noise",
     "noise": "raft:raftdim/continents",
     "xz_scale": 1.0,

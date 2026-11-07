@@ -17,7 +17,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:neon_tube_cyan"
+        "recipe": "raft:neon_tube_cyan"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

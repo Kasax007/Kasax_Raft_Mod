@@ -2,7 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "G": "raft:blue_sea_glass"
+    "G": {
+      "item": "raft:blue_sea_glass"
+    }
   },
   "pattern": [
     "GGG",

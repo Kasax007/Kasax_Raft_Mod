@@ -3,8 +3,12 @@
   "category": "misc",
   "group": "chest_boat",
   "ingredients": [
-    "minecraft:chest",
-    "raft:palm_boat"
+    {
+      "item": "minecraft:chest"
+    },
+    {
+      "item": "raft:palm_boat"
+    }
   ],
   "result": {
     "count": 1,

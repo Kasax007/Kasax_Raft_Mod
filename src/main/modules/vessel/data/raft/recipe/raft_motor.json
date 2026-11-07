@@ -2,10 +2,18 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "S": "raft:scrap_metal",
-    "C": "raft:circuit_board",
-    "F": "minecraft:furnace",
-    "T": "raft:titanium_ingot"
+    "S": {
+      "item": "raft:scrap_metal"
+    },
+    "C": {
+      "item": "raft:circuit_board"
+    },
+    "F": {
+      "item": "minecraft:furnace"
+    },
+    "T": {
+      "item": "raft:titanium_ingot"
+    }
   },
   "pattern": [
     "SCS",

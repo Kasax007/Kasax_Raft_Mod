@@ -735,7 +735,7 @@
           11.5
         ],
         "axis": "y",
-        "angle": 45,
+        "angle": 45.0,
         "rescale": true
       },
       "shade_direction_override": "up",
@@ -778,7 +778,7 @@
           11.5
         ],
         "axis": "y",
-        "angle": -45,
+        "angle": -45.0,
         "rescale": true
       },
       "shade_direction_override": "up",
@@ -821,7 +821,7 @@
           4.5
         ],
         "axis": "y",
-        "angle": 45,
+        "angle": 45.0,
         "rescale": true
       },
       "shade_direction_override": "up",
@@ -864,7 +864,7 @@
           4.5
         ],
         "axis": "y",
-        "angle": -45,
+        "angle": -45.0,
         "rescale": true
       },
       "shade_direction_override": "up",
@@ -966,7 +966,6 @@
         15.0,
         15.5
       ],
-      "light_emission": 6,
       "faces": {
         "up": {
           "uv": [

@@ -5,63 +5,71 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 2,
-              "max": 6
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 6
+              }
             }
-          },
+          ],
           "name": "minecraft:prismarine_shard",
           "weight": 5
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 2,
-              "max": 8
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 8
+              }
             }
-          },
+          ],
           "name": "minecraft:gold_nugget",
           "weight": 4
         },
         {
           "type": "minecraft:tag",
-          "expand": false,
-          "items": "#raft:loot/seashell",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 4
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 4
+              }
             }
-          },
-          "weight": 4
+          ],
+          "expand": false,
+          "weight": 4,
+          "name": "raft:loot/seashell"
         },
         {
           "type": "minecraft:tag",
           "expand": false,
-          "items": "#raft:loot/pearl",
-          "weight": 2
+          "weight": 2,
+          "name": "raft:loot/pearl"
         },
         {
           "type": "minecraft:tag",
-          "expand": false,
-          "items": "#raft:loot/sea_glass_shard",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 4
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 4
+              }
             }
-          },
-          "weight": 3
+          ],
+          "expand": false,
+          "weight": 3,
+          "name": "raft:loot/sea_glass_shard"
         },
         {
           "type": "minecraft:item",

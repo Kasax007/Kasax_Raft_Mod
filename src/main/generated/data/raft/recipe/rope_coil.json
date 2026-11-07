@@ -1,7 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "R": "raft:rope"
+    "R": {
+      "item": "raft:rope"
+    }
   },
   "pattern": [
     "RR",

@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:corrugated_metal_stairs_from_corrugated_metal_stonecutting"
+        "recipe": "raft:corrugated_metal_stairs_from_corrugated_metal_stonecutting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

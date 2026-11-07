@@ -3,8 +3,12 @@
   "category": "misc",
   "group": "chest_boat",
   "ingredients": [
-    "minecraft:chest",
-    "raft:driftwood_raft"
+    {
+      "item": "minecraft:chest"
+    },
+    {
+      "item": "raft:driftwood_raft"
+    }
   ],
   "result": {
     "count": 1,

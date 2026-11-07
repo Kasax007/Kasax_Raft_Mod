@@ -1,8 +1,12 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "B": "raft:ancient_energy",
-    "S": "raft:titanium_ingot"
+    "B": {
+      "item": "raft:ancient_energy"
+    },
+    "S": {
+      "item": "raft:titanium_ingot"
+    }
   },
   "pattern": [
     " S ",

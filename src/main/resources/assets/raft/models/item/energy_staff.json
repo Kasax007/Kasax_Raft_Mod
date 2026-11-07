@@ -1,6 +1,11 @@
 {
-	"parent": "minecraft:item/generated",
-	"textures": {
-		"layer0": "raft:item/energy_staff"
-	}
+  "parent": "raft:item/energy_staff_3d",
+  "overrides": [
+    {
+      "predicate": {
+        "raft:gui": 1
+      },
+      "model": "raft:item/energy_staff_gui"
+    }
+  ]
 }

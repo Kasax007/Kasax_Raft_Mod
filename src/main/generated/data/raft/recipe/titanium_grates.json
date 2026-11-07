@@ -1,7 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "S": "raft:titanium_ingot"
+    "S": {
+      "item": "raft:titanium_ingot"
+    }
   },
   "pattern": [
     "S S",

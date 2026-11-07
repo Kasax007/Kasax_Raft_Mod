@@ -2,7 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "redstone",
   "key": {
-    "P": "raft:teak_planks"
+    "P": {
+      "item": "raft:teak_planks"
+    }
   },
   "pattern": [
     "PP",

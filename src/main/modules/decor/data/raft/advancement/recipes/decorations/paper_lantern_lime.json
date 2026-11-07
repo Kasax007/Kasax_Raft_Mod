@@ -18,7 +18,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:paper_lantern_lime"
+        "recipe": "raft:paper_lantern_lime"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

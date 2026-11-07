@@ -35,6 +35,27 @@ public class HelmBlock extends HorizontalDirectionalBlock {
         return simpleCodec(HelmBlock::new);
     }
 
+    /**
+     * Which model the block shows: always {@code full} in the world. A sailing raft draws the helm as {@code base} plus
+     * {@code wheel}, and turns the wheel while the helmsman steers.
+     */
+    public enum Part implements net.minecraft.util.StringRepresentable {
+        FULL("full"), BASE("base"), WHEEL("wheel");
+
+        private final String name;
+
+        Part(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String getSerializedName() {
+            return this.name;
+        }
+    }
+
+    public static final net.minecraft.world.level.block.state.properties.EnumProperty<Part> PART =
+            net.minecraft.world.level.block.state.properties.EnumProperty.create("part", Part.class);
     /** Shape for facing=north: stool at the south (stern) side, pedestal and wheel at the north side. */
     private static final VoxelShape NORTH_SHAPE = Shapes.or(
             Block.box(5.0, 0.0, 3.0, 11.0, 2.0, 8.0),
@@ -45,12 +66,12 @@ public class HelmBlock extends HorizontalDirectionalBlock {
 
     public HelmBlock(Properties properties) {
         super(properties);
-        registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));
+        registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(PART, Part.FULL));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, PART);
     }
 
     @Override

@@ -1,55 +1,46 @@
 {
-  "attributes": {
-    "minecraft:audio/background_music": {
-      "default": {
-        "max_delay": 24000,
-        "min_delay": 12000,
-        "sound": "minecraft:music.overworld.jungle"
-      },
-      "underwater": {
-        "max_delay": 24000,
-        "min_delay": 12000,
-        "sound": "minecraft:music.under_water"
-      }
-    },
-    "minecraft:gameplay/natural_mob_spawns": {
-      "argument": {
-        "spawn_costs": {},
-        "spawns_by_category": {
-          "creature": [
-            {
-              "type": "minecraft:parrot",
-              "count": {
-                "type": "minecraft:uniform",
-                "max_inclusive": 2,
-                "min_inclusive": 1
-              },
-              "weight": 40
-            },
-            {
-              "type": "minecraft:ocelot",
-              "count": {
-                "type": "minecraft:uniform",
-                "max_inclusive": 3,
-                "min_inclusive": 1
-              },
-              "weight": 2
-            }
-          ]
-        }
-      },
-      "modifier": "overlay"
-    },
-    "minecraft:visual/fog_color": "#2aa4e0",
-    "minecraft:visual/sky_color": "#6cbaea",
-    "minecraft:visual/water_fog_color": "#00aedc"
-  },
-  "carvers": [
-    "minecraft:cave"
-  ],
+  "has_precipitation": false,
+  "temperature": 0.95,
   "downfall": 0.9,
   "effects": {
-    "water_color": "#2fb4cc"
+    "water_color": 3126476,
+    "fog_color": 2794720,
+    "sky_color": 7125738,
+    "water_fog_color": 44764,
+    "music": {
+      "sound": "minecraft:music.overworld.jungle",
+      "min_delay": 12000,
+      "max_delay": 24000,
+      "replace_current_music": false
+    },
+    "mood_sound": {
+      "sound": "raft:ambient.raft.deep",
+      "tick_delay": 6000,
+      "block_search_extent": 8,
+      "offset": 2.0
+    }
+  },
+  "spawners": {
+    "creature": [
+      {
+        "type": "minecraft:parrot",
+        "weight": 40,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "minecraft:ocelot",
+        "weight": 2,
+        "minCount": 1,
+        "maxCount": 3
+      }
+    ]
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave"
+    ]
   },
   "features": [
     [],
@@ -117,7 +108,5 @@
     [
       "raft:gravity_support"
     ]
-  ],
-  "has_precipitation": false,
-  "temperature": 0.95
+  ]
 }

@@ -5,92 +5,106 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "max": 3,
-              "min": 1
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 3,
+                "min": 1
+              }
             }
-          },
+          ],
           "name": "raft:coconut",
           "weight": 10
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "max": 2,
-              "min": 1
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 2,
+                "min": 1
+              }
             }
-          },
+          ],
           "name": "minecraft:cooked_cod",
           "weight": 10
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "max": 3,
-              "min": 1
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 3,
+                "min": 1
+              }
             }
-          },
+          ],
           "name": "minecraft:glass_bottle",
           "weight": 6
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "max": 3,
-              "min": 1
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 3,
+                "min": 1
+              }
             }
-          },
+          ],
           "name": "minecraft:string",
           "weight": 8
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "max": 3,
-              "min": 1
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 3,
+                "min": 1
+              }
             }
-          },
+          ],
           "name": "raft:rope",
           "weight": 8
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "max": 5,
-              "min": 2
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 5,
+                "min": 2
+              }
             }
-          },
+          ],
           "name": "minecraft:iron_nugget",
           "weight": 6
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "max": 3,
-              "min": 1
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 3,
+                "min": 1
+              }
             }
-          },
+          ],
           "name": "minecraft:coal",
           "weight": 6
         },
@@ -106,14 +120,16 @@
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "max": 2,
-              "min": 1
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 2,
+                "min": 1
+              }
             }
-          },
+          ],
           "name": "raft:titanium_nugget",
           "weight": 2
         },

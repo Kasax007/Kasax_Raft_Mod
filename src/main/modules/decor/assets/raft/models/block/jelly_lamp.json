@@ -20,7 +20,6 @@
         5.5,
         10.0
       ],
-      "light_emission": 15,
       "faces": {
         "down": {
           "uv": [

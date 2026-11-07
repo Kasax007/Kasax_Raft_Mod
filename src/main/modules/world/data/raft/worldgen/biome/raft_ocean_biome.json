@@ -1,71 +1,60 @@
 {
-  "attributes": {
-    "minecraft:audio/background_music": {
-      "default": {
-        "max_delay": 7200,
-        "min_delay": 2400,
-        "sound": "raft:music.raft.sea_day"
-      },
-      "underwater": {
-        "max_delay": 24000,
-        "min_delay": 12000,
-        "sound": "minecraft:music.under_water"
-      }
-    },
-    "minecraft:gameplay/natural_mob_spawns": {
-      "argument": {
-        "spawn_costs": {},
-        "spawns_by_category": {
-          "water_creature": [
-            {
-              "type": "raft:shark",
-              "count": 1,
-              "weight": 3
-            },
-            {
-              "type": "minecraft:squid",
-              "count": {
-                "type": "minecraft:uniform",
-                "max_inclusive": 4,
-                "min_inclusive": 1
-              },
-              "weight": 4
-            },
-            {
-              "type": "minecraft:dolphin",
-              "count": {
-                "type": "minecraft:uniform",
-                "max_inclusive": 2,
-                "min_inclusive": 1
-              },
-              "weight": 2
-            }
-          ],
-          "water_ambient": [
-            {
-              "type": "minecraft:cod",
-              "count": {
-                "type": "minecraft:uniform",
-                "max_inclusive": 6,
-                "min_inclusive": 3
-              },
-              "weight": 10
-            }
-          ]
-        }
-      },
-      "modifier": "overlay"
-    },
-    "minecraft:visual/fog_color": "#22a1e6",
-    "minecraft:visual/sky_color": "#6cbaea",
-    "minecraft:visual/water_fog_color": "#0052b8"
-  },
-  "carvers": [
-    "minecraft:cave"
-  ],
+  "has_precipitation": false,
+  "temperature": 0.7,
   "downfall": 0.5,
   "effects": {
-    "water_color": "#2a86d8"
+    "water_color": 2787032,
+    "fog_color": 2269670,
+    "sky_color": 7125738,
+    "water_fog_color": 21176,
+    "music": {
+      "sound": "raft:music.raft.sea_day",
+      "min_delay": 2400,
+      "max_delay": 7200,
+      "replace_current_music": false
+    },
+    "mood_sound": {
+      "sound": "raft:ambient.raft.deep",
+      "tick_delay": 6000,
+      "block_search_extent": 8,
+      "offset": 2.0
+    }
+  },
+  "spawners": {
+    "water_creature": [
+      {
+        "type": "raft:shark",
+        "weight": 3,
+        "minCount": 1,
+        "maxCount": 1
+      },
+      {
+        "type": "minecraft:squid",
+        "weight": 4,
+        "minCount": 1,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:dolphin",
+        "weight": 2,
+        "minCount": 1,
+        "maxCount": 2
+      }
+    ],
+    "water_ambient": [
+      {
+        "type": "minecraft:cod",
+        "weight": 10,
+        "minCount": 3,
+        "maxCount": 6
+      }
+    ]
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave"
+    ]
   },
   "features": [
     [],
@@ -119,7 +108,5 @@
     [
       "raft:gravity_support"
     ]
-  ],
-  "has_precipitation": false,
-  "temperature": 0.7
+  ]
 }

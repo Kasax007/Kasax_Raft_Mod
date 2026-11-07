@@ -1,33 +1,15 @@
 {
-  "type": "minecraft:cache",
-  "input": {
-    "type": "minecraft:lerp",
-    "alpha": {
+  "type": "minecraft:cache_once",
+  "argument": {
+    "type": "minecraft:add",
+    "argument1": {
       "type": "minecraft:spline",
       "spline": {
         "coordinate": "raft:raftdim/continents",
         "points": [
           {
             "derivative": 0.0,
-            "location": 0.31,
-            "value": 0.0
-          },
-          {
-            "derivative": 0.0,
-            "location": 0.34,
-            "value": 1.0
-          }
-        ]
-      }
-    },
-    "first": {
-      "type": "minecraft:spline",
-      "spline": {
-        "coordinate": "raft:raftdim/continents",
-        "points": [
-          {
-            "derivative": 0.0,
-            "location": -0.08,
+            "location": -0.04,
             "value": {
               "coordinate": "raft:raftdim/erosion",
               "points": [
@@ -37,7 +19,7 @@
                   "value": {
                     "coordinate": {
                       "type": "minecraft:abs",
-                      "input": "raft:raftdim/ridges"
+                      "argument": "raft:raftdim/ridges"
                     },
                     "points": [
                       {
@@ -73,7 +55,7 @@
           },
           {
             "derivative": 0.0,
-            "location": 0.015,
+            "location": 0.055,
             "value": {
               "coordinate": "raft:raftdim/erosion",
               "points": [
@@ -92,269 +74,1017 @@
           },
           {
             "derivative": 0.0,
-            "location": 0.05,
+            "location": 0.09,
             "value": 0.14
           },
           {
-            "derivative": 0.308,
-            "location": 0.175,
+            "derivative": 0.2426,
+            "location": 0.25,
             "value": 0.16
           },
           {
             "derivative": 0.0,
-            "location": 0.197,
+            "location": 0.272,
             "value": 0.25
           },
           {
-            "derivative": -1.849,
-            "location": 0.209,
+            "derivative": -1.232,
+            "location": 0.284,
             "value": 0.2
           },
           {
-            "derivative": -1.6438,
-            "location": 0.31,
+            "derivative": -1.1374,
+            "location": 0.45,
             "value": 0.08
           },
           {
             "derivative": 0.0,
-            "location": 0.34,
+            "location": 0.48,
             "value": 0.0
           }
         ]
       }
     },
-    "second": {
-      "type": "minecraft:lerp",
-      "alpha": {
-        "type": "minecraft:spline",
-        "spline": {
-          "coordinate": "raft:raftdim/vegetation",
-          "points": [
-            {
-              "derivative": 0.0,
-              "location": -0.46,
-              "value": 1.0
-            },
-            {
-              "derivative": 0.0,
-              "location": -0.39,
-              "value": 0.0
-            }
-          ]
-        }
-      },
-      "first": {
-        "type": "minecraft:lerp",
-        "alpha": {
-          "type": "minecraft:spline",
-          "spline": {
-            "coordinate": "raft:raftdim/erosion",
-            "points": [
-              {
-                "derivative": 0.0,
-                "location": 0.27,
-                "value": 0.0
-              },
-              {
-                "derivative": 0.0,
-                "location": 0.34,
-                "value": 1.0
-              }
-            ]
-          }
-        },
-        "first": {
-          "type": "minecraft:lerp",
-          "alpha": {
-            "type": "minecraft:spline",
-            "spline": {
-              "coordinate": "raft:raftdim/vegetation",
-              "points": [
-                {
-                  "derivative": 0.0,
-                  "location": 0.09,
-                  "value": 0.0
-                },
-                {
-                  "derivative": 0.0,
-                  "location": 0.21,
-                  "value": 1.0
-                }
-              ]
-            }
-          },
-          "first": {
-            "type": "minecraft:spline",
-            "spline": {
-              "coordinate": "raft:raftdim/continents",
-              "points": [
-                {
-                  "derivative": 0.0,
-                  "location": 0.31,
-                  "value": 0.08
-                },
-                {
-                  "derivative": 0.0,
-                  "location": 0.34,
-                  "value": 0.0
-                },
-                {
-                  "derivative": 0.0,
-                  "location": 0.37,
-                  "value": 0.0
-                },
-                {
-                  "derivative": 1.0,
-                  "location": 0.42,
-                  "value": 0.05
-                },
-                {
-                  "derivative": 0.6667,
-                  "location": 0.49,
-                  "value": 0.12
-                },
-                {
-                  "derivative": 0.129,
-                  "location": 0.57,
-                  "value": 0.16
-                },
-                {
-                  "derivative": 0.0,
-                  "location": 0.84,
-                  "value": 0.18
-                }
-              ]
-            }
-          },
-          "second": {
-            "type": "minecraft:spline",
-            "spline": {
-              "coordinate": "raft:raftdim/continents",
-              "points": [
-                {
-                  "derivative": 0.0,
-                  "location": 0.31,
-                  "value": 0.08
-                },
-                {
-                  "derivative": 0.0,
-                  "location": 0.34,
-                  "value": 0.0
-                },
-                {
-                  "derivative": 0.0,
-                  "location": 0.37,
-                  "value": 0.0
-                },
-                {
-                  "derivative": 1.5094,
-                  "location": 0.42,
-                  "value": 0.08
-                },
-                {
-                  "derivative": 0.9836,
-                  "location": 0.49,
-                  "value": 0.18
-                },
-                {
-                  "derivative": 0.1348,
-                  "location": 0.57,
-                  "value": 0.24
-                },
-                {
-                  "derivative": 0.0,
-                  "location": 0.84,
-                  "value": 0.26
-                }
-              ]
-            }
-          }
-        },
-        "second": {
-          "type": "minecraft:spline",
-          "spline": {
-            "coordinate": "raft:raftdim/continents",
-            "points": [
-              {
-                "derivative": 0.0,
-                "location": 0.31,
-                "value": 0.08
-              },
-              {
-                "derivative": 0.0,
-                "location": 0.34,
-                "value": 0.0
-              },
-              {
-                "derivative": 0.0,
-                "location": 0.36,
-                "value": 0.0
-              },
-              {
-                "derivative": 0.0444,
-                "location": 0.42,
-                "value": 0.02
-              },
-              {
-                "derivative": 0.0,
-                "location": 0.84,
-                "value": 0.03
-              }
-            ]
-          }
-        }
-      },
-      "second": {
+    "argument2": {
+      "type": "minecraft:mul",
+      "argument1": {
         "type": "minecraft:spline",
         "spline": {
           "coordinate": "raft:raftdim/continents",
           "points": [
             {
               "derivative": 0.0,
-              "location": 0.31,
-              "value": 0.08
-            },
-            {
-              "derivative": 0.0,
-              "location": 0.34,
+              "location": 0.45,
               "value": 0.0
             },
             {
               "derivative": 0.0,
-              "location": 0.37,
-              "value": 0.0
-            },
-            {
-              "derivative": 1.1707,
-              "location": 0.44,
-              "value": 0.08
-            },
-            {
-              "derivative": 0.7059,
-              "location": 0.54,
-              "value": 0.2
-            },
-            {
-              "derivative": 0.0,
-              "location": 0.64,
-              "value": 0.25
-            },
-            {
-              "derivative": -1.4286,
-              "location": 0.7,
-              "value": 0.2
-            },
-            {
-              "derivative": -2.5,
-              "location": 0.73,
-              "value": 0.05
-            },
-            {
-              "derivative": 0.0,
-              "location": 0.76,
-              "value": 0.0
+              "location": 0.48,
+              "value": 1.0
             }
           ]
+        }
+      },
+      "argument2": {
+        "type": "minecraft:add",
+        "argument1": {
+          "type": "minecraft:add",
+          "argument1": {
+            "type": "minecraft:add",
+            "argument1": {
+              "type": "minecraft:add",
+              "argument1": {
+                "type": "minecraft:spline",
+                "spline": {
+                  "coordinate": "raft:raftdim/continents",
+                  "points": [
+                    {
+                      "derivative": 0.0,
+                      "location": 0.45,
+                      "value": 0.08
+                    },
+                    {
+                      "derivative": 0.0,
+                      "location": 0.48,
+                      "value": 0.0
+                    },
+                    {
+                      "derivative": 0.0,
+                      "location": 0.51,
+                      "value": 0.0
+                    },
+                    {
+                      "derivative": 1.0,
+                      "location": 0.56,
+                      "value": 0.05
+                    },
+                    {
+                      "derivative": 0.6667,
+                      "location": 0.63,
+                      "value": 0.12
+                    },
+                    {
+                      "derivative": 0.129,
+                      "location": 0.71,
+                      "value": 0.16
+                    },
+                    {
+                      "derivative": 0.0,
+                      "location": 0.98,
+                      "value": 0.18
+                    }
+                  ]
+                }
+              },
+              "argument2": {
+                "type": "minecraft:mul",
+                "argument1": {
+                  "type": "minecraft:spline",
+                  "spline": {
+                    "coordinate": "raft:raftdim/vegetation",
+                    "points": [
+                      {
+                        "derivative": 0.0,
+                        "location": 0.36,
+                        "value": 0.0
+                      },
+                      {
+                        "derivative": 0.0,
+                        "location": 0.48,
+                        "value": 1.0
+                      }
+                    ]
+                  }
+                },
+                "argument2": {
+                  "type": "minecraft:add",
+                  "argument1": {
+                    "type": "minecraft:spline",
+                    "spline": {
+                      "coordinate": "raft:raftdim/continents",
+                      "points": [
+                        {
+                          "derivative": 0.0,
+                          "location": 0.45,
+                          "value": 0.08
+                        },
+                        {
+                          "derivative": 0.0,
+                          "location": 0.48,
+                          "value": 0.0
+                        },
+                        {
+                          "derivative": 0.0,
+                          "location": 0.51,
+                          "value": 0.0
+                        },
+                        {
+                          "derivative": 1.5094,
+                          "location": 0.56,
+                          "value": 0.08
+                        },
+                        {
+                          "derivative": 0.9836,
+                          "location": 0.63,
+                          "value": 0.18
+                        },
+                        {
+                          "derivative": 0.1348,
+                          "location": 0.71,
+                          "value": 0.24
+                        },
+                        {
+                          "derivative": 0.0,
+                          "location": 0.98,
+                          "value": 0.26
+                        }
+                      ]
+                    }
+                  },
+                  "argument2": {
+                    "type": "minecraft:mul",
+                    "argument1": {
+                      "type": "minecraft:spline",
+                      "spline": {
+                        "coordinate": "raft:raftdim/continents",
+                        "points": [
+                          {
+                            "derivative": 0.0,
+                            "location": 0.45,
+                            "value": 0.08
+                          },
+                          {
+                            "derivative": 0.0,
+                            "location": 0.48,
+                            "value": 0.0
+                          },
+                          {
+                            "derivative": 0.0,
+                            "location": 0.51,
+                            "value": 0.0
+                          },
+                          {
+                            "derivative": 1.0,
+                            "location": 0.56,
+                            "value": 0.05
+                          },
+                          {
+                            "derivative": 0.6667,
+                            "location": 0.63,
+                            "value": 0.12
+                          },
+                          {
+                            "derivative": 0.129,
+                            "location": 0.71,
+                            "value": 0.16
+                          },
+                          {
+                            "derivative": 0.0,
+                            "location": 0.98,
+                            "value": 0.18
+                          }
+                        ]
+                      }
+                    },
+                    "argument2": -1.0
+                  }
+                }
+              }
+            },
+            "argument2": {
+              "type": "minecraft:mul",
+              "argument1": {
+                "type": "minecraft:spline",
+                "spline": {
+                  "coordinate": "raft:raftdim/erosion",
+                  "points": [
+                    {
+                      "derivative": 0.0,
+                      "location": 0.27,
+                      "value": 0.0
+                    },
+                    {
+                      "derivative": 0.0,
+                      "location": 0.34,
+                      "value": 1.0
+                    }
+                  ]
+                }
+              },
+              "argument2": {
+                "type": "minecraft:add",
+                "argument1": {
+                  "type": "minecraft:spline",
+                  "spline": {
+                    "coordinate": "raft:raftdim/continents",
+                    "points": [
+                      {
+                        "derivative": 0.0,
+                        "location": 0.45,
+                        "value": 0.08
+                      },
+                      {
+                        "derivative": 0.0,
+                        "location": 0.48,
+                        "value": 0.0
+                      },
+                      {
+                        "derivative": 0.0,
+                        "location": 0.5,
+                        "value": 0.0
+                      },
+                      {
+                        "derivative": 0.0444,
+                        "location": 0.56,
+                        "value": 0.02
+                      },
+                      {
+                        "derivative": 0.0,
+                        "location": 0.98,
+                        "value": 0.03
+                      }
+                    ]
+                  }
+                },
+                "argument2": {
+                  "type": "minecraft:mul",
+                  "argument1": {
+                    "type": "minecraft:add",
+                    "argument1": {
+                      "type": "minecraft:spline",
+                      "spline": {
+                        "coordinate": "raft:raftdim/continents",
+                        "points": [
+                          {
+                            "derivative": 0.0,
+                            "location": 0.45,
+                            "value": 0.08
+                          },
+                          {
+                            "derivative": 0.0,
+                            "location": 0.48,
+                            "value": 0.0
+                          },
+                          {
+                            "derivative": 0.0,
+                            "location": 0.51,
+                            "value": 0.0
+                          },
+                          {
+                            "derivative": 1.0,
+                            "location": 0.56,
+                            "value": 0.05
+                          },
+                          {
+                            "derivative": 0.6667,
+                            "location": 0.63,
+                            "value": 0.12
+                          },
+                          {
+                            "derivative": 0.129,
+                            "location": 0.71,
+                            "value": 0.16
+                          },
+                          {
+                            "derivative": 0.0,
+                            "location": 0.98,
+                            "value": 0.18
+                          }
+                        ]
+                      }
+                    },
+                    "argument2": {
+                      "type": "minecraft:mul",
+                      "argument1": {
+                        "type": "minecraft:spline",
+                        "spline": {
+                          "coordinate": "raft:raftdim/vegetation",
+                          "points": [
+                            {
+                              "derivative": 0.0,
+                              "location": 0.36,
+                              "value": 0.0
+                            },
+                            {
+                              "derivative": 0.0,
+                              "location": 0.48,
+                              "value": 1.0
+                            }
+                          ]
+                        }
+                      },
+                      "argument2": {
+                        "type": "minecraft:add",
+                        "argument1": {
+                          "type": "minecraft:spline",
+                          "spline": {
+                            "coordinate": "raft:raftdim/continents",
+                            "points": [
+                              {
+                                "derivative": 0.0,
+                                "location": 0.45,
+                                "value": 0.08
+                              },
+                              {
+                                "derivative": 0.0,
+                                "location": 0.48,
+                                "value": 0.0
+                              },
+                              {
+                                "derivative": 0.0,
+                                "location": 0.51,
+                                "value": 0.0
+                              },
+                              {
+                                "derivative": 1.5094,
+                                "location": 0.56,
+                                "value": 0.08
+                              },
+                              {
+                                "derivative": 0.9836,
+                                "location": 0.63,
+                                "value": 0.18
+                              },
+                              {
+                                "derivative": 0.1348,
+                                "location": 0.71,
+                                "value": 0.24
+                              },
+                              {
+                                "derivative": 0.0,
+                                "location": 0.98,
+                                "value": 0.26
+                              }
+                            ]
+                          }
+                        },
+                        "argument2": {
+                          "type": "minecraft:mul",
+                          "argument1": {
+                            "type": "minecraft:spline",
+                            "spline": {
+                              "coordinate": "raft:raftdim/continents",
+                              "points": [
+                                {
+                                  "derivative": 0.0,
+                                  "location": 0.45,
+                                  "value": 0.08
+                                },
+                                {
+                                  "derivative": 0.0,
+                                  "location": 0.48,
+                                  "value": 0.0
+                                },
+                                {
+                                  "derivative": 0.0,
+                                  "location": 0.51,
+                                  "value": 0.0
+                                },
+                                {
+                                  "derivative": 1.0,
+                                  "location": 0.56,
+                                  "value": 0.05
+                                },
+                                {
+                                  "derivative": 0.6667,
+                                  "location": 0.63,
+                                  "value": 0.12
+                                },
+                                {
+                                  "derivative": 0.129,
+                                  "location": 0.71,
+                                  "value": 0.16
+                                },
+                                {
+                                  "derivative": 0.0,
+                                  "location": 0.98,
+                                  "value": 0.18
+                                }
+                              ]
+                            }
+                          },
+                          "argument2": -1.0
+                        }
+                      }
+                    }
+                  },
+                  "argument2": -1.0
+                }
+              }
+            }
+          },
+          "argument2": {
+            "type": "minecraft:mul",
+            "argument1": {
+              "type": "minecraft:spline",
+              "spline": {
+                "coordinate": "raft:raftdim/vegetation",
+                "points": [
+                  {
+                    "derivative": 0.0,
+                    "location": -0.46,
+                    "value": 1.0
+                  },
+                  {
+                    "derivative": 0.0,
+                    "location": -0.39,
+                    "value": 0.0
+                  }
+                ]
+              }
+            },
+            "argument2": {
+              "type": "minecraft:add",
+              "argument1": {
+                "type": "minecraft:spline",
+                "spline": {
+                  "coordinate": "raft:raftdim/continents",
+                  "points": [
+                    {
+                      "derivative": 0.0,
+                      "location": 0.45,
+                      "value": 0.08
+                    },
+                    {
+                      "derivative": 0.0,
+                      "location": 0.48,
+                      "value": 0.0
+                    },
+                    {
+                      "derivative": 0.0,
+                      "location": 0.51,
+                      "value": 0.0
+                    },
+                    {
+                      "derivative": 1.1707,
+                      "location": 0.58,
+                      "value": 0.08
+                    },
+                    {
+                      "derivative": 0.7059,
+                      "location": 0.68,
+                      "value": 0.2
+                    },
+                    {
+                      "derivative": 0.0,
+                      "location": 0.78,
+                      "value": 0.25
+                    },
+                    {
+                      "derivative": -1.4286,
+                      "location": 0.84,
+                      "value": 0.2
+                    },
+                    {
+                      "derivative": -2.5,
+                      "location": 0.87,
+                      "value": 0.05
+                    },
+                    {
+                      "derivative": 0.0,
+                      "location": 0.9,
+                      "value": 0.0
+                    }
+                  ]
+                }
+              },
+              "argument2": {
+                "type": "minecraft:mul",
+                "argument1": {
+                  "type": "minecraft:add",
+                  "argument1": {
+                    "type": "minecraft:add",
+                    "argument1": {
+                      "type": "minecraft:spline",
+                      "spline": {
+                        "coordinate": "raft:raftdim/continents",
+                        "points": [
+                          {
+                            "derivative": 0.0,
+                            "location": 0.45,
+                            "value": 0.08
+                          },
+                          {
+                            "derivative": 0.0,
+                            "location": 0.48,
+                            "value": 0.0
+                          },
+                          {
+                            "derivative": 0.0,
+                            "location": 0.51,
+                            "value": 0.0
+                          },
+                          {
+                            "derivative": 1.0,
+                            "location": 0.56,
+                            "value": 0.05
+                          },
+                          {
+                            "derivative": 0.6667,
+                            "location": 0.63,
+                            "value": 0.12
+                          },
+                          {
+                            "derivative": 0.129,
+                            "location": 0.71,
+                            "value": 0.16
+                          },
+                          {
+                            "derivative": 0.0,
+                            "location": 0.98,
+                            "value": 0.18
+                          }
+                        ]
+                      }
+                    },
+                    "argument2": {
+                      "type": "minecraft:mul",
+                      "argument1": {
+                        "type": "minecraft:spline",
+                        "spline": {
+                          "coordinate": "raft:raftdim/vegetation",
+                          "points": [
+                            {
+                              "derivative": 0.0,
+                              "location": 0.36,
+                              "value": 0.0
+                            },
+                            {
+                              "derivative": 0.0,
+                              "location": 0.48,
+                              "value": 1.0
+                            }
+                          ]
+                        }
+                      },
+                      "argument2": {
+                        "type": "minecraft:add",
+                        "argument1": {
+                          "type": "minecraft:spline",
+                          "spline": {
+                            "coordinate": "raft:raftdim/continents",
+                            "points": [
+                              {
+                                "derivative": 0.0,
+                                "location": 0.45,
+                                "value": 0.08
+                              },
+                              {
+                                "derivative": 0.0,
+                                "location": 0.48,
+                                "value": 0.0
+                              },
+                              {
+                                "derivative": 0.0,
+                                "location": 0.51,
+                                "value": 0.0
+                              },
+                              {
+                                "derivative": 1.5094,
+                                "location": 0.56,
+                                "value": 0.08
+                              },
+                              {
+                                "derivative": 0.9836,
+                                "location": 0.63,
+                                "value": 0.18
+                              },
+                              {
+                                "derivative": 0.1348,
+                                "location": 0.71,
+                                "value": 0.24
+                              },
+                              {
+                                "derivative": 0.0,
+                                "location": 0.98,
+                                "value": 0.26
+                              }
+                            ]
+                          }
+                        },
+                        "argument2": {
+                          "type": "minecraft:mul",
+                          "argument1": {
+                            "type": "minecraft:spline",
+                            "spline": {
+                              "coordinate": "raft:raftdim/continents",
+                              "points": [
+                                {
+                                  "derivative": 0.0,
+                                  "location": 0.45,
+                                  "value": 0.08
+                                },
+                                {
+                                  "derivative": 0.0,
+                                  "location": 0.48,
+                                  "value": 0.0
+                                },
+                                {
+                                  "derivative": 0.0,
+                                  "location": 0.51,
+                                  "value": 0.0
+                                },
+                                {
+                                  "derivative": 1.0,
+                                  "location": 0.56,
+                                  "value": 0.05
+                                },
+                                {
+                                  "derivative": 0.6667,
+                                  "location": 0.63,
+                                  "value": 0.12
+                                },
+                                {
+                                  "derivative": 0.129,
+                                  "location": 0.71,
+                                  "value": 0.16
+                                },
+                                {
+                                  "derivative": 0.0,
+                                  "location": 0.98,
+                                  "value": 0.18
+                                }
+                              ]
+                            }
+                          },
+                          "argument2": -1.0
+                        }
+                      }
+                    }
+                  },
+                  "argument2": {
+                    "type": "minecraft:mul",
+                    "argument1": {
+                      "type": "minecraft:spline",
+                      "spline": {
+                        "coordinate": "raft:raftdim/erosion",
+                        "points": [
+                          {
+                            "derivative": 0.0,
+                            "location": 0.27,
+                            "value": 0.0
+                          },
+                          {
+                            "derivative": 0.0,
+                            "location": 0.34,
+                            "value": 1.0
+                          }
+                        ]
+                      }
+                    },
+                    "argument2": {
+                      "type": "minecraft:add",
+                      "argument1": {
+                        "type": "minecraft:spline",
+                        "spline": {
+                          "coordinate": "raft:raftdim/continents",
+                          "points": [
+                            {
+                              "derivative": 0.0,
+                              "location": 0.45,
+                              "value": 0.08
+                            },
+                            {
+                              "derivative": 0.0,
+                              "location": 0.48,
+                              "value": 0.0
+                            },
+                            {
+                              "derivative": 0.0,
+                              "location": 0.5,
+                              "value": 0.0
+                            },
+                            {
+                              "derivative": 0.0444,
+                              "location": 0.56,
+                              "value": 0.02
+                            },
+                            {
+                              "derivative": 0.0,
+                              "location": 0.98,
+                              "value": 0.03
+                            }
+                          ]
+                        }
+                      },
+                      "argument2": {
+                        "type": "minecraft:mul",
+                        "argument1": {
+                          "type": "minecraft:add",
+                          "argument1": {
+                            "type": "minecraft:spline",
+                            "spline": {
+                              "coordinate": "raft:raftdim/continents",
+                              "points": [
+                                {
+                                  "derivative": 0.0,
+                                  "location": 0.45,
+                                  "value": 0.08
+                                },
+                                {
+                                  "derivative": 0.0,
+                                  "location": 0.48,
+                                  "value": 0.0
+                                },
+                                {
+                                  "derivative": 0.0,
+                                  "location": 0.51,
+                                  "value": 0.0
+                                },
+                                {
+                                  "derivative": 1.0,
+                                  "location": 0.56,
+                                  "value": 0.05
+                                },
+                                {
+                                  "derivative": 0.6667,
+                                  "location": 0.63,
+                                  "value": 0.12
+                                },
+                                {
+                                  "derivative": 0.129,
+                                  "location": 0.71,
+                                  "value": 0.16
+                                },
+                                {
+                                  "derivative": 0.0,
+                                  "location": 0.98,
+                                  "value": 0.18
+                                }
+                              ]
+                            }
+                          },
+                          "argument2": {
+                            "type": "minecraft:mul",
+                            "argument1": {
+                              "type": "minecraft:spline",
+                              "spline": {
+                                "coordinate": "raft:raftdim/vegetation",
+                                "points": [
+                                  {
+                                    "derivative": 0.0,
+                                    "location": 0.36,
+                                    "value": 0.0
+                                  },
+                                  {
+                                    "derivative": 0.0,
+                                    "location": 0.48,
+                                    "value": 1.0
+                                  }
+                                ]
+                              }
+                            },
+                            "argument2": {
+                              "type": "minecraft:add",
+                              "argument1": {
+                                "type": "minecraft:spline",
+                                "spline": {
+                                  "coordinate": "raft:raftdim/continents",
+                                  "points": [
+                                    {
+                                      "derivative": 0.0,
+                                      "location": 0.45,
+                                      "value": 0.08
+                                    },
+                                    {
+                                      "derivative": 0.0,
+                                      "location": 0.48,
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "derivative": 0.0,
+                                      "location": 0.51,
+                                      "value": 0.0
+                                    },
+                                    {
+                                      "derivative": 1.5094,
+                                      "location": 0.56,
+                                      "value": 0.08
+                                    },
+                                    {
+                                      "derivative": 0.9836,
+                                      "location": 0.63,
+                                      "value": 0.18
+                                    },
+                                    {
+                                      "derivative": 0.1348,
+                                      "location": 0.71,
+                                      "value": 0.24
+                                    },
+                                    {
+                                      "derivative": 0.0,
+                                      "location": 0.98,
+                                      "value": 0.26
+                                    }
+                                  ]
+                                }
+                              },
+                              "argument2": {
+                                "type": "minecraft:mul",
+                                "argument1": {
+                                  "type": "minecraft:spline",
+                                  "spline": {
+                                    "coordinate": "raft:raftdim/continents",
+                                    "points": [
+                                      {
+                                        "derivative": 0.0,
+                                        "location": 0.45,
+                                        "value": 0.08
+                                      },
+                                      {
+                                        "derivative": 0.0,
+                                        "location": 0.48,
+                                        "value": 0.0
+                                      },
+                                      {
+                                        "derivative": 0.0,
+                                        "location": 0.51,
+                                        "value": 0.0
+                                      },
+                                      {
+                                        "derivative": 1.0,
+                                        "location": 0.56,
+                                        "value": 0.05
+                                      },
+                                      {
+                                        "derivative": 0.6667,
+                                        "location": 0.63,
+                                        "value": 0.12
+                                      },
+                                      {
+                                        "derivative": 0.129,
+                                        "location": 0.71,
+                                        "value": 0.16
+                                      },
+                                      {
+                                        "derivative": 0.0,
+                                        "location": 0.98,
+                                        "value": 0.18
+                                      }
+                                    ]
+                                  }
+                                },
+                                "argument2": -1.0
+                              }
+                            }
+                          }
+                        },
+                        "argument2": -1.0
+                      }
+                    }
+                  }
+                },
+                "argument2": -1.0
+              }
+            }
+          }
+        },
+        "argument2": {
+          "type": "minecraft:mul",
+          "argument1": {
+            "type": "minecraft:spline",
+            "spline": {
+              "coordinate": "raft:raftdim/continents",
+              "points": [
+                {
+                  "derivative": 0.0,
+                  "location": -0.04,
+                  "value": {
+                    "coordinate": "raft:raftdim/erosion",
+                    "points": [
+                      {
+                        "derivative": 0.0,
+                        "location": 0.27,
+                        "value": {
+                          "coordinate": {
+                            "type": "minecraft:abs",
+                            "argument": "raft:raftdim/ridges"
+                          },
+                          "points": [
+                            {
+                              "derivative": 0.0,
+                              "location": 0.035,
+                              "value": 0.25
+                            },
+                            {
+                              "derivative": 0.0,
+                              "location": 0.062,
+                              "value": 0.55
+                            },
+                            {
+                              "derivative": -6.9822,
+                              "location": 0.085,
+                              "value": 0.3
+                            },
+                            {
+                              "derivative": 0.0,
+                              "location": 0.12,
+                              "value": 0.12
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "derivative": 0.0,
+                        "location": 0.32,
+                        "value": 0.03
+                      }
+                    ]
+                  }
+                },
+                {
+                  "derivative": 0.0,
+                  "location": 0.055,
+                  "value": {
+                    "coordinate": "raft:raftdim/erosion",
+                    "points": [
+                      {
+                        "derivative": 0.0,
+                        "location": 0.27,
+                        "value": 0.12
+                      },
+                      {
+                        "derivative": 0.0,
+                        "location": 0.32,
+                        "value": 0.03
+                      }
+                    ]
+                  }
+                },
+                {
+                  "derivative": 0.0,
+                  "location": 0.09,
+                  "value": 0.14
+                },
+                {
+                  "derivative": 0.2426,
+                  "location": 0.25,
+                  "value": 0.16
+                },
+                {
+                  "derivative": 0.0,
+                  "location": 0.272,
+                  "value": 0.25
+                },
+                {
+                  "derivative": -1.232,
+                  "location": 0.284,
+                  "value": 0.2
+                },
+                {
+                  "derivative": -1.1374,
+                  "location": 0.45,
+                  "value": 0.08
+                },
+                {
+                  "derivative": 0.0,
+                  "location": 0.48,
+                  "value": 0.0
+                }
+              ]
+            }
+          },
+          "argument2": -1.0
         }
       }
     }

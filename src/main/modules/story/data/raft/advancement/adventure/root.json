@@ -9,7 +9,7 @@
   },
   "display": {
     "announce_to_chat": false,
-    "background": "raft:gui/advancements/backgrounds/adventure",
+    "background": "raft:textures/gui/advancements/backgrounds/adventure.png",
     "description": {
       "translate": "advancements.raft.adventure.root.description"
     },

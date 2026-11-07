@@ -33,7 +33,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:circuit_board"
+        "recipe": "raft:circuit_board"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -2,7 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "B": "raft:mossy_coral_stone_bricks"
+    "B": {
+      "item": "raft:mossy_coral_stone_bricks"
+    }
   },
   "pattern": [
     "B  ",

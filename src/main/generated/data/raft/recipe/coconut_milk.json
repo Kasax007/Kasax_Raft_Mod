@@ -1,8 +1,12 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    "raft:coconut",
-    "minecraft:glass_bottle"
+    {
+      "item": "raft:coconut"
+    },
+    {
+      "item": "minecraft:glass_bottle"
+    }
   ],
   "result": {
     "id": "raft:coconut_milk"

@@ -2,9 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "I": "minecraft:iron_ingot",
-    "S": "raft:scrap_metal",
-    "W": "raft:driftwood_planks"
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "S": {
+      "item": "raft:scrap_metal"
+    },
+    "W": {
+      "item": "raft:driftwood_planks"
+    }
   },
   "pattern": [
     "III",

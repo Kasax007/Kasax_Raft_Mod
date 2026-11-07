@@ -29,7 +29,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:tidewarden_altar"
+        "recipe": "raft:tidewarden_altar"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

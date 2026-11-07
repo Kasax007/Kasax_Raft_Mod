@@ -2,10 +2,18 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "I": "minecraft:iron_ingot",
-    "P": "minecraft:piston",
-    "C": "minecraft:copper_ingot",
-    "W": "#minecraft:planks"
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    },
+    "C": {
+      "item": "minecraft:copper_ingot"
+    },
+    "W": {
+      "tag": "minecraft:planks"
+    }
   },
   "pattern": [
     "III",

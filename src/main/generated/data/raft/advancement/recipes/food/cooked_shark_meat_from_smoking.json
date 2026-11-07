@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:cooked_shark_meat_from_smoking"
+        "recipe": "raft:cooked_shark_meat_from_smoking"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

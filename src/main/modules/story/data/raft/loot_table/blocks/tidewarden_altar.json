@@ -2,9 +2,11 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "condition": {
-        "type": "minecraft:survives_explosion"
-      },
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
@@ -14,13 +16,15 @@
       "rolls": 1
     },
     {
-      "condition": {
-        "type": "minecraft:match_block",
-        "blocks": "raft:tidewarden_altar",
-        "state": {
-          "coral": "true"
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "raft:tidewarden_altar",
+          "properties": {
+            "coral": "true"
+          }
         }
-      },
+      ],
       "entries": [
         {
           "type": "minecraft:item",
@@ -30,13 +34,15 @@
       "rolls": 1
     },
     {
-      "condition": {
-        "type": "minecraft:match_block",
-        "blocks": "raft:tidewarden_altar",
-        "state": {
-          "pearl": "true"
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "raft:tidewarden_altar",
+          "properties": {
+            "pearl": "true"
+          }
         }
-      },
+      ],
       "entries": [
         {
           "type": "minecraft:item",
@@ -46,13 +52,15 @@
       "rolls": 1
     },
     {
-      "condition": {
-        "type": "minecraft:match_block",
-        "blocks": "raft:tidewarden_altar",
-        "state": {
-          "storm": "true"
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "raft:tidewarden_altar",
+          "properties": {
+            "storm": "true"
+          }
         }
-      },
+      ],
       "entries": [
         {
           "type": "minecraft:item",
@@ -62,13 +70,15 @@
       "rolls": 1
     },
     {
-      "condition": {
-        "type": "minecraft:match_block",
-        "blocks": "raft:tidewarden_altar",
-        "state": {
-          "ember": "true"
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "raft:tidewarden_altar",
+          "properties": {
+            "ember": "true"
+          }
         }
-      },
+      ],
       "entries": [
         {
           "type": "minecraft:item",

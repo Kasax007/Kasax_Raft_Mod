@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:shark_jaw_trophy"
+        "recipe": "raft:shark_jaw_trophy"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

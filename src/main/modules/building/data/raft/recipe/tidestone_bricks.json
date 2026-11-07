@@ -2,7 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "T": "raft:tidestone"
+    "T": {
+      "item": "raft:tidestone"
+    }
   },
   "pattern": [
     "TT",

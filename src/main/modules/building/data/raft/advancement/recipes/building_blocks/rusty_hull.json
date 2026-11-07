@@ -16,7 +16,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:rusty_hull"
+        "recipe": "raft:rusty_hull"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

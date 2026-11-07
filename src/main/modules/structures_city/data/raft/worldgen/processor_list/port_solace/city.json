@@ -12,7 +12,9 @@
             "predicate_type": "minecraft:block_match",
             "block": "minecraft:air"
           },
-          "output_state": "minecraft:air"
+          "output_state": {
+            "Name": "minecraft:air"
+          }
         }
       ]
     },
@@ -28,7 +30,9 @@
           "location_predicate": {
             "predicate_type": "minecraft:always_true"
           },
-          "output_state": "raft:cracked_concrete"
+          "output_state": {
+            "Name": "raft:cracked_concrete"
+          }
         },
         {
           "input_predicate": {
@@ -39,7 +43,9 @@
           "location_predicate": {
             "predicate_type": "minecraft:always_true"
           },
-          "output_state": "raft:mossy_concrete"
+          "output_state": {
+            "Name": "raft:mossy_concrete"
+          }
         },
         {
           "input_predicate": {
@@ -50,7 +56,9 @@
           "location_predicate": {
             "predicate_type": "minecraft:always_true"
           },
-          "output_state": "minecraft:gravel"
+          "output_state": {
+            "Name": "minecraft:gravel"
+          }
         }
       ]
     }

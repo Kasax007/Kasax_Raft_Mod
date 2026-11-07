@@ -623,7 +623,6 @@
         15.0,
         9.5
       ],
-      "light_emission": 15,
       "faces": {
         "down": {
           "uv": [

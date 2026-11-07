@@ -58,6 +58,7 @@ def main(previews=False):
                 want = 0 if o.startswith('down') else (size[1] - 1 if o.startswith('up') else 2)
                 if y - my != want:
                     problems.append(f'{name}: jigsaw {o} at y {y - my}, expected {want}')
+        citylib.no_rebar_into(s)
         s.save(MODULE, f'port_solace/{name}')
         print(f'{name:18s} {size[0]:3d} x {size[1]:3d} x {size[2]:3d}  blocks {len(s.blocks)}')
         if previews:

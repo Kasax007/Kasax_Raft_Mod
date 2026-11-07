@@ -1,0 +1,143 @@
+{
+  "type": "minecraft:simple_block",
+  "config": {
+    "to_place": {
+      "type": "minecraft:weighted_state_provider",
+      "entries": [
+        {
+          "data": {
+            "Name": "raft:starfish_orange",
+            "Properties": {
+              "face": "floor",
+              "facing": "north",
+              "waterlogged": "true"
+            }
+          },
+          "weight": 1
+        },
+        {
+          "data": {
+            "Name": "raft:starfish_orange",
+            "Properties": {
+              "face": "floor",
+              "facing": "east",
+              "waterlogged": "true"
+            }
+          },
+          "weight": 1
+        },
+        {
+          "data": {
+            "Name": "raft:starfish_orange",
+            "Properties": {
+              "face": "floor",
+              "facing": "south",
+              "waterlogged": "true"
+            }
+          },
+          "weight": 1
+        },
+        {
+          "data": {
+            "Name": "raft:starfish_orange",
+            "Properties": {
+              "face": "floor",
+              "facing": "west",
+              "waterlogged": "true"
+            }
+          },
+          "weight": 1
+        },
+        {
+          "data": {
+            "Name": "raft:starfish_purple",
+            "Properties": {
+              "face": "floor",
+              "facing": "north",
+              "waterlogged": "true"
+            }
+          },
+          "weight": 1
+        },
+        {
+          "data": {
+            "Name": "raft:starfish_purple",
+            "Properties": {
+              "face": "floor",
+              "facing": "east",
+              "waterlogged": "true"
+            }
+          },
+          "weight": 1
+        },
+        {
+          "data": {
+            "Name": "raft:starfish_purple",
+            "Properties": {
+              "face": "floor",
+              "facing": "south",
+              "waterlogged": "true"
+            }
+          },
+          "weight": 1
+        },
+        {
+          "data": {
+            "Name": "raft:starfish_purple",
+            "Properties": {
+              "face": "floor",
+              "facing": "west",
+              "waterlogged": "true"
+            }
+          },
+          "weight": 1
+        },
+        {
+          "data": {
+            "Name": "raft:starfish_red",
+            "Properties": {
+              "face": "floor",
+              "facing": "north",
+              "waterlogged": "true"
+            }
+          },
+          "weight": 1
+        },
+        {
+          "data": {
+            "Name": "raft:starfish_red",
+            "Properties": {
+              "face": "floor",
+              "facing": "east",
+              "waterlogged": "true"
+            }
+          },
+          "weight": 1
+        },
+        {
+          "data": {
+            "Name": "raft:starfish_red",
+            "Properties": {
+              "face": "floor",
+              "facing": "south",
+              "waterlogged": "true"
+            }
+          },
+          "weight": 1
+        },
+        {
+          "data": {
+            "Name": "raft:starfish_red",
+            "Properties": {
+              "face": "floor",
+              "facing": "west",
+              "waterlogged": "true"
+            }
+          },
+          "weight": 1
+        }
+      ]
+    },
+    "schedule_tick": false
+  }
+}

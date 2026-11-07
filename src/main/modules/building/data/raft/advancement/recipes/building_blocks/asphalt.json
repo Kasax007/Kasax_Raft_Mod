@@ -27,7 +27,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:asphalt"
+        "recipe": "raft:asphalt"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

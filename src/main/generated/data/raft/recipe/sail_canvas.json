@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "R": "raft:rope",
-    "W": "minecraft:white_wool"
+    "R": {
+      "item": "raft:rope"
+    },
+    "W": {
+      "item": "minecraft:white_wool"
+    }
   },
   "pattern": [
     "RR",

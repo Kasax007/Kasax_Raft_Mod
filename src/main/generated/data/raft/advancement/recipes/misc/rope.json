@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:rope"
+        "recipe": "raft:rope"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

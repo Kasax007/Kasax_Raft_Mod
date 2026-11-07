@@ -25,7 +25,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:cracked_concrete"
+        "recipe": "raft:cracked_concrete"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -2,11 +2,21 @@
   "type": "minecraft:crafting_shapeless",
   "category": "building",
   "ingredients": [
-    "minecraft:sand",
-    "minecraft:sand",
-    "minecraft:sand",
-    "minecraft:sand",
-    "raft:seashell"
+    {
+      "item": "minecraft:sand"
+    },
+    {
+      "item": "minecraft:sand"
+    },
+    {
+      "item": "minecraft:sand"
+    },
+    {
+      "item": "minecraft:sand"
+    },
+    {
+      "item": "raft:seashell"
+    }
   ],
   "result": {
     "count": 4,

@@ -2,9 +2,15 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "raft:paddle",
-    "raft:rope",
-    "minecraft:stick"
+    {
+      "item": "raft:paddle"
+    },
+    {
+      "item": "raft:rope"
+    },
+    {
+      "item": "minecraft:stick"
+    }
   ],
   "result": {
     "count": 1,

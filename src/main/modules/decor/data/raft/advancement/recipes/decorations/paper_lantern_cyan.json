@@ -18,7 +18,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:paper_lantern_cyan"
+        "recipe": "raft:paper_lantern_cyan"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

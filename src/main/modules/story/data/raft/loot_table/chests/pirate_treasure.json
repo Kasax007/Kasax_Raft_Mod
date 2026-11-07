@@ -5,16 +5,18 @@
       "entries": [
         {
           "type": "minecraft:tag",
-          "expand": false,
-          "items": "#raft:loot/gold_coin",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 8,
-              "max": 24
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 8,
+                "max": 24
+              }
             }
-          }
+          ],
+          "expand": false,
+          "name": "raft:loot/gold_coin"
         }
       ],
       "rolls": 1
@@ -23,40 +25,46 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 3,
-              "max": 8
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 3,
+                "max": 8
+              }
             }
-          },
+          ],
           "name": "minecraft:gold_ingot",
           "weight": 5
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 3,
-              "max": 8
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 3,
+                "max": 8
+              }
             }
-          },
+          ],
           "name": "minecraft:emerald",
           "weight": 4
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 3
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
             }
-          },
+          ],
           "name": "minecraft:diamond",
           "weight": 3
         },
@@ -67,17 +75,19 @@
         },
         {
           "type": "minecraft:tag",
-          "expand": false,
-          "items": "#raft:loot/gold_coin_pile",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 3
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
             }
-          },
-          "weight": 2
+          ],
+          "expand": false,
+          "weight": 2,
+          "name": "raft:loot/gold_coin_pile"
         },
         {
           "type": "minecraft:item",
@@ -101,8 +111,8 @@
         {
           "type": "minecraft:tag",
           "expand": false,
-          "items": "#raft:loot/cutlass",
-          "weight": 1
+          "weight": 1,
+          "name": "raft:loot/cutlass"
         },
         {
           "type": "minecraft:item",

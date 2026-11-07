@@ -1,8 +1,12 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "B": "raft:circuit_board",
-    "S": "raft:titanium_ingot"
+    "B": {
+      "item": "raft:circuit_board"
+    },
+    "S": {
+      "item": "raft:titanium_ingot"
+    }
   },
   "pattern": [
     "SBS",

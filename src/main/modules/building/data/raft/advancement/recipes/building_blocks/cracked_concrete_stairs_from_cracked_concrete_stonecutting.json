@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:cracked_concrete_stairs_from_cracked_concrete_stonecutting"
+        "recipe": "raft:cracked_concrete_stairs_from_cracked_concrete_stonecutting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

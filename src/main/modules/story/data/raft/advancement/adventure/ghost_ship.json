@@ -3,15 +3,17 @@
   "criteria": {
     "visit": {
       "conditions": {
-        "player": {
-          "type": "minecraft:entity_properties",
-          "entity": "this",
-          "predicate": {
-            "minecraft:location": {
-              "structures": "#raft:visit/wreck_galleon"
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "structures": "#raft:visit/wreck_galleon"
+              }
             }
           }
-        }
+        ]
       },
       "trigger": "minecraft:location"
     }

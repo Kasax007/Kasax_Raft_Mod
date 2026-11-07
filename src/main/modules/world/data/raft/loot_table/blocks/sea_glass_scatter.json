@@ -5,31 +5,35 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "modifier": [
+          "functions": [
             {
-              "type": "minecraft:set_count",
-              "condition": {
-                "type": "minecraft:match_block",
-                "blocks": "raft:sea_glass_scatter",
-                "state": {
-                  "pebbles": "2"
+              "function": "minecraft:set_count",
+              "conditions": [
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "raft:sea_glass_scatter",
+                  "properties": {
+                    "pebbles": "2"
+                  }
                 }
-              },
+              ],
               "count": 2
             },
             {
-              "type": "minecraft:set_count",
-              "condition": {
-                "type": "minecraft:match_block",
-                "blocks": "raft:sea_glass_scatter",
-                "state": {
-                  "pebbles": "3"
+              "function": "minecraft:set_count",
+              "conditions": [
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "raft:sea_glass_scatter",
+                  "properties": {
+                    "pebbles": "3"
+                  }
                 }
-              },
+              ],
               "count": 3
             },
             {
-              "type": "minecraft:explosion_decay"
+              "function": "minecraft:explosion_decay"
             }
           ],
           "name": "raft:sea_glass_shard"

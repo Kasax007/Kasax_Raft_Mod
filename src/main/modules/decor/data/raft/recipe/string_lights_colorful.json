@@ -2,11 +2,21 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "raft:string_lights_warm",
-    "raft:string_lights_warm",
-    "minecraft:red_dye",
-    "minecraft:lime_dye",
-    "minecraft:blue_dye"
+    {
+      "item": "raft:string_lights_warm"
+    },
+    {
+      "item": "raft:string_lights_warm"
+    },
+    {
+      "item": "minecraft:red_dye"
+    },
+    {
+      "item": "minecraft:lime_dye"
+    },
+    {
+      "item": "minecraft:blue_dye"
+    }
   ],
   "result": {
     "count": 2,

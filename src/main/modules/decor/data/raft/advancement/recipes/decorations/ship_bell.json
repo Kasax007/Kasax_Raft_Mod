@@ -17,7 +17,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:ship_bell"
+        "recipe": "raft:ship_bell"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

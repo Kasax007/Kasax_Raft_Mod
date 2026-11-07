@@ -9,7 +9,9 @@
     "PlayerEdgeMixin",
     "PlayerReachMixin",
     "ServerGamePacketListenerImplMixin",
-    "ServerLevelShipyardMixin"
+    "ServerLevelShipyardMixin",
+    "ShipyardChunkGenMixin",
+    "ShipyardDecorationMixin"
   ],
   "client": [
     "client.ClientLevelTickMixin",

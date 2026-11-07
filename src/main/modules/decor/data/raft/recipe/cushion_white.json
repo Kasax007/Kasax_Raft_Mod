@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "W": "minecraft:white_wool",
-    "F": "minecraft:feather"
+    "W": {
+      "item": "minecraft:white_wool"
+    },
+    "F": {
+      "item": "minecraft:feather"
+    }
   },
   "pattern": [
     "WFW"

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:ancient_energy_from_blasting_ancient_broken_ring"
+        "recipe": "raft:ancient_energy_from_blasting_ancient_broken_ring"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

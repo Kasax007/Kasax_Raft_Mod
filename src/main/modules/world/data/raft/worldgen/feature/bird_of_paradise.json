@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:simple_block",
-  "to_place": {
-    "id": "raft:bird_of_paradise",
-    "properties": {
-      "half": "lower"
-    }
-  }
-}

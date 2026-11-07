@@ -2,7 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "redstone",
   "ingredients": [
-    "raft:driftwood_planks"
+    {
+      "item": "raft:driftwood_planks"
+    }
   ],
   "result": {
     "id": "raft:driftwood_button"

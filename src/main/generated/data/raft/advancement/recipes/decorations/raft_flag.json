@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:raft_flag"
+        "recipe": "raft:raft_flag"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

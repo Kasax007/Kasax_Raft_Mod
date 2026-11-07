@@ -16,7 +16,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:chiseled_tidestone"
+        "recipe": "raft:chiseled_tidestone"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

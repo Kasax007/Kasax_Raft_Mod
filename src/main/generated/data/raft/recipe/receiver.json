@@ -2,9 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "C": "raft:circuit_board",
-    "M": "raft:scrap_metal",
-    "N": "raft:titanium_nugget"
+    "C": {
+      "item": "raft:circuit_board"
+    },
+    "M": {
+      "item": "raft:scrap_metal"
+    },
+    "N": {
+      "item": "raft:titanium_nugget"
+    }
   },
   "pattern": [
     " N ",

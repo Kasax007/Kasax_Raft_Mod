@@ -2,20 +2,24 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "condition": {
-        "type": "minecraft:survives_explosion"
-      },
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "raft:beach_umbrella_blue",
-          "condition": {
-            "type": "minecraft:match_block",
-            "blocks": "raft:beach_umbrella_blue",
-            "state": {
-              "half": "lower"
+          "conditions": [
+            {
+              "condition": "minecraft:block_state_property",
+              "block": "raft:beach_umbrella_blue",
+              "properties": {
+                "half": "lower"
+              }
             }
-          }
+          ],
+          "name": "raft:beach_umbrella_blue"
         }
       ],
       "rolls": 1

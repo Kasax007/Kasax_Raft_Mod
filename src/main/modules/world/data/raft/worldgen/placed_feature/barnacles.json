@@ -13,7 +13,7 @@
       "heightmap": "OCEAN_FLOOR_WG"
     },
     {
-      "type": "minecraft:offset",
+      "type": "raft:offset",
       "x": {
         "type": "minecraft:trapezoid",
         "max": 0,

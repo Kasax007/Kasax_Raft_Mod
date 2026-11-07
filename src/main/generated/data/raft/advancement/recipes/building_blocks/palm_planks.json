@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:palm_planks"
+        "recipe": "raft:palm_planks"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

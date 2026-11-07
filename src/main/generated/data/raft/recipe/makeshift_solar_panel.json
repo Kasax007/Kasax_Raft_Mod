@@ -1,9 +1,15 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "B": "minecraft:redstone",
-    "C": "minecraft:iron_ingot",
-    "S": "raft:circuit_board"
+    "B": {
+      "item": "minecraft:redstone"
+    },
+    "C": {
+      "item": "minecraft:iron_ingot"
+    },
+    "S": {
+      "item": "raft:circuit_board"
+    }
   },
   "pattern": [
     "SSS",

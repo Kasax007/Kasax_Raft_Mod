@@ -12,7 +12,9 @@
             "predicate_type": "minecraft:block_match",
             "block": "minecraft:air"
           },
-          "output_state": "minecraft:air"
+          "output_state": {
+            "Name": "minecraft:air"
+          }
         }
       ]
     }

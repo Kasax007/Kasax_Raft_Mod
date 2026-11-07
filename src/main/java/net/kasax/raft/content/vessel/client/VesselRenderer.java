@@ -1,5 +1,10 @@
 package net.kasax.raft.content.vessel.client;
 
+import net.kasax.raft.content.vessel.block.HelmBlock;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import org.joml.Quaternionf;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.fabricmc.api.EnvType;
@@ -57,6 +62,7 @@ public class VesselRenderer extends EntityRenderer<VesselEntity, VesselRenderSta
         }
         state.model = model;
         state.yaw = entity.getViewYRot(partialTicks);
+        state.wheel = entity.getWheel();
         state.target = VesselPicker.targetOf(entity);
     }
 
@@ -82,6 +88,14 @@ public class VesselRenderer extends EntityRenderer<VesselEntity, VesselRenderSta
                     poseStack.translate(-0.5F, 0.0F, -0.5F);
                 }
                 blocks.renderSingleBlock(blockState, poseStack, collector.buffers(), model.light[i], OverlayTexture.NO_OVERLAY);
+                if (i == model.helmIndex && model.wheel != null) {
+                    // the ship's wheel turns about the axis from stern to bow as the helmsman steers
+                    Direction bow = blockState.getValue(HelmBlock.FACING);
+                    poseStack.translate(0.5F, 0.75F, 0.5F);
+                    poseStack.mulPose(new Quaternionf().rotationAxis(state.wheel * Mth.HALF_PI, bow.getStepX(), 0.0F, bow.getStepZ()));
+                    poseStack.translate(-0.5F, -0.75F, -0.5F);
+                    blocks.renderSingleBlock(model.wheel, poseStack, collector.buffers(), model.light[i], OverlayTexture.NO_OVERLAY);
+                }
                 poseStack.popPose();
             }
             BlockPos target = state.target;

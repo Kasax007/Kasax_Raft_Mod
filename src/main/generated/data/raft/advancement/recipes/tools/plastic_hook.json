@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:plastic_hook"
+        "recipe": "raft:plastic_hook"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

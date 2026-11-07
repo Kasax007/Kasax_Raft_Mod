@@ -1,0 +1,79 @@
+{
+  "type": "raft:rubble",
+  "config": {
+    "optional_blocks": [
+      "raft:weathered_planks",
+      "raft:teak_planks",
+      "raft:rusty_hull",
+      "raft:riveted_hull"
+    ],
+    "optional_chance": 0.35,
+    "pieces": {
+      "type": "minecraft:uniform",
+      "max_inclusive": 7,
+      "min_inclusive": 2
+    },
+    "spread": 3,
+    "stack_chance": 0.25,
+    "state_provider": {
+      "type": "minecraft:weighted_state_provider",
+      "entries": [
+        {
+          "data": {
+            "Name": "raft:driftwood_log",
+            "Properties": {
+              "axis": "x"
+            }
+          },
+          "weight": 3
+        },
+        {
+          "data": {
+            "Name": "raft:driftwood_planks"
+          },
+          "weight": 3
+        },
+        {
+          "data": {
+            "Name": "minecraft:spruce_planks"
+          },
+          "weight": 2
+        },
+        {
+          "data": {
+            "Name": "minecraft:dark_oak_planks"
+          },
+          "weight": 1
+        },
+        {
+          "data": {
+            "Name": "minecraft:stripped_spruce_log",
+            "Properties": {
+              "axis": "x"
+            }
+          },
+          "weight": 2
+        },
+        {
+          "data": {
+            "Name": "minecraft:barrel",
+            "Properties": {
+              "facing": "up"
+            }
+          },
+          "weight": 1
+        },
+        {
+          "data": {
+            "Name": "minecraft:iron_chain",
+            "Properties": {
+              "axis": "x",
+              "waterlogged": "true"
+            }
+          },
+          "weight": 1
+        }
+      ]
+    }
+  }
+}

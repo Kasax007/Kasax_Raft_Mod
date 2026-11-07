@@ -3,7 +3,9 @@
   "cookingtime": 200,
   "experience": 0.7,
   "group": "misc",
-  "ingredient": "raft:unrefined_ocean_garbage",
+  "ingredient": {
+    "item": "raft:unrefined_ocean_garbage"
+  },
   "result": {
     "id": "raft:trash_cube"
   }

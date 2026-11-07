@@ -16,7 +16,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:rope_railing"
+        "recipe": "raft:rope_railing"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

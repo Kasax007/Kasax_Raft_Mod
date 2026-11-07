@@ -3,15 +3,17 @@
   "criteria": {
     "visit": {
       "conditions": {
-        "player": {
-          "type": "minecraft:entity_properties",
-          "entity": "this",
-          "predicate": {
-            "minecraft:location": {
-              "structures": "#raft:visit/rusted_rig"
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "structures": "#raft:visit/rusted_rig"
+              }
             }
           }
-        }
+        ]
       },
       "trigger": "minecraft:location"
     }

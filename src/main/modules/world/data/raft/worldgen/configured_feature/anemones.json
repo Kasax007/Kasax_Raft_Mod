@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:simple_block",
+  "config": {
+    "to_place": {
+      "type": "minecraft:weighted_state_provider",
+      "entries": [
+        {
+          "data": {
+            "Name": "raft:sea_anemone_red",
+            "Properties": {
+              "waterlogged": "true"
+            }
+          },
+          "weight": 1
+        },
+        {
+          "data": {
+            "Name": "raft:sea_anemone_purple",
+            "Properties": {
+              "waterlogged": "true"
+            }
+          },
+          "weight": 1
+        }
+      ]
+    },
+    "schedule_tick": false
+  }
+}

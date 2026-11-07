@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "P": "raft:teak_planks",
-    "#": "minecraft:stick"
+    "P": {
+      "item": "raft:teak_planks"
+    },
+    "#": {
+      "item": "minecraft:stick"
+    }
   },
   "pattern": [
     "P#P",

@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:tidestone_brick_wall_from_tidestone_stonecutting"
+        "recipe": "raft:tidestone_brick_wall_from_tidestone_stonecutting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

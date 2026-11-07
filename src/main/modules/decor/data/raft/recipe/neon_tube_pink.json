@@ -2,9 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "P": "minecraft:glass_pane",
-    "L": "minecraft:glowstone_dust",
-    "D": "minecraft:pink_dye"
+    "P": {
+      "item": "minecraft:glass_pane"
+    },
+    "L": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "D": {
+      "item": "minecraft:pink_dye"
+    }
   },
   "pattern": [
     " P ",

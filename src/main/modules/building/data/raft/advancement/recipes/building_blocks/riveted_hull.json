@@ -16,7 +16,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:riveted_hull"
+        "recipe": "raft:riveted_hull"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

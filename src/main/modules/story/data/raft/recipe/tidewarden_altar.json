@@ -13,10 +13,18 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "G": "raft:glowing_tidestone",
-    "A": "raft:ancient_crystal",
-    "B": "raft:tidestone_bricks",
-    "C": "raft:chiseled_tidestone"
+    "G": {
+      "item": "raft:glowing_tidestone"
+    },
+    "A": {
+      "item": "raft:ancient_crystal"
+    },
+    "B": {
+      "item": "raft:tidestone_bricks"
+    },
+    "C": {
+      "item": "raft:chiseled_tidestone"
+    }
   },
   "pattern": [
     "GAG",

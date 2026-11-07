@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:gold_coin_from_pile"
+        "recipe": "raft:gold_coin_from_pile"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

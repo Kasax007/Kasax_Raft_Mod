@@ -17,7 +17,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:ship_anchor"
+        "recipe": "raft:ship_anchor"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

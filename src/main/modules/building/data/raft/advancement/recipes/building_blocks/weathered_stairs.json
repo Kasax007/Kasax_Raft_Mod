@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:weathered_stairs"
+        "recipe": "raft:weathered_stairs"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

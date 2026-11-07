@@ -17,7 +17,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:figurehead"
+        "recipe": "raft:figurehead"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

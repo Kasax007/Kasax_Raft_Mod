@@ -1,5 +1,7 @@
 package net.kasax.raft.content.vessel.client;
 
+import net.kasax.raft.content.vessel.block.HelmBlock;
+
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -32,9 +34,13 @@ final class VesselClientModel {
     /** Block light from the raft's own lanterns, lamps and torches (the world has no light where the raft is). */
     final int[] ownLight;
     final int[] light;
+    /** The helm, drawn as its base (states[helmIndex]) and its wheel (wheel) that turns with the steering, or -1. */
+    final int helmIndex;
+    final BlockState wheel;
     private long lightTick = Long.MIN_VALUE;
 
-    private VesselClientModel(VesselStructure structure, Object modelSet, List<int[]> positions, List<BlockState> states) {
+    private VesselClientModel(VesselStructure structure, Object modelSet, List<int[]> positions, List<BlockState> states,
+                              int helmIndex, BlockState wheel) {
         this.structure = structure;
         this.modelSet = modelSet;
         int n = positions.size();
@@ -49,6 +55,8 @@ final class VesselClientModel {
         this.states = states.toArray(new BlockState[0]);
         this.ownLight = ownLight(structure, this.x, this.y, this.z);
         this.light = new int[n];
+        this.helmIndex = helmIndex;
+        this.wheel = wheel;
     }
 
     static Object currentModelSet() {
@@ -62,6 +70,8 @@ final class VesselClientModel {
     static VesselClientModel build(VesselStructure structure) {
         List<int[]> positions = new ArrayList<>();
         List<BlockState> states = new ArrayList<>();
+        int helmIndex = -1;
+        BlockState wheel = null;
         for (Long2ObjectMap.Entry<BlockState> e : structure.blocks().long2ObjectEntrySet()) {
             long key = e.getLongKey();
             int bx = BlockPos.getX(key);
@@ -73,10 +83,19 @@ final class VesselClientModel {
             if (e.getValue().getRenderShape() == net.minecraft.world.level.block.RenderShape.INVISIBLE) {
                 continue;
             }
+            BlockState shown = e.getValue();
+            boolean helm = key == BlockPos.asLong(structure.helm().getX(), structure.helm().getY(), structure.helm().getZ())
+                    && shown.getBlock() instanceof HelmBlock;
+            if (helm) {
+                // the helm without its wheel; the wheel is drawn by itself and turns with the steering
+                wheel = shown.setValue(HelmBlock.PART, HelmBlock.Part.WHEEL);
+                shown = shown.setValue(HelmBlock.PART, HelmBlock.Part.BASE);
+                helmIndex = positions.size();
+            }
             positions.add(new int[]{bx, by, bz});
-            states.add(e.getValue());
+            states.add(shown);
         }
-        return new VesselClientModel(structure, currentModelSet(), positions, states);
+        return new VesselClientModel(structure, currentModelSet(), positions, states, helmIndex, wheel);
     }
 
     /** Light of the raft's own light sources at each drawn block: falls off by one per block (Manhattan distance). */

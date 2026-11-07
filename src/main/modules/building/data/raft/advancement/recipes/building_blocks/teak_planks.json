@@ -16,7 +16,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:teak_planks"
+        "recipe": "raft:teak_planks"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

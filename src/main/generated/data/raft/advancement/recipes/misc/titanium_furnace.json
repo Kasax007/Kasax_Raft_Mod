@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:titanium_furnace"
+        "recipe": "raft:titanium_furnace"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

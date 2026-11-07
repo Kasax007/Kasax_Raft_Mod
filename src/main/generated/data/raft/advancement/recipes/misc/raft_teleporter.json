@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:raft_teleporter"
+        "recipe": "raft:raft_teleporter"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

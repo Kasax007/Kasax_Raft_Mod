@@ -9,7 +9,7 @@
   },
   "display": {
     "announce_to_chat": false,
-    "background": "raft:gui/advancements/backgrounds/story",
+    "background": "raft:textures/gui/advancements/backgrounds/story.png",
     "description": {
       "translate": "advancements.raft.story.root.description"
     },

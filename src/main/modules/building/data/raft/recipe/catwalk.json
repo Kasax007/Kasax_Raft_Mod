@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "S": "raft:scrap_metal",
-    "B": "minecraft:iron_bars"
+    "S": {
+      "item": "raft:scrap_metal"
+    },
+    "B": {
+      "item": "minecraft:iron_bars"
+    }
   },
   "pattern": [
     "SBS"

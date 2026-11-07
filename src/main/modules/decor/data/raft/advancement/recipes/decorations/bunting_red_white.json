@@ -17,7 +17,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:bunting_red_white"
+        "recipe": "raft:bunting_red_white"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

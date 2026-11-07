@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "W": "minecraft:yellow_wool",
-    "S": "minecraft:stick"
+    "W": {
+      "item": "minecraft:yellow_wool"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
   },
   "pattern": [
     "WWW",

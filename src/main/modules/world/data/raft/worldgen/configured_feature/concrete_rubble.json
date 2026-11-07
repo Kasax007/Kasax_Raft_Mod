@@ -1,0 +1,57 @@
+{
+  "type": "raft:rubble",
+  "config": {
+    "optional_blocks": [
+      "raft:cracked_concrete",
+      "raft:mossy_concrete",
+      "raft:rebar_concrete",
+      "raft:rusted_plate"
+    ],
+    "optional_chance": 0.85,
+    "pieces": {
+      "type": "minecraft:uniform",
+      "max_inclusive": 9,
+      "min_inclusive": 3
+    },
+    "spread": 3,
+    "stack_chance": 0.35,
+    "state_provider": {
+      "type": "minecraft:weighted_state_provider",
+      "entries": [
+        {
+          "data": {
+            "Name": "minecraft:cobblestone"
+          },
+          "weight": 3
+        },
+        {
+          "data": {
+            "Name": "minecraft:mossy_cobblestone"
+          },
+          "weight": 2
+        },
+        {
+          "data": {
+            "Name": "minecraft:andesite"
+          },
+          "weight": 2
+        },
+        {
+          "data": {
+            "Name": "minecraft:cracked_stone_bricks"
+          },
+          "weight": 2
+        },
+        {
+          "data": {
+            "Name": "minecraft:iron_bars",
+            "Properties": {
+              "waterlogged": "true"
+            }
+          },
+          "weight": 1
+        }
+      ]
+    }
+  }
+}

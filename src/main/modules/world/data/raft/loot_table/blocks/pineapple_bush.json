@@ -1,13 +1,17 @@
 {
   "type": "minecraft:block",
-  "modifier": {
-    "type": "minecraft:explosion_decay"
-  },
+  "functions": [
+    {
+      "function": "minecraft:explosion_decay"
+    }
+  ],
   "pools": [
     {
-      "condition": {
-        "type": "minecraft:survives_explosion"
-      },
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
@@ -17,22 +21,18 @@
       "rolls": 1
     },
     {
-      "condition": {
-        "type": "minecraft:match_block",
-        "blocks": "raft:pineapple_bush",
-        "state": {
-          "age": "3"
-        }
-      },
-      "entries": [
+      "conditions": [
         {
-          "type": "minecraft:item",
-          "name": "raft:pineapple"
+          "condition": "minecraft:block_state_property",
+          "block": "raft:pineapple_bush",
+          "properties": {
+            "age": "3"
+          }
         }
       ],
-      "modifier": [
+      "functions": [
         {
-          "type": "minecraft:set_count",
+          "function": "minecraft:set_count",
           "count": {
             "type": "minecraft:uniform",
             "max": 2,
@@ -40,12 +40,18 @@
           }
         },
         {
-          "type": "minecraft:apply_bonus",
+          "function": "minecraft:apply_bonus",
           "enchantment": "minecraft:fortune",
           "formula": "minecraft:uniform_bonus_count",
           "parameters": {
             "bonusMultiplier": 1
           }
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "raft:pineapple"
         }
       ],
       "rolls": 1

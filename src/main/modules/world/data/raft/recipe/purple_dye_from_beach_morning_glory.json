@@ -2,7 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "raft:beach_morning_glory"
+    {
+      "item": "raft:beach_morning_glory"
+    }
   ],
   "result": {
     "count": 1,

@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "I": "minecraft:iron_ingot",
-    "G": "minecraft:glass"
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "G": {
+      "item": "minecraft:glass"
+    }
   },
   "pattern": [
     " I ",

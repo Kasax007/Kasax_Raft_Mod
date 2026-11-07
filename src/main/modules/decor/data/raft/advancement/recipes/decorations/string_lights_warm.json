@@ -17,7 +17,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:string_lights_warm"
+        "recipe": "raft:string_lights_warm"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

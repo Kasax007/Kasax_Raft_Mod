@@ -18,7 +18,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:ship_lantern"
+        "recipe": "raft:ship_lantern"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

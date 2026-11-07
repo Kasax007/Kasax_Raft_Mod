@@ -17,7 +17,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:server_rack"
+        "recipe": "raft:server_rack"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -16,7 +16,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:cushion_green"
+        "recipe": "raft:cushion_green"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

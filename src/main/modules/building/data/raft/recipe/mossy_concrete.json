@@ -2,11 +2,19 @@
   "type": "minecraft:crafting_shapeless",
   "category": "building",
   "ingredients": [
-    "raft:cracked_concrete",
+    {
+      "item": "raft:cracked_concrete"
+    },
     [
-      "minecraft:kelp",
-      "minecraft:vine",
-      "minecraft:moss_block"
+      {
+        "item": "minecraft:kelp"
+      },
+      {
+        "item": "minecraft:vine"
+      },
+      {
+        "item": "minecraft:moss_block"
+      }
     ]
   ],
   "result": {

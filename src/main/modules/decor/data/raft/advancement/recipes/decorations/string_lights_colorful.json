@@ -18,7 +18,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:string_lights_colorful"
+        "recipe": "raft:string_lights_colorful"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

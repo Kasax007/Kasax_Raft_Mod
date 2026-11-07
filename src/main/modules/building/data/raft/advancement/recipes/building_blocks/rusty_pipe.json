@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:rusty_pipe"
+        "recipe": "raft:rusty_pipe"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

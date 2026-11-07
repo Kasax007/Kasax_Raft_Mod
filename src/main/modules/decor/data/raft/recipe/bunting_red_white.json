@@ -2,9 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "S": "minecraft:string",
-    "R": "minecraft:red_wool",
-    "W": "minecraft:white_wool"
+    "S": {
+      "item": "minecraft:string"
+    },
+    "R": {
+      "item": "minecraft:red_wool"
+    },
+    "W": {
+      "item": "minecraft:white_wool"
+    }
   },
   "pattern": [
     "SSS",

@@ -2,9 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "L": "minecraft:glowstone_dust",
-    "P": "raft:plastic",
-    "D": "minecraft:red_dye"
+    "L": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "P": {
+      "item": "raft:plastic"
+    },
+    "D": {
+      "item": "minecraft:red_dye"
+    }
   },
   "pattern": [
     " L ",

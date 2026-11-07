@@ -2,7 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "raft:bird_of_paradise"
+    {
+      "item": "raft:bird_of_paradise"
+    }
   ],
   "result": {
     "count": 2,

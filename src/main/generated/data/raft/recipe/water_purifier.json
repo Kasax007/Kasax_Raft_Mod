@@ -1,9 +1,15 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "G": "minecraft:glass_bottle",
-    "M": "raft:scrap_metal",
-    "P": "raft:plastic"
+    "G": {
+      "item": "minecraft:glass_bottle"
+    },
+    "M": {
+      "item": "raft:scrap_metal"
+    },
+    "P": {
+      "item": "raft:plastic"
+    }
   },
   "pattern": [
     "PPP",

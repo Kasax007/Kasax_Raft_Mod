@@ -2,9 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "L": "minecraft:lantern",
-    "R": "raft:rope",
-    "S": "minecraft:stick"
+    "L": {
+      "item": "minecraft:lantern"
+    },
+    "R": {
+      "item": "raft:rope"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
   },
   "pattern": [
     "LRL",

@@ -299,6 +299,11 @@ PRIORITY = OrderedDict([
     ('raft:priority/story', ['port_solace', 'abyssal_sanctum', 'coral_temple', 'helix_station', 'ashen_forge',
                              'old_lighthouse', 'saltmere_village']),
     ('raft:priority/people', ['rusted_rig', 'iceberg_outpost', 'beach_shack', 'castaway_camp', 'pirate_cove']),
+    # every Beach Craft structure: two of the same rank but from different sets do not overlap either (one stays)
+    ('raft:priority/own', ['port_solace', 'abyssal_sanctum', 'coral_temple', 'helix_station', 'ashen_forge',
+                           'old_lighthouse', 'saltmere_village', 'rusted_rig', 'iceberg_outpost', 'beach_shack',
+                           'castaway_camp', 'pirate_cove', 'sunken_ruins', 'wreck_cargo_ship', 'wreck_galleon',
+                           'sunken_plane', 'abandoned_raft', 'buoy_field', 'wreck_fishing_boat']),
 ])
 
 

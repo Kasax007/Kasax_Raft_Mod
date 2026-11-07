@@ -3,7 +3,9 @@
   "category": "building",
   "group": "bark",
   "key": {
-    "#": "raft:palm_log"
+    "#": {
+      "item": "raft:palm_log"
+    }
   },
   "pattern": [
     "##",

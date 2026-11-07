@@ -3,7 +3,9 @@
   "category": "blocks",
   "cookingtime": 200,
   "experience": 0.1,
-  "ingredient": "raft:tidestone_bricks",
+  "ingredient": {
+    "item": "raft:tidestone_bricks"
+  },
   "result": {
     "id": "raft:cracked_tidestone_bricks"
   }

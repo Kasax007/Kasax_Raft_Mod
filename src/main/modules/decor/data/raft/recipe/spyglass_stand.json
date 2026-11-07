@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "G": "minecraft:spyglass",
-    "S": "minecraft:stick"
+    "G": {
+      "item": "minecraft:spyglass"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
   },
   "pattern": [
     " G ",

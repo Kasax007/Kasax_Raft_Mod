@@ -2,9 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "G": "minecraft:gold_ingot",
-    "C": "minecraft:copper_ingot",
-    "P": "minecraft:glass_pane"
+    "G": {
+      "item": "minecraft:gold_ingot"
+    },
+    "C": {
+      "item": "minecraft:copper_ingot"
+    },
+    "P": {
+      "item": "minecraft:glass_pane"
+    }
   },
   "pattern": [
     "GCG",

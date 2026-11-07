@@ -2,9 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "T": "raft:titanium_ingot",
-    "C": "minecraft:copper_ingot",
-    "O": "raft:oxygen_tank"
+    "T": {
+      "item": "raft:titanium_ingot"
+    },
+    "C": {
+      "item": "minecraft:copper_ingot"
+    },
+    "O": {
+      "item": "raft:oxygen_tank"
+    }
   },
   "pattern": [
     "TCT",

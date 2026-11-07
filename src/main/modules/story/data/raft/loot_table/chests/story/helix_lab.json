@@ -5,15 +5,15 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "modifier": [
+          "functions": [
             {
-              "type": "minecraft:set_book_cover",
+              "function": "minecraft:set_book_cover",
               "author": "Dr. Imara Voss",
               "generation": 0,
               "title": "Voss's Journal"
             },
             {
-              "type": "minecraft:set_written_book_pages",
+              "function": "minecraft:set_written_book_pages",
               "mode": "replace_all",
               "pages": [
                 {
@@ -37,7 +37,7 @@
               ]
             },
             {
-              "type": "minecraft:set_custom_data",
+              "function": "minecraft:set_custom_data",
               "tag": "{raft_log:\"voss_journal\"}"
             }
           ],
@@ -51,7 +51,7 @@
         {
           "type": "minecraft:tag",
           "expand": false,
-          "items": "#raft:loot/oxygen_tank"
+          "name": "raft:loot/oxygen_tank"
         }
       ],
       "rolls": 1
@@ -60,16 +60,16 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "modifier": [
+          "functions": [
             {
-              "type": "minecraft:set_name",
+              "function": "minecraft:set_name",
               "name": {
                 "translate": "filled_map.raft.port_solace"
               },
               "target": "item_name"
             },
             {
-              "type": "minecraft:exploration_map",
+              "function": "minecraft:exploration_map",
               "decoration": "minecraft:target_x",
               "destination": "#raft:on_port_solace_maps",
               "search_radius": 120,
@@ -77,14 +77,14 @@
               "zoom": 2
             },
             {
-              "type": "minecraft:filtered",
+              "function": "minecraft:filtered",
+              "on_fail": {
+                "function": "minecraft:discard"
+              },
               "item_filter": {
                 "predicates": {
                   "minecraft:map_id": {}
                 }
-              },
-              "on_fail": {
-                "type": "minecraft:discard"
               }
             }
           ],
@@ -97,53 +97,61 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 2
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
             }
-          },
+          ],
           "name": "raft:circuit_board",
           "weight": 4
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 2,
-              "max": 6
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 6
+              }
             }
-          },
+          ],
           "name": "minecraft:paper",
           "weight": 4
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 3
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
             }
-          },
+          ],
           "name": "minecraft:glass_bottle",
           "weight": 3
         },
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:set_count",
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 3
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
             }
-          },
+          ],
           "name": "minecraft:glow_ink_sac",
           "weight": 3
         }

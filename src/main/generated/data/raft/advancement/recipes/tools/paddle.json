@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:paddle"
+        "recipe": "raft:paddle"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -1,7 +1,9 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    "raft:plastic_block"
+    {
+      "item": "raft:plastic_block"
+    }
   ],
   "result": {
     "count": 9,

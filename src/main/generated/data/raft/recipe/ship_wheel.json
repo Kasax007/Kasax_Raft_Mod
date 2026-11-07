@@ -1,9 +1,15 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "M": "raft:scrap_metal",
-    "P": "#minecraft:planks",
-    "S": "minecraft:stick"
+    "M": {
+      "item": "raft:scrap_metal"
+    },
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
   },
   "pattern": [
     "SPS",

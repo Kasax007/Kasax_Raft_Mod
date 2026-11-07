@@ -2,7 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "raft:gold_coin_pile"
+    {
+      "item": "raft:gold_coin_pile"
+    }
   ],
   "result": {
     "count": 9,

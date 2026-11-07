@@ -6,17 +6,20 @@
         "item": {
           "items": "minecraft:spyglass"
         },
-        "player": {
-          "type": "minecraft:entity_properties",
-          "entity": "this",
-          "predicate": {
-            "minecraft:type_specific/player": {
-              "looking_at": {
-                "minecraft:entity_type": "#raft:adv/whale"
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type_specific": {
+                "type": "minecraft:player",
+                "looking_at": {
+                  "type": "#raft:adv/whale"
+                }
               }
             }
           }
-        }
+        ]
       },
       "trigger": "minecraft:using_item"
     }

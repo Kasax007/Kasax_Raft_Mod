@@ -2,21 +2,23 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "condition": {
-        "type": "minecraft:all_of",
-        "terms": [
-          {
-            "type": "minecraft:survives_explosion"
-          },
-          {
-            "type": "minecraft:match_block",
-            "blocks": "raft:heliconia",
-            "state": {
-              "half": "lower"
+      "conditions": [
+        {
+          "condition": "minecraft:all_of",
+          "terms": [
+            {
+              "condition": "minecraft:survives_explosion"
+            },
+            {
+              "condition": "minecraft:block_state_property",
+              "block": "raft:heliconia",
+              "properties": {
+                "half": "lower"
+              }
             }
-          }
-        ]
-      },
+          ]
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",

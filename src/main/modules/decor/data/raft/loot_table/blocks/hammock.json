@@ -2,20 +2,24 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "condition": {
-        "type": "minecraft:survives_explosion"
-      },
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "raft:hammock",
-          "condition": {
-            "type": "minecraft:match_block",
-            "blocks": "raft:hammock",
-            "state": {
-              "part": "head"
+          "conditions": [
+            {
+              "condition": "minecraft:block_state_property",
+              "block": "raft:hammock",
+              "properties": {
+                "part": "head"
+              }
             }
-          }
+          ],
+          "name": "raft:hammock"
         }
       ],
       "rolls": 1

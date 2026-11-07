@@ -1,8 +1,10 @@
 {
   "type": "minecraft:block",
-  "modifier": {
-    "type": "minecraft:explosion_decay"
-  },
+  "functions": [
+    {
+      "function": "minecraft:explosion_decay"
+    }
+  ],
   "pools": [
     {
       "entries": [
@@ -11,13 +13,15 @@
           "children": [
             {
               "type": "minecraft:item",
-              "condition": {
-                "type": "minecraft:match_block",
-                "blocks": "raft:pineapple_crop",
-                "state": {
-                  "age": "7"
+              "conditions": [
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "raft:pineapple_crop",
+                  "properties": {
+                    "age": "7"
+                  }
                 }
-              },
+              ],
               "name": "raft:pineapple"
             },
             {
@@ -30,25 +34,29 @@
       "rolls": 1
     },
     {
-      "condition": {
-        "type": "minecraft:match_block",
-        "blocks": "raft:pineapple_crop",
-        "state": {
-          "age": "7"
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "raft:pineapple_crop",
+          "properties": {
+            "age": "7"
+          }
         }
-      },
+      ],
       "entries": [
         {
           "type": "minecraft:item",
-          "modifier": {
-            "type": "minecraft:apply_bonus",
-            "enchantment": "minecraft:fortune",
-            "formula": "minecraft:binomial_with_bonus_count",
-            "parameters": {
-              "extra": 0,
-              "probability": 0.35
+          "functions": [
+            {
+              "function": "minecraft:apply_bonus",
+              "enchantment": "minecraft:fortune",
+              "formula": "minecraft:binomial_with_bonus_count",
+              "parameters": {
+                "extra": 0,
+                "probability": 0.35
+              }
             }
-          },
+          ],
           "name": "raft:pineapple_crown"
         }
       ],

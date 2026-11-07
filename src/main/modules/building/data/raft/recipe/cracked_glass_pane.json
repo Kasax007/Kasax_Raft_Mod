@@ -2,7 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "G": "raft:cracked_glass"
+    "G": {
+      "item": "raft:cracked_glass"
+    }
   },
   "pattern": [
     "GGG",

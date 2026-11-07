@@ -189,9 +189,10 @@ def model_elements():
         'west': _face('pump', [5, 1, 11, 5]), 'east': _face('pump', [5, 1, 11, 5]),
         'up': _face('pump_top', [4, 5, 11, 11])}))
     # outlet valve (brass) on top
-    e.append(_el([11, 11, 6], [13, 14, 8], {
-        'north': _face('brass', [0, 0, 2, 3]), 'south': _face('brass', [2, 0, 4, 3]),
-        'west': _face('brass', [4, 0, 6, 3]), 'east': _face('brass', [6, 0, 8, 3]), 'up': _face('brass', [8, 0, 10, 2])}))
+    # (the stem ends under the hand wheel: no top face in the plane of the wheel's top)
+    e.append(_el([11, 11, 6], [13, 13, 8], {
+        'north': _face('brass', [0, 1, 2, 3]), 'south': _face('brass', [2, 1, 4, 3]),
+        'west': _face('brass', [4, 1, 6, 3]), 'east': _face('brass', [6, 1, 8, 3])}))
     e.append(_el([10, 13, 5], [14, 14, 9], {
         'north': _face('wheel', [6, 1, 10, 2]), 'south': _face('wheel', [6, 1, 10, 2]),
         'west': _face('wheel', [6, 1, 10, 2]), 'east': _face('wheel', [6, 1, 10, 2]),

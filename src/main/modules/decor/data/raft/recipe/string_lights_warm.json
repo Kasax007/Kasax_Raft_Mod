@@ -2,9 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "S": "minecraft:string",
-    "G": "minecraft:glowstone_dust",
-    "P": "raft:plastic"
+    "S": {
+      "item": "minecraft:string"
+    },
+    "G": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "P": {
+      "item": "raft:plastic"
+    }
   },
   "pattern": [
     "SSS",

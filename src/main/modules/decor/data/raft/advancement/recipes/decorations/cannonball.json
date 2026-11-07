@@ -16,7 +16,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:cannonball"
+        "recipe": "raft:cannonball"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

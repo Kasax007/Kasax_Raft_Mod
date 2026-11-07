@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "B": "minecraft:basalt",
-    "S": "minecraft:soul_sand"
+    "B": {
+      "item": "minecraft:basalt"
+    },
+    "S": {
+      "item": "minecraft:soul_sand"
+    }
   },
   "pattern": [
     " B ",

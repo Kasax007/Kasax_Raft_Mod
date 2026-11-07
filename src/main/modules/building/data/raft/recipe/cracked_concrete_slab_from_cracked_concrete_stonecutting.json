@@ -1,6 +1,8 @@
 {
   "type": "minecraft:stonecutting",
-  "ingredient": "raft:cracked_concrete",
+  "ingredient": {
+    "item": "raft:cracked_concrete"
+  },
   "result": {
     "count": 2,
     "id": "raft:cracked_concrete_slab"

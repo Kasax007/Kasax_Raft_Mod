@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:scrap_metal"
+        "recipe": "raft:scrap_metal"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

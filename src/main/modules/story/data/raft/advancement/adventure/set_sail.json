@@ -3,15 +3,17 @@
   "criteria": {
     "ride": {
       "conditions": {
-        "player": {
-          "type": "minecraft:entity_properties",
-          "entity": "this",
-          "predicate": {
-            "minecraft:vehicle": {
-              "minecraft:entity_type": "#raft:adv/expedition_raft"
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "vehicle": {
+                "type": "#raft:adv/expedition_raft"
+              }
             }
           }
-        }
+        ]
       },
       "trigger": "minecraft:started_riding"
     }

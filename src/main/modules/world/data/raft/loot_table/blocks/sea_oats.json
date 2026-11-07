@@ -2,19 +2,26 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "condition": {
-        "type": "minecraft:all_of",
-        "terms": [
-          {
-            "type": "minecraft:match_block",
-            "blocks": "raft:sea_oats",
-            "state": {
-              "half": "lower"
+      "conditions": [
+        {
+          "condition": "minecraft:all_of",
+          "terms": [
+            {
+              "condition": "minecraft:block_state_property",
+              "block": "raft:sea_oats",
+              "properties": {
+                "half": "lower"
+              }
+            },
+            {
+              "condition": "minecraft:match_tool",
+              "predicate": {
+                "items": "minecraft:shears"
+              }
             }
-          },
-          "minecraft:tool/can_shear"
-        ]
-      },
+          ]
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",

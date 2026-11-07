@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:teak_slab"
+        "recipe": "raft:teak_slab"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

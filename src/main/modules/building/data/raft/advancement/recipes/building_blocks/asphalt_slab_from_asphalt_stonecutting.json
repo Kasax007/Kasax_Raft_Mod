@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:asphalt_slab_from_asphalt_stonecutting"
+        "recipe": "raft:asphalt_slab_from_asphalt_stonecutting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

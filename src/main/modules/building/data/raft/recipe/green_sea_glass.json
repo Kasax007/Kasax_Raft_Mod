@@ -11,11 +11,21 @@
   "type": "minecraft:crafting_shapeless",
   "category": "building",
   "ingredients": [
-    "raft:sea_glass_shard",
-    "raft:sea_glass_shard",
-    "raft:sea_glass_shard",
-    "raft:sea_glass_shard",
-    "minecraft:green_dye"
+    {
+      "item": "raft:sea_glass_shard"
+    },
+    {
+      "item": "raft:sea_glass_shard"
+    },
+    {
+      "item": "raft:sea_glass_shard"
+    },
+    {
+      "item": "raft:sea_glass_shard"
+    },
+    {
+      "item": "minecraft:green_dye"
+    }
   ],
   "result": {
     "count": 1,

@@ -2,7 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "raft:spider_lily"
+    {
+      "item": "raft:spider_lily"
+    }
   ],
   "result": {
     "count": 1,

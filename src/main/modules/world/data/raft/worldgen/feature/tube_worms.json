@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:simple_block",
-  "to_place": {
-    "id": "raft:tube_worms",
-    "properties": {
-      "waterlogged": "true"
-    }
-  }
-}

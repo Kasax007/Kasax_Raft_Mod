@@ -2,9 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "P": "#minecraft:planks",
-    "R": "raft:rope",
-    "C": "minecraft:chest"
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "R": {
+      "item": "raft:rope"
+    },
+    "C": {
+      "item": "minecraft:chest"
+    }
   },
   "pattern": [
     "PRP",

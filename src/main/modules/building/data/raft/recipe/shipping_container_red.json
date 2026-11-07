@@ -2,9 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "S": "raft:scrap_metal",
-    "I": "minecraft:iron_ingot",
-    "D": "minecraft:red_dye"
+    "S": {
+      "item": "raft:scrap_metal"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "D": {
+      "item": "minecraft:red_dye"
+    }
   },
   "pattern": [
     "SIS",

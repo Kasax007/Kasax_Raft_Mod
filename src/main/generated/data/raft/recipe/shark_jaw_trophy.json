@@ -1,8 +1,12 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "P": "#minecraft:planks",
-    "T": "raft:shark_tooth"
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "T": {
+      "item": "raft:shark_tooth"
+    }
   },
   "pattern": [
     "PPP",

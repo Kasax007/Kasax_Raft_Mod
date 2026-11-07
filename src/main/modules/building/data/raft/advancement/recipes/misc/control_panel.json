@@ -18,7 +18,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:control_panel"
+        "recipe": "raft:control_panel"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

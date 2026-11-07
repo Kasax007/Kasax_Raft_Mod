@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:palm_thatch_stairs"
+        "recipe": "raft:palm_thatch_stairs"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

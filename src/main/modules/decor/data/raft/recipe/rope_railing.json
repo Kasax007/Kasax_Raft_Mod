@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "S": "minecraft:stick",
-    "R": "raft:rope"
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "R": {
+      "item": "raft:rope"
+    }
   },
   "pattern": [
     "SRS",

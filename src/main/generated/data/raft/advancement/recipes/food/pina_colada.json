@@ -33,7 +33,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:pina_colada"
+        "recipe": "raft:pina_colada"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -2,10 +2,18 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "R": "raft:rope",
-    "F": "#minecraft:small_flowers",
-    "D": "minecraft:dirt",
-    "B": "minecraft:bamboo"
+    "R": {
+      "item": "raft:rope"
+    },
+    "F": {
+      "tag": "minecraft:small_flowers"
+    },
+    "D": {
+      "item": "minecraft:dirt"
+    },
+    "B": {
+      "item": "minecraft:bamboo"
+    }
   },
   "pattern": [
     " R ",

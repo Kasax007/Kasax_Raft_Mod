@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shapeless",
   "category": "building",
   "ingredients": [
-    "raft:sail_canvas",
-    "minecraft:red_dye"
+    {
+      "item": "raft:sail_canvas"
+    },
+    {
+      "item": "minecraft:red_dye"
+    }
   ],
   "result": {
     "id": "raft:sail_canvas_red_striped"

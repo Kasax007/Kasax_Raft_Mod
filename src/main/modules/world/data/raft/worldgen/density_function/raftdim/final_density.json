@@ -1,15 +1,13 @@
 {
   "type": "minecraft:add",
-  "left": {
+  "argument1": {
     "type": "minecraft:squeeze",
-    "input": {
+    "argument": {
       "type": "minecraft:interpolated",
-      "cell_size_xz": 4,
-      "cell_size_y": 8,
-      "input": "raft:raftdim/base_density"
+      "argument": "raft:raftdim/base_density"
     }
   },
-  "right": {
+  "argument2": {
     "type": "minecraft:beardifier"
   }
 }

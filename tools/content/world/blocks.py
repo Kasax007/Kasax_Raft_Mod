@@ -3,7 +3,7 @@ blockstates, item definitions, loot tables, recipes, tags and lang. The Java sid
 """
 from collections import OrderedDict
 
-from bclib import assets, tex
+from bclib import assets, extrude, tex
 from content.world import art as A
 
 M = 'world'
@@ -388,16 +388,13 @@ def sea_life():
     save(A.sea_glass_atlas(), 'block/sea_glass_scatter')
     shells = [((0, 0, 4, 4), (6, 0, 8), 4, 4), ((4, 0, 8, 4), (10, 0, 3), 4, 4), ((8, 0, 12, 5), (3, 0, 3), 4, 5),
               ((12, 0, 15, 4), (11, 0, 11), 3, 4)]
+    # each shell is its top-view sprite extruded row by row, so the sides follow the shell's outline; the sides show
+    # the shell's side colour (texture row 6)
     for n in range(1, 5):
         els = []
         for (uv, (x, _, z), w, d) in shells[:n]:
             h = 1.5 if w == 4 else 1
-            side_uv = (uv[0], 6, uv[2], 7)
-            els.append(el((x, 0, z), (x + w, h, z + d), OrderedDict([
-                ('up', face('#shell', uv)), ('down', face('#shell', uv, cullface='down')),
-                ('north', face('#shell', side_uv)), ('south', face('#shell', side_uv)),
-                ('west', face('#shell', (uv[0], 6, uv[0] + d if uv[0] + d <= 16 else 16, 7))),
-                ('east', face('#shell', (uv[0], 6, uv[0] + d if uv[0] + d <= 16 else 16, 7)))])))
+            els += extrude.flat('raft:block/seashells', '#shell', uv, at=(x, 0, z), height=h, side_row=6)
         model(f'seashells_{n}', OrderedDict(parent='minecraft:block/block', ambientocclusion=False,
                                             textures={'shell': R('block/seashells'), 'particle': R('block/seashells')},
                                             elements=els))

@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:weathered_slab"
+        "recipe": "raft:weathered_slab"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:asphalt_stairs"
+        "recipe": "raft:asphalt_stairs"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

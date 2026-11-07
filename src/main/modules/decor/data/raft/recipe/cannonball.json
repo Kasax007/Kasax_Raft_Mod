@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "minecraft:iron_ingot",
-    "minecraft:gunpowder"
+    {
+      "item": "minecraft:iron_ingot"
+    },
+    {
+      "item": "minecraft:gunpowder"
+    }
   ],
   "result": {
     "count": 4,

@@ -2,11 +2,19 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "G": "minecraft:gravel",
-    "S": "#minecraft:sand",
+    "G": {
+      "item": "minecraft:gravel"
+    },
+    "S": {
+      "tag": "minecraft:sand"
+    },
     "C": [
-      "minecraft:coal",
-      "minecraft:charcoal"
+      {
+        "item": "minecraft:coal"
+      },
+      {
+        "item": "minecraft:charcoal"
+      }
     ]
   },
   "pattern": [

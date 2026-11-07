@@ -11,9 +11,15 @@
   "type": "minecraft:crafting_shapeless",
   "category": "equipment",
   "ingredients": [
-    "raft:urchin_spine",
-    "minecraft:stick",
-    "minecraft:string"
+    {
+      "item": "raft:urchin_spine"
+    },
+    {
+      "item": "minecraft:stick"
+    },
+    {
+      "item": "minecraft:string"
+    }
   ],
   "result": {
     "count": 2,

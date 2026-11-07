@@ -16,7 +16,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:wanted_poster"
+        "recipe": "raft:wanted_poster"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

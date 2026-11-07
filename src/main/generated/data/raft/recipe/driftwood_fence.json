@@ -1,8 +1,12 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "#": "minecraft:stick",
-    "W": "raft:driftwood_planks"
+    "#": {
+      "item": "minecraft:stick"
+    },
+    "W": {
+      "item": "raft:driftwood_planks"
+    }
   },
   "pattern": [
     "W#W",

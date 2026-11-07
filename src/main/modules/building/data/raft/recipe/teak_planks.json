@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shapeless",
   "category": "building",
   "ingredients": [
-    "minecraft:dark_oak_planks",
-    "raft:palm_planks"
+    {
+      "item": "minecraft:dark_oak_planks"
+    },
+    {
+      "item": "raft:palm_planks"
+    }
   ],
   "result": {
     "count": 2,

@@ -17,7 +17,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:rum_bottles"
+        "recipe": "raft:rum_bottles"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

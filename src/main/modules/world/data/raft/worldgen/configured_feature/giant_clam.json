@@ -1,0 +1,107 @@
+{
+  "type": "minecraft:simple_block",
+  "config": {
+    "to_place": {
+      "type": "minecraft:weighted_state_provider",
+      "entries": [
+        {
+          "data": {
+            "Name": "raft:giant_clam",
+            "Properties": {
+              "facing": "north",
+              "open": "false",
+              "pearl": "true",
+              "waterlogged": "true"
+            }
+          },
+          "weight": 1
+        },
+        {
+          "data": {
+            "Name": "raft:giant_clam",
+            "Properties": {
+              "facing": "north",
+              "open": "false",
+              "pearl": "false",
+              "waterlogged": "true"
+            }
+          },
+          "weight": 2
+        },
+        {
+          "data": {
+            "Name": "raft:giant_clam",
+            "Properties": {
+              "facing": "east",
+              "open": "false",
+              "pearl": "true",
+              "waterlogged": "true"
+            }
+          },
+          "weight": 1
+        },
+        {
+          "data": {
+            "Name": "raft:giant_clam",
+            "Properties": {
+              "facing": "east",
+              "open": "false",
+              "pearl": "false",
+              "waterlogged": "true"
+            }
+          },
+          "weight": 2
+        },
+        {
+          "data": {
+            "Name": "raft:giant_clam",
+            "Properties": {
+              "facing": "south",
+              "open": "false",
+              "pearl": "true",
+              "waterlogged": "true"
+            }
+          },
+          "weight": 1
+        },
+        {
+          "data": {
+            "Name": "raft:giant_clam",
+            "Properties": {
+              "facing": "south",
+              "open": "false",
+              "pearl": "false",
+              "waterlogged": "true"
+            }
+          },
+          "weight": 2
+        },
+        {
+          "data": {
+            "Name": "raft:giant_clam",
+            "Properties": {
+              "facing": "west",
+              "open": "false",
+              "pearl": "true",
+              "waterlogged": "true"
+            }
+          },
+          "weight": 1
+        },
+        {
+          "data": {
+            "Name": "raft:giant_clam",
+            "Properties": {
+              "facing": "west",
+              "open": "false",
+              "pearl": "false",
+              "waterlogged": "true"
+            }
+          },
+          "weight": 2
+        }
+      ]
+    },
+    "schedule_tick": false
+  }
+}

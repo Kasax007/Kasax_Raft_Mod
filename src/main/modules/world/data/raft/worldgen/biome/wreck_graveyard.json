@@ -1,57 +1,48 @@
 {
-  "attributes": {
-    "minecraft:audio/background_music": {
-      "default": {
-        "max_delay": 24000,
-        "min_delay": 12000,
-        "sound": "minecraft:music.overworld.old_growth_taiga"
-      },
-      "underwater": {
-        "max_delay": 24000,
-        "min_delay": 12000,
-        "sound": "minecraft:music.under_water"
-      }
-    },
-    "minecraft:gameplay/natural_mob_spawns": {
-      "argument": {
-        "spawn_costs": {},
-        "spawns_by_category": {
-          "water_creature": [
-            {
-              "type": "raft:shark",
-              "count": 1,
-              "weight": 3
-            }
-          ],
-          "monster": [
-            {
-              "type": "minecraft:drowned",
-              "count": {
-                "type": "minecraft:uniform",
-                "max_inclusive": 2,
-                "min_inclusive": 1
-              },
-              "weight": 5
-            }
-          ]
-        }
-      },
-      "modifier": "overlay"
-    },
-    "minecraft:visual/fog_color": "#9fb1c0",
-    "minecraft:visual/sky_color": "#90abc4",
-    "minecraft:visual/water_fog_color": "#00405a",
-    "minecraft:visual/water_fog_end_distance": {
-      "argument": 0.7,
-      "modifier": "multiply"
-    }
-  },
-  "carvers": [
-    "minecraft:cave"
-  ],
+  "has_precipitation": false,
+  "temperature": 0.6,
   "downfall": 0.5,
   "effects": {
-    "water_color": "#4a6d8e"
+    "water_color": 4877710,
+    "fog_color": 10465728,
+    "sky_color": 9481156,
+    "water_fog_color": 16474,
+    "music": {
+      "sound": "minecraft:music.overworld.old_growth_taiga",
+      "min_delay": 12000,
+      "max_delay": 24000,
+      "replace_current_music": false
+    },
+    "mood_sound": {
+      "sound": "raft:ambient.raft.deep",
+      "tick_delay": 6000,
+      "block_search_extent": 8,
+      "offset": 2.0
+    }
+  },
+  "spawners": {
+    "water_creature": [
+      {
+        "type": "raft:shark",
+        "weight": 3,
+        "minCount": 1,
+        "maxCount": 1
+      }
+    ],
+    "monster": [
+      {
+        "type": "minecraft:drowned",
+        "weight": 5,
+        "minCount": 1,
+        "maxCount": 2
+      }
+    ]
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave"
+    ]
   },
   "features": [
     [],
@@ -102,7 +93,5 @@
     [
       "raft:gravity_support"
     ]
-  ],
-  "has_precipitation": false,
-  "temperature": 0.6
+  ]
 }

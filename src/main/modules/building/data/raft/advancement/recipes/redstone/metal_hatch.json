@@ -16,7 +16,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:metal_hatch"
+        "recipe": "raft:metal_hatch"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

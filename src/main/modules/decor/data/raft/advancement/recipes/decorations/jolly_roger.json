@@ -18,7 +18,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:jolly_roger"
+        "recipe": "raft:jolly_roger"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "L": "minecraft:leather",
-    "K": "minecraft:dried_kelp"
+    "L": {
+      "item": "minecraft:leather"
+    },
+    "K": {
+      "item": "minecraft:dried_kelp"
+    }
   },
   "pattern": [
     "LKL",

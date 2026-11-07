@@ -1,7 +1,9 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    "raft:scrap_metal_block"
+    {
+      "item": "raft:scrap_metal_block"
+    }
   ],
   "result": {
     "count": 9,

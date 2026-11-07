@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:driftwood_trapdoor"
+        "recipe": "raft:driftwood_trapdoor"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

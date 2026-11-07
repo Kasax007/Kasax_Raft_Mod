@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:mossy_coral_stone_brick_wall_from_mossy_coral_stone_bricks_stonecutting"
+        "recipe": "raft:mossy_coral_stone_brick_wall_from_mossy_coral_stone_bricks_stonecutting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -2,10 +2,18 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "G": "minecraft:glass_pane",
-    "R": "minecraft:redstone",
-    "C": "raft:circuit_board",
-    "S": "raft:scrap_metal"
+    "G": {
+      "item": "minecraft:glass_pane"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "C": {
+      "item": "raft:circuit_board"
+    },
+    "S": {
+      "item": "raft:scrap_metal"
+    }
   },
   "pattern": [
     " G ",

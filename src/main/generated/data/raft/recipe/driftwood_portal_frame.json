@@ -1,8 +1,12 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "R": "raft:driftwood_log",
-    "S": "raft:ancient_energy"
+    "R": {
+      "item": "raft:driftwood_log"
+    },
+    "S": {
+      "item": "raft:ancient_energy"
+    }
   },
   "pattern": [
     " R ",

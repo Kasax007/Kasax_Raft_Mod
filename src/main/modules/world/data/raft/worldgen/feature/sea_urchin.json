@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:simple_block",
-  "to_place": {
-    "id": "raft:sea_urchin",
-    "properties": {
-      "waterlogged": "true"
-    }
-  }
-}

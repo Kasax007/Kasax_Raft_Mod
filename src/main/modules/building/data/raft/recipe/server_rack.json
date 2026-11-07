@@ -2,9 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "S": "raft:scrap_metal",
-    "C": "raft:circuit_board",
-    "R": "minecraft:redstone"
+    "S": {
+      "item": "raft:scrap_metal"
+    },
+    "C": {
+      "item": "raft:circuit_board"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
   },
   "pattern": [
     "SCS",

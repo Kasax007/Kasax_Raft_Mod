@@ -16,7 +16,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:helm"
+        "recipe": "raft:helm"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

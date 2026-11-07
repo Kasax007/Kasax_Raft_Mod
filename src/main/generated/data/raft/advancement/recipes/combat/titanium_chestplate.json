@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:titanium_chestplate"
+        "recipe": "raft:titanium_chestplate"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

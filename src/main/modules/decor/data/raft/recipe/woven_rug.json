@@ -2,7 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "T": "raft:palm_thatch"
+    "T": {
+      "item": "raft:palm_thatch"
+    }
   },
   "pattern": [
     "TT"

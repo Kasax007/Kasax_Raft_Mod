@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,dropped=false": {
+      "model": "raft:block/anchor_winch"
+    },
+    "facing=east,dropped=false": {
+      "model": "raft:block/anchor_winch",
+      "y": 90
+    },
+    "facing=south,dropped=false": {
+      "model": "raft:block/anchor_winch",
+      "y": 180
+    },
+    "facing=west,dropped=false": {
+      "model": "raft:block/anchor_winch",
+      "y": 270
+    },
+    "facing=north,dropped=true": {
+      "model": "raft:block/anchor_winch_dropped"
+    },
+    "facing=east,dropped=true": {
+      "model": "raft:block/anchor_winch_dropped",
+      "y": 90
+    },
+    "facing=south,dropped=true": {
+      "model": "raft:block/anchor_winch_dropped",
+      "y": 180
+    },
+    "facing=west,dropped=true": {
+      "model": "raft:block/anchor_winch_dropped",
+      "y": 270
+    }
+  }
+}

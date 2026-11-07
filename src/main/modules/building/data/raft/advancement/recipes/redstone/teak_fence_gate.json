@@ -16,7 +16,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:teak_fence_gate"
+        "recipe": "raft:teak_fence_gate"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -3,10 +3,16 @@
   "category": "building",
   "key": {
     "P": [
-      "raft:driftwood_planks",
-      "raft:palm_planks"
+      {
+        "item": "raft:driftwood_planks"
+      },
+      {
+        "item": "raft:palm_planks"
+      }
     ],
-    "B": "minecraft:bone_meal"
+    "B": {
+      "item": "minecraft:bone_meal"
+    }
   },
   "pattern": [
     " P ",

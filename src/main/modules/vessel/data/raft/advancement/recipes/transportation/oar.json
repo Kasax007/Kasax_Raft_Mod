@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:oar"
+        "recipe": "raft:oar"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -12,7 +12,9 @@
           "location_predicate": {
             "predicate_type": "minecraft:always_true"
           },
-          "output_state": "raft:rusty_hull"
+          "output_state": {
+            "Name": "raft:rusty_hull"
+          }
         },
         {
           "input_predicate": {
@@ -23,7 +25,9 @@
           "location_predicate": {
             "predicate_type": "minecraft:always_true"
           },
-          "output_state": "raft:rusty_hull"
+          "output_state": {
+            "Name": "raft:rusty_hull"
+          }
         }
       ]
     }

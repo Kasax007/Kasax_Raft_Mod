@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:coral_stone_stairs"
+        "recipe": "raft:coral_stone_stairs"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

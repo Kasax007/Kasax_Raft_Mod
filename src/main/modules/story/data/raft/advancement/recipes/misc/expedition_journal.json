@@ -17,7 +17,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:expedition_journal"
+        "recipe": "raft:expedition_journal"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

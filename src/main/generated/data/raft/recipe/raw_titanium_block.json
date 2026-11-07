@@ -1,7 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "S": "raft:raw_titanium"
+    "S": {
+      "item": "raft:raw_titanium"
+    }
   },
   "pattern": [
     "SSS",

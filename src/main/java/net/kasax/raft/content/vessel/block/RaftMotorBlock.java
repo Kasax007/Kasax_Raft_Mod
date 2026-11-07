@@ -96,24 +96,11 @@ public class RaftMotorBlock extends BaseEntityBlock {
         return new RaftMotorBlockEntity(pos, state);
     }
 
-    @Override
-    protected net.minecraft.world.ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (!VesselFuel.isFuel(stack)) {
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-        }
-        if (level instanceof ServerLevel serverLevel && level.getBlockEntity(pos) instanceof RaftMotorBlockEntity motor) {
-            int fuel = VesselFuel.refuel(serverLevel, pos, player, stack, motor.getFuel());
-            if (fuel != motor.getFuel()) {
-                motor.setFuel(fuel);
-            }
-        }
-        return ItemInteractionResult.SUCCESS;
-    }
-
+    /** Any click opens the fuel bay (fuel slot, flame, running time), on land and on a sailing raft. */
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (!level.isClientSide() && level.getBlockEntity(pos) instanceof RaftMotorBlockEntity motor) {
-            VesselFuel.showFuel(player, motor.getFuel());
+            player.openMenu(motor);
         }
         return InteractionResult.SUCCESS;
     }

@@ -3,15 +3,17 @@
   "criteria": {
     "visit": {
       "conditions": {
-        "player": {
-          "type": "minecraft:entity_properties",
-          "entity": "this",
-          "predicate": {
-            "minecraft:location": {
-              "structures": "#raft:on_abyssal_sanctum_maps"
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "structures": "#raft:on_abyssal_sanctum_maps"
+              }
             }
           }
-        }
+        ]
       },
       "trigger": "minecraft:location"
     }

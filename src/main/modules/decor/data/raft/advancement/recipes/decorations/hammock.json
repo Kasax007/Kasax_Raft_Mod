@@ -26,7 +26,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:hammock"
+        "recipe": "raft:hammock"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

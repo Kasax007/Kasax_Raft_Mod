@@ -16,7 +16,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:asphalt_line"
+        "recipe": "raft:asphalt_line"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

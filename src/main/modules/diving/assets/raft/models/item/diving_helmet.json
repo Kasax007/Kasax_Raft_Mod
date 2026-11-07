@@ -1,6 +1,11 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "raft:item/diving_helmet"
-  }
+  "parent": "raft:item/diving_helmet",
+  "overrides": [
+    {
+      "predicate": {
+        "raft:lamp": 1
+      },
+      "model": "raft:item/diving_helmet_lamp"
+    }
+  ]
 }

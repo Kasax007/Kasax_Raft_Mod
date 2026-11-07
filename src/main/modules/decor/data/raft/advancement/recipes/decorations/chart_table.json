@@ -17,7 +17,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:chart_table"
+        "recipe": "raft:chart_table"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

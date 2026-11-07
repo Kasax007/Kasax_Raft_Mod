@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:water_purifier"
+        "recipe": "raft:water_purifier"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

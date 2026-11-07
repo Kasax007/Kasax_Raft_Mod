@@ -1,7 +1,9 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    "raft:rope_coil"
+    {
+      "item": "raft:rope_coil"
+    }
   ],
   "result": {
     "count": 4,

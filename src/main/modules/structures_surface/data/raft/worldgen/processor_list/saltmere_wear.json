@@ -12,7 +12,9 @@
           "location_predicate": {
             "predicate_type": "minecraft:always_true"
           },
-          "output_state": "raft:weathered_planks"
+          "output_state": {
+            "Name": "raft:weathered_planks"
+          }
         },
         {
           "input_predicate": {
@@ -23,7 +25,9 @@
           "location_predicate": {
             "predicate_type": "minecraft:always_true"
           },
-          "output_state": "raft:weathered_planks"
+          "output_state": {
+            "Name": "raft:weathered_planks"
+          }
         },
         {
           "input_predicate": {
@@ -34,7 +38,9 @@
           "location_predicate": {
             "predicate_type": "minecraft:always_true"
           },
-          "output_state": "raft:mossy_coral_stone_bricks"
+          "output_state": {
+            "Name": "raft:mossy_coral_stone_bricks"
+          }
         }
       ]
     }

@@ -2,9 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "S": "raft:leviathan_scale",
-    "I": "raft:titanium_ingot",
-    "T": "minecraft:trident"
+    "S": {
+      "item": "raft:leviathan_scale"
+    },
+    "I": {
+      "item": "raft:titanium_ingot"
+    },
+    "T": {
+      "item": "minecraft:trident"
+    }
   },
   "pattern": [
     "SIS",

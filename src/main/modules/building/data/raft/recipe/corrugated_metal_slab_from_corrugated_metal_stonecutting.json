@@ -1,6 +1,8 @@
 {
   "type": "minecraft:stonecutting",
-  "ingredient": "raft:corrugated_metal",
+  "ingredient": {
+    "item": "raft:corrugated_metal"
+  },
   "result": {
     "count": 2,
     "id": "raft:corrugated_metal_slab"

@@ -2,10 +2,18 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "G": "minecraft:glass",
-    "F": "minecraft:tropical_fish",
-    "P": "#minecraft:planks",
-    "S": "minecraft:sand"
+    "G": {
+      "item": "minecraft:glass"
+    },
+    "F": {
+      "item": "minecraft:tropical_fish"
+    },
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "S": {
+      "item": "minecraft:sand"
+    }
   },
   "pattern": [
     "GGG",

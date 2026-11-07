@@ -16,7 +16,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:cracked_glass"
+        "recipe": "raft:cracked_glass"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

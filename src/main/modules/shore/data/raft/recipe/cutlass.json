@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "I": "#minecraft:iron_tool_materials",
-    "T": "raft:teak_planks"
+    "I": {
+      "tag": "minecraft:iron_tool_materials"
+    },
+    "T": {
+      "item": "raft:teak_planks"
+    }
   },
   "pattern": [
     "  I",

@@ -1,8 +1,12 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "M": "raft:scrap_metal",
-    "S": "minecraft:stick"
+    "M": {
+      "item": "raft:scrap_metal"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
   },
   "pattern": [
     "MMM",

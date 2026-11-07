@@ -45,6 +45,8 @@ final class NpcActivityGoal extends Goal {
     private @Nullable BlockPos stand;
     private @Nullable Vec3 lookAt;
     private @Nullable BlockPos fishSpot;
+    /** Where the fisher stands to fish: on a deck or shore block right at the water (3.2: he stood inland before). */
+    private @Nullable BlockPos fishStand;
     private boolean fishSearched;
     private @Nullable BlockPos seat;
     private @Nullable BlockPos fire;
@@ -169,12 +171,11 @@ final class NpcActivityGoal extends Goal {
             this.fishSearched = true;
             this.fishSpot = this.findFishSpot();
         }
-        if (this.fishSpot == null) {
+        if (this.fishSpot == null || this.fishStand == null) {
             return false;
         }
-        BlockPos home = this.npc.getRestrictCenter();
-        if (this.npc.position().distanceToSqr(Vec3.atBottomCenterOf(home)) > 2.25) {
-            return this.walkTo(home, Phase.FISH, 0);
+        if (this.npc.position().distanceToSqr(Vec3.atBottomCenterOf(this.fishStand)) > 0.8) {
+            return this.walkTo(this.fishStand, Phase.FISH, 0);
         }
         this.phase = Phase.FISH;
         return true;
@@ -355,7 +356,10 @@ final class NpcActivityGoal extends Goal {
     }
 
     private void tickFish() {
-        if (this.fishSpot == null) {
+        // only with water in front: at the stand by the water, the float's water still there
+        if (this.fishSpot == null || this.fishStand == null
+                || this.npc.position().distanceToSqr(Vec3.atBottomCenterOf(this.fishStand)) > 2.0
+                || !this.level().getFluidState(this.fishSpot).is(Fluids.WATER)) {
             this.end(100);
             return;
         }
@@ -430,34 +434,53 @@ final class NpcActivityGoal extends Goal {
     }
 
     // ------------------------------------------------------------------------------------------ spots
-    /** The nearest sea surface 2-7 blocks from home and 1-6 blocks below the feet (the fisher's float). */
+    /**
+     * A place to fish near home: a cell to stand in (floor under the feet, room for the body) right at the edge of a
+     * deck or the shore, with open sea surface 1 to 3 blocks in front of it and 1 to 5 blocks below the feet (the float).
+     * Sets {@link #fishStand} and returns the water cell, or null. The nearest such place to home wins.
+     */
     private @Nullable BlockPos findFishSpot() {
         ServerLevel level = this.level();
         BlockPos home = this.npc.getRestrictCenter();
         BlockPos best = null;
+        BlockPos bestStand = null;
         double bestD = Double.MAX_VALUE;
-        for (int dx = -7; dx <= 7; dx++) {
-            for (int dz = -7; dz <= 7; dz++) {
-                double h = dx * dx + dz * dz;
-                if (h < 4 || h > 49 || h >= bestD) {
+        for (BlockPos p : BlockPos.betweenClosed(home.offset(-8, -2, -8), home.offset(8, 2, 8))) {
+            double d = p.distSqr(home);
+            if (d >= bestD || !level.getBlockState(p).isAir() || !level.getBlockState(p.above()).isAir()
+                    || !level.getBlockState(p.below()).isFaceSturdy(level, p.below(), net.minecraft.core.Direction.UP)) {
+                continue;
+            }
+            for (net.minecraft.core.Direction dir : net.minecraft.core.Direction.Plane.HORIZONTAL) {
+                BlockPos edge = p.relative(dir);
+                // the cell in front must be open (no deck there): the stand is at the edge
+                if (!level.getBlockState(edge).isAir() || !level.getBlockState(edge.below()).getCollisionShape(level, edge.below()).isEmpty()) {
                     continue;
                 }
-                for (int dy = -1; dy >= -6; dy--) {
-                    BlockPos p = home.offset(dx, dy, dz);
-                    BlockState st = level.getBlockState(p);
-                    if (st.getFluidState().is(Fluids.WATER)) {
-                        if (level.getBlockState(p.above()).isAir()) {
-                            best = p;
-                            bestD = h;
+                BlockPos water = null;
+                for (int k = 1; k <= 3 && water == null; k++) {
+                    BlockPos col = p.relative(dir, k);
+                    for (int dy = 1; dy <= 5; dy++) {
+                        BlockPos w = col.below(dy);
+                        BlockState st = level.getBlockState(w);
+                        if (st.getFluidState().is(Fluids.WATER) && level.getBlockState(w.above()).isAir()) {
+                            water = w.immutable();
+                            break;
                         }
-                        break;
+                        if (!st.isAir()) {
+                            break;
+                        }
                     }
-                    if (!st.isAir()) {
-                        break;
-                    }
+                }
+                if (water != null) {
+                    best = water;
+                    bestStand = p.immutable();
+                    bestD = d;
+                    break;
                 }
             }
         }
+        this.fishStand = bestStand;
         return best;
     }
 

@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "P": "#minecraft:planks",
-    "R": "raft:rope"
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "R": {
+      "item": "raft:rope"
+    }
   },
   "pattern": [
     "PRP",

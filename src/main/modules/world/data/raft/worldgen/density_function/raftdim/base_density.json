@@ -1,22 +1,22 @@
 {
   "type": "minecraft:add",
-  "left": {
+  "argument1": {
     "type": "minecraft:mul",
-    "left": {
+    "argument1": {
       "type": "minecraft:add",
-      "left": "raft:raftdim/surface",
-      "right": {
+      "argument1": "raft:raftdim/surface",
+      "argument2": {
         "type": "minecraft:mul",
-        "left": "minecraft:y",
-        "right": -1.0
+        "argument1": "minecraft:y",
+        "argument2": -1.0
       }
     },
-    "right": 0.125
+    "argument2": 0.125
   },
-  "right": {
+  "argument2": {
     "type": "minecraft:mul",
-    "left": "raft:raftdim/detail_amplitude",
-    "right": {
+    "argument1": "raft:raftdim/detail_amplitude",
+    "argument2": {
       "type": "minecraft:noise",
       "noise": "raft:raftdim/detail",
       "xz_scale": 1.0,

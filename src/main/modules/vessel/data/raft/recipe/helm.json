@@ -2,9 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "W": "raft:ship_wheel",
-    "S": "minecraft:stick",
-    "P": "#minecraft:planks"
+    "W": {
+      "item": "raft:ship_wheel"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "P": {
+      "tag": "minecraft:planks"
+    }
   },
   "pattern": [
     " W ",

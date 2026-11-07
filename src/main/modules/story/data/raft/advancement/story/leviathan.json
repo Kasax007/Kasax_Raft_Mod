@@ -3,13 +3,15 @@
   "criteria": {
     "kill": {
       "conditions": {
-        "entity": {
-          "type": "minecraft:entity_properties",
-          "entity": "this",
-          "predicate": {
-            "minecraft:entity_type": "#raft:adv/leviathan"
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "#raft:adv/leviathan"
+            }
           }
-        }
+        ]
       },
       "trigger": "minecraft:player_killed_entity"
     }

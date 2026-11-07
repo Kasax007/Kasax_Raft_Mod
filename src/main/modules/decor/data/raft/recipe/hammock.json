@@ -2,9 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "W": "#minecraft:wool",
-    "R": "raft:rope",
-    "S": "minecraft:stick"
+    "W": {
+      "tag": "minecraft:wool"
+    },
+    "R": {
+      "item": "raft:rope"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
   },
   "pattern": [
     "WWW",

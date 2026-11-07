@@ -2,7 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "B": "raft:cracked_concrete"
+    "B": {
+      "item": "raft:cracked_concrete"
+    }
   },
   "pattern": [
     "BBB"

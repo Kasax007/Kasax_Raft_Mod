@@ -2,7 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "redstone",
   "key": {
-    "P": "raft:weathered_planks"
+    "P": {
+      "item": "raft:weathered_planks"
+    }
   },
   "pattern": [
     "PPP",

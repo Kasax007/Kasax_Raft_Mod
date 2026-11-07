@@ -18,7 +18,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:mossy_coral_stone_bricks"
+        "recipe": "raft:mossy_coral_stone_bricks"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

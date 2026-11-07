@@ -17,7 +17,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:wind_turbine"
+        "recipe": "raft:wind_turbine"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

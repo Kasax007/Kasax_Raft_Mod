@@ -12,8 +12,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "B": "raft:tidestone_bricks",
-    "C": "raft:chiseled_tidestone"
+    "B": {
+      "item": "raft:tidestone_bricks"
+    },
+    "C": {
+      "item": "raft:chiseled_tidestone"
+    }
   },
   "pattern": [
     "BBB",

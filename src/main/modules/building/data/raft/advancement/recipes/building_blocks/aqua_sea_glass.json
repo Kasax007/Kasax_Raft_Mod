@@ -24,7 +24,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:aqua_sea_glass"
+        "recipe": "raft:aqua_sea_glass"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:cooked_shark_meat_from_campfire_cooking"
+        "recipe": "raft:cooked_shark_meat_from_campfire_cooking"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -5,93 +5,126 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "condition": {
-            "type": "minecraft:any_of",
-            "terms": [
-              "minecraft:tool/can_shear",
-              "minecraft:tool/can_silk_touch"
-            ]
-          },
-          "modifier": [
+          "conditions": [
             {
-              "type": "minecraft:set_count",
-              "add": true,
-              "condition": {
-                "type": "minecraft:match_block",
-                "blocks": "raft:barnacles",
-                "state": {
-                  "down": "true"
+              "condition": "minecraft:any_of",
+              "terms": [
+                {
+                  "condition": "minecraft:match_tool",
+                  "predicate": {
+                    "items": "minecraft:shears"
+                  }
+                },
+                {
+                  "condition": "minecraft:match_tool",
+                  "predicate": {
+                    "predicates": {
+                      "minecraft:enchantments": [
+                        {
+                          "enchantments": "minecraft:silk_touch",
+                          "levels": {
+                            "min": 1
+                          }
+                        }
+                      ]
+                    }
+                  }
                 }
-              },
+              ]
+            }
+          ],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "conditions": [
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "raft:barnacles",
+                  "properties": {
+                    "down": "true"
+                  }
+                }
+              ],
+              "add": true,
               "count": 1
             },
             {
-              "type": "minecraft:set_count",
-              "add": true,
-              "condition": {
-                "type": "minecraft:match_block",
-                "blocks": "raft:barnacles",
-                "state": {
-                  "up": "true"
+              "function": "minecraft:set_count",
+              "conditions": [
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "raft:barnacles",
+                  "properties": {
+                    "up": "true"
+                  }
                 }
-              },
+              ],
+              "add": true,
               "count": 1
             },
             {
-              "type": "minecraft:set_count",
-              "add": true,
-              "condition": {
-                "type": "minecraft:match_block",
-                "blocks": "raft:barnacles",
-                "state": {
-                  "north": "true"
+              "function": "minecraft:set_count",
+              "conditions": [
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "raft:barnacles",
+                  "properties": {
+                    "north": "true"
+                  }
                 }
-              },
+              ],
+              "add": true,
               "count": 1
             },
             {
-              "type": "minecraft:set_count",
-              "add": true,
-              "condition": {
-                "type": "minecraft:match_block",
-                "blocks": "raft:barnacles",
-                "state": {
-                  "south": "true"
+              "function": "minecraft:set_count",
+              "conditions": [
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "raft:barnacles",
+                  "properties": {
+                    "south": "true"
+                  }
                 }
-              },
+              ],
+              "add": true,
               "count": 1
             },
             {
-              "type": "minecraft:set_count",
-              "add": true,
-              "condition": {
-                "type": "minecraft:match_block",
-                "blocks": "raft:barnacles",
-                "state": {
-                  "west": "true"
+              "function": "minecraft:set_count",
+              "conditions": [
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "raft:barnacles",
+                  "properties": {
+                    "west": "true"
+                  }
                 }
-              },
+              ],
+              "add": true,
               "count": 1
             },
             {
-              "type": "minecraft:set_count",
-              "add": true,
-              "condition": {
-                "type": "minecraft:match_block",
-                "blocks": "raft:barnacles",
-                "state": {
-                  "east": "true"
+              "function": "minecraft:set_count",
+              "conditions": [
+                {
+                  "condition": "minecraft:block_state_property",
+                  "block": "raft:barnacles",
+                  "properties": {
+                    "east": "true"
+                  }
                 }
-              },
+              ],
+              "add": true,
               "count": 1
             },
             {
-              "type": "minecraft:set_count",
+              "function": "minecraft:set_count",
               "add": true,
               "count": -1
             },
             {
-              "type": "minecraft:explosion_decay"
+              "function": "minecraft:explosion_decay"
             }
           ],
           "name": "raft:barnacles"

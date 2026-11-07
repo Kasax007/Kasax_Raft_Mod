@@ -1,8 +1,12 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "D": "minecraft:dirt",
-    "P": "#minecraft:planks"
+    "D": {
+      "item": "minecraft:dirt"
+    },
+    "P": {
+      "tag": "minecraft:planks"
+    }
   },
   "pattern": [
     "DDD",

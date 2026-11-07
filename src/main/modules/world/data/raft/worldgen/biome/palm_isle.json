@@ -1,36 +1,33 @@
 {
-  "attributes": {
-    "minecraft:audio/background_music": {
-      "default": {
-        "max_delay": 24000,
-        "min_delay": 12000,
-        "sound": "minecraft:music.overworld.cherry_grove"
-      },
-      "underwater": {
-        "max_delay": 24000,
-        "min_delay": 12000,
-        "sound": "minecraft:music.under_water"
-      }
-    },
-    "minecraft:gameplay/natural_mob_spawns": {
-      "argument": {
-        "spawn_costs": {},
-        "spawns_by_category": {}
-      },
-      "modifier": "overlay"
-    },
-    "minecraft:visual/fog_color": "#22a1e6",
-    "minecraft:visual/sky_color": "#6cbaea",
-    "minecraft:visual/water_fog_color": "#00b4f0"
-  },
-  "carvers": [
-    "minecraft:cave"
-  ],
+  "has_precipitation": false,
+  "temperature": 0.95,
   "downfall": 0.5,
   "effects": {
-    "foliage_color": "#5ab63c",
-    "grass_color": "#7cc45a",
-    "water_color": "#3fc8e4"
+    "water_color": 4180196,
+    "foliage_color": 5944892,
+    "grass_color": 8176730,
+    "fog_color": 2269670,
+    "sky_color": 7125738,
+    "water_fog_color": 46320,
+    "music": {
+      "sound": "minecraft:music.overworld.cherry_grove",
+      "min_delay": 12000,
+      "max_delay": 24000,
+      "replace_current_music": false
+    },
+    "mood_sound": {
+      "sound": "raft:ambient.raft.deep",
+      "tick_delay": 6000,
+      "block_search_extent": 8,
+      "offset": 2.0
+    }
+  },
+  "spawners": {},
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave"
+    ]
   },
   "features": [
     [],
@@ -94,7 +91,5 @@
     [
       "raft:gravity_support"
     ]
-  ],
-  "has_precipitation": false,
-  "temperature": 0.95
+  ]
 }

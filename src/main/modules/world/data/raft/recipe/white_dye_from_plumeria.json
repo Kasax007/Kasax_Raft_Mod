@@ -2,7 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "raft:plumeria"
+    {
+      "item": "raft:plumeria"
+    }
   ],
   "result": {
     "count": 1,

@@ -33,7 +33,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:quarry"
+        "recipe": "raft:quarry"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

@@ -12,7 +12,8 @@
   ],
   "client": [
     "ClientAdvancementsAccess",
-    "ItemRendererGuiModelMixin"
+    "ItemRendererGuiModelMixin",
+    "CubeAccess"
   ],
   "injectors": {
     "defaultRequire": 1

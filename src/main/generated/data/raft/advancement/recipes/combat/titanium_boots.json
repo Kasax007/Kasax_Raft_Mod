@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:titanium_boots"
+        "recipe": "raft:titanium_boots"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

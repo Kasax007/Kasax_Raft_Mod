@@ -2,21 +2,23 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "condition": {
-        "type": "minecraft:all_of",
-        "terms": [
-          {
-            "type": "minecraft:survives_explosion"
-          },
-          {
-            "type": "minecraft:match_block",
-            "blocks": "raft:bird_of_paradise",
-            "state": {
-              "half": "lower"
+      "conditions": [
+        {
+          "condition": "minecraft:all_of",
+          "terms": [
+            {
+              "condition": "minecraft:survives_explosion"
+            },
+            {
+              "condition": "minecraft:block_state_property",
+              "block": "raft:bird_of_paradise",
+              "properties": {
+                "half": "lower"
+              }
             }
-          }
-        ]
-      },
+          ]
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",

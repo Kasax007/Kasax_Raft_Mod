@@ -1,5 +1,6 @@
 {
   "values": [
-    "raft:raft_motor"
+    "raft:raft_motor",
+    "raft:anchor_winch"
   ]
 }

@@ -8,10 +8,14 @@
       ]
     }
   ],
-  "type": "minecraft:crafting_transmute",
+  "type": "raft:crafting_transmute",
   "category": "equipment",
-  "input": "raft:diving_helmet",
-  "material": "raft:angler_lure",
+  "input": {
+    "item": "raft:diving_helmet"
+  },
+  "material": {
+    "item": "raft:angler_lure"
+  },
   "result": {
     "id": "raft:diving_helmet",
     "components": {

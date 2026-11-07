@@ -16,7 +16,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:spyglass_stand"
+        "recipe": "raft:spyglass_stand"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

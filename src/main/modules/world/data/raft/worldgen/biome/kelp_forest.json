@@ -1,59 +1,46 @@
 {
-  "attributes": {
-    "minecraft:audio/background_music": {
-      "default": {
-        "max_delay": 7200,
-        "min_delay": 2400,
-        "sound": "raft:music.raft.sea_day"
-      },
-      "underwater": {
-        "max_delay": 24000,
-        "min_delay": 12000,
-        "sound": "minecraft:music.under_water"
-      }
-    },
-    "minecraft:gameplay/natural_mob_spawns": {
-      "argument": {
-        "spawn_costs": {},
-        "spawns_by_category": {
-          "water_ambient": [
-            {
-              "type": "minecraft:cod",
-              "count": {
-                "type": "minecraft:uniform",
-                "max_inclusive": 6,
-                "min_inclusive": 3
-              },
-              "weight": 10
-            },
-            {
-              "type": "minecraft:salmon",
-              "count": {
-                "type": "minecraft:uniform",
-                "max_inclusive": 5,
-                "min_inclusive": 1
-              },
-              "weight": 5
-            }
-          ]
-        }
-      },
-      "modifier": "overlay"
-    },
-    "minecraft:visual/fog_color": "#2aa3d6",
-    "minecraft:visual/sky_color": "#6cbaea",
-    "minecraft:visual/water_fog_color": "#00866f",
-    "minecraft:visual/water_fog_end_distance": {
-      "argument": 0.85,
-      "modifier": "multiply"
-    }
-  },
-  "carvers": [
-    "minecraft:cave"
-  ],
+  "has_precipitation": false,
+  "temperature": 0.6,
   "downfall": 0.6,
   "effects": {
-    "water_color": "#2b9a92"
+    "water_color": 2857618,
+    "fog_color": 2794454,
+    "sky_color": 7125738,
+    "water_fog_color": 34415,
+    "music": {
+      "sound": "raft:music.raft.sea_day",
+      "min_delay": 2400,
+      "max_delay": 7200,
+      "replace_current_music": false
+    },
+    "mood_sound": {
+      "sound": "raft:ambient.raft.deep",
+      "tick_delay": 6000,
+      "block_search_extent": 8,
+      "offset": 2.0
+    }
+  },
+  "spawners": {
+    "water_ambient": [
+      {
+        "type": "minecraft:cod",
+        "weight": 10,
+        "minCount": 3,
+        "maxCount": 6
+      },
+      {
+        "type": "minecraft:salmon",
+        "weight": 5,
+        "minCount": 1,
+        "maxCount": 5
+      }
+    ]
+  },
+  "spawn_costs": {},
+  "carvers": {
+    "air": [
+      "minecraft:cave"
+    ]
   },
   "features": [
     [],
@@ -107,7 +94,5 @@
     [
       "raft:gravity_support"
     ]
-  ],
-  "has_precipitation": false,
-  "temperature": 0.6
+  ]
 }

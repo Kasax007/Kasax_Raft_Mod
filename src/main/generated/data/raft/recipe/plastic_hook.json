@@ -2,9 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "P": "raft:plastic",
-    "R": "raft:rope",
-    "S": "minecraft:stick"
+    "P": {
+      "item": "raft:plastic"
+    },
+    "R": {
+      "item": "raft:rope"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
   },
   "pattern": [
     "PP",

@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:tidestone_stairs"
+        "recipe": "raft:tidestone_stairs"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
