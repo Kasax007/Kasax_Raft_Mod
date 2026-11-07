@@ -7,7 +7,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -78,13 +78,13 @@ public final class StructAudit {
     }
 
     public static ServerLevel sea(MinecraftServer server) {
-        return server.getLevel(ResourceKey.create(Registries.DIMENSION, Identifier.parse("raft:raftdim")));
+        return server.getLevel(ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse("raft:raftdim")));
     }
 
     /** The nearest start of that structure from (x, z) in the Endless Sea, or null. */
     public static StructureStart find(ServerLevel level, String id, BlockPos from) {
         var reg = level.registryAccess().lookupOrThrow(Registries.STRUCTURE);
-        Holder<Structure> holder = reg.get(ResourceKey.create(Registries.STRUCTURE, Identifier.parse(id))).orElse(null);
+        Holder<Structure> holder = reg.get(ResourceKey.create(Registries.STRUCTURE, ResourceLocation.parse(id))).orElse(null);
         if (holder == null) return null;
         Pair<BlockPos, Holder<Structure>> found = level.getChunkSource().getGenerator()
                 .findNearestMapStructure(level, HolderSet.direct(holder), from, 100, false);
@@ -160,7 +160,7 @@ public final class StructAudit {
                 lines.add("piece " + index + " " + pc.getClass().getSimpleName() + " " + box(pc.getBoundingBox()) + " (not checked)");
                 continue;
             }
-            Identifier tid;
+            ResourceLocation tid;
             try {
                 tid = el.getTemplateLocation();
             } catch (RuntimeException e) {
@@ -194,7 +194,7 @@ public final class StructAudit {
             }
             for (StructureTemplate.StructureEntityInfo e : ((StructureTemplateAccess) t).bc$entities()) {
                 String eid = e.nbt.getString("id").orElse("");
-                EntityType<?> type = eid.isEmpty() ? null : BuiltInRegistries.ENTITY_TYPE.getOptional(Identifier.parse(eid)).orElse(null);
+                EntityType<?> type = eid.isEmpty() ? null : BuiltInRegistries.ENTITY_TYPE.getOptional(ResourceLocation.parse(eid)).orElse(null);
                 if (type == null || !eid.startsWith("raft:")) continue;
                 Vec3 at = StructureTemplate.transform(e.pos, Mirror.NONE, pe.getRotation(), BlockPos.ZERO)
                         .add(origin.getX(), origin.getY(), origin.getZ());
@@ -280,7 +280,7 @@ public final class StructAudit {
         for (int i = 0; i < npcSpots.size(); i++) {
             double[] s = npcSpots.get(i);
             String eid = npcTypes.get(i);
-            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getOptional(Identifier.parse(eid)).orElseThrow();
+            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getOptional(ResourceLocation.parse(eid)).orElseThrow();
             Vec3 spot = new Vec3(s[0], s[1], s[2]);
             List<Entity> near = new ArrayList<>(level.getEntities((Entity) null, new AABB(spot, spot).inflate(48), e -> e.getType() == type));
             near.sort(Comparator.comparingDouble(e -> e.position().distanceToSqr(spot)));

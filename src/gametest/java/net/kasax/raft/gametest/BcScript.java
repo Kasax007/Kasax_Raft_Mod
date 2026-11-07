@@ -17,7 +17,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -439,7 +439,7 @@ public class BcScript implements FabricClientGameTest {
             case "tab" -> ctx.runOnClient(mc -> {
                 // tab <id> [rows]: open the creative inventory on that tab (scrolled down by rows) and log its items
                 String[] ta = arg.split("\\s+");
-                var tab = BuiltInRegistries.CREATIVE_MODE_TAB.getValue(Identifier.parse(ta[0]));
+                var tab = BuiltInRegistries.CREATIVE_MODE_TAB.getValue(ResourceLocation.parse(ta[0]));
                 var screen = new net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen(
                         mc.player, mc.player.connection.enabledFeatures(), false);
                 mc.gui.setScreen(screen);
@@ -485,7 +485,7 @@ public class BcScript implements FabricClientGameTest {
                 String res = ctx.computeOnClient(mc -> {
                     var music = mc.getSituationalMusic();
                     return String.format(Locale.ROOT, "situational=%s place=%s fight=%s openSea=%.2f night=%s playing=%s",
-                            music == null ? "none" : music.sound().unwrapKey().map(k -> k.identifier().toString()).orElse("?"),
+                            music == null ? "none" : music.sound().unwrapKey().map(k -> k.location().toString()).orElse("?"),
                             net.kasax.raft.content.audio.client.MusicDirector.place(),
                             net.kasax.raft.content.audio.client.MusicDirector.inFight(),
                             net.kasax.raft.content.audio.client.AudioClient.openSea(),
@@ -498,7 +498,7 @@ public class BcScript implements FabricClientGameTest {
                 // count <dimension>: entities per type loaded in that dimension (written to the log)
                 String dim = arg.isEmpty() ? "raft:raftdim" : arg;
                 String res = need().getServer().computeOnServer(server -> {
-                    var level = server.getLevel(ResourceKey.create(Registries.DIMENSION, Identifier.parse(dim)));
+                    var level = server.getLevel(ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(dim)));
                     if (level == null) return "no level " + dim;
                     Map<String, Integer> counts = new TreeMap<>();
                     for (var e : level.getAllEntities()) {
@@ -516,7 +516,7 @@ public class BcScript implements FabricClientGameTest {
                 String res = need().getServer().computeOnServer(server -> {
                     var pl = server.getPlayerList().getPlayers().getFirst();
                     var level = (ServerLevel) pl.level();
-                    var type = BuiltInRegistries.ENTITY_TYPE.getOptional(Identifier.parse(a[0])).orElse(null);
+                    var type = BuiltInRegistries.ENTITY_TYPE.getOptional(ResourceLocation.parse(a[0])).orElse(null);
                     if (type == null) return "no type " + a[0];
                     StringBuilder sb = new StringBuilder().append(level.getGameTime());
                     for (var e : level.getEntities(type, pl.getBoundingBox().inflate(r), x -> true)) {
@@ -531,7 +531,7 @@ public class BcScript implements FabricClientGameTest {
                 String res = need().getServer().computeOnServer(server -> {
                     var pl = server.getPlayerList().getPlayers().getFirst();
                     var level = (ServerLevel) pl.level();
-                    return String.format(Locale.ROOT, "%s %.2f %.2f %.2f %.1f %.1f %s", level.dimension().identifier(), pl.getX(), pl.getY(), pl.getZ(),
+                    return String.format(Locale.ROOT, "%s %.2f %.2f %.2f %.1f %.1f %s", level.dimension().location(), pl.getX(), pl.getY(), pl.getZ(),
                             pl.getYRot(), pl.getXRot(), level.getBiome(pl.blockPosition()).getRegisteredName());
                 });
                 LOG.info("[bctest] WHERE {}", res);
@@ -571,7 +571,7 @@ public class BcScript implements FabricClientGameTest {
                             if (ch == null) continue;
                             for (BlockEntity be : ch.getBlockEntities().values()) {
                                 if (be instanceof RandomizableContainer rc2 && rc2.getLootTable() != null
-                                        && rc2.getLootTable().identifier().toString().contains(a[0])) {
+                                        && rc2.getLootTable().location().toString().contains(a[0])) {
                                     double d = be.getBlockPos().distSqr(c);
                                     if (d < bd) {
                                         bd = d;
@@ -616,11 +616,11 @@ public class BcScript implements FabricClientGameTest {
                 String res = need().getServer().computeOnServer(server -> {
                     var pl = server.getPlayerList().getPlayers().getFirst();
                     ServerLevel level = dim == null ? (ServerLevel) pl.level()
-                            : server.getLevel(ResourceKey.create(Registries.DIMENSION, Identifier.parse(dim)));
-                    var key = ResourceKey.create(Registries.BIOME, Identifier.parse(a[0]));
+                            : server.getLevel(ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(dim)));
+                    var key = ResourceKey.create(Registries.BIOME, ResourceLocation.parse(a[0]));
                     var found = level.findClosestBiome3d(h -> h.is(key), pl.blockPosition(), 6400, 32, 64);
                     if (found == null) return null;
-                    return level.dimension().identifier() + " " + found.getFirst().getX() + " " + found.getFirst().getZ();
+                    return level.dimension().location() + " " + found.getFirst().getX() + " " + found.getFirst().getZ();
                 });
                 if (res == null) {
                     LOG.warn("[bctest] tpbiome: no {}", a[0]);
@@ -683,7 +683,7 @@ public class BcScript implements FabricClientGameTest {
                 double fx = vars.getOrDefault("cx", Double.NaN), fz = vars.getOrDefault("cz", Double.NaN);
                 double[] cam = need().getServer().computeOnServer(server -> {
                     ServerLevel level = StructAudit.sea(server);
-                    var et = BuiltInRegistries.ENTITY_TYPE.getOptional(Identifier.parse(type)).orElse(null);
+                    var et = BuiltInRegistries.ENTITY_TYPE.getOptional(ResourceLocation.parse(type)).orElse(null);
                     if (et == null) return null;
                     Vec3 from = Double.isNaN(fx) ? server.getPlayerList().getPlayers().getFirst().position() : new Vec3(fx, 64, fz);
                     Entity best = null;
@@ -1203,10 +1203,10 @@ public class BcScript implements FabricClientGameTest {
 
     private static String scout(net.minecraft.server.MinecraftServer server, String id, BlockPos from) {
         var pl = server.getPlayerList().getPlayers().getFirst();
-        ServerLevel level = server.getLevel(ResourceKey.create(Registries.DIMENSION, Identifier.parse("raft:raftdim")));
+        ServerLevel level = server.getLevel(ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse("raft:raftdim")));
         if (level == null) level = (ServerLevel) pl.level();
         var reg = level.registryAccess().lookupOrThrow(Registries.STRUCTURE);
-        var holder = reg.get(ResourceKey.create(Registries.STRUCTURE, Identifier.parse(id))).orElse(null);
+        var holder = reg.get(ResourceKey.create(Registries.STRUCTURE, ResourceLocation.parse(id))).orElse(null);
         if (holder == null) return "unknown structure";
         var found = level.getChunkSource().getGenerator().findNearestMapStructure(level, HolderSet.direct(holder), from != null ? from : pl.blockPosition(), 100, false);
         if (found == null && level != pl.level()) {
@@ -1247,7 +1247,7 @@ public class BcScript implements FabricClientGameTest {
                     String block = BuiltInRegistries.BLOCK.getKey(be.getBlockState().getBlock()).toString();
                     if (be instanceof RandomizableContainer rc2) {
                         var lt = rc2.getLootTable();
-                        res.add("CHEST " + p.getX() + " " + p.getY() + " " + p.getZ() + " " + block + " " + (lt == null ? "-" : lt.identifier()));
+                        res.add("CHEST " + p.getX() + " " + p.getY() + " " + p.getZ() + " " + block + " " + (lt == null ? "-" : lt.location()));
                     } else if (block.startsWith("raft:")) {
                         res.add("BE " + p.getX() + " " + p.getY() + " " + p.getZ() + " " + block + " " + be.getBlockState());
                     }
@@ -1276,7 +1276,7 @@ public class BcScript implements FabricClientGameTest {
     private static List<BlockPos> scan(net.minecraft.server.MinecraftServer server, String id, int r) {
         var pl = server.getPlayerList().getPlayers().getFirst();
         ServerLevel level = (ServerLevel) pl.level();
-        Block b = BuiltInRegistries.BLOCK.getValue(Identifier.parse(id));
+        Block b = BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(id));
         BlockPos c = pl.blockPosition();
         List<BlockPos> hits = new ArrayList<>();
         int rc = (r >> 4) + 1;

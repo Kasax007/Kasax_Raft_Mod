@@ -26,7 +26,26 @@ public final class DivingGear {
     public record Material(String name, EquipmentSlot slot, int defense, int durability, int enchantability, float toughness,
                            TagKey<Item> repair) {
         public net.kasax.raft.compat.GearItem.Gear gear() {
-            return new net.kasax.raft.compat.GearItem.Gear(this.slot, this.enchantability, this.repair, DivingSounds.EQUIP_DIVING_GEAR);
+            return new net.kasax.raft.compat.GearItem.Gear(this.armorMaterial(), switch (this.slot) {
+                case HEAD -> net.minecraft.world.item.ArmorItem.Type.HELMET;
+                case CHEST -> net.minecraft.world.item.ArmorItem.Type.CHESTPLATE;
+                case LEGS -> net.minecraft.world.item.ArmorItem.Type.LEGGINGS;
+                default -> net.minecraft.world.item.ArmorItem.Type.BOOTS;
+            });
+        }
+
+        /** The armor material (registered once): its texture is textures/models/armor/&lt;name&gt;_layer_1/2.png. */
+        public net.minecraft.core.Holder<net.minecraft.world.item.ArmorMaterial> armorMaterial() {
+            net.minecraft.resources.ResourceLocation id = Raft.id(this.name);
+            var existing = net.minecraft.core.registries.BuiltInRegistries.ARMOR_MATERIAL.getHolder(id);
+            if (existing.isPresent()) return existing.get();
+            java.util.Map<net.minecraft.world.item.ArmorItem.Type, Integer> defense = new java.util.EnumMap<>(net.minecraft.world.item.ArmorItem.Type.class);
+            for (net.minecraft.world.item.ArmorItem.Type t : net.minecraft.world.item.ArmorItem.Type.values()) defense.put(t, this.defense);
+            TagKey<Item> repairTag = this.repair;
+            return net.minecraft.core.Registry.registerForHolder(net.minecraft.core.registries.BuiltInRegistries.ARMOR_MATERIAL, id,
+                    new net.minecraft.world.item.ArmorMaterial(defense, this.enchantability, DivingSounds.EQUIP_DIVING_GEAR,
+                            () -> net.minecraft.world.item.crafting.Ingredient.of(repairTag),
+                            java.util.List.of(new net.minecraft.world.item.ArmorMaterial.Layer(id)), this.toughness, 0.0F));
         }
 
         /** Durability like vanilla armor: the slot's base durability times the factor. */
