@@ -210,6 +210,7 @@
   "message.raft.journal.wait": "The ink is still wet. You can draw a new map in %s.",
   "message.raft.leviathan_altar.alive": "The Leviathan is already awake!",
   "message.raft.leviathan_altar.need_crystal": "The altar hungers for an Ancient Crystal before it calls again.",
+  "message.raft.leviathan_altar.not_ready": "The pool is not ready: the altar cannot call the Leviathan here.",
   "message.raft.leviathan_altar.need_key": "The altar waits for the Tidewarden Key.",
   "message.raft.leviathan_altar.silent": "The altar stays silent.",
   "message.raft.leviathan_altar.summon": "The Leviathan rises from the deep!",

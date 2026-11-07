@@ -56,14 +56,15 @@ import java.util.List;
  * (3.0 x 2.5); the long body is visual ({@link LeviathanBody}). The fight is a state machine driven directly by the
  * server (no path finding): it circles submerged and invulnerable, rises to spit brine bolts, lunges across the floor
  * ring and lies stranded (x1.5 damage taken), and from half health also roars (pushback + tidelings) and stirs a
- * whirlpool that drags players into the pool. Below a quarter it is faster and chains its attacks.
+ * whirlpool that drags players into the pool. Below 30 % it is faster and chains its attacks. Phases: 2 from 60 %, 3 from
+ * 30 % health (3.2; was 50 % and 25 %).
  * <p>Arena contract: it lives in the pool around its home (= spawn point, pool centre 4 below the altar) and never
  * leaves it for more than a lunge: out of water for over 8 s it leaps back; further than 30 blocks from home it
  * returns at once.
  */
 public class LeviathanEntity extends Monster {
     /** At most this many tidelings alive at once (spec 10: 3-4 per roar; more swarmed players in tests). */
-    private static final int MAX_TIDELINGS = 5;
+    private static final int MAX_TIDELINGS = 7;
 
     public static final int S_INTRO = 0;
     public static final int S_CIRCLE = 1;
@@ -78,6 +79,8 @@ public class LeviathanEntity extends Monster {
 
     /** Head pivot (centre of the hitbox) above the entity position. */
     public static final double PIVOT = 1.25;
+    /** Least depth of the head pivot under the surface while it swims (the hitbox top stays 0.5 under water). */
+    private static final double MIN_DEPTH = 1.75;
     public static final int DEATH_TICKS = 90;
     private static final double LEASH = 30.0;
     private static final double ARENA = 24.0;
@@ -135,9 +138,11 @@ public class LeviathanEntity extends Monster {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
-                .add(Attributes.MAX_HEALTH, 600.0)
-                .add(Attributes.ARMOR, 10.0)
-                .add(Attributes.ATTACK_DAMAGE, 6.0)
+                // 3.2: harder (was 600 health, armour 10, bite 6): a real fight in full titanium armour
+                .add(Attributes.MAX_HEALTH, 750.0)
+                .add(Attributes.ARMOR, 12.0)
+                .add(Attributes.ARMOR_TOUGHNESS, 2.0)
+                .add(Attributes.ATTACK_DAMAGE, 10.0)
                 .add(Attributes.MOVEMENT_SPEED, 0.3)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0)
                 .add(Attributes.EXPLOSION_KNOCKBACK_RESISTANCE, 1.0)
@@ -484,7 +489,17 @@ public class LeviathanEntity extends Monster {
         this.yHeadRot = this.getYRot();
     }
 
+    private static final String[] STATE_NAMES = {"intro", "circle", "rise_spit", "lunge_aim", "lunge_leap", "stranded",
+            "return", "tidal_roar", "whirlpool", "leap_back"};
+
     private void setState(int newState, int length) {
+        if (newState != this.state && !Double.isNaN(this.surfaceY)) {
+            // one line per change of state: where the head is against the surface (for the fight tests)
+            net.kasax.raft.Raft.LOGGER.info("Leviathan {} -> {} (phase {}): head {} under the surface, {} from the centre",
+                    STATE_NAMES[Mth.clamp(this.state, 0, 9)], STATE_NAMES[Mth.clamp(newState, 0, 9)], this.getPhase(),
+                    String.format(java.util.Locale.ROOT, "%.2f", this.surfaceY - this.getBoundingBox().maxY),
+                    String.format(java.util.Locale.ROOT, "%.1f", Math.sqrt(Mth.square(this.getX() - this.centre().x) + Mth.square(this.getZ() - this.centre().z))));
+        }
         this.state = newState;
         this.stateTicks = 0;
         this.stateLength = length;
@@ -494,15 +509,15 @@ public class LeviathanEntity extends Monster {
 
     private float speedMul() {
         return switch (this.getPhase()) {
-            case 3 -> 1.35F;
-            case 2 -> 1.15F;
+            case 3 -> 1.45F;
+            case 2 -> 1.2F;
             default -> 1.0F;
         };
     }
 
     private void updatePhase(ServerLevel level) {
         float hp = this.getHealth() / this.getMaxHealth();
-        int phase = hp <= 0.25F ? 3 : hp <= 0.5F ? 2 : 1;
+        int phase = hp <= 0.3F ? 3 : hp <= 0.6F ? 2 : 1;
         if (phase > this.getPhase()) {
             this.entityData.set(DATA_PHASE, phase);
             this.pendingRoar = true;
@@ -585,8 +600,45 @@ public class LeviathanEntity extends Monster {
         return Mth.clamp(this.poolRadius - 3.2, 1.2, 4.0);
     }
 
+    /**
+     * Depth of the head pivot while it cruises: deep enough that the whole hitbox (1.25 above and below the pivot)
+     * stays under the surface even at the top of its bob (3.2: it could swim so high that players hit it there).
+     */
     private double cruiseDepth() {
-        return Math.min(3.6, Math.max(1.6, (this.surfaceY - this.bottomY) * 0.5));
+        return Math.min(4.5, Math.max(MIN_DEPTH + 0.6, (this.surfaceY - this.bottomY) * 0.5));
+    }
+
+    /**
+     * The depth band and the pool's walls while it swims (circling, whirlpool, diving back): the pivot never rises
+     * above {@link #MIN_DEPTH} under the surface, never scrapes the floor and keeps off the walls. Surfacing happens
+     * only in the attacks that do it on purpose (spit, roar, lunge, intro), each with its own warning.
+     */
+    private void keepInBand() {
+        Vec3 pv = this.pivot();
+        Vec3 v = this.getDeltaMovement();
+        double vy = v.y;
+        if (pv.y > this.surfaceY - MIN_DEPTH) {
+            vy = Math.min(vy, -0.06 - (pv.y - (this.surfaceY - MIN_DEPTH)) * 0.2);
+        } else if (pv.y < this.bottomY + PIVOT + 0.4) {
+            vy = Math.max(vy, 0.05);
+        }
+        Vec3 c = this.centre();
+        Vec3 out = new Vec3(pv.x - c.x, 0.0, pv.z - c.z);
+        double r = out.length();
+        double maxR = Math.max(1.0, this.poolRadius - 1.8);
+        double vx = v.x;
+        double vz = v.z;
+        if (r > maxR) {
+            Vec3 n = out.scale(1.0 / r);
+            double outward = vx * n.x + vz * n.z;
+            if (outward > 0.0) {
+                vx -= n.x * outward;
+                vz -= n.z * outward;
+            }
+            vx -= n.x * 0.04 * (r - maxR);
+            vz -= n.z * 0.04 * (r - maxR);
+        }
+        this.setDeltaMovement(vx, vy, vz);
     }
 
     /** Point on the pool rim side towards p (horizontal), at radius r from the centre. */
@@ -651,6 +703,7 @@ public class LeviathanEntity extends Monster {
         this.circleAngle += (float) (this.circleDir * speed / Math.max(r, 1.0));
         double depth = this.cruiseDepth() + Mth.sin(this.tickCount * 0.09F) * 0.5;
         this.swimTo(this.circlePoint(this.circleAngle, r, depth), speed, 0.14);
+        this.keepInBand();
         this.faceMotion();
         if (this.getState() == S_CIRCLE && this.entityData.get(DATA_JAW) > 0 && this.biteCooldown < 20) {
             this.setJaw(0);
@@ -674,7 +727,7 @@ public class LeviathanEntity extends Monster {
     private void endAttack(ServerLevel level) {
         this.setJaw(0);
         List<Player> players = this.players(level);
-        if (this.getPhase() == 3 && !players.isEmpty() && this.random.nextFloat() < 0.6F) {
+        if (this.getPhase() == 3 && !players.isEmpty() && this.random.nextFloat() < 0.7F) {
             this.chooseAttack(level, players);
         } else {
             this.setState(S_CIRCLE, this.circleLength());
@@ -819,6 +872,7 @@ public class LeviathanEntity extends Monster {
 
     private void spitBolt(ServerLevel level, LivingEntity target, Vec3 mouth) {
         BrineBoltEntity bolt = new BrineBoltEntity(level, this, mouth);
+        bolt.setDamage(this.getPhase() == 3 ? 9.0F : 7.0F);
         double speed = this.getPhase() == 3 ? 1.25 : 1.05;
         Vec3 aimAt = target.position().add(0.0, target.getBbHeight() * 0.55, 0.0);
         double dist = aimAt.distanceTo(mouth);
@@ -927,7 +981,7 @@ public class LeviathanEntity extends Monster {
             if (d > 5.5) {
                 continue;
             }
-            e.hurtServer(level, this.damageSources().mobAttack(this), 8.0F);
+            e.hurtServer(level, this.damageSources().mobAttack(this), 13.0F);
             Vec3 push = d < 0.01 ? new Vec3(1.0, 0.0, 0.0) : new Vec3(dx / d, 0.0, dz / d);
             e.push(push.x * 1.3, 0.55, push.z * 1.3);
             e.needsSync = true;
@@ -1075,7 +1129,7 @@ public class LeviathanEntity extends Monster {
                 p.push(n.x * s, 0.45, n.z * s);
                 p.needsSync = true;
                 if (dist < 9.0) {
-                    p.hurtServer(level, this.damageSources().mobAttack(this), this.getPhase() == 3 ? 4.0F : 2.0F);
+                    p.hurtServer(level, this.damageSources().mobAttack(this), this.getPhase() == 3 ? 7.0F : 4.0F);
                 }
             }
             this.summonTidelings(level, players);
@@ -1123,7 +1177,7 @@ public class LeviathanEntity extends Monster {
     }
 
     private void summonTidelings(ServerLevel level, List<Player> players) {
-        int count = Math.min(this.getPhase() == 3 ? 4 : 3 + this.random.nextInt(2), MAX_TIDELINGS - this.countTidelings(level));
+        int count = Math.min(this.getPhase() == 3 ? 6 : 4, MAX_TIDELINGS - this.countTidelings(level));
         Vec3 c = this.centre();
         for (int i = 0; i < count; i++) {
             Player p = players.isEmpty() ? null : players.get(i % players.size());
@@ -1156,7 +1210,8 @@ public class LeviathanEntity extends Monster {
         double r = Math.min(2.6, this.cruiseRadius());
         float spin = t < 20 ? 0.12F + t * 0.008F : (t < 85 ? 0.3F : 0.3F - (t - 85) * 0.008F);
         this.circleAngle += this.circleDir * spin * this.speedMul();
-        this.swimTo(this.circlePoint(this.circleAngle, r, 1.15), 0.55 * this.speedMul(), 0.25);
+        this.swimTo(this.circlePoint(this.circleAngle, r, MIN_DEPTH + 0.6), 0.55 * this.speedMul(), 0.25);
+        this.keepInBand();
         this.faceMotion();
         // the vortex on the surface
         int arms = 3;
@@ -1307,21 +1362,39 @@ public class LeviathanEntity extends Monster {
             AABB before = this.getBoundingBox().inflate(3.0);
             List<ItemEntity> old = level.getEntitiesOfClass(ItemEntity.class, before);
             this.dropFromLootTable(level, this.deathSource, this.deathByPlayer);
-            Vec3 ring = killer != null ? killer.position() : c.add(this.poolRadius + 2.0, 0.0, 0.0);
+            // 3.2: the rewards land on dry floor next to the killer (or on the rim of the pool), never in the deep water
+            Vec3 land = this.rewardSpot(level, killer);
             for (ItemEntity item : level.getEntitiesOfClass(ItemEntity.class, before.inflate(1.0), e -> !old.contains(e))) {
-                item.setPos(c.x, c.y, c.z);
-                Vec3 to = new Vec3(ring.x - c.x, 0.0, ring.z - c.z);
-                double h = to.length();
-                double t = 22.0;
-                Vec3 v = h < 0.1 ? new Vec3(0.0, 0.5, 0.0) : new Vec3(to.x / t, 0.55, to.z / t);
-                item.setDeltaMovement(v.add(this.random.nextGaussian() * 0.04, this.random.nextDouble() * 0.1, this.random.nextGaussian() * 0.04));
+                item.setPos(land.x, land.y + 0.3, land.z);
+                item.setDeltaMovement(this.random.nextGaussian() * 0.05, 0.25 + this.random.nextDouble() * 0.1, this.random.nextGaussian() * 0.05);
                 item.setUnlimitedLifetime();
                 item.setPermanentlyInvulnerable(true);
             }
+            level.sendParticles(ParticleTypes.END_ROD, land.x, land.y + 0.6, land.z, 40, 0.4, 0.4, 0.4, 0.08);
         }
         if (this.deathByPlayer) {
-            ExperienceOrb.award(level, c, 500);
+            ExperienceOrb.award(level, killer != null && !killer.isInWater() ? killer.position() : c, 800);
         }
+    }
+
+    /** Dry ground for the rewards: the killer's feet when they stand on the floor, else the pool's rim towards them. */
+    private Vec3 rewardSpot(ServerLevel level, @Nullable Player killer) {
+        if (killer != null && killer.isAlive() && !killer.isInWater() && killer.onGround() && killer.distanceToSqr(this) < 40.0 * 40.0) {
+            return killer.position();
+        }
+        Vec3 c = this.centre();
+        Vec3 towards = killer != null ? killer.position() : c.add(1.0, 0.0, 0.0);
+        for (double r = this.poolRadius + 1.5; r < this.poolRadius + 8.0; r += 0.5) {
+            Vec3 p = this.poolPointTowards(towards, r, 0.0);
+            BlockPos.MutableBlockPos q = BlockPos.containing(p.x, this.surfaceY - 1.0, p.z).mutable();
+            for (int k = 0; k < 8; k++, q.move(0, 1, 0)) {
+                if (!level.getBlockState(q).isAir() && level.getFluidState(q).isEmpty() && level.getBlockState(q.above()).isAir()
+                        && level.getBlockState(q.above(2)).isAir()) {
+                    return new Vec3(p.x, q.getY() + 1.0, p.z);
+                }
+            }
+        }
+        return new Vec3(c.x, this.surfaceY + 1.0, c.z);
     }
 
     @Override
