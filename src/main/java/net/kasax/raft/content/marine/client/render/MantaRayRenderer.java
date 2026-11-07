@@ -5,21 +5,21 @@ import net.kasax.raft.content.marine.client.model.MantaRayModel;
 import net.kasax.raft.content.marine.client.model.MantaRayRenderState;
 import net.kasax.raft.content.marine.entity.MantaRayEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.Identifier;
+import net.kasax.raft.compat.render.MobRenderer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.AABB;
 
 /** Renders the manta ray; it banks into its turns. */
 public class MantaRayRenderer extends MobRenderer<MantaRayEntity, MantaRayRenderState, MantaRayModel> {
-    private static final Identifier TEXTURE = Raft.id("textures/entity/manta_ray.png");
+    private static final ResourceLocation TEXTURE = Raft.id("textures/entity/manta_ray.png");
 
     public MantaRayRenderer(EntityRendererProvider.Context context) {
         super(context, new MantaRayModel(context.bakeLayer(MantaRayModel.LAYER)), 1.0F);
     }
 
     @Override
-    public Identifier getTextureLocation(MantaRayRenderState state) {
+    public ResourceLocation getTextureLocation(MantaRayRenderState state) {
         return TEXTURE;
     }
 

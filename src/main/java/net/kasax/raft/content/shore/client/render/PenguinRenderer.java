@@ -5,15 +5,15 @@ import net.kasax.raft.Raft;
 import net.kasax.raft.content.shore.client.model.PenguinModel;
 import net.kasax.raft.content.shore.entity.PenguinEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.Identifier;
+import net.kasax.raft.compat.render.MobRenderer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
 /** Penguin; the chick is a small grey fluffball with a big head. */
 public class PenguinRenderer extends MobRenderer<PenguinEntity, PenguinRenderState, PenguinModel> {
-    private static final Identifier TEXTURE = Raft.id("textures/entity/penguin/penguin.png");
-    private static final Identifier CHICK = Raft.id("textures/entity/penguin/penguin_chick.png");
+    private static final ResourceLocation TEXTURE = Raft.id("textures/entity/penguin/penguin.png");
+    private static final ResourceLocation CHICK = Raft.id("textures/entity/penguin/penguin_chick.png");
 
     public PenguinRenderer(EntityRendererProvider.Context context) {
         super(context, new PenguinModel(context.bakeLayer(PenguinModel.LAYER)), 0.35F);
@@ -37,7 +37,7 @@ public class PenguinRenderer extends MobRenderer<PenguinEntity, PenguinRenderSta
     }
 
     @Override
-    public Identifier getTextureLocation(PenguinRenderState state) {
+    public ResourceLocation getTextureLocation(PenguinRenderState state) {
         return state.isBaby ? CHICK : TEXTURE;
     }
 

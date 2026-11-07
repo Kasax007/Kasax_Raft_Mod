@@ -10,14 +10,19 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.SpawnEggItem;
-import net.minecraft.world.item.ToolMaterial;
 
 /** Items of the boss module. Everything goes into the STORY tab (the leviathan egg only exists for creative/testing). */
 public final class BossItems {
     public static final TagKey<Item> TIDEBREAKER_REPAIR = TagKey.create(Registries.ITEM, Raft.id("tidebreaker_repair_materials"));
     /** Netherite-level spear: 2031 uses, 4 + 4 + 1 = 9 attack damage (see {@link TidebreakerItem}). */
-    public static final ToolMaterial TIDEBREAKER_MATERIAL = new ToolMaterial(BlockTags.INCORRECT_FOR_NETHERITE_TOOL, 2031, 9.0F, 4.0F, 15,
-            TIDEBREAKER_REPAIR);
+    public static final net.minecraft.world.item.Tier TIDEBREAKER_MATERIAL = new net.minecraft.world.item.Tier() {
+        @Override public int getUses() { return 2031; }
+        @Override public float getSpeed() { return 9.0F; }
+        @Override public float getAttackDamageBonus() { return 4.0F; }
+        @Override public TagKey<net.minecraft.world.level.block.Block> getIncorrectBlocksForDrops() { return BlockTags.INCORRECT_FOR_NETHERITE_TOOL; }
+        @Override public int getEnchantmentValue() { return 15; }
+        @Override public net.minecraft.world.item.crafting.Ingredient getRepairIngredient() { return net.minecraft.world.item.crafting.Ingredient.of(TIDEBREAKER_REPAIR); }
+    };
 
     public static Item LEVIATHAN_SCALE;
     public static Item TIDEBREAKER;
@@ -31,10 +36,10 @@ public final class BossItems {
         BcTabs.Tab tab = BcTabs.Tab.STORY;
         LEVIATHAN_SCALE = BcReg.item("leviathan_scale", Item::new, new Item.Properties().rarity(Rarity.RARE).fireResistant(), tab);
         TIDEBREAKER = BcReg.item("tidebreaker", TidebreakerItem::new, new Item.Properties()
-                .sword(TIDEBREAKER_MATERIAL, 4.0F, -2.6F).rarity(Rarity.EPIC).fireResistant(), tab);
+                .attributes(net.minecraft.world.item.SwordItem.createAttributes(TIDEBREAKER_MATERIAL, 4, -2.6F)).rarity(Rarity.EPIC).fireResistant(), tab);
         BossBlocks.registerItems();
-        LEVIATHAN_SPAWN_EGG = BcReg.item("leviathan_spawn_egg", SpawnEggItem::new,
-                new Item.Properties().spawnEgg(BossEntities.LEVIATHAN).rarity(Rarity.EPIC), tab);
-        TIDELING_SPAWN_EGG = BcReg.item("tideling_spawn_egg", SpawnEggItem::new, new Item.Properties().spawnEgg(BossEntities.TIDELING), tab);
+        LEVIATHAN_SPAWN_EGG = BcReg.item("leviathan_spawn_egg", p -> new SpawnEggItem(BossEntities.LEVIATHAN, 0xFFFFFF, 0xFFFFFF, p),
+                new Item.Properties().rarity(Rarity.EPIC), tab);
+        TIDELING_SPAWN_EGG = BcReg.item("tideling_spawn_egg", p -> new SpawnEggItem(BossEntities.TIDELING, 0xFFFFFF, 0xFFFFFF, p), new Item.Properties(), tab);
     }
 }

@@ -1,7 +1,7 @@
 package net.kasax.raft.content.audio;
 
 import net.minecraft.sounds.Music;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * The music of the raft dimension. The sea themes and the trench theme come from the biomes' and the dimension's

@@ -10,15 +10,15 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ProjectileDeflection;
-import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.kasax.raft.compat.ValueInput;
+import net.kasax.raft.compat.ValueOutput;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -50,7 +50,7 @@ public class Harpoon extends AbstractArrow {
     @Override
     public void tick() {
         super.tick();
-        if (this.level().isClientSide() && !this.isInGround() && this.isInWater() && this.getDeltaMovement().lengthSqr() > 0.01) {
+        if (this.level().isClientSide() && !this.inGround && this.isInWater() && this.getDeltaMovement().lengthSqr() > 0.01) {
             Vec3 v = this.getDeltaMovement();
             this.level().addParticle(ParticleTypes.BUBBLE, this.getX() - v.x * 0.5, this.getY() - v.y * 0.5, this.getZ() - v.z * 0.5,
                     0.0, 0.02, 0.0);
@@ -73,7 +73,6 @@ public class Harpoon extends AbstractArrow {
         return this.dealtDamage ? null : super.findHitEntity(from, to);
     }
 
-    @Override
     protected Collection<EntityHitResult> findHitEntities(Vec3 from, Vec3 to) {
         EntityHitResult hit = this.findHitEntity(from, to);
         return hit != null ? List.of(hit) : List.of();
@@ -90,14 +89,14 @@ public class Harpoon extends AbstractArrow {
             damage = EnchantmentHelper.modifyDamage(serverLevel, this.getWeaponItem(), target, source, damage);
         }
         this.dealtDamage = true;
-        boolean hurt = target.hurtOrSimulate(source, damage);
+        boolean hurt = target.hurt(source, damage);
         if (hurt && target instanceof LivingEntity living) {
             this.doKnockback(living, source);
             this.doPostHurtEffects(living);
         }
-        if (target.projectileReceivesSideEffectsOnHit(hurt)) {
+        if (target.getType() != net.minecraft.world.entity.EntityType.ENDERMAN || hurt) {
             this.playSound(DivingSounds.HARPOON_HIT, 1.0F, 1.0F);
-            this.deflect(ProjectileDeflection.REVERSE, target, this.owner, false, new Vec3(0.02, 0.15, 0.02));
+            this.setDeltaMovement(this.getDeltaMovement().multiply(-0.01, -0.1, -0.01));
         }
     }
 
@@ -112,14 +111,16 @@ public class Harpoon extends AbstractArrow {
     }
 
     @Override
-    protected void readAdditionalSaveData(ValueInput input) {
-        super.readAdditionalSaveData(input);
+    public void readAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueInput input = ValueInput.of(tag121, this.registryAccess());
+        super.readAdditionalSaveData(input.tag());
         this.dealtDamage = input.getBooleanOr("DealtDamage", false);
     }
 
     @Override
-    protected void addAdditionalSaveData(ValueOutput output) {
-        super.addAdditionalSaveData(output);
+    public void addAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueOutput output = ValueOutput.of(tag121, this.registryAccess());
+        super.addAdditionalSaveData(output.tag());
         output.putBoolean("DealtDamage", this.dealtDamage);
     }
 }

@@ -7,15 +7,14 @@ import net.fabricmc.api.Environment;
 import net.kasax.raft.content.vessel.VesselEntity;
 import net.kasax.raft.content.vessel.VesselStructure;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.block.BlockModelResolver;
-import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.kasax.raft.compat.render.SubmitNodeCollector;
+import net.kasax.raft.compat.render.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.kasax.raft.compat.render.RenderTypes;
+import net.kasax.raft.compat.render.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.ARGB;
+import net.kasax.raft.compat.ARGB;
 import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -27,11 +26,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  */
 @Environment(EnvType.CLIENT)
 public class VesselRenderer extends EntityRenderer<VesselEntity, VesselRenderState> {
-    private final BlockModelResolver resolver;
-
     public VesselRenderer(EntityRendererProvider.Context context) {
         super(context);
-        this.resolver = context.getBlockModelResolver();
         this.shadowRadius = 0.0F;
     }
 
@@ -51,7 +47,7 @@ public class VesselRenderer extends EntityRenderer<VesselEntity, VesselRenderSta
         }
         VesselClientModel model = entity.clientModel instanceof VesselClientModel m && m.isCurrent(structure) ? m : null;
         if (model == null) {
-            model = VesselClientModel.build(structure, this.resolver);
+            model = VesselClientModel.build(structure);
             entity.clientModel = model;
         }
         // an anchored raft is still drawn for its last few ticks, until the world has built the meshes of its blocks
@@ -60,7 +56,7 @@ public class VesselRenderer extends EntityRenderer<VesselEntity, VesselRenderSta
             model.updateLight(entity.level(), entity.renderPose(partialTicks), entity.level().getGameTime());
         }
         state.model = model;
-        state.yaw = entity.getYRot(partialTicks);
+        state.yaw = entity.getViewYRot(partialTicks);
         state.target = VesselPicker.targetOf(entity);
     }
 
@@ -70,12 +66,22 @@ public class VesselRenderer extends EntityRenderer<VesselEntity, VesselRenderSta
         if (model != null) {
             Vec3 pivot = model.structure.pivot();
             poseStack.pushPose();
-            poseStack.rotateDegrees(Axis.YP, -state.yaw);
+            poseStack.mulPose(Axis.YP.rotationDegrees(-state.yaw));
             poseStack.translate(-pivot.x, -pivot.y, -pivot.z);
-            for (int i = 0; i < model.models.length; i++) {
+            net.minecraft.client.renderer.block.BlockRenderDispatcher blocks = Minecraft.getInstance().getBlockRenderer();
+            for (int i = 0; i < model.states.length; i++) {
                 poseStack.pushPose();
                 poseStack.translate(model.x[i], model.y[i], model.z[i]);
-                model.models[i].submit(poseStack, collector, model.light[i], OverlayTexture.NO_OVERLAY, state.outlineColor);
+                BlockState blockState = model.states[i];
+                if (blockState.getRenderShape() == net.minecraft.world.level.block.RenderShape.ENTITYBLOCK_ANIMATED
+                        && blockState.hasProperty(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING)) {
+                    // chests and the like are drawn as their item (1.21.1 has no block model for them): turn it the block's way
+                    float rot = blockState.getValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING).toYRot();
+                    poseStack.translate(0.5F, 0.0F, 0.5F);
+                    poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - rot));
+                    poseStack.translate(-0.5F, 0.0F, -0.5F);
+                }
+                blocks.renderSingleBlock(blockState, poseStack, collector.buffers(), model.light[i], OverlayTexture.NO_OVERLAY);
                 poseStack.popPose();
             }
             BlockPos target = state.target;
@@ -85,8 +91,7 @@ public class VesselRenderer extends EntityRenderer<VesselEntity, VesselRenderSta
                 if (!shape.isEmpty()) {
                     poseStack.pushPose();
                     poseStack.translate(target.getX(), target.getY(), target.getZ());
-                    float width = Minecraft.getInstance().gameRenderer.gameRenderState().windowRenderState.appropriateLineWidth;
-                    collector.submitShapeOutline(poseStack, shape, RenderTypes.linesTranslucent(), ARGB.black(102), width, false);
+                    collector.submitShapeOutline(poseStack, shape, RenderTypes.linesTranslucent(), ARGB.black(102), 1.0F, false);
                     poseStack.popPose();
                 }
             }

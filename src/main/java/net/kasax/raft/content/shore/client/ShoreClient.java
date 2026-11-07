@@ -1,7 +1,7 @@
 package net.kasax.raft.content.shore.client;
 
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.kasax.raft.content.shore.ShoreEntities;
 import net.kasax.raft.content.shore.client.model.CorsairModel;
 import net.kasax.raft.content.shore.client.model.CrabModel;
@@ -21,12 +21,12 @@ public final class ShoreClient {
     }
 
     public static void init() {
-        ModelLayerRegistry.registerModelLayer(CrabModel.LAYER, CrabModel::createBodyLayer);
-        ModelLayerRegistry.registerModelLayer(CrabModel.EMBER_LAYER, CrabModel::createEmberLayer);
-        ModelLayerRegistry.registerModelLayer(SeagullModel.LAYER, SeagullModel::createBodyLayer);
-        ModelLayerRegistry.registerModelLayer(PenguinModel.LAYER, PenguinModel::createBodyLayer);
-        ModelLayerRegistry.registerModelLayer(SeaOtterModel.LAYER, SeaOtterModel::createBodyLayer);
-        ModelLayerRegistry.registerModelLayer(CorsairModel.HAT_LAYER, CorsairModel::createHatLayer);
+        EntityModelLayerRegistry.registerModelLayer(CrabModel.LAYER, CrabModel::createBodyLayer);
+        EntityModelLayerRegistry.registerModelLayer(CrabModel.EMBER_LAYER, CrabModel::createEmberLayer);
+        EntityModelLayerRegistry.registerModelLayer(SeagullModel.LAYER, SeagullModel::createBodyLayer);
+        EntityModelLayerRegistry.registerModelLayer(PenguinModel.LAYER, PenguinModel::createBodyLayer);
+        EntityModelLayerRegistry.registerModelLayer(SeaOtterModel.LAYER, SeaOtterModel::createBodyLayer);
+        EntityModelLayerRegistry.registerModelLayer(CorsairModel.HAT_LAYER, CorsairModel::createHatLayer);
 
         EntityRendererRegistry.register(ShoreEntities.CRAB, CrabRenderer::new);
         EntityRendererRegistry.register(ShoreEntities.EMBER_CRAB, EmberCrabRenderer::new);

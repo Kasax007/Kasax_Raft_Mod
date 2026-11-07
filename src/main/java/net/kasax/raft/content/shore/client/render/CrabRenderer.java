@@ -6,13 +6,13 @@ import net.kasax.raft.content.shore.client.model.CrabModel;
 import net.kasax.raft.content.shore.entity.CrabAnimated;
 import net.kasax.raft.content.shore.entity.CrabEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.Identifier;
+import net.kasax.raft.compat.render.MobRenderer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 
 /** Beach crab in three shell colours; the babies are half size. */
 public class CrabRenderer extends MobRenderer<CrabEntity, CrabRenderState, CrabModel> {
-    private static final Identifier[] TEXTURES = {
+    private static final ResourceLocation[] TEXTURES = {
             Raft.id("textures/entity/crab/crab_red.png"),
             Raft.id("textures/entity/crab/crab_blue.png"),
             Raft.id("textures/entity/crab/crab_sand.png")};
@@ -43,7 +43,7 @@ public class CrabRenderer extends MobRenderer<CrabEntity, CrabRenderState, CrabM
     }
 
     @Override
-    public Identifier getTextureLocation(CrabRenderState state) {
+    public ResourceLocation getTextureLocation(CrabRenderState state) {
         return TEXTURES[Math.floorMod(state.variant, TEXTURES.length)];
     }
 

@@ -10,7 +10,7 @@ import net.minecraft.world.entity.ai.control.MoveControl;
  * goals set a wanted position and the creature turns towards it with a limited turn rate, pitching smoothly up or
  * down, which gives wide, natural curves instead of the sharp corners of a path.
  */
-public class GlideMoveControl extends MoveControl<Mob> {
+public class GlideMoveControl extends MoveControl {
     private final float maxYawPerTick;
     private final float maxPitch;
     private final float pitchPerTick;
@@ -65,5 +65,10 @@ public class GlideMoveControl extends MoveControl<Mob> {
             this.mob.zza = 0.0F;
             this.mob.yya = 0.0F;
         }
+    }
+
+    private float rotateTowards(float from, float to, float max) {
+        float diff = net.minecraft.util.Mth.degreesDifference(from, to);
+        return from + net.minecraft.util.Mth.clamp(diff, -max, max);
     }
 }

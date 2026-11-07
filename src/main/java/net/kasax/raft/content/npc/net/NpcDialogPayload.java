@@ -34,15 +34,20 @@ public record NpcDialogPayload(int entityId, String npc, Component name, Compone
                 Topic::new);
     }
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, NpcDialogPayload> CODEC = StreamCodec.composite(
-            ByteBufCodecs.VAR_INT, NpcDialogPayload::entityId,
-            ByteBufCodecs.STRING_UTF8, NpcDialogPayload::npc,
-            ComponentSerialization.TRUSTED_STREAM_CODEC, NpcDialogPayload::name,
-            ComponentSerialization.TRUSTED_STREAM_CODEC, NpcDialogPayload::greeting,
-            ItemStack.OPTIONAL_STREAM_CODEC, NpcDialogPayload::gift,
-            Topic.CODEC.apply(ByteBufCodecs.list(8)), NpcDialogPayload::topics,
-            ByteBufCodecs.BOOL, NpcDialogPayload::trade,
-            NpcDialogPayload::new);
+    private static final StreamCodec<RegistryFriendlyByteBuf, List<Topic>> TOPICS = Topic.CODEC.apply(ByteBufCodecs.list(8));
+    public static final StreamCodec<RegistryFriendlyByteBuf, NpcDialogPayload> CODEC = StreamCodec.of(
+            (buf, p) -> {
+                ByteBufCodecs.VAR_INT.encode(buf, p.entityId());
+                ByteBufCodecs.STRING_UTF8.encode(buf, p.npc());
+                ComponentSerialization.TRUSTED_STREAM_CODEC.encode(buf, p.name());
+                ComponentSerialization.TRUSTED_STREAM_CODEC.encode(buf, p.greeting());
+                ItemStack.OPTIONAL_STREAM_CODEC.encode(buf, p.gift());
+                TOPICS.encode(buf, p.topics());
+                ByteBufCodecs.BOOL.encode(buf, p.trade());
+            },
+            buf -> new NpcDialogPayload(ByteBufCodecs.VAR_INT.decode(buf), ByteBufCodecs.STRING_UTF8.decode(buf),
+                    ComponentSerialization.TRUSTED_STREAM_CODEC.decode(buf), ComponentSerialization.TRUSTED_STREAM_CODEC.decode(buf),
+                    ItemStack.OPTIONAL_STREAM_CODEC.decode(buf), TOPICS.decode(buf), ByteBufCodecs.BOOL.decode(buf)));
 
     @Override
     public Type<? extends CustomPacketPayload> type() {

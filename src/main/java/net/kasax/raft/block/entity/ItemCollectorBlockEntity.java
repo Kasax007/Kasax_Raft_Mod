@@ -38,13 +38,13 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
-import org.jspecify.annotations.Nullable;
+import net.kasax.raft.compat.ValueInput;
+import net.kasax.raft.compat.ValueOutput;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class ItemCollectorBlockEntity extends BlockEntity implements MenuProvider, ImplementedInventory {
+public class ItemCollectorBlockEntity extends BlockEntity implements net.kasax.raft.compat.RemovalSideEffects, MenuProvider, ImplementedInventory {
     public static final BooleanProperty HAS_NET = BooleanProperty.create("has_net");
     private final NonNullList<ItemStack> inventory = NonNullList.withSize(2, ItemStack.EMPTY);
 
@@ -102,7 +102,7 @@ public class ItemCollectorBlockEntity extends BlockEntity implements MenuProvide
 
     /** Hoppers may only insert nets into the top slot and only take the catch from the bottom slot. */
     @Override
-    public boolean canPlaceItemThroughFace(int slot, ItemStack stack, net.minecraft.core.@org.jspecify.annotations.Nullable Direction side) {
+    public boolean canPlaceItemThroughFace(int slot, ItemStack stack, net.minecraft.core.@org.jetbrains.annotations.Nullable Direction side) {
         return slot == INPUT_SLOT && stack.is(ModItems.NET);
     }
 
@@ -127,18 +127,20 @@ public class ItemCollectorBlockEntity extends BlockEntity implements MenuProvide
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
-        ContainerHelper.saveAllItems(output, inventory);
+    protected void saveAdditional(net.minecraft.nbt.CompoundTag tag121, net.minecraft.core.HolderLookup.Provider reg121) {
+        ValueOutput output = ValueOutput.of(tag121, reg121);
+        super.saveAdditional(output.tag(), output.lookup());
+        ContainerHelper.saveAllItems(output.tag(), inventory, output.lookup());
         output.putInt("item_collector.progress", progress);
     }
 
     @Override
-    protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);
+    protected void loadAdditional(net.minecraft.nbt.CompoundTag tag121, net.minecraft.core.HolderLookup.Provider reg121) {
+        ValueInput input = ValueInput.of(tag121, reg121);
+        super.loadAdditional(input.tag(), input.lookup());
         // loadAllItems only sets non-empty slots: clear first, or an emptied slot keeps its old item on the client
         for (int i = 0; i < inventory.size(); i++) inventory.set(i, ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(input, inventory);
+        ContainerHelper.loadAllItems(input.tag(), inventory, input.lookup());
         progress = input.getIntOr("item_collector.progress", 0);
     }
 
@@ -157,7 +159,6 @@ public class ItemCollectorBlockEntity extends BlockEntity implements MenuProvide
         if (this.level != null) {
             Containers.dropContents(this.level, pos, this);
         }
-        super.preRemoveSideEffects(pos, state);
     }
 
     public boolean hasNetInInputSlot() {
@@ -242,7 +243,7 @@ public class ItemCollectorBlockEntity extends BlockEntity implements MenuProvide
     private void craftItemKeepInput(ServerLevel level) {
         Optional<RecipeHolder<ItemCatchingRecipe>> recipe = getCurrentRecipe(level);
         if (recipe.isEmpty()) return;
-        ItemStack result = recipe.get().value().assemble(new SingleRecipeInput(this.inventory.getFirst()));
+        ItemStack result = recipe.get().value().assemble(new SingleRecipeInput(this.inventory.getFirst()), level.registryAccess());
 
         ItemStack inputStack = this.getItem(INPUT_SLOT);
         if (!inputStack.isEmpty()) {
@@ -270,7 +271,7 @@ public class ItemCollectorBlockEntity extends BlockEntity implements MenuProvide
     private boolean hasRecipe(ServerLevel level) {
         Optional<RecipeHolder<ItemCatchingRecipe>> recipe = getCurrentRecipe(level);
         if (recipe.isEmpty()) return false;
-        ItemStack result = recipe.get().value().assemble(new SingleRecipeInput(this.inventory.getFirst()));
+        ItemStack result = recipe.get().value().assemble(new SingleRecipeInput(this.inventory.getFirst()), level.registryAccess());
         return canInsertAmountIntoOutputSlot(result) && canInsertItemIntoOutputSlot(result.getItem());
     }
 

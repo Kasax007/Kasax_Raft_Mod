@@ -1,6 +1,6 @@
 package net.kasax.raft.content.boss.client.model;
 
-import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.kasax.raft.compat.render.EntityRenderState;
 
 /**
  * Render state of the Leviathan. Parts: 0 = head, 1..6 = body segments, 7 = tail. Positions are in blocks relative to

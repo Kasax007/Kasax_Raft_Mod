@@ -6,7 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
@@ -23,7 +23,7 @@ import net.minecraft.world.level.levelgen.structure.Structure;
  * Craters that hold the Ashen Forge (story chapter 6) stay dry in and around the forge: no lava in a chunk that, or
  * whose neighbour, references the structure, so players can walk up to it.
  */
-public record CraterLavaFeature(int floorY) implements Feature {
+public record CraterLavaFeature(int floorY) implements net.kasax.raft.compat.worldgen.WorldFeature {
     public static final MapCodec<CraterLavaFeature> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             Codec.intRange(-64, 320).optionalFieldOf("floor_y", 164).forGetter(CraterLavaFeature::floorY)
     ).apply(i, CraterLavaFeature::new));
@@ -74,11 +74,11 @@ public record CraterLavaFeature(int floorY) implements Feature {
         return any;
     }
 
-    private static final Identifier ASHEN_FORGE = Identifier.fromNamespaceAndPath("raft", "ashen_forge");
+    private static final ResourceLocation ASHEN_FORGE = ResourceLocation.fromNamespaceAndPath("raft", "ashen_forge");
 
     /** True when this chunk or one of its 8 neighbours belongs to an Ashen Forge (structure references). */
     private static boolean nearForge(WorldGenLevel level, int chunkX, int chunkZ) {
-        Structure forge = level.registryAccess().lookupOrThrow(Registries.STRUCTURE).getValue(ASHEN_FORGE);
+        Structure forge = level.registryAccess().registryOrThrow(Registries.STRUCTURE).get(ASHEN_FORGE);
         if (forge == null) {
             return false;
         }

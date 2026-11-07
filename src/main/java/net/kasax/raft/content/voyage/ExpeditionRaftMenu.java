@@ -9,7 +9,7 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Storage of the Expedition Raft: 3 rows (6 with the cargo crate), the engine's fuel slot (with the engine) and the
@@ -59,7 +59,7 @@ public class ExpeditionRaftMenu extends AbstractContainerMenu {
             });
         }
         this.ownSlots = this.slots.size();
-        this.addStandardInventorySlots(inventory, 8, 18 + this.rows * 18 + 13);
+        net.kasax.raft.compat.Menus.addStandardInventorySlots(this::addSlot, inventory, 8, 18 + this.rows * 18 + 13);
         this.addDataSlots(data);
     }
 

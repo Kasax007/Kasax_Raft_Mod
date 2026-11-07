@@ -5,11 +5,11 @@ import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.kasax.raft.Raft;
 import net.kasax.raft.world.biome.ModBiomes;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.biome.Biome;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -62,11 +62,11 @@ public final class WorldSpawns {
      * creatures of the frost floes and coral shallows, so they always filled the water creature cap (5-6 whales around
      * a player): their costs keep them some 30 (whale) or 20 (manta) blocks apart.
      */
-    private record Cost(@Nullable ResourceKey<Biome> biome, Identifier entity, double charge, double budget) {
+    private record Cost(@Nullable ResourceKey<Biome> biome, ResourceLocation entity, double charge, double budget) {
     }
 
     private static final List<Cost> COSTS = List.of(
-            new Cost(null, Identifier.withDefaultNamespace("drowned"), 0.7, 0.12),
+            new Cost(null, ResourceLocation.withDefaultNamespace("drowned"), 0.7, 0.12),
             new Cost(null, Raft.id("drowned_corsair"), 0.7, 0.12),
             new Cost(ModBiomes.VOLCANIC_ISLE, Raft.id("ember_crab"), 0.7, 0.08),
             new Cost(ModBiomes.FROST_FLOES, Raft.id("whale"), 1.0, 0.03),
@@ -79,19 +79,19 @@ public final class WorldSpawns {
 
     public static void init() {
         BiomeModifications.create(Raft.id("world_creature_spawns")).add(ModificationPhase.ADDITIONS,
-                context -> context.getBiomeKey().identifier().getNamespace().equals(Raft.MOD_ID),
+                context -> context.getBiomeKey().location().getNamespace().equals(Raft.MOD_ID),
                 (selection, context) -> {
                     for (Spawn spawn : SPAWNS) {
                         if (!spawn.biome().equals(selection.getBiomeKey())) {
                             continue;
                         }
                         Optional<EntityType<?>> type = BuiltInRegistries.ENTITY_TYPE.getOptional(Raft.id(spawn.entity()));
-                        type.ifPresent(t -> context.getMobSpawnSettings().addSpawn(t, spawn.weight(), spawn.min(), spawn.max()));
+                        type.ifPresent(t -> context.getSpawnSettings().addSpawn(t.getCategory(), new net.minecraft.world.level.biome.MobSpawnSettings.SpawnerData(t, spawn.weight(), spawn.min(), spawn.max())));
                     }
                     for (Cost cost : COSTS) {
                         if (cost.biome() == null || cost.biome().equals(selection.getBiomeKey())) {
                             BuiltInRegistries.ENTITY_TYPE.getOptional(cost.entity())
-                                    .ifPresent(t -> context.getMobSpawnSettings().addMobCharge(t, cost.charge(), cost.budget()));
+                                    .ifPresent(t -> context.getSpawnSettings().setSpawnCost(t, cost.charge(), cost.budget()));
                         }
                     }
                 });

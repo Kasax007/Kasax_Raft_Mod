@@ -5,20 +5,20 @@ import net.kasax.raft.content.marine.client.model.MorayEelModel;
 import net.kasax.raft.content.marine.client.model.MorayEelRenderState;
 import net.kasax.raft.content.marine.entity.MorayEelEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.Identifier;
+import net.kasax.raft.compat.render.MobRenderer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 /** Renders the moray eel. */
 public class MorayEelRenderer extends MobRenderer<MorayEelEntity, MorayEelRenderState, MorayEelModel> {
-    private static final Identifier TEXTURE = Raft.id("textures/entity/moray_eel.png");
+    private static final ResourceLocation TEXTURE = Raft.id("textures/entity/moray_eel.png");
 
     public MorayEelRenderer(EntityRendererProvider.Context context) {
         super(context, new MorayEelModel(context.bakeLayer(MorayEelModel.LAYER)), 0.4F);
     }
 
     @Override
-    public Identifier getTextureLocation(MorayEelRenderState state) {
+    public ResourceLocation getTextureLocation(MorayEelRenderState state) {
         return TEXTURE;
     }
 

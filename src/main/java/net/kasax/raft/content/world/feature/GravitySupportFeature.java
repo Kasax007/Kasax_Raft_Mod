@@ -27,7 +27,7 @@ import net.minecraft.world.level.levelgen.feature.Feature;
  * the layer above it rests on it. The tops of beaches and sea floors keep their look; only cave ceilings change, as
  * with vanilla's sandstone-on-ceilings rule. Sections without any of these blocks are skipped (palette check).
  */
-public final class GravitySupportFeature implements Feature {
+public final class GravitySupportFeature implements net.kasax.raft.compat.worldgen.WorldFeature {
     public static final GravitySupportFeature INSTANCE = new GravitySupportFeature();
     public static final MapCodec<GravitySupportFeature> CODEC = MapCodec.unit(INSTANCE);
     private static Map<Block, BlockState> solid;
@@ -61,7 +61,7 @@ public final class GravitySupportFeature implements Feature {
                 SectionPos.blockToSectionCoord(origin.getZ()));
         int x0 = chunk.getPos().getMinBlockX();
         int z0 = chunk.getPos().getMinBlockZ();
-        int minY = chunk.getMinY();
+        int minY = chunk.getMinBuildHeight();
         LevelChunkSection[] sections = chunk.getSections();
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         boolean any = false;

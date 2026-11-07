@@ -19,9 +19,9 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
-import org.jspecify.annotations.Nullable;
+import net.kasax.raft.compat.ValueInput;
+import net.kasax.raft.compat.ValueOutput;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Turns water bottles into fresh water bottles (a water bucket gives three) while it is fuelled.
@@ -219,8 +219,9 @@ public class WaterPurifierBlockEntity extends BaseContainerBlockEntity implement
     }
 
     @Override
-    protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);
+    protected void loadAdditional(net.minecraft.nbt.CompoundTag tag121, net.minecraft.core.HolderLookup.Provider reg121) {
+        ValueInput input = ValueInput.of(tag121, reg121);
+        super.loadAdditional(input.tag(), input.lookup());
         burnTime = input.getIntOr("BurnTime", 0);
         burnTotal = input.getIntOr("BurnTotal", 0);
         progress = input.getIntOr("Progress", 0);
@@ -228,8 +229,9 @@ public class WaterPurifierBlockEntity extends BaseContainerBlockEntity implement
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
+    protected void saveAdditional(net.minecraft.nbt.CompoundTag tag121, net.minecraft.core.HolderLookup.Provider reg121) {
+        ValueOutput output = ValueOutput.of(tag121, reg121);
+        super.saveAdditional(output.tag(), output.lookup());
         output.putInt("BurnTime", burnTime);
         output.putInt("BurnTotal", burnTotal);
         output.putInt("Progress", progress);

@@ -12,7 +12,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.SpawnGroupData;
@@ -26,11 +26,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.kasax.raft.compat.ValueInput;
+import net.kasax.raft.compat.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 
@@ -67,7 +67,7 @@ public class MorayEelEntity extends AbstractMarineMonster {
         this.goalSelector.addGoal(3, new HideInHoleGoal());
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true,
-                (target, level) -> target.isInWater() && !target.isSpectator()
+                target -> target.isInWater() && !target.isSpectator()
                         && MorayEelEntity.this.distanceToSqr(target) < (LUNGE_RANGE + 1) * (LUNGE_RANGE + 1)));
     }
 
@@ -77,15 +77,16 @@ public class MorayEelEntity extends AbstractMarineMonster {
     }
 
     @Override
-    public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason reason,
+    public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason,
                                                   @Nullable SpawnGroupData groupData) {
         this.home = findHole(level, this.blockPosition(), this.random);
         return super.finalizeSpawn(level, difficulty, reason, groupData);
     }
 
     @Override
-    protected void addAdditionalSaveData(ValueOutput output) {
-        super.addAdditionalSaveData(output);
+    public void addAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueOutput output = ValueOutput.of(tag121, this.registryAccess());
+        super.addAdditionalSaveData(output.tag());
         if (this.home != null) {
             output.putInt("HoleX", this.home.getX());
             output.putInt("HoleY", this.home.getY());
@@ -94,8 +95,9 @@ public class MorayEelEntity extends AbstractMarineMonster {
     }
 
     @Override
-    protected void readAdditionalSaveData(ValueInput input) {
-        super.readAdditionalSaveData(input);
+    public void readAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueInput input = ValueInput.of(tag121, this.registryAccess());
+        super.readAdditionalSaveData(input.tag());
         int y = input.getIntOr("HoleY", Integer.MIN_VALUE);
         if (y != Integer.MIN_VALUE) {
             this.home = new BlockPos(input.getIntOr("HoleX", 0), y, input.getIntOr("HoleZ", 0));
@@ -172,7 +174,7 @@ public class MorayEelEntity extends AbstractMarineMonster {
     /** Without a crevice nearby the eel lies on the sea floor (a water block right above solid ground). */
     private static BlockPos floorBelow(LevelReader level, BlockPos start) {
         BlockPos.MutableBlockPos m = start.mutable();
-        for (int i = 0; i < 12 && level.getFluidState(m.below()).is(FluidTags.WATER) && m.getY() > level.getMinY() + 1; i++) {
+        for (int i = 0; i < 12 && level.getFluidState(m.below()).is(FluidTags.WATER) && m.getY() > level.getMinBuildHeight() + 1; i++) {
             m.move(Direction.DOWN);
         }
         return m.immutable();
@@ -265,7 +267,7 @@ public class MorayEelEntity extends AbstractMarineMonster {
      * ruins also list eels as monsters (light does not matter), so a local limit keeps them from taking the whole
      * monster cap: no new eel while {@value #MAX_NEARBY} are within {@value #NEARBY_RANGE} blocks.
      */
-    public static boolean checkMoraySpawnRules(EntityType<MorayEelEntity> type, ServerLevelAccessor level, EntitySpawnReason reason,
+    public static boolean checkMoraySpawnRules(EntityType<MorayEelEntity> type, ServerLevelAccessor level, MobSpawnType reason,
                                                BlockPos pos, RandomSource random) {
         if (level.getDifficulty() == Difficulty.PEACEFUL || pos.getY() > level.getSeaLevel() - 3) {
             return false;
@@ -276,7 +278,7 @@ public class MorayEelEntity extends AbstractMarineMonster {
         if (level.getFluidState(pos.below()).is(FluidTags.WATER) && level.getFluidState(pos.below(2)).is(FluidTags.WATER)) {
             return false;
         }
-        return EntitySpawnReason.isSpawner(reason)
+        return MobSpawnType.isSpawner(reason)
                 || level.getEntitiesOfClass(MorayEelEntity.class, new AABB(pos).inflate(NEARBY_RANGE)).size() < MAX_NEARBY;
     }
 
@@ -401,7 +403,7 @@ public class MorayEelEntity extends AbstractMarineMonster {
                 Vec3 dir = t.position().add(0, t.getBbHeight() * 0.4, 0).subtract(e.position()).normalize();
                 e.setDeltaMovement(e.getDeltaMovement().scale(0.5).add(dir.scale(0.45)));
                 if (e.isWithinMeleeAttackRange(t) && e.level() instanceof ServerLevel level) {
-                    e.doHurtTarget(level, t);
+                    e.doHurtTarget(t);
                     this.lunge = 0;
                     this.cooldown = 40;
                     this.retreat = 25;

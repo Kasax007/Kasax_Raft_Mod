@@ -15,9 +15,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
-import org.jspecify.annotations.Nullable;
+import net.kasax.raft.compat.ValueInput;
+import net.kasax.raft.compat.ValueOutput;
+import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 import team.reborn.energy.api.base.SimpleEnergyStorage;
 
@@ -53,7 +53,7 @@ public class MakeshiftSolarPanelBlockEntity extends BlockEntity {
         boolean skyVisible = level.canSeeSky(pos.above());
 
         // Energy only by day, in the overworld and over the Endless Sea (it has day and night now).
-        if (skyVisible && (inOverworld || inRaftDim) && level.isBrightOutside()) {
+        if (skyVisible && (inOverworld || inRaftDim) && level.isDay()) {
             if (energyStorage.amount < energyStorage.getCapacity()) {
                 energyStorage.amount = Mth.clamp(energyStorage.amount + 10, 0, energyStorage.getCapacity());
                 update();
@@ -90,14 +90,16 @@ public class MakeshiftSolarPanelBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);
+    protected void loadAdditional(net.minecraft.nbt.CompoundTag tag121, net.minecraft.core.HolderLookup.Provider reg121) {
+        ValueInput input = ValueInput.of(tag121, reg121);
+        super.loadAdditional(input.tag(), input.lookup());
         energyStorage.amount = input.getLongOr("Energy", 0L);
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
+    protected void saveAdditional(net.minecraft.nbt.CompoundTag tag121, net.minecraft.core.HolderLookup.Provider reg121) {
+        ValueOutput output = ValueOutput.of(tag121, reg121);
+        super.saveAdditional(output.tag(), output.lookup());
         output.putLong("Energy", this.energyStorage.amount);
     }
 

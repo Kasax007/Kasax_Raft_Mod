@@ -1,9 +1,10 @@
 {
   "required": true,
   "package": "net.kasax.raft.mixin",
-  "compatibilityLevel": "JAVA_25",
+  "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "FarmlandBlockMixin"
+    "FarmlandBlockMixin",
+    "NaturalSpawnerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

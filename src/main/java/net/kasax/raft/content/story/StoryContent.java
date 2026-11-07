@@ -23,7 +23,6 @@ import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.component.DamageResistant;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
@@ -68,14 +67,13 @@ public final class StoryContent {
     }
 
     private static Item.Properties relic(Rarity rarity) {
-        return new Item.Properties().stacksTo(1).rarity(rarity)
-                .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true)
-                .delayedComponent(DataComponents.DAMAGE_RESISTANT, context -> new DamageResistant(context.getOrThrow(RELIC_RESISTANT)));
+        return net.kasax.raft.compat.ItemProps.damageResistant(new Item.Properties().stacksTo(1).rarity(rarity)
+                .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true).fireResistant(), RELIC_RESISTANT);
     }
 
     private static BlockBehaviour.Properties sanctum() {
         return BlockBehaviour.Properties.of().strength(UNBREAKABLE, BLAST_PROOF)
-                .pushReaction(PushReaction.IMMOVEABLE).isValidSpawn(Blocks::never);
+                .pushReaction(PushReaction.BLOCK).isValidSpawn(Blocks::never);
     }
 
     static void register() {
@@ -113,7 +111,7 @@ public final class StoryContent {
                 sanctum().mapColor(MapColor.DIAMOND).sound(SoundType.AMETHYST).noOcclusion()
                         .lightLevel(s -> s.getValue(TideSealBlock.OPEN) ? 3 : 8)
                         .isRedstoneConductor((s, l, p) -> false).isSuffocating((s, l, p) -> false)
-                        .isViewBlocking((s, l, p, b) -> false),
+                        .isViewBlocking((s, l, p) -> false),
                 tab, "tooltip.raft.tide_seal.0", "tooltip.raft.sanctum.0");
         SANCTUM_TIDESTONE = BcReg.blockWithItem("sanctum_tidestone", Block::new,
                 sanctum().mapColor(MapColor.WARPED_NYLIUM).sound(SoundType.DEEPSLATE_BRICKS),
@@ -121,7 +119,7 @@ public final class StoryContent {
         SANCTUM_GLASS = BcReg.blockWithItem("sanctum_glass", TransparentBlock::new,
                 sanctum().mapColor(MapColor.COLOR_CYAN).sound(SoundType.GLASS).noOcclusion()
                         .isRedstoneConductor((s, l, p) -> false).isSuffocating((s, l, p) -> false)
-                        .isViewBlocking((s, l, p, b) -> false),
+                        .isViewBlocking((s, l, p) -> false),
                 tab, "tooltip.raft.sanctum.0");
         LEVIATHAN_ALTAR = BcReg.blockWithItem("leviathan_altar", LeviathanAltarBlock::new,
                 sanctum().mapColor(MapColor.COLOR_CYAN).sound(SoundType.DEEPSLATE_BRICKS).noOcclusion()

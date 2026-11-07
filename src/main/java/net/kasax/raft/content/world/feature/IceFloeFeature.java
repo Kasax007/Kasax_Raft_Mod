@@ -7,7 +7,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.IntProvider;
-import net.minecraft.util.valueproviders.IntProviders;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SnowLayerBlock;
@@ -22,9 +21,9 @@ import net.minecraft.world.level.material.Fluids;
  * middle (snow blocks with a few snow layers on top), a thin ice keel below the waterline and now and then a small
  * pressure ridge. Only replaces water, so it never cuts into icebergs or land.
  */
-public record IceFloeFeature(IntProvider radius, float ridgeChance) implements Feature {
+public record IceFloeFeature(IntProvider radius, float ridgeChance) implements net.kasax.raft.compat.worldgen.WorldFeature {
     public static final MapCodec<IceFloeFeature> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-            IntProviders.codec(2, 10).fieldOf("radius").forGetter(IceFloeFeature::radius),
+            IntProvider.codec(2, 10).fieldOf("radius").forGetter(IceFloeFeature::radius),
             Codec.floatRange(0.0F, 1.0F).optionalFieldOf("ridge_chance", 0.3F).forGetter(IceFloeFeature::ridgeChance)
     ).apply(i, IceFloeFeature::new));
 

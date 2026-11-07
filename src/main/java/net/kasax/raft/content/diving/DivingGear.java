@@ -3,7 +3,7 @@ package net.kasax.raft.content.diving;
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.diving.item.OxygenTankItem;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -14,10 +14,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
-import net.minecraft.world.item.equipment.ArmorMaterial;
-import net.minecraft.world.item.equipment.ArmorType;
-import net.minecraft.world.item.equipment.EquipmentAsset;
-import net.minecraft.world.item.equipment.EquipmentAssets;
 
 import java.util.Map;
 
@@ -26,26 +22,49 @@ public final class DivingGear {
     private DivingGear() {
     }
 
-    public static final ArmorMaterial DIVING_HELMET = material("diving_helmet", ArmorType.HELMET, 2, 15, 12, 0f);
-    public static final ArmorMaterial OXYGEN_TANK = material("oxygen_tank", ArmorType.CHESTPLATE, 3, 12, 9, 0f);
-    public static final ArmorMaterial TITANIUM_OXYGEN_TANK = material("titanium_oxygen_tank", ArmorType.CHESTPLATE, 6, 25, 15, 0f);
-    public static final ArmorMaterial WETSUIT = material("wetsuit", ArmorType.LEGGINGS, 2, 10, 15, 0f);
-    public static final ArmorMaterial FLIPPERS = material("flippers", ArmorType.BOOTS, 1, 10, 15, 0f);
+    /** A piece of diving gear: slot, armor points, durability factor, enchantability and toughness. */
+    public record Material(String name, EquipmentSlot slot, int defense, int durability, int enchantability, float toughness,
+                           TagKey<Item> repair) {
+        public net.kasax.raft.compat.GearItem.Gear gear() {
+            return new net.kasax.raft.compat.GearItem.Gear(this.slot, this.enchantability, this.repair, DivingSounds.EQUIP_DIVING_GEAR);
+        }
+
+        /** Durability like vanilla armor: the slot's base durability times the factor. */
+        public int maxDamage() {
+            int base = switch (this.slot) {
+                case HEAD -> 11;
+                case CHEST -> 16;
+                case LEGS -> 15;
+                default -> 13;
+            };
+            return base * this.durability;
+        }
+    }
+
+    public static final Material DIVING_HELMET = material("diving_helmet", EquipmentSlot.HEAD, 2, 15, 12, 0f);
+    public static final Material OXYGEN_TANK = material("oxygen_tank", EquipmentSlot.CHEST, 3, 12, 9, 0f);
+    public static final Material TITANIUM_OXYGEN_TANK = material("titanium_oxygen_tank", EquipmentSlot.CHEST, 6, 25, 15, 0f);
+    public static final Material WETSUIT = material("wetsuit", EquipmentSlot.LEGS, 2, 10, 15, 0f);
+    public static final Material FLIPPERS = material("flippers", EquipmentSlot.FEET, 1, 10, 15, 0f);
 
     /** Land penalty of the flippers (added while the wearer is out of water, see DivingEvents). */
-    public static final Identifier FLIPPERS_ON_LAND = Raft.id("flippers_on_land");
+    public static final ResourceLocation FLIPPERS_ON_LAND = Raft.id("flippers_on_land");
 
-    private static ArmorMaterial material(String name, ArmorType type, int defense, int durability, int enchantability,
-                                          float toughness) {
-        ResourceKey<EquipmentAsset> asset = ResourceKey.create(EquipmentAssets.ROOT_ID, Raft.id(name));
+    private static Material material(String name, EquipmentSlot slot, int defense, int durability, int enchantability,
+                                     float toughness) {
         TagKey<Item> repair = TagKey.create(Registries.ITEM, Raft.id("repairs_" + name));
-        return new ArmorMaterial(durability, Map.of(type, defense), enchantability, DivingSounds.EQUIP_DIVING_GEAR,
-                toughness, 0f, repair, asset);
+        return new Material(name, slot, defense, durability, enchantability, toughness, repair);
     }
 
     /** Armor attributes of the material plus the gear's own bonus (wetsuit: mining, flippers: swimming). */
-    public static ItemAttributeModifiers attributes(ArmorMaterial material, ArmorType type) {
-        ItemAttributeModifiers modifiers = material.createAttributes(type);
+    public static ItemAttributeModifiers attributes(Material material) {
+        EquipmentSlotGroup group = EquipmentSlotGroup.bySlot(material.slot());
+        ItemAttributeModifiers modifiers = ItemAttributeModifiers.builder()
+                .add(Attributes.ARMOR, new AttributeModifier(Raft.id("armor." + material.name()), material.defense(),
+                        AttributeModifier.Operation.ADD_VALUE), group)
+                .add(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(Raft.id("armor." + material.name()), material.toughness(),
+                        AttributeModifier.Operation.ADD_VALUE), group)
+                .build();
         if (material == WETSUIT) {
             // submerged_mining_speed has the base 0.2: +200 % of the base = x3
             modifiers = modifiers.withModifierAdded(Attributes.SUBMERGED_MINING_SPEED,

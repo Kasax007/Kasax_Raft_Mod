@@ -3,7 +3,7 @@ package net.kasax.raft.content.npc;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -152,11 +152,11 @@ public final class NpcTrades {
     }
 
     private static Item item(String id) {
-        Identifier ident = Identifier.tryParse(id);
+        ResourceLocation ident = ResourceLocation.tryParse(id);
         if (ident == null) {
             return null;
         }
-        Item item = BuiltInRegistries.ITEM.getValue(ident);
+        Item item = BuiltInRegistries.ITEM.get(ident);
         return item == Items.AIR ? null : item;
     }
 

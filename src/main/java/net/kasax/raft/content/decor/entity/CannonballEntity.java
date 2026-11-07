@@ -9,14 +9,14 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile;
+import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * The ball fired by a ship cannon: a heavy iron projectile that flies about 40 blocks, deals 8 damage to what it
@@ -30,7 +30,7 @@ public class CannonballEntity extends ThrowableItemProjectile {
     }
 
     public CannonballEntity(Level level, double x, double y, double z, @Nullable Entity owner) {
-        super(DecorEntities.CANNONBALL, x, y, z, level, new ItemStack(DecorBlocks.CANNONBALL));
+        super(DecorEntities.CANNONBALL, x, y, z, level);
         if (owner != null) setOwner(owner);
     }
 
@@ -61,10 +61,10 @@ public class CannonballEntity extends ThrowableItemProjectile {
         Entity target = hitResult.getEntity();
         if (level() instanceof ServerLevel serverLevel) {
             var source = damageSources().thrown(this, getOwner());
-            target.hurtServer(serverLevel, source, DAMAGE);
+            target.hurt(source, DAMAGE);
             if (target instanceof LivingEntity living) {
                 Vec3 push = getDeltaMovement().normalize();
-                living.knockback(0.8, -push.x, -push.z, source, DAMAGE);
+                living.knockback(0.8, -push.x, -push.z);
             }
         }
     }

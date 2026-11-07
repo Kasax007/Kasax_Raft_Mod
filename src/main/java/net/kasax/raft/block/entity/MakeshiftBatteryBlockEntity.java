@@ -1,6 +1,6 @@
 package net.kasax.raft.block.entity;
 
-import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
@@ -24,13 +24,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
-import org.jspecify.annotations.Nullable;
+import net.kasax.raft.compat.ValueInput;
+import net.kasax.raft.compat.ValueOutput;
+import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 import team.reborn.energy.api.base.SimpleEnergyStorage;
 
-public class MakeshiftBatteryBlockEntity extends BlockEntity implements ExtendedMenuProvider<BlockPosPayload> {
+public class MakeshiftBatteryBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory<BlockPosPayload> {
 
     public static final Component TITLE = Component.translatable("container.raft.makeshift_battery");
 
@@ -48,14 +48,16 @@ public class MakeshiftBatteryBlockEntity extends BlockEntity implements Extended
     };
 
     @Override
-    protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);
+    protected void loadAdditional(net.minecraft.nbt.CompoundTag tag121, net.minecraft.core.HolderLookup.Provider reg121) {
+        ValueInput input = ValueInput.of(tag121, reg121);
+        super.loadAdditional(input.tag(), input.lookup());
         this.energyStorage.amount = input.getLongOr("Energy", 0L);
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
+    protected void saveAdditional(net.minecraft.nbt.CompoundTag tag121, net.minecraft.core.HolderLookup.Provider reg121) {
+        ValueOutput output = ValueOutput.of(tag121, reg121);
+        super.saveAdditional(output.tag(), output.lookup());
         output.putLong("Energy", this.energyStorage.amount);
     }
 

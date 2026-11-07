@@ -20,7 +20,7 @@ public class AudioModule implements ContentModule {
     public void init() {
         AudioSounds.register();
         AudioMusic.register();
-        PayloadTypeRegistry.clientboundPlay().register(PlacePayload.TYPE, PlacePayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(PlacePayload.TYPE, PlacePayload.CODEC);
         AudioPlaces.register();
     }
 

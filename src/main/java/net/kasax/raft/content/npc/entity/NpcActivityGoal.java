@@ -14,14 +14,13 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.SwingAnimation;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -62,7 +61,7 @@ final class NpcActivityGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if (this.npc.isTalking() || !this.npc.hasHome() || !(this.npc.level() instanceof ServerLevel level)
+        if (this.npc.isTalking() || !this.npc.hasRestriction() || !(this.npc.level() instanceof ServerLevel level)
                 || level.getGameTime() < this.nextStart) {
             return false;
         }
@@ -117,7 +116,7 @@ final class NpcActivityGoal extends Goal {
      * compact work place still moves between its sides. Null when no floor cell is close.
      */
     private @Nullable BlockPos standFor(BlockPos place) {
-        BlockPos home = this.npc.getHomePosition();
+        BlockPos home = this.npc.getRestrictCenter();
         int y0 = Math.min(place.getY(), home.getY());
         ServerLevel level = this.level();
         BlockPos best = null;
@@ -173,7 +172,7 @@ final class NpcActivityGoal extends Goal {
         if (this.fishSpot == null) {
             return false;
         }
-        BlockPos home = this.npc.getHomePosition();
+        BlockPos home = this.npc.getRestrictCenter();
         if (this.npc.position().distanceToSqr(Vec3.atBottomCenterOf(home)) > 2.25) {
             return this.walkTo(home, Phase.FISH, 0);
         }
@@ -186,7 +185,7 @@ final class NpcActivityGoal extends Goal {
             this.seatSearched = true;
             this.findSeat();
         }
-        BlockPos s = this.seat != null ? this.seat : this.npc.getHomePosition();
+        BlockPos s = this.seat != null ? this.seat : this.npc.getRestrictCenter();
         if (this.npc.position().distanceToSqr(Vec3.atBottomCenterOf(s)) > 1.0) {
             return this.walkTo(s, Phase.SIT, 0);
         }
@@ -346,7 +345,7 @@ final class NpcActivityGoal extends Goal {
         } else {
             this.npc.getLookControl().setLookAt(c.x, c.y, c.z, 10.0F, 30.0F);
             if (--this.beat <= 0) {
-                this.npc.swing(InteractionHand.MAIN_HAND, SwingAnimation.DEFAULT);
+                this.npc.swing(InteractionHand.MAIN_HAND);
                 this.beat = 14 + this.npc.getRandom().nextInt(26);
             }
         }
@@ -368,7 +367,7 @@ final class NpcActivityGoal extends Goal {
         }
         switch (this.step) {
             case 0 -> {   // cast
-                this.npc.swing(InteractionHand.MAIN_HAND, SwingAnimation.DEFAULT);
+                this.npc.swing(InteractionHand.MAIN_HAND);
                 level.playSound(null, this.npc.getX(), this.npc.getY(), this.npc.getZ(), SoundEvents.FISHING_BOBBER_THROW,
                         SoundSource.NEUTRAL, 0.5F, 0.4F / (this.npc.getRandom().nextFloat() * 0.4F + 0.8F));
                 this.beat = 18;
@@ -387,13 +386,13 @@ final class NpcActivityGoal extends Goal {
                 this.step = 3;
             }
             default -> {  // reel in, sometimes with a fish
-                this.npc.swing(InteractionHand.MAIN_HAND, SwingAnimation.DEFAULT);
+                this.npc.swing(InteractionHand.MAIN_HAND);
                 level.playSound(null, this.npc.getX(), this.npc.getY(), this.npc.getZ(), SoundEvents.FISHING_BOBBER_RETRIEVE,
                         SoundSource.NEUTRAL, 0.6F, 0.9F + this.npc.getRandom().nextFloat() * 0.2F);
                 if (this.npc.getRandom().nextInt(5) < 3) {
                     var fish = this.npc.getRandom().nextBoolean() ? Items.COD : Items.SALMON;
                     Vec3 mid = s.add(this.npc.getEyePosition()).scale(0.5);
-                    level.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, fish), mid.x, mid.y + 0.4, mid.z, 6, 0.15, 0.15, 0.15, 0.05);
+                    level.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, new net.minecraft.world.item.ItemStack(fish)), mid.x, mid.y + 0.4, mid.z, 6, 0.15, 0.15, 0.15, 0.05);
                     level.sendParticles(ParticleTypes.SPLASH, s.x, s.y, s.z, 12, 0.2, 0.0, 0.2, 0.1);
                 }
                 this.beat = 40 + this.npc.getRandom().nextInt(50);
@@ -434,7 +433,7 @@ final class NpcActivityGoal extends Goal {
     /** The nearest sea surface 2-7 blocks from home and 1-6 blocks below the feet (the fisher's float). */
     private @Nullable BlockPos findFishSpot() {
         ServerLevel level = this.level();
-        BlockPos home = this.npc.getHomePosition();
+        BlockPos home = this.npc.getRestrictCenter();
         BlockPos best = null;
         double bestD = Double.MAX_VALUE;
         for (int dx = -7; dx <= 7; dx++) {
@@ -465,7 +464,7 @@ final class NpcActivityGoal extends Goal {
     /** A free cell two blocks from the nearest camp fire, on the side closest to home (else home itself). */
     private void findSeat() {
         ServerLevel level = this.level();
-        BlockPos home = this.npc.getHomePosition();
+        BlockPos home = this.npc.getRestrictCenter();
         BlockPos found = null;
         for (BlockPos p : BlockPos.betweenClosed(home.offset(-7, -2, -7), home.offset(7, 2, 7))) {
             if (level.getBlockState(p).is(BlockTags.CAMPFIRES)

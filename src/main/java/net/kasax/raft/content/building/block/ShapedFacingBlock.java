@@ -14,17 +14,23 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.Map;
+import net.kasax.raft.compat.VShapes;
 
 /**
  * A machine-like decoration with a front ({@code facing}), e.g. the server rack and the satellite dish. The front
  * faces the player who places it. The shape is given for {@code facing=north}.
  */
 public class ShapedFacingBlock extends HorizontalDirectionalBlock {
+    @Override
+    protected com.mojang.serialization.MapCodec<? extends HorizontalDirectionalBlock> codec() {
+        return null;
+    }
+
     private final Map<Direction, VoxelShape> shapes;
 
     public ShapedFacingBlock(Properties properties, VoxelShape northShape) {
         super(properties);
-        this.shapes = Shapes.rotateHorizontal(northShape);
+        this.shapes = VShapes.rotateHorizontal(northShape);
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 

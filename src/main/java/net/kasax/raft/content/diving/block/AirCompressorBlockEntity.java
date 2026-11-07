@@ -20,9 +20,9 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
-import org.jspecify.annotations.Nullable;
+import net.kasax.raft.compat.ValueInput;
+import net.kasax.raft.compat.ValueOutput;
+import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 import team.reborn.energy.api.base.SimpleEnergyItem;
 import team.reborn.energy.api.base.SimpleEnergyStorage;
@@ -291,18 +291,20 @@ public class AirCompressorBlockEntity extends BaseContainerBlockEntity implement
     }
 
     @Override
-    protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);
+    protected void loadAdditional(net.minecraft.nbt.CompoundTag tag121, net.minecraft.core.HolderLookup.Provider reg121) {
+        ValueInput input = ValueInput.of(tag121, reg121);
+        super.loadAdditional(input.tag(), input.lookup());
         items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(input, items);
+        ContainerHelper.loadAllItems(input.tag(), items, input.lookup());
         energy.amount = Math.min(ENERGY_CAPACITY, input.getLongOr("Energy", 0L));
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
+    protected void saveAdditional(net.minecraft.nbt.CompoundTag tag121, net.minecraft.core.HolderLookup.Provider reg121) {
+        ValueOutput output = ValueOutput.of(tag121, reg121);
+        super.saveAdditional(output.tag(), output.lookup());
         // the tank or scooter in the slot is kept when the chunk is saved
-        ContainerHelper.saveAllItems(output, items);
+        ContainerHelper.saveAllItems(output.tag(), items, output.lookup());
         output.putLong("Energy", energy.amount);
     }
 }

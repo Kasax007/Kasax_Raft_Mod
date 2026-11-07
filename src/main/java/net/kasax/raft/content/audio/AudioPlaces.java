@@ -57,10 +57,10 @@ public final class AudioPlaces {
     /** The key place at the player ("" if none). */
     public static String placeOf(ServerPlayer player) {
         ServerLevel level = (ServerLevel) player.level();
-        var registry = level.registryAccess().lookupOrThrow(Registries.STRUCTURE);
+        var registry = level.registryAccess().registryOrThrow(Registries.STRUCTURE);
         BlockPos pos = player.blockPosition();
         for (String id : PLACES) {
-            Structure structure = registry.getValue(Raft.id(id));
+            Structure structure = registry.get(Raft.id(id));
             if (structure == null) {
                 continue;
             }

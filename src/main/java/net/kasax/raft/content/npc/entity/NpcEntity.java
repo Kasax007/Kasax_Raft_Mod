@@ -11,7 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -24,7 +24,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ExperienceOrb;
@@ -54,10 +54,10 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.pathfinder.PathType;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.kasax.raft.compat.ValueInput;
+import net.kasax.raft.compat.ValueOutput;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -96,11 +96,11 @@ public class NpcEntity extends PathfinderMob implements Merchant, Npc {
         super(type, level);
         this.setPathfindingMalus(PathType.WATER, -1.0F);
         this.setPathfindingMalus(PathType.WATER_BORDER, 4.0F);
-        this.setPathfindingMalus(PathType.FIRE_IN_NEIGHBOR, -1.0F);
-        this.setPathfindingMalus(PathType.FIRE, -1.0F);
+        this.setPathfindingMalus(PathType.DANGER_FIRE, -1.0F);
+        this.setPathfindingMalus(PathType.DAMAGE_FIRE, -1.0F);
         this.setPathfindingMalus(PathType.LAVA, -1.0F);
-        this.setPathfindingMalus(PathType.DAMAGING_IN_NEIGHBOR, 16.0F);
-        this.getNavigation().setCanOpenDoors(true);
+        this.setPathfindingMalus(PathType.DANGER_OTHER, 16.0F);
+        ((net.minecraft.world.entity.ai.navigation.GroundPathNavigation) this.getNavigation()).setCanOpenDoors(true);
         this.setPersistenceRequired();
     }
 
@@ -150,15 +150,15 @@ public class NpcEntity extends PathfinderMob implements Merchant, Npc {
     // ------------------------------------------------------------------------------------------ set-up
     @Override
     public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty,
-                                                  EntitySpawnReason reason, @Nullable SpawnGroupData groupData) {
+                                                  MobSpawnType reason, @Nullable SpawnGroupData groupData) {
         this.setUp();
         return super.finalizeSpawn(level, difficulty, reason, groupData);
     }
 
     /** Home where the NPC first stands, and its tool in hand. Runs once (template entities, eggs, old saves). */
     private void setUp() {
-        if (!this.hasHome()) {
-            this.setHomeTo(this.blockPosition(), this.character().homeRadius);
+        if (!this.hasRestriction()) {
+            this.restrictTo(this.blockPosition(), this.character().homeRadius);
         }
         if (!this.setUp) {
             this.setUp = true;
@@ -170,8 +170,8 @@ public class NpcEntity extends PathfinderMob implements Merchant, Npc {
     }
 
     public ItemStack heldItem() {
-        Identifier id = Identifier.tryParse(this.character().heldItem);
-        Item item = id == null ? Items.AIR : BuiltInRegistries.ITEM.getValue(id);
+        ResourceLocation id = ResourceLocation.tryParse(this.character().heldItem);
+        Item item = id == null ? Items.AIR : BuiltInRegistries.ITEM.get(id);
         return item == Items.AIR ? ItemStack.EMPTY : new ItemStack(item);
     }
 
@@ -201,16 +201,16 @@ public class NpcEntity extends PathfinderMob implements Merchant, Npc {
         }
         // lost: in the water, far from home (fell off a pier, pushed by a piston...), up on a roof (every home is one
         // floor) or on top of a railing or fence -> back home after 5 s
-        if (this.tickCount % 20 == 0 && this.hasHome()) {
-            double r = this.getHomeRadius() + 12.0;
+        if (this.tickCount % 20 == 0 && this.hasRestriction()) {
+            double r = this.getRestrictRadius() + 12.0;
             boolean lost = this.isInWater() || this.isInLava()
-                    || this.getY() > this.getHomePosition().getY() + 2.5
-                    || this.getHomePosition().distToCenterSqr(this.position()) > r * r
+                    || this.getY() > this.getRestrictCenter().getY() + 2.5
+                    || this.getRestrictCenter().distToCenterSqr(this.position()) > r * r
                     || NpcPaths.onFenceTop(this);
             this.lostTicks = lost ? this.lostTicks + 20 : 0;
             if (this.lostTicks >= 100 && !this.isTalking()) {
                 this.lostTicks = 0;
-                BlockPos home = this.getHomePosition();
+                BlockPos home = this.getRestrictCenter();
                 this.setSitting(false);
                 this.getNavigation().stop();
                 this.teleportTo(home.getX() + 0.5, home.getY(), home.getZ() + 0.5);
@@ -228,19 +228,19 @@ public class NpcEntity extends PathfinderMob implements Merchant, Npc {
         if (player instanceof ServerPlayer sp) {
             if (sp.isCreative() && sp.isSecondaryUseActive()) {
                 // builders: sneak-use in creative moves the NPC's home to where it stands now
-                this.setHomeTo(this.blockPosition(), this.character().homeRadius);
+                this.restrictTo(this.blockPosition(), this.character().homeRadius);
                 this.places.clear();
                 this.placesScannedAt = -1_000_000L;
-                sp.sendOverlayMessage(Component.translatable("npc.raft.home_set", this.getDisplayName()).withStyle(ChatFormatting.AQUA));
-                return InteractionResult.SUCCESS_SERVER;
+                sp.displayClientMessage(Component.translatable("npc.raft.home_set", this.getDisplayName()).withStyle(ChatFormatting.AQUA), true);
+                return InteractionResult.SUCCESS;
             }
             if (this.tradingPlayer != null && this.tradingPlayer != sp) {
-                sp.sendOverlayMessage(Component.translatable("npc.raft.busy", this.getDisplayName()).withStyle(ChatFormatting.GRAY));
-                return InteractionResult.SUCCESS_SERVER;
+                sp.displayClientMessage(Component.translatable("npc.raft.busy", this.getDisplayName()).withStyle(ChatFormatting.GRAY), true);
+                return InteractionResult.SUCCESS;
             }
             NpcDialogue.open(sp, this);
         }
-        return InteractionResult.SUCCESS_SERVER;
+        return InteractionResult.SUCCESS;
     }
 
     public void startTalking(Player player) {
@@ -274,7 +274,7 @@ public class NpcEntity extends PathfinderMob implements Merchant, Npc {
     // ------------------------------------------------------------------------------------------ places of interest
     /** The blocks of interest around home (scanned every two minutes); empty when the character has none. */
     public List<BlockPos> places() {
-        if (!(this.level() instanceof ServerLevel level) || !this.hasHome() || this.character().places.isEmpty()) {
+        if (!(this.level() instanceof ServerLevel level) || !this.hasRestriction() || this.character().places.isEmpty()) {
             return List.of();
         }
         long now = level.getGameTime();
@@ -285,8 +285,8 @@ public class NpcEntity extends PathfinderMob implements Merchant, Npc {
         if (this.placeBlocks == null) {
             Set<Block> blocks = new HashSet<>();
             for (String id : this.character().places) {
-                Identifier ident = Identifier.tryParse(id);
-                Block b = ident == null ? Blocks.AIR : BuiltInRegistries.BLOCK.getValue(ident);
+                ResourceLocation ident = ResourceLocation.tryParse(id);
+                Block b = ident == null ? Blocks.AIR : BuiltInRegistries.BLOCK.get(ident);
                 if (b != Blocks.AIR) {
                     blocks.add(b);
                 }
@@ -294,8 +294,8 @@ public class NpcEntity extends PathfinderMob implements Merchant, Npc {
             this.placeBlocks = blocks;
         }
         this.places.clear();
-        BlockPos home = this.getHomePosition();
-        int r = this.getHomeRadius();
+        BlockPos home = this.getRestrictCenter();
+        int r = (int) this.getRestrictRadius();
         for (BlockPos p : BlockPos.betweenClosed(home.offset(-r, -3, -r), home.offset(r, 3, r))) {
             int dx = p.getX() - home.getX(), dz = p.getZ() - home.getZ();
             if (dx * dx + dz * dz <= r * r && this.placeBlocks.contains(level.getBlockState(p).getBlock())) {
@@ -311,9 +311,10 @@ public class NpcEntity extends PathfinderMob implements Merchant, Npc {
 
     // ------------------------------------------------------------------------------------------ invulnerable
     @Override
-    public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
+    public boolean hurt(DamageSource source, float damage) {
+        if (!(this.level() instanceof ServerLevel level)) return false;
         if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY) || source.isCreativePlayer()) {
-            return super.hurtServer(level, source, damage);
+            return super.hurt(source, damage);
         }
         if (source.getEntity() instanceof ServerPlayer player && !player.isSpectator() && this.hurtLineCooldown == 0) {
             this.hurtLineCooldown = 40;
@@ -327,7 +328,7 @@ public class NpcEntity extends PathfinderMob implements Merchant, Npc {
     }
 
     @Override
-    public boolean isInvulnerableTo(ServerLevel level, DamageSource source) {
+    public boolean isInvulnerableTo(DamageSource source) {
         return !source.is(DamageTypeTags.BYPASSES_INVULNERABILITY) && !source.isCreativePlayer();
     }
 
@@ -348,11 +349,6 @@ public class NpcEntity extends PathfinderMob implements Merchant, Npc {
     /** The name plate shows (client side) when a player looks at the NPC from close by, see NpcRenderer. */
     @Override
     public boolean shouldShowName() {
-        return true;
-    }
-
-    @Override
-    public boolean canBreatheUnderwater() {
         return true;
     }
 
@@ -417,7 +413,7 @@ public class NpcEntity extends PathfinderMob implements Merchant, Npc {
             return;
         }
         if (this.tradingPlayer != null && this.tradingPlayer != player) {
-            player.sendOverlayMessage(Component.translatable("npc.raft.busy", this.getDisplayName()).withStyle(ChatFormatting.GRAY));
+            player.displayClientMessage(Component.translatable("npc.raft.busy", this.getDisplayName()).withStyle(ChatFormatting.GRAY), true);
             return;
         }
         if (this.level() instanceof ServerLevel level && level.getGameTime() - this.lastRestock >= RESTOCK_TICKS) {
@@ -502,15 +498,15 @@ public class NpcEntity extends PathfinderMob implements Merchant, Npc {
         return this.level().isClientSide();
     }
 
-    @Override
     public boolean stillValid(Player player) {
-        return this.getTradingPlayer() == player && this.isAlive() && player.isWithinEntityInteractionRange(this, 4.0);
+        return this.getTradingPlayer() == player && this.isAlive() && player.canInteractWithEntity(this, 4.0);
     }
 
     // ------------------------------------------------------------------------------------------ save / load
     @Override
-    protected void addAdditionalSaveData(ValueOutput output) {
-        super.addAdditionalSaveData(output);
+    public void addAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueOutput output = ValueOutput.of(tag121, this.registryAccess());
+        super.addAdditionalSaveData(output.tag());
         output.putBoolean("NpcSetUp", this.setUp);
         output.putBoolean("Sitting", this.isSitting());
         output.putLong("LastRestock", this.lastRestock);
@@ -526,8 +522,9 @@ public class NpcEntity extends PathfinderMob implements Merchant, Npc {
     }
 
     @Override
-    protected void readAdditionalSaveData(ValueInput input) {
-        super.readAdditionalSaveData(input);
+    public void readAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueInput input = ValueInput.of(tag121, this.registryAccess());
+        super.readAdditionalSaveData(input.tag());
         this.setUp = input.getBooleanOr("NpcSetUp", false);
         this.setSitting(input.getBooleanOr("Sitting", false));
         this.lastRestock = input.getLongOr("LastRestock", 0L);

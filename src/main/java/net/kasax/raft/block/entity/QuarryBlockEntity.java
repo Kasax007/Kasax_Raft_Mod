@@ -16,8 +16,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.kasax.raft.compat.ValueInput;
+import net.kasax.raft.compat.ValueOutput;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import team.reborn.energy.api.base.SimpleEnergyStorage;
@@ -86,7 +86,7 @@ public class QuarryBlockEntity extends BlockEntity implements TickableBlockEntit
             // Continue mining logic every second (20 ticks)
             if (this.ticks++ % 20 == 0) {
                 // If we hit the bottom of the world, move to the next column
-                if (this.miningPos.getY() <= this.level.getMinY()) {
+                if (this.miningPos.getY() <= this.level.getMinBuildHeight()) {
                     moveToNextColumn();
                     return;
                 }
@@ -95,7 +95,7 @@ public class QuarryBlockEntity extends BlockEntity implements TickableBlockEntit
                 while (state.isAir() || state.getDestroySpeed(this.level, this.miningPos) < 0 || state.is(Blocks.WATER) || state.is(Blocks.LAVA)) {
                     this.miningPos = this.miningPos.below();
                     state = this.level.getBlockState(this.miningPos);
-                    if (this.miningPos.getY() <= this.level.getMinY()) {
+                    if (this.miningPos.getY() <= this.level.getMinBuildHeight()) {
                         moveToNextColumn();
                         return;
                     }
@@ -153,7 +153,7 @@ public class QuarryBlockEntity extends BlockEntity implements TickableBlockEntit
         BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
         for (int x = -MINING_AREA_SIZE / 2; x <= MINING_AREA_SIZE / 2; x++) {
             for (int z = -MINING_AREA_SIZE / 2; z <= MINING_AREA_SIZE / 2; z++) {
-                for (int y = this.worldPosition.getY(); y >= this.level.getMinY(); y--) { // Looping top to bottom
+                for (int y = this.worldPosition.getY(); y >= this.level.getMinBuildHeight(); y--) { // Looping top to bottom
                     mutablePos.set(this.worldPosition.getX() + x, y, this.worldPosition.getZ() + z); // Set Y explicitly
                     BlockState blockState = this.level.getBlockState(mutablePos);
                     if (!blockState.getFluidState().isEmpty()) {
@@ -178,9 +178,9 @@ public class QuarryBlockEntity extends BlockEntity implements TickableBlockEntit
                     continue;
                 }
                 // Iterate down from the top of the world to the bottom of the world
-                for (int y = this.worldPosition.getY(); y >= this.level.getMinY(); y--) { // Correctly loop to the bottom
+                for (int y = this.worldPosition.getY(); y >= this.level.getMinBuildHeight(); y--) { // Correctly loop to the bottom
                     //System.out.println(y);
-                    //System.out.println("bottom " + this.level.getMinY());
+                    //System.out.println("bottom " + this.level.getMinBuildHeight());
                     mutablePos.set(this.worldPosition.getX() + x, y, this.worldPosition.getZ() + z); // Set Y explicitly
                     BlockState blockState = this.level.getBlockState(mutablePos);
                     if (!blockState.getFluidState().isEmpty()) {
@@ -217,8 +217,9 @@ public class QuarryBlockEntity extends BlockEntity implements TickableBlockEntit
     }
 
     @Override
-    protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);
+    protected void loadAdditional(net.minecraft.nbt.CompoundTag tag121, net.minecraft.core.HolderLookup.Provider reg121) {
+        ValueInput input = ValueInput.of(tag121, reg121);
+        super.loadAdditional(input.tag(), input.lookup());
         this.ticks = input.getIntOr("Ticks", 0);
         input.getLong("MiningPos").ifPresent(l -> this.miningPos = BlockPos.of(l));
         this.energyStorage.amount = input.getLongOr("Energy", 0L);
@@ -228,8 +229,9 @@ public class QuarryBlockEntity extends BlockEntity implements TickableBlockEntit
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
+    protected void saveAdditional(net.minecraft.nbt.CompoundTag tag121, net.minecraft.core.HolderLookup.Provider reg121) {
+        ValueOutput output = ValueOutput.of(tag121, reg121);
+        super.saveAdditional(output.tag(), output.lookup());
         output.putInt("Ticks", this.ticks);
         output.putLong("MiningPos", this.miningPos.asLong());
         output.putLong("Energy", this.energyStorage.amount);

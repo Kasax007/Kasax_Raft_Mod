@@ -21,7 +21,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -42,14 +42,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
-import net.minecraft.world.level.block.FarmlandBlock;
+import net.minecraft.world.level.block.FarmBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.pathfinder.PathType;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.kasax.raft.compat.ValueInput;
+import net.kasax.raft.compat.ValueOutput;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -116,8 +116,8 @@ public class SeagullEntity extends Animal {
         super(type, level);
         this.moveControl = new SeagullMoveControl(this);
         this.setPathfindingMalus(PathType.WATER, 0.0F);
-        this.setPathfindingMalus(PathType.FIRE_IN_NEIGHBOR, -1.0F);
-        this.setPathfindingMalus(PathType.FIRE, -1.0F);
+        this.setPathfindingMalus(PathType.DANGER_FIRE, -1.0F);
+        this.setPathfindingMalus(PathType.DAMAGE_FIRE, -1.0F);
         this.setPathfindingMalus(PathType.LEAVES, 4.0F);
         RandomSource r = this.random;
         // a little personal offset from the exact place in the V, and the phase of its slow drift around it
@@ -126,7 +126,7 @@ public class SeagullEntity extends Animal {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Animal.createAnimalAttributes()
+        return net.minecraft.world.entity.Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 6.0)
                 .add(Attributes.FLYING_SPEED, 0.6)
                 .add(Attributes.MOVEMENT_SPEED, 0.2)
@@ -156,7 +156,7 @@ public class SeagullEntity extends Animal {
 
     @Override
     public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty,
-                                                  EntitySpawnReason reason, @Nullable SpawnGroupData groupData) {
+                                                  MobSpawnType reason, @Nullable SpawnGroupData groupData) {
         this.home = this.blockPosition();
         this.restTicks = 40 + this.random.nextInt(200);
         if (groupData == null) {
@@ -165,8 +165,7 @@ public class SeagullEntity extends Animal {
         return super.finalizeSpawn(level, difficulty, reason, groupData);
     }
 
-    @Override
-    protected boolean canBeABaby() {
+        protected boolean canBeABaby() {
         return false;
     }
 
@@ -274,8 +273,9 @@ public class SeagullEntity extends Animal {
     }
 
     @Override
-    protected void customServerAiStep(ServerLevel level) {
-        super.customServerAiStep(level);
+    protected void customServerAiStep() {
+        ServerLevel level = (ServerLevel) this.level();
+        super.customServerAiStep();
         if (this.home == null) {
             this.home = this.blockPosition();
         }
@@ -339,7 +339,7 @@ public class SeagullEntity extends Animal {
     }
 
     private void eat(ServerLevel level, ItemStack held) {
-        level.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, held.getItem()), this.getX(), this.getY() + 0.4, this.getZ(),
+        level.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, held), this.getX(), this.getY() + 0.4, this.getZ(),
                 8, 0.1, 0.1, 0.1, 0.05);
         this.playSound(ShoreSounds.SEAGULL_PECK, 0.8F, 1.0F);
         this.heal(2.0F);
@@ -347,14 +347,15 @@ public class SeagullEntity extends Animal {
     }
 
     @Override
-    public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
-        boolean hurt = super.hurtServer(level, source, damage);
+    public boolean hurt(DamageSource source, float damage) {
+        if (!(this.level() instanceof ServerLevel level)) return false;
+        boolean hurt = super.hurt(source, damage);
         if (hurt && this.isAlive()) {
             this.fleeTicks = 60;
             this.restTicks = 0;
             ItemStack held = this.getMainHandItem();
             if (!held.isEmpty()) {
-                this.spawnAtLocation(level, held.copy());
+                this.spawnAtLocation(held.copy());
                 this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
             }
         }
@@ -385,8 +386,7 @@ public class SeagullEntity extends Animal {
         return this.isFlying() ? 0.05F : 0.02F;
     }
 
-    @Override
-    protected boolean omnidirectionalAirMover() {
+        protected boolean omnidirectionalAirMover() {
         return true;
     }
 
@@ -584,8 +584,9 @@ public class SeagullEntity extends Animal {
 
     // ------------------------------------------------------------------------------------------ save
     @Override
-    protected void addAdditionalSaveData(ValueOutput output) {
-        super.addAdditionalSaveData(output);
+    public void addAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueOutput output = ValueOutput.of(tag121, this.registryAccess());
+        super.addAdditionalSaveData(output.tag());
         if (this.home != null) {
             output.putIntArray("Home", new int[]{this.home.getX(), this.home.getY(), this.home.getZ()});
         }
@@ -596,8 +597,9 @@ public class SeagullEntity extends Animal {
     }
 
     @Override
-    protected void readAdditionalSaveData(ValueInput input) {
-        super.readAdditionalSaveData(input);
+    public void readAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueInput input = ValueInput.of(tag121, this.registryAccess());
+        super.readAdditionalSaveData(input.tag());
         input.getIntArray("Home").ifPresent(a -> {
             if (a.length == 3) {
                 this.home = new BlockPos(a[0], a[1], a[2]);
@@ -612,22 +614,22 @@ public class SeagullEntity extends Animal {
     }
 
     // ------------------------------------------------------------------------------------------ spawning
-    public static boolean checkSeagullSpawnRules(EntityType<SeagullEntity> type, ServerLevelAccessor level, EntitySpawnReason reason,
+    public static boolean checkSeagullSpawnRules(EntityType<SeagullEntity> type, ServerLevelAccessor level, MobSpawnType reason,
                                                  BlockPos pos, RandomSource random) {
         return level.getBlockState(pos.below()).is(SPAWNABLE_ON)
-                && (EntitySpawnReason.ignoresLightRequirements(reason) || isBrightEnoughToSpawn(level, pos));
+                && (MobSpawnType.ignoresLightRequirements(reason) || isBrightEnoughToSpawn(level, pos));
     }
 
     // ------------------------------------------------------------------------------------------ AI
     /** Smooth banking flight in the air, small steps on the ground. */
-    private static class SeagullMoveControl extends MoveControl<SeagullEntity> {
+    private static class SeagullMoveControl extends MoveControl {
         SeagullMoveControl(SeagullEntity gull) {
             super(gull);
         }
 
         @Override
         public void tick() {
-            SeagullEntity gull = this.mob;
+            SeagullEntity gull = (SeagullEntity) this.mob;
             if (this.operation == MoveControl.Operation.MOVE_TO) {
                 this.operation = MoveControl.Operation.WAIT;
                 double dx = this.wantedX - gull.getX();
@@ -878,7 +880,7 @@ public class SeagullEntity extends Animal {
             BlockPos pos = new BlockPos(x, y, z);
             BlockState state = level.getBlockState(pos);
             if (state.getBlock() instanceof CropBlock cropBlock && cropBlock.getAge(state) > 0
-                    && level.getBlockState(pos.below()).getBlock() instanceof FarmlandBlock
+                    && level.getBlockState(pos.below()).getBlock() instanceof FarmBlock
                     && level.canSeeSky(pos.above())
                     && !scarecrowGuards(level, pos)) {
                 return pos;

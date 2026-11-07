@@ -19,7 +19,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
@@ -45,10 +45,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.world.ItemInteractionResult;
 
 /**
  * The Leviathan altar at the rim of the sanctum's pool. <b>Contract</b> (docs/design/beachcraft3.md, 9.2): it stands
@@ -58,6 +59,11 @@ import java.util.Optional;
  * first costs one Ancient Crystal. {@code active} is true while the Leviathan is awake.
  */
 public class LeviathanAltarBlock extends BaseEntityBlock {
+    @Override
+    protected com.mojang.serialization.MapCodec<? extends BaseEntityBlock> codec() {
+        return simpleCodec(LeviathanAltarBlock::new);
+    }
+
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
     public static final int POOL_DISTANCE = 9;
@@ -122,15 +128,14 @@ public class LeviathanAltarBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
-                                          InteractionHand hand, BlockHitResult hit) {
+    protected net.minecraft.world.ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (!stack.is(StoryContent.TIDEWARDEN_KEY)) {
-            return InteractionResult.TRY_WITH_EMPTY_HAND;
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
         if (level instanceof ServerLevel server) {
             summon(server, pos, state, player);
         }
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 
     @Override
@@ -170,14 +175,14 @@ public class LeviathanAltarBlock extends BaseEntityBlock {
         }
         Direction facing = state.getValue(FACING);
         BlockPos at = spawnPos(pos, facing);
-        Entity boss = type.get().create(level, EntitySpawnReason.TRIGGERED);
+        Entity boss = type.get().create(level);
         if (boss == null) {
             StoryUtil.tell(player, "leviathan_altar.silent");
             return;
         }
-        boss.snapTo(at.getX() + 0.5, at.getY(), at.getZ() + 0.5, facing.getOpposite().toYRot(), 0.0F);
+        boss.moveTo(at.getX() + 0.5, at.getY(), at.getZ() + 0.5, facing.getOpposite().toYRot(), 0.0F);
         if (boss instanceof Mob mob) {
-            mob.finalizeSpawn(level, level.getCurrentDifficultyAt(at), EntitySpawnReason.TRIGGERED, null);
+            mob.finalizeSpawn(level, level.getCurrentDifficultyAt(at), MobSpawnType.TRIGGERED, null);
             mob.setPersistenceRequired();
         }
         level.addFreshEntity(boss);

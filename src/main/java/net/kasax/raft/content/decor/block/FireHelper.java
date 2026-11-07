@@ -33,7 +33,7 @@ final class FireHelper {
             stack.consume(1, player);
         } else {
             level.playSound(player, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.4F + 0.8F);
-            stack.hurtAndBreak(1, player, hand.asEquipmentSlot());
+            stack.hurtAndBreak(1, player, net.minecraft.world.entity.LivingEntity.getSlotForHand(hand));
         }
         level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
     }
@@ -44,7 +44,7 @@ final class FireHelper {
             serverLevel.sendParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5, pos.getY() + smokeY, pos.getZ() + 0.5,
                     6, 0.15, 0.1, 0.15, 0.01);
         }
-        if (stack.isDamageableItem()) stack.hurtAndBreak(1, player, hand.asEquipmentSlot());
+        if (stack.isDamageableItem()) stack.hurtAndBreak(1, player, net.minecraft.world.entity.LivingEntity.getSlotForHand(hand));
         level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
     }
 }

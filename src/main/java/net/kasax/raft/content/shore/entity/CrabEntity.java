@@ -21,7 +21,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.SpawnGroupData;
@@ -47,9 +47,9 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathType;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
-import org.jspecify.annotations.Nullable;
+import net.kasax.raft.compat.ValueInput;
+import net.kasax.raft.compat.ValueOutput;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 
@@ -82,7 +82,7 @@ public class CrabEntity extends Animal implements CrabAnimated {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Animal.createAnimalAttributes()
+        return net.minecraft.world.entity.Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 8.0)
                 .add(Attributes.MOVEMENT_SPEED, 0.22)
                 .add(Attributes.ATTACK_DAMAGE, 2.0)
@@ -165,7 +165,7 @@ public class CrabEntity extends Animal implements CrabAnimated {
 
     @Override
     public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty,
-                                                  EntitySpawnReason reason, @Nullable SpawnGroupData groupData) {
+                                                  MobSpawnType reason, @Nullable SpawnGroupData groupData) {
         if (groupData instanceof CrabGroupData crabGroup) {
             this.setVariant(crabGroup.variant);
         } else {
@@ -238,8 +238,9 @@ public class CrabEntity extends Animal implements CrabAnimated {
     }
 
     @Override
-    protected void customServerAiStep(ServerLevel level) {
-        super.customServerAiStep(level);
+    protected void customServerAiStep() {
+        ServerLevel level = (ServerLevel) this.level();
+        super.customServerAiStep();
         if (this.angerTicks > 0) {
             this.angerTicks--;
         } else if (this.getTarget() != null) {
@@ -305,8 +306,9 @@ public class CrabEntity extends Animal implements CrabAnimated {
     }
 
     @Override
-    public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
-        boolean hurt = super.hurtServer(level, source, damage);
+    public boolean hurt(DamageSource source, float damage) {
+        if (!(this.level() instanceof ServerLevel level)) return false;
+        boolean hurt = super.hurt(source, damage);
         if (hurt && source.getEntity() instanceof LivingEntity && !this.isBaby()) {
             this.angerTicks = 300;
             if (this.isHidden()) {
@@ -317,8 +319,9 @@ public class CrabEntity extends Animal implements CrabAnimated {
     }
 
     @Override
-    public boolean doHurtTarget(ServerLevel level, Entity target) {
-        boolean hit = super.doHurtTarget(level, target);
+    public boolean doHurtTarget(Entity target) {
+        if (!(this.level() instanceof ServerLevel level)) return false;
+        boolean hit = super.doHurtTarget(target);
         if (hit) {
             level.broadcastEntityEvent(this, EVENT_PINCH);
             this.playSound(ShoreSounds.CRAB_PINCH, 1.0F, 0.9F + this.random.nextFloat() * 0.2F);
@@ -348,7 +351,7 @@ public class CrabEntity extends Animal implements CrabAnimated {
 
     @Override
     public @Nullable AgeableMob getBreedOffspring(ServerLevel level, AgeableMob partner) {
-        CrabEntity baby = ShoreEntities.CRAB.create(level, EntitySpawnReason.BREEDING);
+        CrabEntity baby = ShoreEntities.CRAB.create(level);
         if (baby != null) {
             Variant variant = partner instanceof CrabEntity other && this.random.nextBoolean() ? other.getVariant() : this.getVariant();
             baby.setVariant(variant);
@@ -384,16 +387,18 @@ public class CrabEntity extends Animal implements CrabAnimated {
 
     // ------------------------------------------------------------------------------------------ save
     @Override
-    protected void addAdditionalSaveData(ValueOutput output) {
-        super.addAdditionalSaveData(output);
+    public void addAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueOutput output = ValueOutput.of(tag121, this.registryAccess());
+        super.addAdditionalSaveData(output.tag());
         output.putString("Variant", this.getVariant().name);
         output.putBoolean("Hidden", this.isHidden());
         output.putInt("HideTicks", this.hideTicks);
     }
 
     @Override
-    protected void readAdditionalSaveData(ValueInput input) {
-        super.readAdditionalSaveData(input);
+    public void readAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueInput input = ValueInput.of(tag121, this.registryAccess());
+        super.readAdditionalSaveData(input.tag());
         String name = input.getStringOr("Variant", "red");
         for (Variant v : Variant.values()) {
             if (v.name.equals(name)) {
@@ -405,10 +410,10 @@ public class CrabEntity extends Animal implements CrabAnimated {
     }
 
     // ------------------------------------------------------------------------------------------ spawning
-    public static boolean checkCrabSpawnRules(EntityType<CrabEntity> type, ServerLevelAccessor level, EntitySpawnReason reason,
+    public static boolean checkCrabSpawnRules(EntityType<CrabEntity> type, ServerLevelAccessor level, MobSpawnType reason,
                                               BlockPos pos, RandomSource random) {
         return level.getBlockState(pos.below()).is(SPAWNABLE_ON)
-                && (EntitySpawnReason.ignoresLightRequirements(reason) || isBrightEnoughToSpawn(level, pos));
+                && (MobSpawnType.ignoresLightRequirements(reason) || isBrightEnoughToSpawn(level, pos));
     }
 
     /** Keeps the crab still while it is dug in. */

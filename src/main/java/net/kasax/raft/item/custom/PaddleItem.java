@@ -7,7 +7,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
+import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -24,15 +24,19 @@ public class PaddleItem extends TooltipItem {
     }
 
     @Override
-    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+    public net.minecraft.world.InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        return net.kasax.raft.compat.Results.holder(this.use26(level, player, hand), player.getItemInHand(hand));
+    }
+
+    private InteractionResult use26(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (!(player.getVehicle() instanceof AbstractBoat boat) || boat.getControllingPassenger() != player) {
+        if (!(player.getVehicle() instanceof Boat boat) || boat.getControllingPassenger() != player) {
             return InteractionResult.PASS;
         }
-        if (player.getCooldowns().isOnCooldown(stack)) {
+        if (player.getCooldowns().isOnCooldown(stack.getItem())) {
             return InteractionResult.FAIL;
         }
-        player.getCooldowns().addCooldown(stack, COOLDOWN_TICKS);
+        player.getCooldowns().addCooldown(stack.getItem(), COOLDOWN_TICKS);
         Vec3 forward = Vec3.directionFromRotation(0.0F, boat.getYRot());
         Vec3 velocity = boat.getDeltaMovement().add(forward.scale(BOOST));
         double speed = velocity.horizontalDistance();
@@ -49,7 +53,7 @@ public class PaddleItem extends TooltipItem {
             serverLevel.playSound(null, boat.getX(), boat.getY(), boat.getZ(), SoundEvents.BOAT_PADDLE_WATER, SoundSource.PLAYERS, 1.0F, 1.0F);
             serverLevel.sendParticles(ParticleTypes.SPLASH, boat.getX() - forward.x, boat.getY() + 0.3, boat.getZ() - forward.z,
                     12, 0.4, 0.1, 0.4, 0.1);
-            stack.hurtAndBreak(1, player, hand);
+            stack.hurtAndBreak(1, player, net.minecraft.world.entity.LivingEntity.getSlotForHand(hand));
         }
         return InteractionResult.SUCCESS;
     }

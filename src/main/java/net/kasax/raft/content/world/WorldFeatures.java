@@ -17,8 +17,8 @@ public final class WorldFeatures {
     private WorldFeatures() {
     }
 
-    private static void register(String name, MapCodec<? extends Feature> codec) {
-        Registry.register(BuiltInRegistries.FEATURE_TYPE, Raft.id(name), codec);
+    private static <C extends net.kasax.raft.compat.worldgen.WorldFeature> void register(String name, MapCodec<C> codec) {
+        Registry.register(BuiltInRegistries.FEATURE, Raft.id(name), new net.kasax.raft.compat.worldgen.CompatFeature<>(codec));
     }
 
     public static void init() {
@@ -28,6 +28,6 @@ public final class WorldFeatures {
         register("ice_floe", IceFloeFeature.CODEC);
         register("gravity_support", GravitySupportFeature.CODEC);
         // placement filter: keeps features (basalt columns, ash, lava, boulders...) out of structures
-        Registry.register(BuiltInRegistries.PLACEMENT_MODIFIER_TYPE, Raft.id("clear_of_structures"), ClearOfStructuresFilter.CODEC);
+        Registry.register(BuiltInRegistries.PLACEMENT_MODIFIER_TYPE, Raft.id("clear_of_structures"), ClearOfStructuresFilter.TYPE);
     }
 }

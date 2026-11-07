@@ -12,11 +12,10 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -35,7 +34,11 @@ public class HarpoonGunItem extends Item {
     }
 
     @Override
-    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+    public net.minecraft.world.InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        return net.kasax.raft.compat.Results.holder(this.use26(level, player, hand), player.getItemInHand(hand));
+    }
+
+    private InteractionResult use26(Level level, Player player, InteractionHand hand) {
         ItemStack gun = player.getItemInHand(hand);
         ItemStack ammo = findAmmo(player);
         if (ammo.isEmpty() && !player.hasInfiniteMaterials()) {
@@ -50,7 +53,7 @@ public class HarpoonGunItem extends Item {
                 harpoon.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
             }
             serverLevel.addFreshEntity(harpoon);
-            gun.hurtAndBreak(1, player, hand);
+            gun.hurtAndBreak(1, player, net.minecraft.world.entity.LivingEntity.getSlotForHand(hand));
             if (!player.hasInfiniteMaterials()) {
                 ammo.shrink(1);
             }
@@ -66,24 +69,25 @@ public class HarpoonGunItem extends Item {
         }
         level.playSound(null, player.getX(), player.getY(), player.getZ(), DivingSounds.HARPOON_GUN_FIRE, SoundSource.PLAYERS,
                 1.0F, 0.9F + level.getRandom().nextFloat() * 0.2F);
-        player.getCooldowns().addCooldown(gun, RELOAD_TICKS);
+        player.getCooldowns().addCooldown(gun.getItem(), RELOAD_TICKS);
         player.awardStat(Stats.ITEM_USED.get(this));
         return InteractionResult.SUCCESS;
     }
 
     /** Plays the click of the next harpoon sliding in shortly before the reload is done. */
     @Override
-    public void inventoryTick(ItemStack stack, ServerLevel level, net.minecraft.world.entity.Entity owner,
-                              net.minecraft.world.entity.@org.jspecify.annotations.Nullable EquipmentSlot slot) {
+    public void inventoryTick(ItemStack stack, net.minecraft.world.level.Level level121, net.minecraft.world.entity.Entity owner, int slot121, boolean slot121selected) {
+        if (!(level121 instanceof ServerLevel level)) return;
+        net.minecraft.world.entity.EquipmentSlot slot = slot121 >= 36 && slot121 < 40 ? net.minecraft.world.entity.EquipmentSlot.values()[2 + slot121 - 36] : slot121selected ? net.minecraft.world.entity.EquipmentSlot.MAINHAND : null;
         if (owner instanceof Player player && (slot == net.minecraft.world.entity.EquipmentSlot.MAINHAND
                 || slot == net.minecraft.world.entity.EquipmentSlot.OFFHAND)) {
-            float left = player.getCooldowns().getCooldownPercent(stack, 0.0F);
+            float left = player.getCooldowns().getCooldownPercent(stack.getItem(), 0.0F);
             if (left > 0.2F && left <= 0.25F) {
                 level.playSound(null, player.getX(), player.getY(), player.getZ(), DivingSounds.HARPOON_GUN_RELOAD,
                         SoundSource.PLAYERS, 0.7F, 1.1F);
             }
         }
-        super.inventoryTick(stack, level, owner, slot);
+        super.inventoryTick(stack, level121, owner, slot121, slot121selected);
     }
 
     /** Off hand first, then the rest of the inventory. */
@@ -102,10 +106,10 @@ public class HarpoonGunItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder,
-                                TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, java.util.List<net.minecraft.network.chat.Component> builderList121, TooltipFlag flag) {
+        java.util.function.Consumer<net.minecraft.network.chat.Component> builder = builderList121::add;
         builder.accept(Component.translatable("tooltip.raft.harpoon_gun").withStyle(ChatFormatting.GRAY));
         builder.accept(Component.translatable("tooltip.raft.harpoon_gun.1").withStyle(ChatFormatting.DARK_AQUA));
-        super.appendHoverText(stack, context, display, builder, flag);
+        super.appendHoverText(stack, context, builderList121, flag);
     }
 }

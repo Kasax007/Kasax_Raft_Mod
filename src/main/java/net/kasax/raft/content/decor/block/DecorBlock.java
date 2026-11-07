@@ -13,7 +13,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Mirror;
@@ -32,12 +31,13 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import net.kasax.raft.compat.VShapes;
 
 /**
  * The configurable decoration block of the decor module: optional horizontal {@code facing}, optional
@@ -80,7 +80,7 @@ public class DecorBlock extends Block implements SimpleWaterloggedBlock {
             return new Config(hasFacing, hasWater, Mount.CEILING, shape, collision, seat);
         }
 
-        public Config noCollision() {
+        public Config noCollission() {
             return new Config(hasFacing, hasWater, mount, shape, false, seat);
         }
 
@@ -135,7 +135,7 @@ public class DecorBlock extends Block implements SimpleWaterloggedBlock {
         VoxelShape north = shape(name);
         Map<Direction, VoxelShape> map = new EnumMap<>(Direction.class);
         if (rotate) {
-            map.putAll(Shapes.rotateHorizontal(north));
+            map.putAll(VShapes.rotateHorizontal(north));
         } else {
             for (Direction d : Direction.Plane.HORIZONTAL) map.put(d, north);
         }
@@ -219,16 +219,14 @@ public class DecorBlock extends Block implements SimpleWaterloggedBlock {
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos,
-                                     Direction directionToNeighbour, BlockPos neighbourPos, BlockState neighbourState,
-                                     RandomSource random) {
+    protected BlockState updateShape(BlockState state, Direction directionToNeighbour, BlockState neighbourState, net.minecraft.world.level.LevelAccessor level, BlockPos pos, BlockPos neighbourPos) {
         if (config.hasWater() && state.getValue(WATERLOGGED)) {
-            ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+            level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
         if (directionToNeighbour == supportSide(state) && !state.canSurvive(level, pos)) {
             return config.hasWater() && state.getValue(WATERLOGGED) ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState();
         }
-        return super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random);
+        return super.updateShape(state, directionToNeighbour, neighbourState, level, pos, neighbourPos);
     }
 
     @Override
@@ -237,7 +235,7 @@ public class DecorBlock extends Block implements SimpleWaterloggedBlock {
     }
 
     @Override
-    public boolean canPlaceLiquid(@Nullable LivingEntity user, BlockGetter level, BlockPos pos, BlockState state, Fluid fluid) {
+    public boolean canPlaceLiquid(@org.jetbrains.annotations.Nullable net.minecraft.world.entity.player.Player user, BlockGetter level, BlockPos pos, BlockState state, Fluid fluid) {
         return config.hasWater() && SimpleWaterloggedBlock.super.canPlaceLiquid(user, level, pos, state, fluid);
     }
 
@@ -247,12 +245,12 @@ public class DecorBlock extends Block implements SimpleWaterloggedBlock {
     }
 
     @Override
-    public ItemStack pickupBlock(@Nullable LivingEntity user, LevelAccessor level, BlockPos pos, BlockState state) {
+    public ItemStack pickupBlock(@org.jetbrains.annotations.Nullable net.minecraft.world.entity.player.Player user, LevelAccessor level, BlockPos pos, BlockState state) {
         return config.hasWater() ? SimpleWaterloggedBlock.super.pickupBlock(user, level, pos, state) : ItemStack.EMPTY;
     }
 
     @Override
-    protected boolean propagatesSkylightDown(BlockState state) {
+    protected boolean propagatesSkylightDown(BlockState state, net.minecraft.world.level.BlockGetter level121, BlockPos pos121) {
         return !(config.hasWater() && state.getValue(WATERLOGGED));
     }
 

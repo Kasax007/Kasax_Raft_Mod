@@ -6,7 +6,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.Mirror;
@@ -20,6 +19,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.Map;
+import net.kasax.raft.compat.VShapes;
 
 /**
  * A sail for a built raft: a mast with a square of canvas behind it. {@code facing} is the bow. Sails stack: each sail
@@ -27,6 +27,11 @@ import java.util.Map;
  * above, so the yard is drawn; {@code bottom} = no sail below, so the boom is drawn).
  */
 public class SailBlock extends HorizontalDirectionalBlock {
+    @Override
+    protected com.mojang.serialization.MapCodec<? extends HorizontalDirectionalBlock> codec() {
+        return simpleCodec(SailBlock::new);
+    }
+
     public static final BooleanProperty TOP = BooleanProperty.create("top");
     public static final BooleanProperty BOTTOM = BooleanProperty.create("bottom");
 
@@ -34,7 +39,7 @@ public class SailBlock extends HorizontalDirectionalBlock {
     private static final VoxelShape NORTH_SHAPE = Shapes.or(
             Block.box(7.0, 0.0, 7.0, 9.0, 16.0, 9.0),
             Block.box(1.0, 0.0, 9.0, 15.0, 16.0, 10.5));
-    private static final Map<Direction, VoxelShape> SHAPES = Shapes.rotateHorizontal(NORTH_SHAPE);
+    private static final Map<Direction, VoxelShape> SHAPES = VShapes.rotateHorizontal(NORTH_SHAPE);
 
     public SailBlock(Properties properties) {
         super(properties);
@@ -59,8 +64,7 @@ public class SailBlock extends HorizontalDirectionalBlock {
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos, Direction direction,
-                                     BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
+    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, net.minecraft.world.level.LevelAccessor level, BlockPos pos, BlockPos neighbourPos) {
         if (direction == Direction.UP) {
             return state.setValue(TOP, !(neighbourState.getBlock() instanceof SailBlock));
         }

@@ -11,7 +11,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MoverType;
@@ -19,13 +19,13 @@ import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.animal.fish.WaterAnimal;
+import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.kasax.raft.compat.ValueInput;
+import net.kasax.raft.compat.ValueOutput;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 
@@ -58,15 +58,16 @@ public class MantaRayEntity extends WaterAnimal {
     }
 
     @Override
-    public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason reason,
+    public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason,
                                                   @Nullable SpawnGroupData groupData) {
         this.home = this.blockPosition();
         return super.finalizeSpawn(level, difficulty, reason, groupData);
     }
 
     @Override
-    protected void addAdditionalSaveData(ValueOutput output) {
-        super.addAdditionalSaveData(output);
+    public void addAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueOutput output = ValueOutput.of(tag121, this.registryAccess());
+        super.addAdditionalSaveData(output.tag());
         if (this.home != null) {
             output.putInt("HomeX", this.home.getX());
             output.putInt("HomeY", this.home.getY());
@@ -75,19 +76,32 @@ public class MantaRayEntity extends WaterAnimal {
     }
 
     @Override
-    protected void readAdditionalSaveData(ValueInput input) {
-        super.readAdditionalSaveData(input);
+    public void readAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueInput input = ValueInput.of(tag121, this.registryAccess());
+        super.readAdditionalSaveData(input.tag());
         int y = input.getIntOr("HomeY", Integer.MIN_VALUE);
         if (y != Integer.MIN_VALUE) {
             this.home = new BlockPos(input.getIntOr("HomeX", 0), y, input.getIntOr("HomeZ", 0));
         }
     }
 
-    @Override
+    
     protected void travelInWater(Vec3 input, double baseGravity, boolean isFalling, double oldY) {
         this.moveRelative(this.getSpeed(), input);
         this.move(MoverType.SELF, this.getDeltaMovement());
         this.setDeltaMovement(this.getDeltaMovement().scale(0.9));
+    }
+
+    /** 1.21.1 port: the newer game moves an entity in water through {@code travelInWater}; 1.21.1 only has travel. */
+    @Override
+    public void travel(Vec3 input) {
+        if (this.isControlledByLocalInstance() && this.isInWater() && this.isAffectedByFluids()
+                && !this.canStandOnFluid(this.level().getFluidState(this.blockPosition()))) {
+            this.travelInWater(input, this.getGravity(), this.getDeltaMovement().y <= 0.0, this.getY());
+            this.calculateEntityAnimation(false);
+        } else {
+            super.travel(input);
+        }
     }
 
     @Override
@@ -117,8 +131,9 @@ public class MantaRayEntity extends WaterAnimal {
     }
 
     @Override
-    public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
-        boolean hurt = super.hurtServer(level, source, damage);
+    public boolean hurt(DamageSource source, float damage) {
+        if (!(this.level() instanceof ServerLevel level)) return false;
+        boolean hurt = super.hurt(source, damage);
         if (hurt) {
             this.panicTicks = 80;
         }
@@ -175,7 +190,7 @@ public class MantaRayEntity extends WaterAnimal {
     }
 
     /** Natural spawning: shallow water, 2–15 blocks below the surface. */
-    public static boolean checkMantaSpawnRules(EntityType<MantaRayEntity> type, ServerLevelAccessor level, EntitySpawnReason reason,
+    public static boolean checkMantaSpawnRules(EntityType<MantaRayEntity> type, ServerLevelAccessor level, MobSpawnType reason,
                                                BlockPos pos, RandomSource random) {
         int sea = level.getSeaLevel();
         return pos.getY() <= sea - 2 && pos.getY() >= sea - 15

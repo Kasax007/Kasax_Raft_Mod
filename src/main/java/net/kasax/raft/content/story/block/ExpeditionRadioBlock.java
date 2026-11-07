@@ -15,7 +15,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -32,15 +31,21 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.Map;
+import net.kasax.raft.compat.VShapes;
 
 /**
  * The Expedition radio set. Use: it crackles and a random broadcast line ({@code radio.raft.<n>}) comes through:
  * fragments of the last days of Port Solace that hint at places and lore. Under water it only gurgles.
  */
 public class ExpeditionRadioBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock {
+    @Override
+    protected com.mojang.serialization.MapCodec<? extends HorizontalDirectionalBlock> codec() {
+        return simpleCodec(ExpeditionRadioBlock::new);
+    }
+
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final int LINES = 16;
-    private static final Map<Direction, VoxelShape> SHAPES = Shapes.rotateHorizontal(Block.box(1, 0, 4, 15, 10, 12));
+    private static final Map<Direction, VoxelShape> SHAPES = VShapes.rotateHorizontal(Block.box(1, 0, 4, 15, 10, 12));
 
     public ExpeditionRadioBlock(Properties properties) {
         super(properties);
@@ -93,12 +98,11 @@ public class ExpeditionRadioBlock extends HorizontalDirectionalBlock implements 
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos,
-                                     Direction direction, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
+    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, net.minecraft.world.level.LevelAccessor level, BlockPos pos, BlockPos neighbourPos) {
         if (state.getValue(WATERLOGGED)) {
-            ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+            level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
-        return super.updateShape(state, level, ticks, pos, direction, neighbourPos, neighbourState, random);
+        return super.updateShape(state, direction, neighbourState, level, pos, neighbourPos);
     }
 
     @Override

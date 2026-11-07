@@ -9,7 +9,7 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.BlockUtil;
+import net.minecraft.BlockUtil;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.ai.village.poi.PoiRecord;
@@ -60,8 +60,8 @@ public final class RaftPortalForcer {
         Direction side = direction.getClockWise();
         boolean raftDim = level.dimension() == ModDimensions.RAFTDIM_LEVEL_KEY;
 
-        int minY = level.getMinY() + 2;
-        int maxY = Math.min(level.getMaxY(), level.getMinY() + level.getLogicalHeight() - 1) - 6;
+        int minY = level.getMinBuildHeight() + 2;
+        int maxY = Math.min(level.getMaxBuildHeight() - 1, level.getMinBuildHeight() + level.getLogicalHeight() - 1) - 6;
         int baseY;
         if (raftDim) {
             baseY = Mth.clamp(Mth.clamp(origin.getY(), RAFT_MIN_Y + 5, RAFT_MAX_Y - 5), minY, maxY);

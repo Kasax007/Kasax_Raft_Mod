@@ -6,7 +6,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
@@ -21,15 +20,21 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import net.kasax.raft.compat.VShapes;
 
 /**
  * A decoration that hangs on a wall, like the ship wheel and the shark jaw trophy. The FACING
  * property is the side the front points to, the back sits against the supporting wall.
  */
 public class WallDecorationBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock {
+    @Override
+    protected com.mojang.serialization.MapCodec<? extends HorizontalDirectionalBlock> codec() {
+        return null;
+    }
+
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     private final Map<Direction, VoxelShape> shapes;
@@ -37,7 +42,7 @@ public class WallDecorationBlock extends HorizontalDirectionalBlock implements S
     /** @param northShape the shape when the front faces north (the wall is on the south side) */
     public WallDecorationBlock(Properties properties, VoxelShape northShape) {
         super(properties);
-        this.shapes = Shapes.rotateHorizontal(northShape);
+        this.shapes = VShapes.rotateHorizontal(northShape);
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
     }
 
@@ -73,14 +78,13 @@ public class WallDecorationBlock extends HorizontalDirectionalBlock implements S
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos,
-                                     Direction directionToNeighbour, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
+    protected BlockState updateShape(BlockState state, Direction directionToNeighbour, BlockState neighbourState, net.minecraft.world.level.LevelAccessor level, BlockPos pos, BlockPos neighbourPos) {
         if (state.getValue(WATERLOGGED)) {
-            ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+            level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
         return directionToNeighbour == state.getValue(FACING).getOpposite() && !state.canSurvive(level, pos)
                 ? Blocks.AIR.defaultBlockState()
-                : super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random);
+                : super.updateShape(state, directionToNeighbour, neighbourState, level, pos, neighbourPos);
     }
 
     @Override

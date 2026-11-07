@@ -3,25 +3,24 @@ package net.kasax.raft.block.entity.renderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.kasax.raft.block.entity.ItemCollectorBlockEntity;
-import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.kasax.raft.compat.render.SubmitNodeCollector;
+import net.kasax.raft.compat.render.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
-import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
-import net.minecraft.client.renderer.item.ItemModelResolver;
-import net.minecraft.client.renderer.item.ItemStackRenderState;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.kasax.raft.compat.render.BlockEntityRenderState;
+import net.kasax.raft.compat.render.ItemModelResolver;
+import net.kasax.raft.compat.render.ItemStackRenderState;
+import net.kasax.raft.compat.render.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /** Shows the last caught item floating in the item catcher. */
 public class ItemCatcherBlockEntityRenderer implements BlockEntityRenderer<ItemCollectorBlockEntity, ItemCatcherBlockEntityRenderer.State> {
     private final ItemModelResolver itemModelResolver;
 
     public ItemCatcherBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
-        this.itemModelResolver = context.itemModelResolver();
+        this.itemModelResolver = new ItemModelResolver();
     }
 
     @Override
@@ -31,7 +30,7 @@ public class ItemCatcherBlockEntityRenderer implements BlockEntityRenderer<ItemC
 
     @Override
     public void extractRenderState(ItemCollectorBlockEntity entity, State state, float partialTicks, Vec3 cameraPosition,
-                                   ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+                                   @Nullable Object breakProgress) {
         BlockEntityRenderer.super.extractRenderState(entity, state, partialTicks, cameraPosition, breakProgress);
         state.item.clear();
         this.itemModelResolver.updateForTopItem(state.item, entity.getRenderStack(), ItemDisplayContext.GUI,
@@ -46,7 +45,7 @@ public class ItemCatcherBlockEntityRenderer implements BlockEntityRenderer<ItemC
         poseStack.pushPose();
         poseStack.translate(0.5f, 0.75f, 0.5f);
         poseStack.scale(0.35f, 0.35f, 0.35f);
-        poseStack.rotateDegrees(Axis.XP, 270);
+        poseStack.mulPose(Axis.XP.rotationDegrees(270));
         state.item.submit(poseStack, collector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
         poseStack.popPose();
     }

@@ -25,7 +25,7 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
@@ -41,12 +41,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
-import net.minecraft.world.level.gamerules.GameRules;
+import net.kasax.raft.compat.ValueInput;
+import net.kasax.raft.compat.ValueOutput;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +88,7 @@ public class LeviathanEntity extends Monster {
     private static final EntityDataAccessor<Integer> DATA_PHASE = SynchedEntityData.defineId(LeviathanEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_JAW = SynchedEntityData.defineId(LeviathanEntity.class, EntityDataSerializers.INT);
 
-    private final ServerBossEvent bossEvent = new ServerBossEvent(this.getUUID(), this.getDisplayName(),
+    private final ServerBossEvent bossEvent = new ServerBossEvent(this.getDisplayName(),
             BossEvent.BossBarColor.BLUE, BossEvent.BossBarOverlay.NOTCHED_10);
 
     // ---------------------------------------------------------------- server state
@@ -163,7 +163,7 @@ public class LeviathanEntity extends Monster {
 
     // ================================================================================================ basics
     @Override
-    public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason reason,
+    public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason,
                                                   @Nullable SpawnGroupData groupData) {
         this.home = this.blockPosition();
         this.setPersistenceRequired();
@@ -187,11 +187,6 @@ public class LeviathanEntity extends Monster {
     @Override
     public float getWalkTargetValue(BlockPos pos, LevelReader level) {
         return level.getFluidState(pos).is(FluidTags.WATER) ? 10.0F : 0.0F;
-    }
-
-    @Override
-    public boolean canBreatheUnderwater() {
-        return true;
     }
 
     @Override
@@ -225,19 +220,19 @@ public class LeviathanEntity extends Monster {
     }
 
     @Override
-    public boolean causeFallDamage(double fallDistance, float damageModifier, DamageSource damageSource) {
+    public boolean causeFallDamage(float fallDistance, float damageModifier, DamageSource damageSource) {
         return false;
     }
 
     @Override
-    public void knockback(double power, double xd, double zd, DamageSource source, float damage, boolean comesFromEffect) {
+    public void knockback(double power, double xd, double zd) {
     }
 
     @Override
-    public boolean isInvulnerableTo(ServerLevel level, DamageSource source) {
+    public boolean isInvulnerableTo(DamageSource source) {
         return source.is(DamageTypes.DROWN) || source.is(DamageTypes.FALL) || source.is(DamageTypes.IN_WALL)
                 || source.is(DamageTypes.CRAMMING) || source.is(DamageTypes.FLY_INTO_WALL) || source.is(DamageTypes.DRY_OUT)
-                || source.is(DamageTypeTags.IS_FIRE) || super.isInvulnerableTo(level, source);
+                || source.is(DamageTypeTags.IS_FIRE) || super.isInvulnerableTo(source);
     }
 
     @Override
@@ -276,8 +271,9 @@ public class LeviathanEntity extends Monster {
     }
 
     @Override
-    protected void addAdditionalSaveData(ValueOutput output) {
-        super.addAdditionalSaveData(output);
+    public void addAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueOutput output = ValueOutput.of(tag121, this.registryAccess());
+        super.addAdditionalSaveData(output.tag());
         if (this.home != null) {
             output.putInt("HomeX", this.home.getX());
             output.putInt("HomeY", this.home.getY());
@@ -286,8 +282,9 @@ public class LeviathanEntity extends Monster {
     }
 
     @Override
-    protected void readAdditionalSaveData(ValueInput input) {
-        super.readAdditionalSaveData(input);
+    public void readAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueInput input = ValueInput.of(tag121, this.registryAccess());
+        super.readAdditionalSaveData(input.tag());
         if (input.getInt("HomeY").isPresent()) {
             this.home = new BlockPos(input.getIntOr("HomeX", 0), input.getIntOr("HomeY", 0), input.getIntOr("HomeZ", 0));
             this.state = S_CIRCLE;
@@ -316,7 +313,7 @@ public class LeviathanEntity extends Monster {
 
     /** Unit vector the head points to (yaw + pitch). */
     public Vec3 forward(float partialTicks) {
-        return Vec3.directionFromRotation(this.getXRot(partialTicks), this.getYRot(partialTicks));
+        return Vec3.directionFromRotation(this.getViewXRot(partialTicks), this.getViewYRot(partialTicks));
     }
 
     /** Neck joint of the body chain, just behind the head (interpolated). */
@@ -423,8 +420,9 @@ public class LeviathanEntity extends Monster {
     }
 
     @Override
-    protected void customServerAiStep(ServerLevel level) {
-        super.customServerAiStep(level);
+    protected void customServerAiStep() {
+        ServerLevel level = (ServerLevel) this.level();
+        super.customServerAiStep();
         if (Double.isNaN(this.surfaceY)) {
             this.scanArena(level);
             if (this.state == S_INTRO) {
@@ -797,7 +795,7 @@ public class LeviathanEntity extends Monster {
                 this.playSound(BossSounds.LEVIATHAN_CHARGE, 1.5F, 1.2F + this.random.nextFloat() * 0.2F);
             }
             if (ct < cycle - 5) {
-                level.sendParticles(new DustParticleOptions(TEAL, 1.6F), mouth.x, mouth.y, mouth.z, 4, 0.5, 0.4, 0.5, 0.0);
+                level.sendParticles(new DustParticleOptions(net.minecraft.world.phys.Vec3.fromRGB24(TEAL).toVector3f(), 1.6F), mouth.x, mouth.y, mouth.z, 4, 0.5, 0.4, 0.5, 0.0);
                 level.sendParticles(ParticleTypes.GLOW, mouth.x, mouth.y, mouth.z, 2, 0.3, 0.3, 0.3, 0.02);
             }
             if (ct == cycle - 5) {
@@ -860,7 +858,7 @@ public class LeviathanEntity extends Monster {
             // the landing zone glows on the floor: get out of the circle!
             for (int i = 0; i < 16; i++) {
                 double a = i * Math.PI / 8.0 + this.stateTicks * 0.15;
-                level.sendParticles(new DustParticleOptions(0xFF5A3C, 1.8F), this.aim.x + Math.cos(a) * 4.0, this.aim.y + 0.15,
+                level.sendParticles(new DustParticleOptions(net.minecraft.world.phys.Vec3.fromRGB24(0xFF5A3C).toVector3f(), 1.8F), this.aim.x + Math.cos(a) * 4.0, this.aim.y + 0.15,
                         this.aim.z + Math.sin(a) * 4.0, 1, 0.05, 0.0, 0.05, 0.0);
             }
             level.sendParticles(ParticleTypes.FALLING_WATER, this.aim.x, this.aim.y + 0.3, this.aim.z, 6, 1.5, 0.1, 1.5, 0.0);
@@ -927,10 +925,10 @@ public class LeviathanEntity extends Monster {
             if (d > 5.5) {
                 continue;
             }
-            e.hurtServer(level, this.damageSources().mobAttack(this), 8.0F);
+            e.hurt(this.damageSources().mobAttack(this), 8.0F);
             Vec3 push = d < 0.01 ? new Vec3(1.0, 0.0, 0.0) : new Vec3(dx / d, 0.0, dz / d);
             e.push(push.x * 1.3, 0.55, push.z * 1.3);
-            e.needsSync = true;
+            e.hurtMarked = true;
         }
         this.setDeltaMovement(0.0, Math.min(0.0, this.getDeltaMovement().y), 0.0);
     }
@@ -1073,9 +1071,9 @@ public class LeviathanEntity extends Monster {
                 Vec3 n = dist < 0.01 ? new Vec3(1.0, 0.0, 0.0) : d.scale(1.0 / dist);
                 double s = 0.6 + 1.4 * (1.0 - dist / 18.0);
                 p.push(n.x * s, 0.45, n.z * s);
-                p.needsSync = true;
+                p.hurtMarked = true;
                 if (dist < 9.0) {
-                    p.hurtServer(level, this.damageSources().mobAttack(this), this.getPhase() == 3 ? 4.0F : 2.0F);
+                    p.hurt(this.damageSources().mobAttack(this), this.getPhase() == 3 ? 4.0F : 2.0F);
                 }
             }
             this.summonTidelings(level, players);
@@ -1113,7 +1111,7 @@ public class LeviathanEntity extends Monster {
             level.sendParticles(ParticleTypes.SPLASH, o.x + Math.cos(a) * 2.0, o.y, o.z + Math.sin(a) * 2.0, 0, vx * 1.5, 0.3, vz * 1.5, 1.0);
         }
         if (kind == 2) {
-            level.sendParticles(ColorParticleOption.create(ParticleTypes.FLASH, 0xFF7FFFF0), o.x, o.y + 1.0, o.z, 1, 0.0, 0.0, 0.0, 0.0);
+            level.sendParticles(ParticleTypes.FLASH, o.x, o.y + 1.0, o.z, 1, 0.0, 0.0, 0.0, 0.0);
         }
     }
 
@@ -1132,12 +1130,12 @@ public class LeviathanEntity extends Monster {
             double r = Math.max(1.0, this.poolRadius - 1.5);
             double x = c.x + Math.cos(a) * r;
             double z = c.z + Math.sin(a) * r;
-            TidelingEntity t = BossEntities.TIDELING.create(level, EntitySpawnReason.MOB_SUMMONED);
+            TidelingEntity t = BossEntities.TIDELING.create(level);
             if (t == null) {
                 continue;
             }
-            t.snapTo(x, this.surfaceY - 1.0, z, (float) (a * Mth.RAD_TO_DEG) - 90.0F, 0.0F);
-            t.finalizeSpawn(level, level.getCurrentDifficultyAt(t.blockPosition()), EntitySpawnReason.MOB_SUMMONED, null);
+            t.moveTo(x, this.surfaceY - 1.0, z, (float) (a * Mth.RAD_TO_DEG) - 90.0F, 0.0F);
+            t.finalizeSpawn(level, level.getCurrentDifficultyAt(t.blockPosition()), MobSpawnType.MOB_SUMMONED, null);
             t.setSummoned();
             if (p != null) {
                 t.setTarget(p);
@@ -1191,7 +1189,7 @@ public class LeviathanEntity extends Monster {
                 double s = (p.isInWater() ? 0.07 : 0.055) + 0.035 * (1.0 - dist / 12.0);
                 Vec3 tangent = new Vec3(-n.z, 0.0, n.x).scale(this.circleDir * (p.isInWater() ? 0.05 : 0.02));
                 p.push(n.x * s + tangent.x, p.isInWater() ? -0.035 : 0.0, n.z * s + tangent.z);
-                p.needsSync = true;
+                p.hurtMarked = true;
                 if (t % 4 == 0 && !p.isInWater()) {
                     level.sendParticles(ParticleTypes.CLOUD, p.getX() - n.x, p.getY() + 0.2, p.getZ() - n.z, 0, n.x * 0.4, 0.0, n.z * 0.4, 1.0);
                 }
@@ -1210,7 +1208,7 @@ public class LeviathanEntity extends Monster {
         Vec3 mouth = this.mouthPos();
         AABB box = new AABB(mouth, mouth).inflate(1.8, 1.4, 1.8);
         for (Player p : level.getEntitiesOfClass(Player.class, box, p -> p.isAlive() && !p.isSpectator() && !p.isCreative())) {
-            if (this.doHurtTarget(level, p)) {
+            if (this.doHurtTarget(p)) {
                 this.biteCooldown = 30;
                 this.setJaw(90);
                 this.playSound(BossSounds.LEVIATHAN_BITE, 2.0F, 0.9F);
@@ -1221,9 +1219,10 @@ public class LeviathanEntity extends Monster {
 
     // ================================================================================================ damage
     @Override
-    public boolean hurtServer(ServerLevel level, DamageSource source, float amount) {
+    public boolean hurt(DamageSource source, float amount) {
+        if (!(this.level() instanceof ServerLevel level)) return false;
         if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
-            return super.hurtServer(level, source, amount);
+            return super.hurt(source, amount);
         }
         Entity attacker = source.getEntity();
         if (attacker instanceof LeviathanEntity || attacker instanceof TidelingEntity || source.getDirectEntity() instanceof BrineBoltEntity) {
@@ -1240,7 +1239,7 @@ public class LeviathanEntity extends Monster {
         if (this.state == S_STRANDED) {
             amount *= 1.5F;
         }
-        return super.hurtServer(level, source, amount);
+        return super.hurt(source, amount);
     }
 
     // ================================================================================================ death
@@ -1248,7 +1247,7 @@ public class LeviathanEntity extends Monster {
     protected void dropAllDeathLoot(ServerLevel level, DamageSource source) {
         // the loot comes out of the light burst at the end of the death animation
         this.deathSource = source;
-        this.deathByPlayer = this.getLastHurtByPlayer() != null;
+        this.deathByPlayer = this.lastHurtByPlayer != null;
     }
 
     @Override
@@ -1286,7 +1285,7 @@ public class LeviathanEntity extends Monster {
         if (this.deathTime == 70) {
             // the light burst: what the deep held is set free
             this.playSound(BossSounds.LEVIATHAN_BURST, 5.0F, 1.0F);
-            level.sendParticles(ColorParticleOption.create(ParticleTypes.FLASH, 0xFF9FFFF4), pv.x, pv.y, pv.z, 2, 0.2, 0.2, 0.2, 0.0);
+            level.sendParticles(ParticleTypes.FLASH, pv.x, pv.y, pv.z, 2, 0.2, 0.2, 0.2, 0.0);
             level.sendParticles(ParticleTypes.END_ROD, pv.x, pv.y, pv.z, 160, 0.4, 0.4, 0.4, 0.55);
             level.sendParticles(ParticleTypes.GLOW, pv.x, pv.y, pv.z, 120, 2.0, 1.5, 2.0, 0.4);
             level.sendParticles(ParticleTypes.SPLASH, pv.x, this.surfaceY + 0.1, pv.z, 160, 3.0, 0.4, 3.0, 0.8);
@@ -1302,11 +1301,11 @@ public class LeviathanEntity extends Monster {
 
     private void releaseRewards(ServerLevel level) {
         Vec3 c = Double.isNaN(this.surfaceY) ? this.pivot() : new Vec3(this.getX(), Math.max(this.getY() + PIVOT, this.surfaceY + 1.0), this.getZ());
-        Player killer = this.getLastHurtByPlayer() instanceof Player p ? p : level.getNearestPlayer(this, 48.0);
-        if (this.deathSource != null && level.getGameRules().get(GameRules.MOB_DROPS)) {
+        Player killer = this.lastHurtByPlayer instanceof Player p ? p : level.getNearestPlayer(this, 48.0);
+        if (this.deathSource != null && level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) {
             AABB before = this.getBoundingBox().inflate(3.0);
             List<ItemEntity> old = level.getEntitiesOfClass(ItemEntity.class, before);
-            this.dropFromLootTable(level, this.deathSource, this.deathByPlayer);
+            this.dropFromLootTable(this.deathSource, this.deathByPlayer);
             Vec3 ring = killer != null ? killer.position() : c.add(this.poolRadius + 2.0, 0.0, 0.0);
             for (ItemEntity item : level.getEntitiesOfClass(ItemEntity.class, before.inflate(1.0), e -> !old.contains(e))) {
                 item.setPos(c.x, c.y, c.z);
@@ -1316,7 +1315,7 @@ public class LeviathanEntity extends Monster {
                 Vec3 v = h < 0.1 ? new Vec3(0.0, 0.5, 0.0) : new Vec3(to.x / t, 0.55, to.z / t);
                 item.setDeltaMovement(v.add(this.random.nextGaussian() * 0.04, this.random.nextDouble() * 0.1, this.random.nextGaussian() * 0.04));
                 item.setUnlimitedLifetime();
-                item.setPermanentlyInvulnerable(true);
+                item.setInvulnerable(true);
             }
         }
         if (this.deathByPlayer) {

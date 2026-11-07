@@ -5,11 +5,11 @@ import net.kasax.raft.content.story.StoryContent;
 import net.kasax.raft.content.story.StoryProgress;
 import net.kasax.raft.content.story.StoryUtil;
 import net.kasax.raft.content.story.net.OpenJournalPayload;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.kasax.raft.compat.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderPipelines;
+import net.kasax.raft.compat.gui.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
 
@@ -20,8 +20,8 @@ import java.util.List;
  * four Tide Sigils and the chart timer. Right page: the voyage so far (chapters done are ticked, the current one is
  * marked, later ones stay unknown).
  */
-public class JournalScreen extends Screen {
-    private static final Identifier TEXTURE = Raft.id("textures/gui/journal.png");
+public class JournalScreen extends net.kasax.raft.compat.gui.BaseScreen {
+    private static final ResourceLocation TEXTURE = Raft.id("textures/gui/journal.png");
     private static final int W = 320, H = 200;
     private static final int INK = 0xFF3B2A1C, FADED = 0xFF8A7656, TEAL = 0xFF1F6E6E, GOLD = 0xFF9A6A12, GREEN = 0xFF2F6E3A;
 

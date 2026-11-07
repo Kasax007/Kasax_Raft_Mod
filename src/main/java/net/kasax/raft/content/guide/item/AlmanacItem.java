@@ -9,7 +9,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 
 import java.util.function.Consumer;
@@ -29,7 +28,11 @@ public class AlmanacItem extends Item {
     }
 
     @Override
-    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+    public net.minecraft.world.InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        return net.kasax.raft.compat.Results.holder(this.use26(level, player, hand), player.getItemInHand(hand));
+    }
+
+    private InteractionResult use26(Level level, Player player, InteractionHand hand) {
         if (level.isClientSide()) {
             openScreen.accept(player.getItemInHand(hand));
         } else {
@@ -39,9 +42,10 @@ public class AlmanacItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, java.util.List<net.minecraft.network.chat.Component> builderList121, TooltipFlag flag) {
+        java.util.function.Consumer<net.minecraft.network.chat.Component> builder = builderList121::add;
         builder.accept(Component.translatable("tooltip.raft.seafarers_almanac").withStyle(ChatFormatting.AQUA));
         builder.accept(Component.translatable("tooltip.raft.seafarers_almanac.1").withStyle(ChatFormatting.GRAY));
-        super.appendHoverText(stack, context, display, builder, flag);
+        super.appendHoverText(stack, context, builderList121, flag);
     }
 }

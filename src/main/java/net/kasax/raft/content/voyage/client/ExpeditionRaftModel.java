@@ -3,7 +3,7 @@ package net.kasax.raft.content.voyage.client;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.kasax.raft.content.voyage.RaftUpgrade;
-import net.minecraft.client.model.EntityModel;
+import net.kasax.raft.compat.render.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;

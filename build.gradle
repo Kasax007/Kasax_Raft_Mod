@@ -1,5 +1,5 @@
 plugins {
-	id 'net.fabricmc.fabric-loom' version "${loom_version}"
+	id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
 	id 'maven-publish'
 }
 
@@ -13,28 +13,30 @@ base {
 repositories {
 }
 
-fabricApi {
-	configureDataGeneration {
-		client = true
-	}
-	// In-game test harness (src/gametest): a scripted client game test, see tools/bctest/README.md.
-	configureTests {
-		createSourceSet = true
-		modId = "raft-gametest"
-		enableGameTests = false
-		enableClientGameTests = false
-		eula = true
+// In-game test harness (src/gametest): a scripted client test driven by client ticks, see tools/bctest/README.md.
+// Fabric's client game test API does not exist for 1.21.1, so the harness runs as an ordinary client mod.
+sourceSets {
+	gametest {
+		compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
+		runtimeClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output
 	}
 }
 
 loom {
+	mods {
+		"raft" {
+			sourceSet sourceSets.main
+		}
+		"raft-gametest" {
+			sourceSet sourceSets.gametest
+		}
+	}
 	runs {
 		bctest {
 			client()
 			name "BcTest"
 			source sourceSets.gametest
 			runDir "build/run/bctest"
-			property "fabric.client.gametest"
 			vmArg "-Xmx${project.findProperty('xmx') ?: '3G'}"
 			if (project.hasProperty('bcScript')) vmArg "-Dbc.script=${project.property('bcScript')}"
 			if (project.hasProperty('bcOut')) vmArg "-Dbc.out=${project.property('bcOut')}"
@@ -45,12 +47,12 @@ loom {
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	// No mappings line: Minecraft 26.x ships unobfuscated.
-	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
-	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	mappings loom.officialMojangMappings()
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	// Team Reborn Energy (bundled): cables, batteries and solar panels talk to Tech Reborn machines.
-	include implementation("teamreborn:energy:${project.energy_version}")
+	include modImplementation("teamreborn:energy:${project.energy_version}")
 }
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -135,15 +137,15 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 25
+	it.options.release = 21
 	it.options.encoding = "UTF-8"
 	it.options.compilerArgs += ["-Xmaxerrs", "2000"]
 }
 
 java {
 	withSourcesJar()
-	sourceCompatibility = JavaVersion.VERSION_25
-	targetCompatibility = JavaVersion.VERSION_25
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
 }
 
 jar {

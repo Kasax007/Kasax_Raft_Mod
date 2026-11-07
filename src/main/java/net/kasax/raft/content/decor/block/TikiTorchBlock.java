@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.ItemInteractionResult;
 
 /**
  * A two-block bamboo torch ({@code half}, {@code lit}). The flame sits on the upper half (light 14 there when lit).
@@ -45,21 +46,20 @@ public class TikiTorchBlock extends TallDecorBlock {
     }
 
     @Override
-    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
-                                          InteractionHand hand, BlockHitResult hit) {
+    protected net.minecraft.world.ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         boolean lit = state.getValue(LIT);
         if (!lit && FireHelper.isIgniter(stack)) {
             FireHelper.ignite(level, pos, player, hand, stack);
             setLit(level, pos, state, true);
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         }
         if (lit && FireHelper.isDouser(stack)) {
             BlockPos top = state.getValue(HALF) == DoubleBlockHalf.UPPER ? pos : pos.above();
             FireHelper.douse(level, top, player, hand, stack, 0.8);
             setLit(level, pos, state, false);
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         }
-        return InteractionResult.TRY_WITH_EMPTY_HAND;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     private static void setLit(Level level, BlockPos pos, BlockState state, boolean lit) {

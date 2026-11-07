@@ -19,7 +19,7 @@ public final class NpcClient {
         }
         ClientPlayNetworking.registerGlobalReceiver(NpcDialogPayload.TYPE, (payload, context) -> {
             Minecraft mc = context.client();
-            mc.execute(() -> mc.gui.setScreen(new NpcDialogScreen(payload)));
+            mc.execute(() -> mc.setScreen(new NpcDialogScreen(payload)));
         });
     }
 }

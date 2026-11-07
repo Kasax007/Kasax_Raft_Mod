@@ -39,7 +39,7 @@ public class ItemCollectorScreenHandler extends AbstractContainerMenu {
             }
         });
 
-        addStandardInventorySlots(playerInventory, 8, 84);
+        net.kasax.raft.compat.Menus.addStandardInventorySlots(this::addSlot, playerInventory, 8, 84);
 
         addDataSlots(arrayPropertyDelegate);
     }

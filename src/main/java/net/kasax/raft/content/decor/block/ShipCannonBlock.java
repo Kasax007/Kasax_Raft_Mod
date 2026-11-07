@@ -18,7 +18,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.ItemInteractionResult;
 
 /**
  * A deck cannon ({@code facing}, {@code waterlogged}). Using a cannonball on it fires the ball out of the muzzle
@@ -39,23 +40,22 @@ public class ShipCannonBlock extends DecorBlock {
     }
 
     @Override
-    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
-                                          InteractionHand hand, BlockHitResult hit) {
-        if (!stack.is(DecorBlocks.CANNONBALL)) return InteractionResult.TRY_WITH_EMPTY_HAND;
-        if (state.getValue(WATERLOGGED)) return InteractionResult.FAIL;
-        if (player.getCooldowns().isOnCooldown(stack)) return InteractionResult.FAIL;
+    protected net.minecraft.world.ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (!stack.is(DecorBlocks.CANNONBALL)) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        if (state.getValue(WATERLOGGED)) return ItemInteractionResult.FAIL;
+        if (player.getCooldowns().isOnCooldown(stack.getItem())) return ItemInteractionResult.FAIL;
         if (level instanceof ServerLevel serverLevel) {
             fire(serverLevel, pos, state.getValue(FACING), player);
             stack.consume(1, player);
-            player.getCooldowns().addCooldown(stack, COOLDOWN);
+            player.getCooldowns().addCooldown(stack.getItem(), COOLDOWN);
         }
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (!level.isClientSide()) {
-            player.sendOverlayMessage(Component.translatable("message.raft.ship_cannon.empty"));
+            player.displayClientMessage(Component.translatable("message.raft.ship_cannon.empty"), true);
         }
         return InteractionResult.SUCCESS;
     }

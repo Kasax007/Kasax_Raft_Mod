@@ -31,6 +31,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Map;
+import net.minecraft.world.ItemInteractionResult;
 
 /**
  * The Tide Seal: an unbreakable, shimmering barrier of the Abyssal Sanctum. Using the Tidewarden Key on it opens every
@@ -83,7 +84,7 @@ public class TideSealBlock extends Block {
     }
 
     @Override
-    protected boolean propagatesSkylightDown(BlockState state) {
+    protected boolean propagatesSkylightDown(BlockState state, net.minecraft.world.level.BlockGetter level121, BlockPos pos121) {
         return true;
     }
 
@@ -93,16 +94,15 @@ public class TideSealBlock extends Block {
     }
 
     @Override
-    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
-                                          InteractionHand hand, BlockHitResult hit) {
+    protected net.minecraft.world.ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (state.getValue(OPEN) || !stack.is(StoryContent.TIDEWARDEN_KEY)) {
-            return InteractionResult.TRY_WITH_EMPTY_HAND;
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
         if (level instanceof ServerLevel server) {
             open(server, pos);
             StoryUtil.tell(player, "seal.open");
         }
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 
     @Override

@@ -22,9 +22,14 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class FurnaceBlock extends AbstractFurnaceBlock {
+    @Override
+    protected com.mojang.serialization.MapCodec<? extends AbstractFurnaceBlock> codec() {
+        return null;
+    }
+
     protected final double speed;
     protected final double fuel;
     protected final int dupe;

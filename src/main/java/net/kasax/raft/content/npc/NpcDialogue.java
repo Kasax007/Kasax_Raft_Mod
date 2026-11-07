@@ -8,9 +8,8 @@ import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Prediction;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -118,14 +117,14 @@ public final class NpcDialogue {
     }
 
     private static ItemStack stack(String id, int count) {
-        Identifier ident = Identifier.tryParse(id);
-        Item item = ident == null ? Items.AIR : BuiltInRegistries.ITEM.getValue(ident);
+        ResourceLocation ident = ResourceLocation.tryParse(id);
+        Item item = ident == null ? Items.AIR : BuiltInRegistries.ITEM.get(ident);
         return item == Items.AIR ? ItemStack.EMPTY : new ItemStack(item, count);
     }
 
     private static void give(ServerPlayer player, ItemStack stack) {
         if (!player.getInventory().add(stack) && !stack.isEmpty()) {
-            player.drop(stack, false, Prediction.SERVER_ONLY);
+            player.drop(stack, false);
         }
     }
 

@@ -1,7 +1,7 @@
 package net.kasax.raft.content.boss.client.model;
 
 import net.kasax.raft.Raft;
-import net.minecraft.client.model.EntityModel;
+import net.kasax.raft.compat.render.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -9,7 +9,7 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.kasax.raft.compat.render.EntityRenderState;
 import net.minecraft.util.Mth;
 
 /** Brine bolt: a bright core inside a wobbling translucent shell of brine. Texture 32x32. */
@@ -20,7 +20,7 @@ public class BrineBoltModel extends EntityModel<EntityRenderState> {
     private final ModelPart shell;
 
     public BrineBoltModel(ModelPart root) {
-        super(root, net.minecraft.client.renderer.rendertype.RenderTypes::entityTranslucentEmissive);
+        super(root, net.kasax.raft.compat.render.RenderTypes::entityTranslucentEmissive);
         this.core = root.getChild("core");
         this.shell = root.getChild("shell");
     }

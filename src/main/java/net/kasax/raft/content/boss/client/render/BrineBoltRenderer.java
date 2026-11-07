@@ -4,20 +4,20 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.boss.client.model.BrineBoltModel;
 import net.kasax.raft.content.boss.entity.BrineBoltEntity;
-import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.kasax.raft.compat.render.SubmitNodeCollector;
+import net.kasax.raft.compat.render.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.state.EntityRenderState;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.kasax.raft.compat.render.EntityRenderState;
+import net.minecraft.client.renderer.RenderType;
+import net.kasax.raft.compat.render.RenderTypes;
+import net.kasax.raft.compat.render.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 /** Draws the brine bolt as a full-bright glowing teal blob. */
 public class BrineBoltRenderer extends EntityRenderer<BrineBoltEntity, EntityRenderState> {
-    private static final Identifier TEXTURE = Raft.id("textures/entity/leviathan/brine_bolt.png");
+    private static final ResourceLocation TEXTURE = Raft.id("textures/entity/leviathan/brine_bolt.png");
     private static final RenderType TYPE = RenderTypes.entityTranslucentEmissive(TEXTURE);
     private final BrineBoltModel model;
 

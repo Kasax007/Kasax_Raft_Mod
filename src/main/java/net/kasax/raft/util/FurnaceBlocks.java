@@ -38,13 +38,13 @@ public class FurnaceBlocks {
                 .strength(3.5f)
                 .requiresCorrectToolForDrops()
                 .lightLevel(createLightLevelFromBlockState(13))
-                .setId(blockKey);
+                ;
         FurnaceBlock furnace = Registry.register(BuiltInRegistries.BLOCK, blockKey,
                 new FurnaceBlock(properties, data.getSpeedModifier(), data.getFuelModifier(), data.getDuplicationChance()));
 
         ResourceKey<Item> itemKey = ResourceKey.create(Registries.ITEM, Raft.id(data.getName()));
         Registry.register(BuiltInRegistries.ITEM, itemKey,
-                new FurnaceItem(furnace, new Item.Properties().setId(itemKey).useBlockDescriptionPrefix()));
+                new FurnaceItem(furnace, new Item.Properties()));
         regularFurnaces.add(furnace);
         allFurnaces.add(furnace);
     }

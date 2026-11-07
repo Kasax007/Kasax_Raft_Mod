@@ -12,7 +12,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.LightLayer;
@@ -28,7 +28,7 @@ import java.util.List;
  * every running wind turbine nearby its rotor sound.
  */
 public final class AudioClient {
-    private static final Identifier RAFT_DIMENSION = Raft.id("raftdim");
+    private static final ResourceLocation RAFT_DIMENSION = Raft.id("raftdim");
     private static SeaAmbience sea;
     private static long seaStarted;
     private static final List<TurbineSound> TURBINES = new ArrayList<>();
@@ -64,7 +64,7 @@ public final class AudioClient {
         if (level == null || player == null || mc.isPaused()) {
             return;
         }
-        boolean raftDim = level.dimension().identifier().equals(RAFT_DIMENSION);
+        boolean raftDim = level.dimension().location().equals(RAFT_DIMENSION);
         motors(mc, level, player);
         if (level.getGameTime() % 10 == 0) {
             openSea = raftDim ? measureOpenSea(level, player) : 0.0F;

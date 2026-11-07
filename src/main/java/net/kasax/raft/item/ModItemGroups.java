@@ -1,6 +1,6 @@
 package net.kasax.raft.item;
 
-import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.kasax.raft.Raft;
 import net.kasax.raft.block.ModBlocks;
 import net.kasax.raft.block.cable.RaftCable;
@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.Block;
 public class ModItemGroups {
     public static final CreativeModeTab RAFT_GROUP = Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB,
             Raft.id("raft"),
-            FabricCreativeModeTab.builder().title(Component.translatable("itemgroup.raft"))
+            FabricItemGroup.builder().title(Component.translatable("itemgroup.raft"))
                     .icon(() -> new ItemStack(ModItems.ANCIENT_ENERGY)).displayItems((displayContext, entries) -> {
                         entries.accept(ModItems.ANCIENT_BROKEN_RING);
                         entries.accept(ModItems.ANCIENT_ENERGY);

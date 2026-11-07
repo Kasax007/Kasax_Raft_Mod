@@ -7,11 +7,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.IntProvider;
-import net.minecraft.util.valueproviders.IntProviders;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -33,14 +32,14 @@ import java.util.List;
  * {@code optional_blocks} are blocks of other content modules (looked up by id when placing, so a block that does not
  * exist is simply left out): with {@code optional_chance} a piece is one of them instead of {@code state_provider}.
  */
-public record RubbleFeature(Holder<BlockStateProvider> stateProvider, IntProvider pieces, int spread, float stackChance,
-                            List<Identifier> optionalBlocks, float optionalChance) implements Feature {
+public record RubbleFeature(BlockStateProvider stateProvider, IntProvider pieces, int spread, float stackChance,
+                            List<ResourceLocation> optionalBlocks, float optionalChance) implements net.kasax.raft.compat.worldgen.WorldFeature {
     public static final MapCodec<RubbleFeature> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             BlockStateProvider.CODEC.fieldOf("state_provider").forGetter(RubbleFeature::stateProvider),
-            IntProviders.codec(1, 64).fieldOf("pieces").forGetter(RubbleFeature::pieces),
+            IntProvider.codec(1, 64).fieldOf("pieces").forGetter(RubbleFeature::pieces),
             Codec.intRange(0, 7).optionalFieldOf("spread", 2).forGetter(RubbleFeature::spread),
             Codec.floatRange(0.0F, 1.0F).optionalFieldOf("stack_chance", 0.3F).forGetter(RubbleFeature::stackChance),
-            Identifier.CODEC.listOf().optionalFieldOf("optional_blocks", List.of()).forGetter(RubbleFeature::optionalBlocks),
+            ResourceLocation.CODEC.listOf().optionalFieldOf("optional_blocks", List.of()).forGetter(RubbleFeature::optionalBlocks),
             Codec.floatRange(0.0F, 1.0F).optionalFieldOf("optional_chance", 0.0F).forGetter(RubbleFeature::optionalChance)
     ).apply(i, RubbleFeature::new));
 
@@ -53,7 +52,7 @@ public record RubbleFeature(Holder<BlockStateProvider> stateProvider, IntProvide
     public boolean place(WorldGenLevel level, ChunkGenerator generator, RandomSource random, BlockPos origin) {
         int n = pieces.sample(random);
         List<Block> optional = new ArrayList<>();
-        for (Identifier id : optionalBlocks) {
+        for (ResourceLocation id : optionalBlocks) {
             BuiltInRegistries.BLOCK.getOptional(id).ifPresent(optional::add);
         }
         boolean any = false;
@@ -75,7 +74,7 @@ public record RubbleFeature(Holder<BlockStateProvider> stateProvider, IntProvide
                 }
                 BlockState state = !optional.isEmpty() && random.nextFloat() < optionalChance
                         ? optional.get(random.nextInt(optional.size())).defaultBlockState()
-                        : stateProvider.value().getState(level, random, pos);
+                        : stateProvider.getState(random, pos);
                 if (state.hasProperty(BlockStateProperties.AXIS)) {
                     state = state.setValue(BlockStateProperties.AXIS, random.nextBoolean() ? Direction.Axis.X : Direction.Axis.Z);
                 }

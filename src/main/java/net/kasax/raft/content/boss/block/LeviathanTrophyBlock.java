@@ -17,6 +17,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.Map;
+import net.kasax.raft.compat.VShapes;
 
 /** The Leviathan's head on a tidestone plinth, a trophy of the final fight. {@code facing} is where the snout points. */
 public class LeviathanTrophyBlock extends Block {
@@ -26,7 +27,7 @@ public class LeviathanTrophyBlock extends Block {
             Block.box(1.0, 0.0, 1.0, 15.0, 3.0, 15.0),
             Block.box(3.0, 3.0, 5.0, 13.0, 12.0, 15.0),
             Block.box(4.0, 3.0, 0.5, 12.0, 9.0, 5.0));
-    private static final Map<Direction, VoxelShape> SHAPES = Shapes.rotateHorizontal(NORTH_SHAPE);
+    private static final Map<Direction, VoxelShape> SHAPES = VShapes.rotateHorizontal(NORTH_SHAPE);
 
     public LeviathanTrophyBlock(Properties properties) {
         super(properties);

@@ -10,7 +10,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
@@ -27,13 +26,18 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Heart of the Tide: the crystal the Tidewardens used to calm the sea, dropped by the Leviathan. Placed anywhere it
  * gives Conduit Power and Dolphin's Grace to players in water (or rain) within 32 blocks. Waterloggable like a conduit.
  */
 public class HeartOfTheTideBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
+    @Override
+    protected com.mojang.serialization.MapCodec<? extends BaseEntityBlock> codec() {
+        return simpleCodec(HeartOfTheTideBlock::new);
+    }
+
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     private static final VoxelShape SHAPE = Block.box(3.0, 0.0, 3.0, 13.0, 15.0, 13.0);
 
@@ -69,12 +73,11 @@ public class HeartOfTheTideBlock extends BaseEntityBlock implements SimpleWaterl
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos, Direction direction,
-                                     BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
+    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, net.minecraft.world.level.LevelAccessor level, BlockPos pos, BlockPos neighbourPos) {
         if (state.getValue(WATERLOGGED)) {
-            ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+            level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
-        return super.updateShape(state, level, ticks, pos, direction, neighbourPos, neighbourState, random);
+        return super.updateShape(state, direction, neighbourState, level, pos, neighbourPos);
     }
 
     @Override
@@ -85,7 +88,7 @@ public class HeartOfTheTideBlock extends BaseEntityBlock implements SimpleWaterl
     @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
         FluidState fluid = context.getLevel().getFluidState(context.getClickedPos());
-        return this.defaultBlockState().setValue(WATERLOGGED, fluid.is(FluidTags.WATER) && fluid.isFull());
+        return this.defaultBlockState().setValue(WATERLOGGED, fluid.is(FluidTags.WATER) && (fluid.getAmount() == 8));
     }
 
     @Override

@@ -6,12 +6,8 @@ import net.fabricmc.api.Environment;
 import net.kasax.raft.content.vessel.VesselPose;
 import net.kasax.raft.content.vessel.VesselStructure;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.BlockModelRenderState;
-import net.minecraft.client.renderer.block.BlockModelResolver;
-import net.minecraft.client.renderer.block.model.BlockDisplayContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.state.BlockState;
@@ -27,22 +23,18 @@ import java.util.List;
  */
 @Environment(EnvType.CLIENT)
 final class VesselClientModel {
-    private static final BlockDisplayContext CONTEXT = BlockDisplayContext.create();
-
     final VesselStructure structure;
     final Object modelSet;
     final int[] x;
     final int[] y;
     final int[] z;
-    final BlockModelRenderState[] models;
     final BlockState[] states;
     /** Block light from the raft's own lanterns, lamps and torches (the world has no light where the raft is). */
     final int[] ownLight;
     final int[] light;
     private long lightTick = Long.MIN_VALUE;
 
-    private VesselClientModel(VesselStructure structure, Object modelSet, List<int[]> positions, List<BlockModelRenderState> models,
-                              List<BlockState> states) {
+    private VesselClientModel(VesselStructure structure, Object modelSet, List<int[]> positions, List<BlockState> states) {
         this.structure = structure;
         this.modelSet = modelSet;
         int n = positions.size();
@@ -54,23 +46,21 @@ final class VesselClientModel {
             this.y[i] = positions.get(i)[1];
             this.z[i] = positions.get(i)[2];
         }
-        this.models = models.toArray(new BlockModelRenderState[0]);
         this.states = states.toArray(new BlockState[0]);
         this.ownLight = ownLight(structure, this.x, this.y, this.z);
         this.light = new int[n];
     }
 
     static Object currentModelSet() {
-        return Minecraft.getInstance().getModelManager().getBlockModelSet();
+        return Minecraft.getInstance().getModelManager();
     }
 
     boolean isCurrent(VesselStructure structure) {
         return this.structure == structure && this.modelSet == currentModelSet();
     }
 
-    static VesselClientModel build(VesselStructure structure, BlockModelResolver resolver) {
+    static VesselClientModel build(VesselStructure structure) {
         List<int[]> positions = new ArrayList<>();
-        List<BlockModelRenderState> models = new ArrayList<>();
         List<BlockState> states = new ArrayList<>();
         for (Long2ObjectMap.Entry<BlockState> e : structure.blocks().long2ObjectEntrySet()) {
             long key = e.getLongKey();
@@ -80,16 +70,13 @@ final class VesselClientModel {
             if (enclosed(structure, bx, by, bz)) {
                 continue;
             }
-            BlockModelRenderState model = new BlockModelRenderState();
-            resolver.update(model, e.getValue(), CONTEXT);
-            if (model.isEmpty()) {
+            if (e.getValue().getRenderShape() == net.minecraft.world.level.block.RenderShape.INVISIBLE) {
                 continue;
             }
             positions.add(new int[]{bx, by, bz});
-            models.add(model);
             states.add(e.getValue());
         }
-        return new VesselClientModel(structure, currentModelSet(), positions, models, states);
+        return new VesselClientModel(structure, currentModelSet(), positions, states);
     }
 
     /** Light of the raft's own light sources at each drawn block: falls off by one per block (Manhattan distance). */
@@ -119,7 +106,7 @@ final class VesselClientModel {
     private static boolean enclosed(VesselStructure structure, int x, int y, int z) {
         for (Direction d : Direction.values()) {
             BlockState n = structure.get(BlockPos.asLong(x + d.getStepX(), y + d.getStepY(), z + d.getStepZ()));
-            if (n == null || !n.isSolidRender()) {
+            if (n == null || !n.isSolidRender(net.minecraft.world.level.EmptyBlockGetter.INSTANCE, BlockPos.ZERO)) {
                 return false;
             }
         }
@@ -136,11 +123,11 @@ final class VesselClientModel {
         }
         this.lightTick = gameTime;
         BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
-        for (int i = 0; i < this.models.length; i++) {
+        for (int i = 0; i < this.states.length; i++) {
             Vec3 c = pose.toWorld(this.x[i] + 0.5, this.y[i] + 0.5, this.z[i] + 0.5);
             cursor.set(c.x, c.y, c.z);
             int block = Math.max(level.getBrightness(LightLayer.BLOCK, cursor), this.ownLight[i]);
-            this.light[i] = LightCoordsUtil.pack(block, level.getBrightness(LightLayer.SKY, cursor));
+            this.light[i] = net.minecraft.client.renderer.LightTexture.pack(block, level.getBrightness(LightLayer.SKY, cursor));
         }
     }
 }

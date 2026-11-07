@@ -26,9 +26,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
-import org.jspecify.annotations.Nullable;
+import net.kasax.raft.compat.ValueInput;
+import net.kasax.raft.compat.ValueOutput;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -37,7 +37,7 @@ import java.util.Optional;
  * The simple grill cooks raw food like a campfire, but in two thirds of the time (50 % faster).
  * It burns planks, logs and coal.
  */
-public class SimpleGrillBlockEntity extends BlockEntity implements Clearable {
+public class SimpleGrillBlockEntity extends BlockEntity implements net.kasax.raft.compat.RemovalSideEffects, Clearable {
     public static final int SLOTS = 2;
     /** Cooking takes this share of the campfire time: 2/3 equals a 50 % higher speed. */
     private static final float TIME_FACTOR = 2.0f / 3.0f;
@@ -112,7 +112,7 @@ public class SimpleGrillBlockEntity extends BlockEntity implements Clearable {
                 changed = true;
                 if (grill.cookingProgress[slot] >= grill.cookingTime[slot]) {
                     SingleRecipeInput input = new SingleRecipeInput(stack);
-                    ItemStack result = recipes.getRecipeFor(input, level).map(r -> r.value().assemble(input)).orElse(stack);
+                    ItemStack result = recipes.getRecipeFor(input, level).map(r -> r.value().assemble(input, level.registryAccess())).orElse(stack);
                     Containers.dropItemStack(level, pos.getX() + 0.5, pos.getY() + 0.9, pos.getZ() + 0.5, result);
                     grill.items.set(slot, ItemStack.EMPTY);
                     grill.cookingProgress[slot] = 0;
@@ -137,7 +137,7 @@ public class SimpleGrillBlockEntity extends BlockEntity implements Clearable {
                 if (recipe.isEmpty()) {
                     return false;
                 }
-                this.cookingTime[slot] = Math.max(1, Math.round(recipe.get().value().cookingTime() * TIME_FACTOR));
+                this.cookingTime[slot] = Math.max(1, Math.round(recipe.get().value().getCookingTime() * TIME_FACTOR));
                 this.cookingProgress[slot] = 0;
                 this.items.set(slot, stack.consumeAndReturn(1, player));
                 level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
@@ -169,10 +169,11 @@ public class SimpleGrillBlockEntity extends BlockEntity implements Clearable {
     }
 
     @Override
-    protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);
+    protected void loadAdditional(net.minecraft.nbt.CompoundTag tag121, net.minecraft.core.HolderLookup.Provider reg121) {
+        ValueInput input = ValueInput.of(tag121, reg121);
+        super.loadAdditional(input.tag(), input.lookup());
         items.clear();
-        ContainerHelper.loadAllItems(input, items);
+        ContainerHelper.loadAllItems(input.tag(), items, input.lookup());
         input.getIntArray("CookingTimes").ifPresentOrElse(
                 times -> System.arraycopy(times, 0, cookingProgress, 0, Math.min(cookingProgress.length, times.length)),
                 () -> Arrays.fill(cookingProgress, 0));
@@ -183,9 +184,10 @@ public class SimpleGrillBlockEntity extends BlockEntity implements Clearable {
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
-        ContainerHelper.saveAllItems(output, items, true);
+    protected void saveAdditional(net.minecraft.nbt.CompoundTag tag121, net.minecraft.core.HolderLookup.Provider reg121) {
+        ValueOutput output = ValueOutput.of(tag121, reg121);
+        super.saveAdditional(output.tag(), output.lookup());
+        ContainerHelper.saveAllItems(output.tag(), items, true, output.lookup());
         output.putIntArray("CookingTimes", cookingProgress);
         output.putIntArray("CookingTotalTimes", cookingTime);
         output.putInt("BurnTime", burnTime);
@@ -196,7 +198,6 @@ public class SimpleGrillBlockEntity extends BlockEntity implements Clearable {
         if (level != null) {
             Containers.dropContents(level, pos, items);
         }
-        super.preRemoveSideEffects(pos, state);
     }
 
     @Override

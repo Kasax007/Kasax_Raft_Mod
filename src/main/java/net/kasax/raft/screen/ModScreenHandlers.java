@@ -1,6 +1,6 @@
 package net.kasax.raft.screen;
 
-import net.fabricmc.fabric.api.menu.v1.ExtendedMenuType;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.kasax.raft.Raft;
 import net.kasax.raft.util.BlockPosPayload;
 import net.minecraft.core.Registry;
@@ -15,7 +15,7 @@ public class ModScreenHandlers {
 
     public static final MenuType<MakeshiftBatteryScreenHandler> MAKESHIFT_BATTERY_SCREEN_HANDLER =
             Registry.register(BuiltInRegistries.MENU, Raft.id("makeshift_battery"),
-                    new ExtendedMenuType<>(MakeshiftBatteryScreenHandler::new, BlockPosPayload.PACKET_CODEC));
+                    new ExtendedScreenHandlerType<>(MakeshiftBatteryScreenHandler::new, BlockPosPayload.PACKET_CODEC));
 
     public static final MenuType<WaterPurifierMenu> WATER_PURIFIER_MENU =
             Registry.register(BuiltInRegistries.MENU, Raft.id("water_purifier"),

@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "package": "net.kasax.raft.compat.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "ItemMixin",
+    "BlockStateRemoveMixin",
+    "FurnaceCookTimeMixin",
+    "BubbleColumnMixin",
+    "ItemEntityResistMixin",
+    "SinglePoolElementTemplateAccess"
+  ],
+  "client": [
+    "ClientAdvancementsAccess"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

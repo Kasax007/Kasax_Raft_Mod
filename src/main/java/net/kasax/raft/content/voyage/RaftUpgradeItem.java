@@ -5,7 +5,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipDisplay;
 
 import java.util.function.Consumer;
 
@@ -23,10 +22,10 @@ public class RaftUpgradeItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> builder,
-                                TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, java.util.List<net.minecraft.network.chat.Component> builderList121, TooltipFlag flag) {
+        java.util.function.Consumer<net.minecraft.network.chat.Component> builder = builderList121::add;
         builder.accept(Component.translatable("tooltip.raft." + this.upgrade.itemId).withStyle(ChatFormatting.AQUA));
         builder.accept(Component.translatable("tooltip.raft.raft_upgrade").withStyle(ChatFormatting.GRAY));
-        super.appendHoverText(stack, context, display, builder, flag);
+        super.appendHoverText(stack, context, builderList121, flag);
     }
 }

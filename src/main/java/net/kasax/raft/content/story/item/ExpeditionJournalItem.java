@@ -23,7 +23,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MapItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomData;
-import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.maps.MapDecorationTypes;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
@@ -48,7 +47,11 @@ public class ExpeditionJournalItem extends Item {
     }
 
     @Override
-    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+    public net.minecraft.world.InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        return net.kasax.raft.compat.Results.holder(this.use26(level, player, hand), player.getItemInHand(hand));
+    }
+
+    private InteractionResult use26(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (!(player instanceof ServerPlayer sp)) {
             return InteractionResult.SUCCESS;
@@ -81,7 +84,7 @@ public class ExpeditionJournalItem extends Item {
     }
 
     private static void drawChart(ServerPlayer player, ItemStack stack) {
-        ServerLevel level = player.level();
+        ServerLevel level = (ServerLevel) player.level();
         int stage = StoryProgress.stage(StoryProgress.doneMask(player));
         if (stage == StoryProgress.DONE) {
             StoryUtil.tell(player, "journal.done");
@@ -120,7 +123,7 @@ public class ExpeditionJournalItem extends Item {
         CustomData data = stack.get(DataComponents.CUSTOM_DATA);
         if (data == null) return 0L;
         CompoundTag tag = data.copyTag();
-        return tag.getLongOr(READY_AT, 0L);
+        return net.kasax.raft.compat.Nbt.getLongOr(tag, READY_AT, 0L);
     }
 
     private static long clientWait(ItemStack stack) {
@@ -144,8 +147,8 @@ public class ExpeditionJournalItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder,
-                                TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, java.util.List<net.minecraft.network.chat.Component> builderList121, TooltipFlag flag) {
+        java.util.function.Consumer<net.minecraft.network.chat.Component> builder = builderList121::add;
         builder.accept(Component.translatable("tooltip.raft.expedition_journal.0").withStyle(ChatFormatting.GRAY));
         builder.accept(Component.translatable("tooltip.raft.expedition_journal.1").withStyle(ChatFormatting.GRAY));
         long wait = clientWait(stack);

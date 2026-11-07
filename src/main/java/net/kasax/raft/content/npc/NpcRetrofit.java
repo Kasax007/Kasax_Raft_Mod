@@ -6,10 +6,10 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.npc.entity.NpcEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
@@ -67,8 +67,8 @@ public final class NpcRetrofit {
     }
 
     static void register() {
-        ServerChunkEvents.CHUNK_LOAD.register((level, chunk, generated) -> onChunkLoad(level, chunk));
-        ServerTickEvents.END_LEVEL_TICK.register(level -> {
+        ServerChunkEvents.CHUNK_LOAD.register((level, chunk) -> onChunkLoad(level, chunk));
+        ServerTickEvents.END_WORLD_TICK.register(level -> {
             if (level.getGameTime() % 40L == 0L) {
                 process(level);
             }
@@ -89,9 +89,9 @@ public final class NpcRetrofit {
                 if (!(piece instanceof PoolElementStructurePiece p) || !(p.getElement() instanceof SinglePoolElement element)) {
                     continue;
                 }
-                Identifier template;
+                ResourceLocation template;
                 try {
-                    template = element.getTemplateLocation();
+                    template = ((net.kasax.raft.compat.mixin.SinglePoolElementTemplateAccess) element).raft$template().left().orElseThrow();
                 } catch (RuntimeException e) {
                     continue;                                   // an inline template, not one of ours
                 }
@@ -125,11 +125,11 @@ public final class NpcRetrofit {
         for (Iterator<Pending> it = pending.values().iterator(); it.hasNext(); ) {
             Pending p = it.next();
             BlockPos pos = BlockPos.containing(p.at());
-            ChunkPos cp = ChunkPos.containing(pos);
+            ChunkPos cp = new ChunkPos(pos);
             if (!entitiesLoadedAround(level, cp)) {
                 continue;                                       // decide only when everything around is loaded
             }
-            LevelChunk chunk = level.getChunkSource().getChunkNow(cp.x(), cp.z());
+            LevelChunk chunk = level.getChunkSource().getChunkNow(cp.x, cp.z);
             if (chunk == null) {
                 continue;
             }
@@ -145,14 +145,14 @@ public final class NpcRetrofit {
             List<String> marked = new ArrayList<>(done);
             marked.add(p.key());
             chunk.setAttached(NpcContent.SPOTS_DONE, marked);
-            chunk.markUnsaved();
+            chunk.setUnsaved(true);
         }
     }
 
     private static boolean entitiesLoadedAround(ServerLevel level, ChunkPos cp) {
         for (int dx = -1; dx <= 1; dx++) {
             for (int dz = -1; dz <= 1; dz++) {
-                if (!level.areEntitiesLoaded(ChunkPos.pack(cp.x() + dx, cp.z() + dz))) {
+                if (!level.areEntitiesLoaded(ChunkPos.asLong(cp.x + dx, cp.z + dz))) {
                     return false;
                 }
             }
@@ -161,11 +161,11 @@ public final class NpcRetrofit {
     }
 
     private static void spawn(ServerLevel level, EntityType<NpcEntity> type, Pending p) {
-        NpcEntity npc = type.create(level, EntitySpawnReason.STRUCTURE);
+        NpcEntity npc = type.create(level);
         if (npc == null) {
             return;
         }
-        npc.snapTo(p.at().x, p.at().y, p.at().z, p.yaw(), 0.0F);
+        npc.moveTo(p.at().x, p.at().y, p.at().z, p.yaw(), 0.0F);
         // the place may have changed since it was built (the player built or dug there): stand on top
         for (int i = 0; i < 4 && !level.noCollision(npc); i++) {
             npc.setPos(npc.getX(), npc.getY() + 1.0, npc.getZ());
@@ -176,7 +176,7 @@ public final class NpcRetrofit {
         }
         npc.setYBodyRot(p.yaw());
         npc.setYHeadRot(p.yaw());
-        npc.finalizeSpawn(level, level.getCurrentDifficultyAt(npc.blockPosition()), EntitySpawnReason.STRUCTURE, null);
+        npc.finalizeSpawn(level, level.getCurrentDifficultyAt(npc.blockPosition()), MobSpawnType.STRUCTURE, null);
         level.addFreshEntity(npc);
         Raft.LOGGER.info("Beach Craft: {} moved into an older structure at {}", p.npc().id, npc.blockPosition());
     }

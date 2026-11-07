@@ -5,17 +5,17 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.npc.net.NpcActionPayload;
 import net.kasax.raft.content.npc.net.NpcDialogPayload;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.kasax.raft.compat.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.client.input.KeyEvent;
-import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.renderer.RenderPipelines;
+import net.kasax.raft.compat.gui.KeyEvent;
+import net.kasax.raft.compat.gui.MouseButtonEvent;
+import net.kasax.raft.compat.gui.RenderPipelines;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -29,8 +29,8 @@ import java.util.List;
  * and the questions the player can ask (click, or press 1-5). The game keeps running (multiplayer-safe); the screen
  * closes when the NPC is gone or the player walks away.
  */
-public class NpcDialogScreen extends Screen {
-    private static final Identifier PANEL = Raft.id("npc/dialog");
+public class NpcDialogScreen extends net.kasax.raft.compat.gui.BaseScreen {
+    private static final ResourceLocation PANEL = Raft.id("npc/dialog");
     private static final int INK = 0xFF3B2A1C, FADED = 0xFF7A6248, NAME = 0xFF7A3E12, HOVER = 0x30A0703C,
             CHOSEN = 0xFF2F6E8E, GIFT = 0xFF2E6B2E;
     private static final int LINES = 5, CHARS_PER_TICK = 2;
@@ -317,7 +317,7 @@ public class NpcDialogScreen extends Screen {
         g.fill(x, y + h * 2 / 3, x + w, y + h * 2 / 3 + 1, 0xFFE8F6FA);
         LivingEntity npc = this.npc();
         if (npc != null) {
-            InventoryScreen.extractEntityInInventoryFollowsMouse(g, x, y, x + w, y + h, 54, 0.0F, mouseX, mouseY, npc);
+            InventoryScreen.renderEntityInInventoryFollowsMouse(g.vanilla(), x, y, x + w, y + h, 54, 0.0F, mouseX, mouseY, npc);
         }
     }
 }

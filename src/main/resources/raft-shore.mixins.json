@@ -1,8 +1,8 @@
 {
   "required": true,
   "package": "net.kasax.raft.content.shore.mixin",
-  "compatibilityLevel": "JAVA_25",
-  "mixins": [],
+  "compatibilityLevel": "JAVA_21",
+  "mixins": ["DrownedSwimMixin"],
   "client": [],
   "injectors": {
     "defaultRequire": 1

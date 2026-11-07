@@ -10,7 +10,7 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -18,7 +18,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.animal.fish.AbstractFish;
+import net.minecraft.world.entity.animal.AbstractFish;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -51,7 +51,7 @@ public class AnglerfishEntity extends AbstractMarineMonster {
         this.goalSelector.addGoal(4, new LurkGoal());
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true,
-                (target, level) -> target.isInWater() && !target.isSpectator()));
+                target -> target.isInWater() && !target.isSpectator()));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AbstractFish.class, 40, true, false, null));
     }
 
@@ -96,7 +96,7 @@ public class AnglerfishEntity extends AbstractMarineMonster {
     }
 
     /** Natural spawning: deep water only (45+ blocks below the surface), never in peaceful. */
-    public static boolean checkAnglerSpawnRules(EntityType<AnglerfishEntity> type, ServerLevelAccessor level, EntitySpawnReason reason,
+    public static boolean checkAnglerSpawnRules(EntityType<AnglerfishEntity> type, ServerLevelAccessor level, MobSpawnType reason,
                                                 BlockPos pos, RandomSource random) {
         if (level.getDifficulty() == Difficulty.PEACEFUL) {
             return false;
@@ -199,7 +199,7 @@ public class AnglerfishEntity extends AbstractMarineMonster {
                 Vec3 dir = t.getEyePosition().subtract(a.position()).normalize();
                 a.setDeltaMovement(a.getDeltaMovement().scale(0.6).add(dir.scale(0.38)));
                 if (a.isWithinMeleeAttackRange(t) && this.cooldown <= 0 && a.level() instanceof ServerLevel level) {
-                    a.doHurtTarget(level, t);
+                    a.doHurtTarget(t);
                     this.cooldown = 30;
                     this.dartTicks = 0;
                     this.backOff = 30;

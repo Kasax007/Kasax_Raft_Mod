@@ -31,7 +31,7 @@ public class CatwalkBlock extends SlabBlock {
     }
 
     @Override
-    protected boolean propagatesSkylightDown(BlockState state) {
+    protected boolean propagatesSkylightDown(BlockState state, net.minecraft.world.level.BlockGetter level121, net.minecraft.core.BlockPos pos121) {
         return !state.getValue(WATERLOGGED);
     }
 

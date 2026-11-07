@@ -52,7 +52,7 @@ public final class StructurePriority {
      */
     public static Optional<Structure.GenerationStub> check(Structure self, Structure.GenerationContext context,
                                                            Structure.GenerationStub stub) {
-        Registry<Structure> structures = context.registryAccess().lookupOrThrow(Registries.STRUCTURE);
+        Registry<Structure> structures = context.registryAccess().registryOrThrow(Registries.STRUCTURE);
         Holder<Structure> holder = structures.wrapAsHolder(self);
         int rank = rank(holder);
         if (rank == 0) {
@@ -66,7 +66,7 @@ public final class StructurePriority {
         BoundingBox box = pieces.getBoundingBox().inflatedBy(GAP);
         ChunkPos here = context.chunkPos();
         long seed = context.seed();
-        for (Holder<StructureSet> set : context.registryAccess().lookupOrThrow(Registries.STRUCTURE_SET).listElements().toList()) {
+        for (Holder<StructureSet> set : context.registryAccess().registryOrThrow(Registries.STRUCTURE_SET).holders().toList()) {
             if (!(set.value().placement() instanceof RandomSpreadStructurePlacement placement)) {
                 continue;
             }
@@ -76,11 +76,11 @@ public final class StructurePriority {
                     continue;
                 }
                 int spacing = placement.spacing();
-                for (int gx = Math.floorDiv(here.x() - RANGE, spacing); gx <= Math.floorDiv(here.x() + RANGE, spacing); gx++) {
-                    for (int gz = Math.floorDiv(here.z() - RANGE, spacing); gz <= Math.floorDiv(here.z() + RANGE, spacing); gz++) {
+                for (int gx = Math.floorDiv(here.x - RANGE, spacing); gx <= Math.floorDiv(here.x + RANGE, spacing); gx++) {
+                    for (int gz = Math.floorDiv(here.z - RANGE, spacing); gz <= Math.floorDiv(here.z + RANGE, spacing); gz++) {
                         ChunkPos at = placement.getPotentialStructureChunk(seed, gx * spacing, gz * spacing);
-                        if (Math.abs(at.x() - here.x()) > RANGE || Math.abs(at.z() - here.z()) > RANGE
-                                || !placement.applyAdditionalChunkRestrictions(at.x(), at.z(), seed)) {
+                        if (Math.abs(at.x - here.x) > RANGE || Math.abs(at.z - here.z) > RANGE
+                                || !placement.applyAdditionalChunkRestrictions(at.x, at.z, seed)) {
                             continue;
                         }
                         BoundingBox theirs = boxOf(other, context, at);
@@ -96,11 +96,11 @@ public final class StructurePriority {
 
     /** The box of that structure if it starts in that chunk (as the game would generate it), else null. */
     private static BoundingBox boxOf(Holder<Structure> structure, Structure.GenerationContext context, ChunkPos at) {
-        Key key = new Key(structure.value(), context.seed(), ChunkPos.pack(at.x(), at.z()));
+        Key key = new Key(structure.value(), context.seed(), ChunkPos.asLong(at.x, at.z));
         BoundingBox cached = BOXES.get(key);
         if (cached == null) {
             Structure.GenerationContext there = new Structure.GenerationContext(context.registryAccess(),
-                    context.chunkGenerator(), context.biomeSource(), context.climateSampler(), context.randomState(),
+                    context.chunkGenerator(), context.biomeSource(), context.randomState(),
                     context.structureTemplateManager(), context.seed(), at, context.heightAccessor(),
                     structure.value().biomes()::contains);
             cached = structure.value().findValidGenerationPoint(there)

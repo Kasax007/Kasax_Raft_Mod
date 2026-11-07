@@ -15,7 +15,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.Mirror;
@@ -35,18 +34,24 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import net.kasax.raft.compat.VShapes;
 
 /**
  * A Meridian Expedition research terminal: a cream steel cabinet with a glowing green CRT and a keyboard ledge. Use:
  * shows the stored log ({@code LogId}) on the terminal screen. {@code facing} = the side the screen looks at.
  */
 public class ResearchTerminalBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
+    @Override
+    protected com.mojang.serialization.MapCodec<? extends BaseEntityBlock> codec() {
+        return simpleCodec(ResearchTerminalBlock::new);
+    }
+
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-    private static final Map<Direction, VoxelShape> SHAPES = Shapes.rotateHorizontal(Shapes.or(
+    private static final Map<Direction, VoxelShape> SHAPES = VShapes.rotateHorizontal(Shapes.or(
             Block.box(1, 0, 1, 15, 3, 15), Block.box(1, 3, 3, 15, 15, 15), Block.box(3, 5, 2, 13, 13, 3)));
 
     public ResearchTerminalBlock(Properties properties) {
@@ -94,12 +99,11 @@ public class ResearchTerminalBlock extends BaseEntityBlock implements SimpleWate
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos,
-                                     Direction direction, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
+    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, net.minecraft.world.level.LevelAccessor level, BlockPos pos, BlockPos neighbourPos) {
         if (state.getValue(WATERLOGGED)) {
-            ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+            level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
-        return super.updateShape(state, level, ticks, pos, direction, neighbourPos, neighbourState, random);
+        return super.updateShape(state, direction, neighbourState, level, pos, neighbourPos);
     }
 
     @Override

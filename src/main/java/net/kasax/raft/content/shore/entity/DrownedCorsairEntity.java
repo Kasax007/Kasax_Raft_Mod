@@ -13,7 +13,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,10 +23,10 @@ import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.ZombieAttackGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.animal.golem.IronGolem;
+import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.monster.zombie.Drowned;
-import net.minecraft.world.entity.npc.villager.AbstractVillager;
+import net.minecraft.world.entity.monster.Drowned;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -36,7 +36,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Drowned corsair: a cursed undead pirate of Saltjaw's crew. Swims like a drowned, does not burn in sunlight, fights
@@ -77,12 +77,9 @@ public class DrownedCorsairEntity extends Drowned {
     /**
      * Like a drowned, a corsair swims after prey in the water and walks out onto beaches after prey on land. Prey on a
      * raft, a boat or a pier above the water is chased swimming too, up to the surface, where the corsair climbs aboard.
+     * (1.21.1: added to the drowned's own wish to swim by {@code shore.mixin.DrownedSwimMixin}.)
      */
-    @Override
-    public boolean wantsToSwim() {
-        if (super.wantsToSwim()) {
-            return true;
-        }
+    public boolean wantsToSwimExtra() {
         LivingEntity target = this.getTarget();
         if (target == null) {
             return false;
@@ -171,17 +168,17 @@ public class DrownedCorsairEntity extends Drowned {
      * peaceful.
      */
     public static boolean checkCorsairSpawnRules(EntityType<DrownedCorsairEntity> type, ServerLevelAccessor level,
-                                                 EntitySpawnReason reason, BlockPos pos, RandomSource random) {
+                                                 MobSpawnType reason, BlockPos pos, RandomSource random) {
         if (level.getDifficulty() == Difficulty.PEACEFUL) {
             return false;
         }
-        if (EntitySpawnReason.isSpawner(reason)) {
+        if (MobSpawnType.isSpawner(reason)) {
             return true;
         }
         boolean water = level.getFluidState(pos).is(FluidTags.WATER);
         boolean place;
         if (water && pos.getY() < level.getSeaLevel() - 6 && random.nextInt(12) == 0
-                && (EntitySpawnReason.ignoresLightRequirements(reason) || Monster.isDarkEnoughToSpawn(level, pos, random))) {
+                && (MobSpawnType.ignoresLightRequirements(reason) || Monster.isDarkEnoughToSpawn(level, pos, random))) {
             place = true;
         } else {
             place = random.nextInt(4) == 0 && level.getBrightness(LightLayer.BLOCK, pos) <= 8

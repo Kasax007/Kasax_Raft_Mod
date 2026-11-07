@@ -5,7 +5,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipDisplay;
 
 import java.util.function.Consumer;
 
@@ -22,8 +21,8 @@ public class RelicItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder,
-                                TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, java.util.List<net.minecraft.network.chat.Component> builderList121, TooltipFlag flag) {
+        java.util.function.Consumer<net.minecraft.network.chat.Component> builder = builderList121::add;
         builder.accept(Component.translatable(getDescriptionId() + ".lore").withStyle(ChatFormatting.GOLD, ChatFormatting.ITALIC));
         builder.accept(Component.translatable("tooltip.raft." + tooltipKey + ".0").withStyle(ChatFormatting.AQUA));
         builder.accept(Component.translatable("tooltip.raft." + tooltipKey + ".1").withStyle(ChatFormatting.GRAY));

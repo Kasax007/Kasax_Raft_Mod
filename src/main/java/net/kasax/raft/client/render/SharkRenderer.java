@@ -5,21 +5,21 @@ import net.kasax.raft.Raft;
 import net.kasax.raft.entity.SharkEntity;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.Identifier;
+import net.kasax.raft.compat.render.MobRenderer;
+import net.minecraft.resources.ResourceLocation;
 
 /** Renderer of the shark "Bruce"; the hammerhead uses it too with its own layer, texture and size. */
 public class SharkRenderer extends MobRenderer<SharkEntity, SharkRenderState, SharkModel> {
-    private static final Identifier TEXTURE = Raft.id("textures/entity/shark.png");
+    private static final ResourceLocation TEXTURE = Raft.id("textures/entity/shark.png");
 
-    private final Identifier texture;
+    private final ResourceLocation texture;
     private final float modelScale;
 
     public SharkRenderer(EntityRendererProvider.Context context) {
         this(context, SharkModel.LAYER, TEXTURE, 1.0F, 0.8F);
     }
 
-    public SharkRenderer(EntityRendererProvider.Context context, ModelLayerLocation layer, Identifier texture, float modelScale,
+    public SharkRenderer(EntityRendererProvider.Context context, ModelLayerLocation layer, ResourceLocation texture, float modelScale,
                          float shadow) {
         super(context, new SharkModel(context.bakeLayer(layer)), shadow);
         this.texture = texture;
@@ -27,7 +27,7 @@ public class SharkRenderer extends MobRenderer<SharkEntity, SharkRenderState, Sh
     }
 
     @Override
-    public Identifier getTextureLocation(SharkRenderState state) {
+    public ResourceLocation getTextureLocation(SharkRenderState state) {
         return this.texture;
     }
 

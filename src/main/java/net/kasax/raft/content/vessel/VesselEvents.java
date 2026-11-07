@@ -33,12 +33,12 @@ public final class VesselEvents {
     }
 
     static void register() {
-        PayloadTypeRegistry.clientboundPlay().register(VesselDataPayload.TYPE, VesselDataPayload.CODEC);
-        PayloadTypeRegistry.clientboundPlay().register(VesselBlocksPayload.TYPE, VesselBlocksPayload.CODEC);
-        PayloadTypeRegistry.clientboundPlay().register(VesselUseResultPayload.TYPE, VesselUseResultPayload.CODEC);
-        PayloadTypeRegistry.clientboundPlay().register(VesselArrivalPayload.TYPE, VesselArrivalPayload.CODEC);
-        PayloadTypeRegistry.serverboundPlay().register(VesselUsePayload.TYPE, VesselUsePayload.CODEC);
-        PayloadTypeRegistry.serverboundPlay().register(VesselBreakPayload.TYPE, VesselBreakPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(VesselDataPayload.TYPE, VesselDataPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(VesselBlocksPayload.TYPE, VesselBlocksPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(VesselUseResultPayload.TYPE, VesselUseResultPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(VesselArrivalPayload.TYPE, VesselArrivalPayload.CODEC);
+        PayloadTypeRegistry.playC2S().register(VesselUsePayload.TYPE, VesselUsePayload.CODEC);
+        PayloadTypeRegistry.playC2S().register(VesselBreakPayload.TYPE, VesselBreakPayload.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(VesselUsePayload.TYPE, (payload, context) -> {
             ServerPlayer player = context.player();
             context.server().execute(() -> {
@@ -59,7 +59,14 @@ public final class VesselEvents {
                 }
             });
         });
-        UseItemCallback.EVENT.register(VesselEvents::placeFoundationOnWater);
+        UseItemCallback.EVENT.register((player, level, hand) -> {
+            InteractionResult result = placeFoundationOnWater(player, level, hand);
+            return new net.minecraft.world.InteractionResultHolder<>(result, player.getItemInHand(hand));
+        });
+        // 1.21.1: a raft leaving the level (removed or unloaded) frees its plot hold and its colliders
+        net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents.ENTITY_UNLOAD.register((entity, level) -> {
+            if (entity instanceof VesselEntity vessel) vessel.onRemoval(entity.getRemovalReason());
+        });
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             VesselAssembler.tickLaunches();
             VesselInteractions.tick(server);

@@ -1,6 +1,5 @@
 package net.kasax.raft.block;
 
-import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 
 import net.kasax.raft.Raft;
 import net.kasax.raft.block.cable.RaftCable;
@@ -19,13 +18,14 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.sounds.AmbientLeavesBlockSoundPlayer;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.WoodType;
 
 import java.util.Arrays;
 import java.util.function.Function;
+import net.kasax.raft.compat.VShapes;
+import net.kasax.raft.compat.ItemProps;
 
 public class ModBlocks {
 
@@ -35,9 +35,8 @@ public class ModBlocks {
 
     public static final Block RAFT_PORTAL = registerBlockOnly("raft_portal",
             RaftPortalBlock::new, BlockBehaviour.Properties.of()
-                    .noCollision().noOcclusion().strength(-1.0F).sound(SoundType.GLASS)
-                    .lightLevel(state -> 11).pushReaction(net.minecraft.world.level.material.PushReaction.IMMOVEABLE)
-                    .noLootTable());
+                    .noCollission().noOcclusion().strength(-1.0F).sound(SoundType.GLASS)
+                    .lightLevel(state -> 11).pushReaction(net.minecraft.world.level.material.PushReaction.BLOCK));
 
     public static final Block DRIFTWOOD_LOG = register("driftwood_log",
             RotatedPillarBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LOG));
@@ -103,7 +102,7 @@ public class ModBlocks {
             p -> new TrapDoorBlock(BlockSetType.OAK, p), BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_TRAPDOOR));
 
     public static final Block DRIFTWOOD_LEAVES = register("driftwood_leaves",
-            p -> new LeavesBlock(AmbientLeavesBlockSoundPlayer.noAmbientSound(), p),
+            p -> new LeavesBlock(p),
             BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LEAVES).noOcclusion());
     public static final Block DRIFTWOOD_SAPLING = register("driftwood_sapling",
             p -> new DriftwoodSaplingBlock(ModTreeGrowers.DRIFTWOOD, p), BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SAPLING));
@@ -135,7 +134,7 @@ public class ModBlocks {
             ChunkDestroyer::new, BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK),
             "tooltip.raft.chunk_destroyer.tooltip1", "tooltip.raft.chunk_destroyer.tooltip2");
     public static final Block TITANIUM_GRATES = register("titanium_grates",
-            TitaniumGrates::new, BlockBehaviour.Properties.ofFullCopy(Blocks.COPPER_BLOCK.weathering().unaffected()).noOcclusion().strength(4f));
+            TitaniumGrates::new, BlockBehaviour.Properties.ofFullCopy(Blocks.COPPER_BLOCK).noOcclusion().strength(4f));
 
     // ---- decoration ----
 
@@ -153,26 +152,26 @@ public class ModBlocks {
     public static final Block SCRAP_METAL_BLOCK = register("scrap_metal_block",
             Block::new, BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(3.0f, 6.0f));
     public static final Block PLASTIC_BLOCK = register("plastic_block",
-            Block::new, BlockBehaviour.Properties.ofFullCopy(Blocks.CONCRETE.white()).strength(1.5f, 4.0f).sound(SoundType.COPPER));
+            Block::new, BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_CONCRETE).strength(1.5f, 4.0f).sound(SoundType.COPPER));
 
     public static final Block ROPE_LADDER = register("rope_ladder",
             LadderBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.LADDER).sound(SoundType.WOOL));
     public static final Block ROPE_COIL = register("rope_coil",
-            p -> new ShapedBlock(p, Block.column(12.0, 0.0, 6.0)),
-            BlockBehaviour.Properties.ofFullCopy(Blocks.WOOL.white()).noOcclusion().strength(0.4f));
+            p -> new ShapedBlock(p, VShapes.column(12.0, 0.0, 6.0)),
+            BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL).noOcclusion().strength(0.4f));
     public static final Block SAIL_CANVAS = register("sail_canvas",
-            Block::new, BlockBehaviour.Properties.ofFullCopy(Blocks.WOOL.white()));
+            Block::new, BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL));
     public static final Block SAIL_CANVAS_RED_STRIPED = register("sail_canvas_red_striped",
-            Block::new, BlockBehaviour.Properties.ofFullCopy(Blocks.WOOL.white()));
+            Block::new, BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL));
 
     public static final Block SHIP_WHEEL = register("ship_wheel",
             p -> new WallDecorationBlock(p, Block.box(0.0, 0.0, 12.0, 16.0, 16.0, 16.0)),
-            BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).strength(1.5f).noOcclusion().noCollision());
+            BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).strength(1.5f).noOcclusion().noCollission());
     public static final Block SHARK_JAW_TROPHY = register("shark_jaw_trophy",
             p -> new WallDecorationBlock(p, Block.box(1.0, 1.0, 13.0, 15.0, 15.0, 16.0)),
-            BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).strength(1.0f).noOcclusion().noCollision());
+            BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).strength(1.0f).noOcclusion().noCollission());
     public static final Block RAFT_FLAG = register("raft_flag",
-            RaftFlagBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).strength(0.6f).noOcclusion().noCollision());
+            RaftFlagBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).strength(0.6f).noOcclusion().noCollission());
     public static final Block COCONUT_LANTERN = register("coconut_lantern",
             LanternBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.LANTERN).sound(SoundType.WOOD).lightLevel(state -> 13));
 
@@ -191,10 +190,10 @@ public class ModBlocks {
             "tooltip.raft.water_purifier.tooltip");
     public static final Block SCARECROW = registerBlockOnly("scarecrow",
             ScarecrowBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_FENCE).strength(0.8f).noOcclusion()
-                    .pushReaction(net.minecraft.world.level.material.PushReaction.POPPED));
+                    .pushReaction(net.minecraft.world.level.material.PushReaction.DESTROY));
     public static final Item SCARECROW_ITEM = registerBlockItem("scarecrow", SCARECROW,
             new TooltipDoubleBlockItem(SCARECROW,
-                    new Item.Properties().setId(ResourceKey.create(Registries.ITEM, Raft.id("scarecrow"))).useBlockDescriptionPrefix(),
+                    new Item.Properties(),
                     "tooltip.raft.scarecrow.tooltip"));
 
     public static void registerCables() {
@@ -203,7 +202,7 @@ public class ModBlocks {
             Registry.register(BuiltInRegistries.BLOCK, blockKey, cable.block);
             ResourceKey<Item> itemKey = ResourceKey.create(Registries.ITEM, Raft.id(cable.name));
             Registry.register(BuiltInRegistries.ITEM, itemKey, new TooltipBlockItem(cable.block,
-                    new Item.Properties().setId(itemKey).useBlockDescriptionPrefix(),
+                    new Item.Properties(),
                     Component.translatable("tooltip.raft.cable.max_input", cable.tier.getMaxInput()).withStyle(ChatFormatting.AQUA)));
         });
     }
@@ -220,7 +219,7 @@ public class ModBlocks {
     public static Block registerBlockOnly(String name, Function<BlockBehaviour.Properties, Block> factory,
                                           BlockBehaviour.Properties properties) {
         ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, Raft.id(name));
-        Block block = factory.apply(properties.setId(key));
+        Block block = factory.apply(properties);
         return Registry.register(BuiltInRegistries.BLOCK, key, block);
     }
 
@@ -240,24 +239,24 @@ public class ModBlocks {
     private static Item.Properties withWoodFuel(String name, Item.Properties properties) {
         String n = name.startsWith("stripped_") ? name.substring("stripped_".length()) : name;
         if ((n.startsWith("driftwood_") || n.startsWith("palm_")) && n.endsWith("_leaves")) {
-            return properties.compostable(ContextIntProviders.COMPOSTABLE_LOW);
+            return ItemProps.compostable(properties, ItemProps.COMPOSTABLE_LOW);
         }
         if ((n.startsWith("driftwood_") || n.startsWith("palm_")) && n.endsWith("_sapling")) {
-            return properties.compostable(ContextIntProviders.COMPOSTABLE_LOW).cookingFuel(ContextIntProviders.COOKING_TIME_DRY_PLANTS);
+            return ItemProps.cookingFuel(ItemProps.compostable(properties, ItemProps.COMPOSTABLE_LOW), ItemProps.COOKING_TIME_DRY_PLANTS);
         }
         boolean wood = (n.startsWith("driftwood_") || n.startsWith("palm_")) && !n.contains("leaves") && !n.contains("sapling")
                 && !n.contains("thatch") && !n.contains("portal") && !n.contains("coconut");
         if (!wood) return properties;
-        var time = n.endsWith("_slab") ? ContextIntProviders.COOKING_TIME_WOOD_SLABS
-                : n.endsWith("_door") ? ContextIntProviders.COOKING_TIME_WOOD_ITEMS_LARGE
-                : n.endsWith("_button") ? ContextIntProviders.COOKING_TIME_WOOD_ITEMS_EXTRA_SMALL
-                : ContextIntProviders.COOKING_TIME_WOOD_BLOCKS;
-        return properties.cookingFuel(time);
+        var time = n.endsWith("_slab") ? ItemProps.COOKING_TIME_WOOD_SLABS
+                : n.endsWith("_door") ? ItemProps.COOKING_TIME_WOOD_ITEMS_LARGE
+                : n.endsWith("_button") ? ItemProps.COOKING_TIME_WOOD_ITEMS_EXTRA_SMALL
+                : ItemProps.COOKING_TIME_WOOD_BLOCKS;
+        return ItemProps.cookingFuel(properties, time);
     }
 
     public static Item registerBlockItem(String name, Block block, Item.Properties properties, String... tooltips) {
         ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Raft.id(name));
-        properties = withWoodFuel(name, properties).setId(key).useBlockDescriptionPrefix();
+        properties = withWoodFuel(name, properties);
         Item item = tooltips.length == 0 ? new BlockItem(block, properties) : new TooltipBlockItem(block, properties, tooltips);
         return Registry.register(BuiltInRegistries.ITEM, key, item);
     }

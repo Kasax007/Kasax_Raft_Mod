@@ -27,7 +27,7 @@ public class MetalDetector extends Item {
             BlockPos positionClicked = context.getClickedPos();
             boolean foundBlock = false;
 
-            int minY = context.getLevel().getMinY();
+            int minY = context.getLevel().getMinBuildHeight();
             for (int i = 0; positionClicked.getY() - i >= minY; i++) {
                 BlockState state = context.getLevel().getBlockState(positionClicked.below(i));
 
@@ -40,19 +40,19 @@ public class MetalDetector extends Item {
             }
 
             if (!foundBlock) {
-                player.sendOverlayMessage(Component.translatable("item.raft.metal_detector.nothing").withStyle(ChatFormatting.AQUA));
+                player.displayClientMessage(Component.translatable("item.raft.metal_detector.nothing").withStyle(ChatFormatting.AQUA), true);
             }
 
-            player.getCooldowns().addCooldown(context.getItemInHand(), 20);
-            context.getItemInHand().hurtAndBreak(1, player, context.getHand());
+            player.getCooldowns().addCooldown(context.getItemInHand().getItem(), 20);
+            context.getItemInHand().hurtAndBreak(1, player, net.minecraft.world.entity.LivingEntity.getSlotForHand(context.getHand()));
         }
 
         return InteractionResult.SUCCESS;
     }
 
     private void outputValuableCoordinates(BlockPos blockPos, Player player, Block block) {
-        player.sendOverlayMessage(Component.translatable("item.raft.metal_detector.found", block.getName(), blockPos.getY())
-                .withStyle(ChatFormatting.AQUA));
+        player.displayClientMessage(Component.translatable("item.raft.metal_detector.found", block.getName(), blockPos.getY())
+                .withStyle(ChatFormatting.AQUA), true);
     }
 
     private boolean isValuableBlock(BlockState state) {

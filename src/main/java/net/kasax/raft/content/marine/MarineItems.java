@@ -35,14 +35,14 @@ public final class MarineItems {
         BcTabs.Tab tab = BcTabs.Tab.CREATURES;
         // the 2.0 shark egg leads the creature tab
         BcTabs.add(tab, ModItems.SHARK_SPAWN_EGG);
-        HAMMERHEAD_SHARK_SPAWN_EGG = BcReg.item("hammerhead_shark_spawn_egg", SpawnEggItem::new,
-                new Item.Properties().spawnEgg(MarineEntities.HAMMERHEAD_SHARK), tab);
-        WHALE_SPAWN_EGG = BcReg.item("whale_spawn_egg", SpawnEggItem::new, new Item.Properties().spawnEgg(MarineEntities.WHALE), tab);
-        MANTA_RAY_SPAWN_EGG = BcReg.item("manta_ray_spawn_egg", SpawnEggItem::new, new Item.Properties().spawnEgg(MarineEntities.MANTA_RAY), tab);
-        JELLYFISH_SPAWN_EGG = BcReg.item("jellyfish_spawn_egg", SpawnEggItem::new, new Item.Properties().spawnEgg(MarineEntities.JELLYFISH), tab);
-        ANGLERFISH_SPAWN_EGG = BcReg.item("anglerfish_spawn_egg", SpawnEggItem::new,
-                new Item.Properties().spawnEgg(MarineEntities.ANGLERFISH), tab);
-        MORAY_EEL_SPAWN_EGG = BcReg.item("moray_eel_spawn_egg", SpawnEggItem::new, new Item.Properties().spawnEgg(MarineEntities.MORAY_EEL), tab);
+        HAMMERHEAD_SHARK_SPAWN_EGG = BcReg.item("hammerhead_shark_spawn_egg", p -> new SpawnEggItem(MarineEntities.HAMMERHEAD_SHARK, 0xFFFFFF, 0xFFFFFF, p),
+                new Item.Properties(), tab);
+        WHALE_SPAWN_EGG = BcReg.item("whale_spawn_egg", p -> new SpawnEggItem(MarineEntities.WHALE, 0xFFFFFF, 0xFFFFFF, p), new Item.Properties(), tab);
+        MANTA_RAY_SPAWN_EGG = BcReg.item("manta_ray_spawn_egg", p -> new SpawnEggItem(MarineEntities.MANTA_RAY, 0xFFFFFF, 0xFFFFFF, p), new Item.Properties(), tab);
+        JELLYFISH_SPAWN_EGG = BcReg.item("jellyfish_spawn_egg", p -> new SpawnEggItem(MarineEntities.JELLYFISH, 0xFFFFFF, 0xFFFFFF, p), new Item.Properties(), tab);
+        ANGLERFISH_SPAWN_EGG = BcReg.item("anglerfish_spawn_egg", p -> new SpawnEggItem(MarineEntities.ANGLERFISH, 0xFFFFFF, 0xFFFFFF, p),
+                new Item.Properties(), tab);
+        MORAY_EEL_SPAWN_EGG = BcReg.item("moray_eel_spawn_egg", p -> new SpawnEggItem(MarineEntities.MORAY_EEL, 0xFFFFFF, 0xFFFFFF, p), new Item.Properties(), tab);
 
         JELLY_BLOB = BcReg.item("jelly_blob", p -> new TooltipItem(p, "tooltip.raft.jelly_blob"), new Item.Properties(), tab);
         GLOW_JELLY = BcReg.item("glow_jelly", p -> new TooltipItem(p, "tooltip.raft.glow_jelly"),

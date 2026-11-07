@@ -6,15 +6,15 @@ import net.kasax.raft.content.boss.client.model.LeviathanModel;
 import net.kasax.raft.content.boss.client.model.LeviathanRenderState;
 import net.kasax.raft.content.boss.entity.LeviathanBody;
 import net.kasax.raft.content.boss.entity.LeviathanEntity;
-import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.kasax.raft.compat.render.SubmitNodeCollector;
+import net.kasax.raft.compat.render.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.RenderType;
+import net.kasax.raft.compat.render.RenderTypes;
+import net.kasax.raft.compat.render.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.Identifier;
-import net.minecraft.util.ARGB;
+import net.minecraft.resources.ResourceLocation;
+import net.kasax.raft.compat.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.AABB;
@@ -29,10 +29,12 @@ import org.joml.Vector3f;
  * it and the body dissolves into light.
  */
 public class LeviathanRenderer extends EntityRenderer<LeviathanEntity, LeviathanRenderState> {
-    private static final Identifier TEXTURE = Raft.id("textures/entity/leviathan/leviathan.png");
-    private static final Identifier GLOW_TEXTURE = Raft.id("textures/entity/leviathan/leviathan_glow.png");
-    private static final Identifier DISSOLVE_MASK = Identifier.withDefaultNamespace("textures/entity/enderdragon/dragon_exploding.png");
-    private static final RenderType DYING = RenderTypes.entityCutoutDissolve(TEXTURE, DISSOLVE_MASK);
+    private static final ResourceLocation TEXTURE = Raft.id("textures/entity/leviathan/leviathan.png");
+    private static final ResourceLocation GLOW_TEXTURE = Raft.id("textures/entity/leviathan/leviathan_glow.png");
+    private static final ResourceLocation DISSOLVE_MASK = ResourceLocation.withDefaultNamespace("textures/entity/enderdragon/dragon_exploding.png");
+    // 1.21.1 has no dissolve render type: like the dying dragon, the dissolve mask writes the depth, the skin is decaled on it
+    private static final RenderType DYING = RenderType.dragonExplosionAlpha(DISSOLVE_MASK);
+    private static final RenderType DYING_SKIN = RenderType.entityDecal(TEXTURE);
     private static final RenderType GLOW = RenderTypes.eyes(GLOW_TEXTURE);
     private static final float HALF_SQRT_3 = (float) (Math.sqrt(3.0) / 2.0);
 
@@ -68,8 +70,8 @@ public class LeviathanRenderer extends EntityRenderer<LeviathanEntity, Leviathan
         state.glow = 1.0F;
 
         Vec3 pivot = entity.getPosition(partialTicks).add(0.0, LeviathanEntity.PIVOT, 0.0);
-        float headYaw = entity.getYRot(partialTicks);
-        float headPitch = entity.getXRot(partialTicks);
+        float headYaw = entity.getViewYRot(partialTicks);
+        float headPitch = entity.getViewXRot(partialTicks);
         state.px[0] = 0.0F;
         state.py[0] = 0.0F;
         state.pz[0] = 0.0F;
@@ -132,8 +134,9 @@ public class LeviathanRenderer extends EntityRenderer<LeviathanEntity, Leviathan
         float death = state.deathTime;
         if (death > 50.0F) {
             float fade = Mth.clamp(1.0F - (death - 50.0F) / 38.0F, 0.0F, 1.0F);
-            collector.submitModel(this.model, state, poseStack, DYING, state.lightCoords, OverlayTexture.NO_OVERLAY, ARGB.white(fade), null,
+            collector.submitModel(this.model, state, poseStack, DYING, state.lightCoords, OverlayTexture.NO_OVERLAY, ARGB.white(1.0F - fade), null,
                     state.outlineColor);
+            collector.submitModel(this.model, state, poseStack, DYING_SKIN, state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor);
         } else {
             int overlay = OverlayTexture.pack(0.0F, state.hurt);
             collector.submitModel(this.model, state, poseStack, TEXTURE, state.lightCoords, overlay, state.outlineColor);
@@ -166,7 +169,7 @@ public class LeviathanRenderer extends EntityRenderer<LeviathanEntity, Leviathan
             float overDrive = Math.min(progress > 0.8F ? (progress - 0.8F) / 0.2F : 0.0F, 1.0F);
             int inner = ARGB.colorFromFloat(1.0F - overDrive * 0.6F, 0.75F, 1.0F, 0.97F);
             int outer = ARGB.color(0, 0x2FE0D0);
-            RandomSource random = RandomSource.createThreadLocalInstance(1912L);
+            RandomSource random = RandomSource.create(1912L);
             Vector3f origin = new Vector3f();
             Vector3f left = new Vector3f();
             Vector3f right = new Vector3f();
@@ -177,7 +180,7 @@ public class LeviathanRenderer extends EntityRenderer<LeviathanEntity, Leviathan
                 rot.rotationXYZ(random.nextFloat() * Mth.TWO_PI, random.nextFloat() * Mth.TWO_PI, random.nextFloat() * Mth.TWO_PI)
                         .rotateXYZ(random.nextFloat() * Mth.TWO_PI, random.nextFloat() * Mth.TWO_PI,
                                 random.nextFloat() * Mth.TWO_PI + progress * Mth.HALF_PI);
-                pose.rotate(rot);
+                pose.pose().rotate(rot);
                 float length = random.nextFloat() * 9.0F + 3.0F + overDrive * 6.0F;
                 float width = random.nextFloat() * 1.2F + 0.6F + overDrive * 1.2F;
                 left.set(-HALF_SQRT_3 * width, length, -0.5F * width);

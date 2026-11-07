@@ -21,9 +21,14 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class ChunkDestroyer extends BaseEntityBlock {
+    @Override
+    protected com.mojang.serialization.MapCodec<? extends BaseEntityBlock> codec() {
+        return simpleCodec(ChunkDestroyer::new);
+    }
+
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public ChunkDestroyer(Properties properties) {
@@ -52,7 +57,7 @@ public class ChunkDestroyer extends BaseEntityBlock {
         if (!level.isClientSide()) {
             if (level.getBlockEntity(pos) instanceof ChunkDestroyerBlockEntity blockEntity) {
                 net.minecraft.core.BlockPos m = blockEntity.getMiningPos();
-                player.sendOverlayMessage(Component.translatable("message.raft.machine.status", blockEntity.getEnergyAmount(), m.getX(), m.getY(), m.getZ()));
+                player.displayClientMessage(Component.translatable("message.raft.machine.status", blockEntity.getEnergyAmount(), m.getX(), m.getY(), m.getZ()), true);
             }
         }
         return InteractionResult.SUCCESS;

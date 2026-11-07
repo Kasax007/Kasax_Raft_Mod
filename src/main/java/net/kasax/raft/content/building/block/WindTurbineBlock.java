@@ -26,9 +26,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import net.kasax.raft.compat.VShapes;
 
 /**
  * A small wind turbine of the Meridian Expedition. The rotor sits in front of the block ({@code facing}); it needs a
@@ -36,6 +37,11 @@ import java.util.Map;
  * storages (cables, batteries, machines). The blades are drawn by a block entity renderer and spin while it runs.
  */
 public class WindTurbineBlock extends BaseEntityBlock {
+    @Override
+    protected com.mojang.serialization.MapCodec<? extends BaseEntityBlock> codec() {
+        return simpleCodec(WindTurbineBlock::new);
+    }
+
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 
     /** Pole, yaw bearing, nacelle and tail vane, front (rotor side) to the north. */
@@ -44,7 +50,7 @@ public class WindTurbineBlock extends BaseEntityBlock {
             Block.box(6.5, 1, 6.5, 9.5, 5, 9.5),
             Block.box(5, 5, 2, 11, 11, 14),
             Block.box(7.5, 6, 14, 8.5, 13, 16));
-    private static final Map<Direction, VoxelShape> SHAPES = Shapes.rotateHorizontal(NORTH_SHAPE);
+    private static final Map<Direction, VoxelShape> SHAPES = VShapes.rotateHorizontal(NORTH_SHAPE);
 
     public WindTurbineBlock(Properties properties) {
         super(properties);
@@ -108,8 +114,8 @@ public class WindTurbineBlock extends BaseEntityBlock {
                 case WindTurbineBlockEntity.WIND_TOO_LOW -> "message.raft.wind_turbine.too_low";
                 default -> "message.raft.wind_turbine.blocked";
             };
-            player.sendOverlayMessage(Component.translatable("message.raft.wind_turbine.energy",
-                    turbine.getEnergy(), turbine.getMaxEnergy(), Component.translatable(status)));
+            player.displayClientMessage(Component.translatable("message.raft.wind_turbine.energy",
+                    turbine.getEnergy(), turbine.getMaxEnergy(), Component.translatable(status)), true);
         }
         return InteractionResult.SUCCESS;
     }

@@ -9,11 +9,10 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.block.VegetationBlock;
+import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -22,13 +21,19 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
+import net.kasax.raft.compat.VShapes;
 
 /**
  * Plant that only lives under water (sea anemones, tube worms): placed into water only, always waterlogged, sits on
  * any sturdy floor, and pops off when its water is taken away. Optional glow particles for the glowing kinds.
  */
-public class UnderwaterPlantBlock extends VegetationBlock implements SimpleWaterloggedBlock {
+public class UnderwaterPlantBlock extends BushBlock implements SimpleWaterloggedBlock {
+    @Override
+    protected com.mojang.serialization.MapCodec<? extends BushBlock> codec() {
+        return simpleCodec(UnderwaterPlantBlock::new);
+    }
+
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     private final VoxelShape shape;
     private final @Nullable ParticleOptions particle;
@@ -41,7 +46,7 @@ public class UnderwaterPlantBlock extends VegetationBlock implements SimpleWater
     }
 
     public UnderwaterPlantBlock(Properties properties) {
-        this(Block.column(12.0, 0.0, 10.0), null, properties);
+        this(VShapes.column(12.0, 0.0, 10.0), null, properties);
     }
 
     @Override
@@ -66,13 +71,12 @@ public class UnderwaterPlantBlock extends VegetationBlock implements SimpleWater
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos,
-                                     Direction direction, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
+    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, net.minecraft.world.level.LevelAccessor level, BlockPos pos, BlockPos neighbourPos) {
         if (!state.getValue(WATERLOGGED) || !state.canSurvive(level, pos)) {
             return Blocks.AIR.defaultBlockState();
         }
-        ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
-        return super.updateShape(state, level, ticks, pos, direction, neighbourPos, neighbourState, random);
+        level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+        return super.updateShape(state, direction, neighbourState, level, pos, neighbourPos);
     }
 
     @Override
@@ -81,7 +85,7 @@ public class UnderwaterPlantBlock extends VegetationBlock implements SimpleWater
     }
 
     @Override
-    protected boolean propagatesSkylightDown(BlockState state) {
+    protected boolean propagatesSkylightDown(BlockState state, net.minecraft.world.level.BlockGetter level121, BlockPos pos121) {
         return true;
     }
 

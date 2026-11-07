@@ -10,7 +10,6 @@ import net.kasax.raft.content.vessel.net.VesselBlocksPayload;
 import net.kasax.raft.content.vessel.net.VesselDataPayload;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.PositionAndRotation;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -29,15 +28,13 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ExperienceOrb;
-import net.minecraft.world.entity.InterpolationHandler;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.Pose;
-import net.minecraft.world.entity.PositionPath;
 import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Input;
+import net.minecraft.client.player.Input;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Explosion;
@@ -47,11 +44,11 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.EntityInLevelCallback;
 import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.kasax.raft.compat.ValueInput;
+import net.kasax.raft.compat.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -145,9 +142,40 @@ public class VesselEntity extends Entity {
         builder.define(DATA_MOTOR, false);
     }
 
+    /** Client interpolation (1.21.1: driven from {@link #lerpTo} and the client tick). */
+    private @Nullable Interpolation interpolationHandler;
+
+    private @Nullable Interpolation interpolation() {
+        if (this.interpolationHandler == null && this.level().isClientSide()) this.interpolationHandler = new Interpolation(this);
+        return this.interpolationHandler;
+    }
+
     @Override
-    protected InterpolationHandler createInterpolationHandler() {
-        return this.level().isClientSide() ? new Interpolation(this) : InterpolationHandler.NO_OP;
+    public void lerpTo(double x, double y, double z, float yRot, float xRot, int steps) {
+        Interpolation interpolation = this.interpolation();
+        if (interpolation != null) {
+            interpolation.interpolateTo(new Vec3(x, y, z));
+        } else {
+            super.lerpTo(x, y, z, yRot, xRot, steps);
+        }
+    }
+
+    @Override
+    public double lerpTargetX() {
+        Interpolation i = this.interpolationHandler;
+        return i != null && i.target() != null ? i.target().x : this.getX();
+    }
+
+    @Override
+    public double lerpTargetY() {
+        Interpolation i = this.interpolationHandler;
+        return i != null && i.target() != null ? i.target().y : this.getY();
+    }
+
+    @Override
+    public double lerpTargetZ() {
+        Interpolation i = this.interpolationHandler;
+        return i != null && i.target() != null ? i.target().z : this.getZ();
     }
 
     /** Server: a raft that has just set sail, its blocks in {@code plot}. */
@@ -202,23 +230,27 @@ public class VesselEntity extends Entity {
     /** The pose drawn at a partial tick (client). */
     public VesselPose renderPose(float partialTicks) {
         return new VesselPose(Mth.lerp(partialTicks, this.xOld, this.getX()), Mth.lerp(partialTicks, this.yOld, this.getY()),
-                Mth.lerp(partialTicks, this.zOld, this.getZ()), this.getYRot(partialTicks), this.structure.pivot());
+                Mth.lerp(partialTicks, this.zOld, this.getZ()), this.getViewYRot(partialTicks), this.structure.pivot());
     }
 
     private void applyPose(VesselPose pose) {
         float yaw = Mth.wrapDegrees(pose.yaw);
         this.setYRot(yaw);
         this.setPos(pose.x, pose.y, pose.z);
-        this.setBoundingBox(this.makeBoundingBox(this.position()));
+        this.setBoundingBox(this.boxAt(this.position()));
         if (!this.level().isClientSide()) {
             this.entityData.set(DATA_YAW, yaw);
         }
     }
 
     @Override
-    protected AABB makeBoundingBox(Vec3 position) {
+    protected AABB makeBoundingBox() {
+        return this.boxAt(this.position());
+    }
+
+    AABB boxAt(Vec3 position) {
         if (this.structure == null) {
-            return super.makeBoundingBox(position);
+            return this.getDimensions(this.getPose()).makeBoundingBox(position);
         }
         return this.structure.worldBounds(new VesselPose(position, this.getYRot(), this.structure.pivot()));
     }
@@ -341,7 +373,7 @@ public class VesselEntity extends Entity {
             return;
         }
         this.structure = this.structure.withChanges(changes);
-        this.setBoundingBox(this.makeBoundingBox(this.position()));
+        this.setBoundingBox(this.boxAt(this.position()));
         int[] positions = new int[changes.size()];
         int[] states = new int[changes.size()];
         int i = 0;
@@ -366,7 +398,7 @@ public class VesselEntity extends Entity {
         }
         this.structure = this.structure.withChanges(changes);
         this.clientModel = null;
-        this.setBoundingBox(this.makeBoundingBox(this.position()));
+        this.setBoundingBox(this.boxAt(this.position()));
     }
 
     /** The motor block entity at a raft position (in the plot), if loaded. */
@@ -388,9 +420,9 @@ public class VesselEntity extends Entity {
         int turn = 0;
         boolean steered = true;
         if (this.getControllingPassenger() instanceof ServerPlayer pilot) {
-            Input input = pilot.getLastClientInput();
-            forward = (input.forward() ? 1 : 0) - (input.backward() ? 1 : 0);
-            turn = (input.right() ? 1 : 0) - (input.left() ? 1 : 0);
+            // 1.21.1: the helmsman's keys arrive as zza (forward > 0) and xxa (left > 0)
+            forward = pilot.zza > 0.0F ? 1 : pilot.zza < 0.0F ? -1 : 0;
+            turn = pilot.xxa < 0.0F ? 1 : pilot.xxa > 0.0F ? -1 : 0;
         } else if (this.autoTicks > 0) {
             this.autoTicks--;
             forward = this.autoForward;
@@ -406,7 +438,7 @@ public class VesselEntity extends Entity {
         if (forward != 0 && !motor && this.structure.motors().length > 0 && !this.fuelWarned
                 && this.getControllingPassenger() instanceof Player pilot) {
             this.fuelWarned = true;
-            pilot.sendOverlayMessage(Component.translatable("message.raft.vessel.motor_empty"));
+            pilot.displayClientMessage(Component.translatable("message.raft.vessel.motor_empty"), true);
         }
         float power = BASE_POWER + this.structure.oars() * OAR_POWER + this.structure.sails() * SAIL_POWER
                 + (motor ? this.fueledMotors() * MOTOR_POWER : 0.0F);
@@ -521,7 +553,7 @@ public class VesselEntity extends Entity {
         net.kasax.raft.Raft.LOGGER.info("Raft at {} drops anchor ({})", this.blockPosition().toShortString(),
                 by != null ? by.getName().getString() : "command");
         if (by != null) {
-            by.sendOverlayMessage(Component.translatable("message.raft.vessel.anchoring"));
+            by.displayClientMessage(Component.translatable("message.raft.vessel.anchoring"), true);
         }
     }
 
@@ -551,7 +583,7 @@ public class VesselEntity extends Entity {
         this.dockTarget = null;
         Player by = this.anchoredBy != null ? this.level().getPlayerByUUID(this.anchoredBy) : null;
         if (by != null) {
-            by.sendOverlayMessage(Component.translatable(message));
+            by.displayClientMessage(Component.translatable(message), true);
         } else {
             this.tellAboard(Component.translatable(message));
         }
@@ -591,7 +623,7 @@ public class VesselEntity extends Entity {
         AABB area = this.getBoundingBox().inflate(4.0, 6.0, 4.0);
         for (Player player : this.level().players()) {
             if (area.contains(player.position())) {
-                player.sendOverlayMessage(message);
+                player.displayClientMessage(message, true);
             }
         }
     }
@@ -615,8 +647,8 @@ public class VesselEntity extends Entity {
         // clients also move items and experience orbs themselves between the server's rare updates of them
         List<Entity> riders = this.level().getEntities(this, zone, e -> !(e instanceof VesselEntity) && !e.isPassenger()
                 && !e.isSpectator() && !e.noPhysics && !(e instanceof HangingEntity) && !(e instanceof Projectile)
-                && (e.isLocalInstanceAuthoritative() || client && (e instanceof ItemEntity || e instanceof ExperienceOrb))
-                && e.getPistonPushReaction() != PushReaction.IGNORE_ENTITY);
+                && (e.isControlledByLocalInstance() || client && (e instanceof ItemEntity || e instanceof ExperienceOrb))
+                && e.getPistonPushReaction() != PushReaction.IGNORE);
         float rad = -dyaw * Mth.DEG_TO_RAD;
         double cos = Math.cos(rad);
         double sin = Math.sin(rad);
@@ -677,6 +709,12 @@ public class VesselEntity extends Entity {
 
     // ------------------------------------------------------------------------------------------- client
     private void clientTick() {
+        // 1.21.1: the level has just stored the old position; move on towards the server's position now (the newer
+        // game interpolates at this point of the tick)
+        Interpolation interpolation = this.interpolation();
+        if (interpolation != null) {
+            interpolation.interpolate();
+        }
         if (this.structure == null) {
             VesselStructure pending = VesselDataPayload.takePending(this.getId());
             if (pending != null) {
@@ -697,18 +735,18 @@ public class VesselEntity extends Entity {
 
     /** Client: a full position sync (or a jump) keeps the exact synced yaw, not the packed one of the packet. */
     @Override
-    public void snapTo(double x, double y, double z, float yRot, float xRot) {
+    public void moveTo(double x, double y, double z, float yRot, float xRot) {
         if (this.level().isClientSide() && this.clientReady) {
             yRot = this.entityData.get(DATA_YAW);
         }
-        super.snapTo(x, y, z, yRot, xRot);
+        super.moveTo(x, y, z, yRot, xRot);
     }
 
     /** Client: the blocks arrived from the server. */
     public void setClientStructure(VesselStructure structure) {
         this.structure = structure;
         this.clientModel = null;
-        this.setBoundingBox(this.makeBoundingBox(this.position()));
+        this.setBoundingBox(this.boxAt(this.position()));
     }
 
     private void clientEffects() {
@@ -738,7 +776,7 @@ public class VesselEntity extends Entity {
             if (!this.clientReady) {
                 this.setYRot(yaw);
                 this.yRotO = yaw;
-                this.setBoundingBox(this.makeBoundingBox(this.position()));
+                this.setBoundingBox(this.boxAt(this.position()));
             } else if (this.interpolationHandler instanceof Interpolation interpolation) {
                 interpolation.yawTo(yaw);
             }
@@ -749,7 +787,7 @@ public class VesselEntity extends Entity {
      * Client interpolation of a server-driven raft: the position from the movement packets, the yaw from the exact
      * synced float (packed rotations would make the raft turn in 1.4 degree steps).
      */
-    static final class Interpolation implements InterpolationHandler {
+    static final class Interpolation {
         private static final int STEPS = 3;
         private final VesselEntity vessel;
         private @Nullable Vec3 targetPos;
@@ -761,17 +799,14 @@ public class VesselEntity extends Entity {
             this.vessel = vessel;
         }
 
-        @Override
-        public @Nullable PositionAndRotation target() {
-            return this.steps > 0 && this.targetPos != null ? PositionAndRotation.of(this.targetPos, this.targetYaw, 0.0F) : null;
+        public @Nullable Vec3 target() {
+            return this.steps > 0 ? this.targetPos : null;
         }
 
-        @Override
-        public boolean interpolateTo(@Nullable PositionPath position, float yRot, float xRot, boolean hasRotation) {
-            if (position == null) {
+        public boolean interpolateTo(@Nullable Vec3 end) {
+            if (end == null) {
                 return true;
             }
-            Vec3 end = position.endPosition();
             if (!this.hasYaw) {
                 this.targetYaw = this.vessel.getYRot();
             }
@@ -793,7 +828,6 @@ public class VesselEntity extends Entity {
             this.steps = STEPS;
         }
 
-        @Override
         public void interpolate() {
             if (this.steps <= 0 || this.targetPos == null) {
                 return;
@@ -802,20 +836,14 @@ public class VesselEntity extends Entity {
             float yaw = (float) Mth.rotLerp(alpha, this.vessel.getYRot(), this.targetYaw);
             this.vessel.setYRot(Mth.wrapDegrees(yaw));
             this.vessel.setPos(this.vessel.position().lerp(this.targetPos, alpha));
-            this.vessel.setBoundingBox(this.vessel.makeBoundingBox(this.vessel.position()));
+            this.vessel.setBoundingBox(this.vessel.boxAt(this.vessel.position()));
             this.steps--;
         }
 
-        @Override
-        public void applyPredictedMovement(Vec3 delta) {
-        }
-
-        @Override
         public boolean hasActiveInterpolation() {
             return this.steps > 0;
         }
 
-        @Override
         public void cancel() {
             this.steps = 0;
         }
@@ -876,9 +904,8 @@ public class VesselEntity extends Entity {
         }
     }
 
-    @Override
+    /** Called when the raft leaves the level (removed or unloaded; 1.21.1: from the entity unload events). */
     public void onRemoval(RemovalReason reason) {
-        super.onRemoval(reason);
         VesselColliders.remove(this);
         if (this.level() instanceof ServerLevel level && this.plot >= 0) {
             if (this.plotHeld) {
@@ -914,15 +941,10 @@ public class VesselEntity extends Entity {
         return this.getFirstPassenger() instanceof Player player ? player : null;
     }
 
-    /** The server sails the raft, not the helmsman's client. */
+    /** The server sails the raft, not the helmsman's client (1.21.1: only the server's copy moves itself). */
     @Override
-    public boolean isClientAuthoritative() {
-        return false;
-    }
-
-    @Override
-    protected boolean isLocalClientAuthoritative() {
-        return false;
+    public boolean isControlledByLocalInstance() {
+        return !this.level().isClientSide();
     }
 
     /** A raft stays in the world when its helmsman logs out (it is not stored with the player). */
@@ -948,7 +970,7 @@ public class VesselEntity extends Entity {
         Vec3 offset = passenger.getVehicleAttachmentPoint(this);
         moveFunction.accept(passenger, seat.x - offset.x, seat.y - offset.y, seat.z - offset.z);
         // the helmsman turns with the raft (once per tick, on the side that owns their rotation)
-        if (this.passengerTurnTick != this.tickCount && passenger.isLocalInstanceAuthoritative()) {
+        if (this.passengerTurnTick != this.tickCount && passenger.isControlledByLocalInstance()) {
             this.passengerTurnTick = this.tickCount;
             float dyaw = Mth.wrapDegrees(this.getYRot() - this.yRotO);
             if (dyaw != 0.0F) {
@@ -987,13 +1009,13 @@ public class VesselEntity extends Entity {
     protected void removePassenger(Entity passenger) {
         super.removePassenger(passenger);
         if (!this.level().isClientSide() && this.getState() == SAILING && this.getPassengers().isEmpty() && passenger instanceof Player player) {
-            player.sendOverlayMessage(Component.translatable("message.raft.vessel.left_helm"));
+            player.displayClientMessage(Component.translatable("message.raft.vessel.left_helm"), true);
         }
     }
 
     // ------------------------------------------------------------------------------------------- interaction
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand, Vec3 location) {
+    public InteractionResult interact(Player player, InteractionHand hand) {
         if (this.level().isClientSide()) {
             return clientUse.apply(this, hand);
         }
@@ -1010,12 +1032,12 @@ public class VesselEntity extends Entity {
         this.helmToggleTick = this.tickCount;
         if (this.hasPassenger(player) || player.isShiftKeyDown()) {
             if (this.getControllingPassenger() != null && !this.hasPassenger(player)) {
-                player.sendOverlayMessage(Component.translatable("message.raft.vessel.helm_taken"));
+                player.displayClientMessage(Component.translatable("message.raft.vessel.helm_taken"), true);
             } else {
                 this.requestAnchor(player);
             }
         } else if (!this.getPassengers().isEmpty()) {
-            player.sendOverlayMessage(Component.translatable("message.raft.vessel.helm_taken"));
+            player.displayClientMessage(Component.translatable("message.raft.vessel.helm_taken"), true);
         } else {
             this.takeHelm(player);
         }
@@ -1029,13 +1051,13 @@ public class VesselEntity extends Entity {
         if (player.isPassenger()) {
             player.stopRiding();
         }
-        if (player.startRiding(this, true, true)) {
+        if (player.startRiding(this, true)) {
             this.setState(SAILING);
             this.fuelWarned = false;
             this.helmToggleTick = this.tickCount;
             this.dockTarget = null;
             this.anchoredBy = null;
-            player.sendOverlayMessage(Component.translatable("message.raft.vessel.controls"));
+            player.displayClientMessage(Component.translatable("message.raft.vessel.controls"), true);
         }
     }
 
@@ -1074,7 +1096,8 @@ public class VesselEntity extends Entity {
     }
 
     @Override
-    public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
+    public boolean hurt(DamageSource source, float damage) {
+        if (!(this.level() instanceof ServerLevel level)) return false;
         return false;
     }
 
@@ -1085,7 +1108,7 @@ public class VesselEntity extends Entity {
 
     @Override
     public PushReaction getPistonPushReaction() {
-        return PushReaction.IGNORE_ENTITY;
+        return PushReaction.IGNORE;
     }
 
     @Override
@@ -1116,7 +1139,8 @@ public class VesselEntity extends Entity {
 
     // ------------------------------------------------------------------------------------------- save
     @Override
-    protected void addAdditionalSaveData(ValueOutput output) {
+    public void addAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueOutput output = ValueOutput.of(tag121, this.registryAccess());
         if (this.structure != null) {
             this.structure.save(output.child("Raft"));
         }
@@ -1141,7 +1165,8 @@ public class VesselEntity extends Entity {
     }
 
     @Override
-    protected void readAdditionalSaveData(ValueInput input) {
+    public void readAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueInput input = ValueInput.of(tag121, this.registryAccess());
         VesselStructure loaded = input.child("Raft").map(VesselStructure::load).orElse(null);
         if (loaded != null) {
             this.structure = loaded;
@@ -1170,7 +1195,7 @@ public class VesselEntity extends Entity {
         }
         this.entityData.set(DATA_YAW, Mth.wrapDegrees(this.getYRot()));
         if (this.structure != null) {
-            this.setBoundingBox(this.makeBoundingBox(this.position()));
+            this.setBoundingBox(this.boxAt(this.position()));
         }
     }
 

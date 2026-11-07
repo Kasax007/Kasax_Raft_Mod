@@ -38,14 +38,13 @@ import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProvider;
-import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import team.reborn.energy.api.EnergyStorage;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.kasax.raft.compat.ItemProps;
 
 /**
  * All blocks of the "building" module (spec section 5): wood, sea glass, coral stone, tidestone, drowned-city
@@ -60,29 +59,29 @@ public final class BuildingBlocks {
             .openableByHand(true).openableByWindCharge(true).register(Raft.id("steel"));
 
     // ------------------------------------------------------------------------------------------------- wood
-    public static final Block WEATHERED_PLANKS = wood("weathered_planks", planks(MapColor.COLOR_LIGHT_GRAY), ContextIntProviders.COOKING_TIME_WOOD_BLOCKS);
+    public static final Block WEATHERED_PLANKS = wood("weathered_planks", planks(MapColor.COLOR_LIGHT_GRAY), ItemProps.COOKING_TIME_WOOD_BLOCKS);
     public static final Block WEATHERED_STAIRS = woodStairs("weathered_stairs", WEATHERED_PLANKS);
     public static final Block WEATHERED_SLAB = woodSlab("weathered_slab", WEATHERED_PLANKS);
     public static final Block WEATHERED_FENCE = woodFence("weathered_fence", WEATHERED_PLANKS);
     public static final Block WEATHERED_FENCE_GATE = woodFenceGate("weathered_fence_gate", WEATHERED_PLANKS, WoodType.OAK);
     public static final Block WEATHERED_DOOR = door("weathered_door", BlockSetType.OAK,
-            planks(MapColor.COLOR_LIGHT_GRAY).strength(3.0F).noOcclusion().pushReaction(PushReaction.POPPED),
-            ContextIntProviders.COOKING_TIME_WOOD_ITEMS_LARGE);
+            planks(MapColor.COLOR_LIGHT_GRAY).strength(3.0F).noOcclusion().pushReaction(PushReaction.DESTROY),
+            ItemProps.COOKING_TIME_WOOD_ITEMS_LARGE);
     public static final Block WEATHERED_TRAPDOOR = trapdoor("weathered_trapdoor", BlockSetType.OAK,
             planks(MapColor.COLOR_LIGHT_GRAY).strength(3.0F).noOcclusion().isValidSpawn(Blocks::never),
-            ContextIntProviders.COOKING_TIME_WOOD_BLOCKS);
+            ItemProps.COOKING_TIME_WOOD_BLOCKS);
 
-    public static final Block TEAK_PLANKS = wood("teak_planks", planks(MapColor.TERRACOTTA_BROWN), ContextIntProviders.COOKING_TIME_WOOD_BLOCKS);
+    public static final Block TEAK_PLANKS = wood("teak_planks", planks(MapColor.TERRACOTTA_BROWN), ItemProps.COOKING_TIME_WOOD_BLOCKS);
     public static final Block TEAK_STAIRS = woodStairs("teak_stairs", TEAK_PLANKS);
     public static final Block TEAK_SLAB = woodSlab("teak_slab", TEAK_PLANKS);
     public static final Block TEAK_FENCE = woodFence("teak_fence", TEAK_PLANKS);
     public static final Block TEAK_FENCE_GATE = woodFenceGate("teak_fence_gate", TEAK_PLANKS, WoodType.DARK_OAK);
     public static final Block TEAK_DOOR = door("teak_door", BlockSetType.DARK_OAK,
-            planks(MapColor.TERRACOTTA_BROWN).strength(3.0F).noOcclusion().pushReaction(PushReaction.POPPED),
-            ContextIntProviders.COOKING_TIME_WOOD_ITEMS_LARGE);
+            planks(MapColor.TERRACOTTA_BROWN).strength(3.0F).noOcclusion().pushReaction(PushReaction.DESTROY),
+            ItemProps.COOKING_TIME_WOOD_ITEMS_LARGE);
     public static final Block TEAK_TRAPDOOR = trapdoor("teak_trapdoor", BlockSetType.DARK_OAK,
             planks(MapColor.TERRACOTTA_BROWN).strength(3.0F).noOcclusion().isValidSpawn(Blocks::never),
-            ContextIntProviders.COOKING_TIME_WOOD_BLOCKS);
+            ItemProps.COOKING_TIME_WOOD_BLOCKS);
 
     // ------------------------------------------------------------------------------------------------- sea glass
     public static final Block AQUA_SEA_GLASS = block("aqua_sea_glass", TransparentBlock::new, glass(MapColor.COLOR_CYAN));
@@ -150,19 +149,19 @@ public final class BuildingBlocks {
     public static final Block RUSTED_PLATE = block("rusted_plate", Block::new, metal(MapColor.TERRACOTTA_ORANGE, SoundType.METAL));
     public static final Block STEEL_BEAM = block("steel_beam", p -> new AxisShapedBlock(p,
             new double[]{1, 0, 0, 15, 16, 3}, new double[]{1, 0, 13, 15, 16, 16}, new double[]{6, 0, 3, 10, 16, 13}),
-            metal(MapColor.METAL, SoundType.IRON).strength(5.0F, 6.0F));
+            metal(MapColor.METAL, SoundType.METAL).strength(5.0F, 6.0F));
     public static final Block CATWALK = block("catwalk", CatwalkBlock::new,
             metal(MapColor.METAL, SoundType.COPPER_GRATE).strength(3.5F, 6.0F).noOcclusion()
                     .isValidSpawn(Blocks::never).isRedstoneConductor(Blocks::never).isSuffocating(Blocks::never));
     public static final Block STEEL_RAILING = block("steel_railing", IronBarsBlock::new,
-            metal(MapColor.METAL, SoundType.IRON).strength(4.0F, 6.0F).noOcclusion());
+            metal(MapColor.METAL, SoundType.METAL).strength(4.0F, 6.0F).noOcclusion());
     public static final Block PORTHOLE = block("porthole", TransparentBlock::new,
             metal(MapColor.METAL, SoundType.METAL).strength(3.0F, 6.0F).noOcclusion()
                     .isValidSpawn(Blocks::never).isRedstoneConductor(Blocks::never).isSuffocating(Blocks::never));
     public static final Block BULKHEAD_DOOR = door("bulkhead_door", STEEL,
-            metal(MapColor.METAL, SoundType.IRON).strength(5.0F).noOcclusion().pushReaction(PushReaction.POPPED), null);
+            metal(MapColor.METAL, SoundType.METAL).strength(5.0F).noOcclusion().pushReaction(PushReaction.DESTROY), null);
     public static final Block METAL_HATCH = trapdoor("metal_hatch", STEEL,
-            metal(MapColor.METAL, SoundType.IRON).strength(5.0F).noOcclusion().isValidSpawn(Blocks::never), null);
+            metal(MapColor.METAL, SoundType.METAL).strength(5.0F).noOcclusion().isValidSpawn(Blocks::never), null);
     private static final double[][] PIPE = {{4, 0, 4, 12, 16, 12}, {3, 0, 3, 13, 2, 13}, {3, 14, 3, 13, 16, 13}};
     public static final Block RUSTY_PIPE = block("rusty_pipe", p -> new AxisShapedBlock(p, PIPE),
             metal(MapColor.TERRACOTTA_ORANGE, SoundType.METAL).strength(3.0F, 6.0F));
@@ -262,48 +261,48 @@ public final class BuildingBlocks {
 
     /** A wooden block whose item burns in furnaces; it is also registered as flammable in {@link #init()}. */
     private static <T extends Block> T woodBlock(String name, java.util.function.Function<Properties, T> factory,
-                                                 Properties properties, ResourceKey<ContextIntProvider> fuel) {
+                                                 Properties properties, Integer fuel) {
         T block = BcReg.block(name, factory, properties);
-        BcReg.blockItem(name, block, new Item.Properties().cookingFuel(fuel), TAB);
+        BcReg.blockItem(name, block, ItemProps.cookingFuel(new Item.Properties(), fuel), TAB);
         WOODEN.add(block);
         return block;
     }
 
-    private static Block wood(String name, Properties properties, ResourceKey<ContextIntProvider> fuel) {
+    private static Block wood(String name, Properties properties, Integer fuel) {
         return woodBlock(name, Block::new, properties, fuel);
     }
 
     private static Block woodStairs(String name, Block base) {
         return woodBlock(name, p -> new StairBlock(base.defaultBlockState(), p), Properties.ofFullCopy(base),
-                ContextIntProviders.COOKING_TIME_WOOD_BLOCKS);
+                ItemProps.COOKING_TIME_WOOD_BLOCKS);
     }
 
     private static Block woodSlab(String name, Block base) {
-        return woodBlock(name, SlabBlock::new, Properties.ofFullCopy(base), ContextIntProviders.COOKING_TIME_WOOD_SLABS);
+        return woodBlock(name, SlabBlock::new, Properties.ofFullCopy(base), ItemProps.COOKING_TIME_WOOD_SLABS);
     }
 
     private static Block woodFence(String name, Block base) {
         return woodBlock(name, FenceBlock::new, Properties.ofFullCopy(base).forceSolidOn(),
-                ContextIntProviders.COOKING_TIME_WOOD_BLOCKS);
+                ItemProps.COOKING_TIME_WOOD_BLOCKS);
     }
 
     private static Block woodFenceGate(String name, Block base, WoodType type) {
         return woodBlock(name, p -> new FenceGateBlock(type, p), Properties.ofFullCopy(base).forceSolidOn(),
-                ContextIntProviders.COOKING_TIME_WOOD_BLOCKS);
+                ItemProps.COOKING_TIME_WOOD_BLOCKS);
     }
 
-    private static Block door(String name, BlockSetType type, Properties properties, ResourceKey<ContextIntProvider> fuel) {
+    private static Block door(String name, BlockSetType type, Properties properties, Integer fuel) {
         Block block = BcReg.block(name, p -> new DoorBlock(type, p), properties);
         Item.Properties itemProperties = new Item.Properties();
         if (fuel != null) {
-            itemProperties = itemProperties.cookingFuel(fuel);
+            itemProperties = ItemProps.cookingFuel(itemProperties, fuel);
             WOODEN.add(block);
         }
         BcReg.blockItem(name, DoubleHighBlockItem::new, block, itemProperties, TAB);
         return block;
     }
 
-    private static Block trapdoor(String name, BlockSetType type, Properties properties, ResourceKey<ContextIntProvider> fuel) {
+    private static Block trapdoor(String name, BlockSetType type, Properties properties, Integer fuel) {
         if (fuel != null) {
             return woodBlock(name, p -> new TrapDoorBlock(type, p), properties, fuel);
         }

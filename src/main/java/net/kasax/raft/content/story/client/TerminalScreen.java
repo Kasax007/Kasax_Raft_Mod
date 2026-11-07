@@ -1,17 +1,17 @@
 package net.kasax.raft.content.story.client;
 
 import net.kasax.raft.Raft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.kasax.raft.compat.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.PageButton;
-import net.minecraft.client.input.KeyEvent;
-import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.renderer.RenderPipelines;
+import net.kasax.raft.compat.gui.KeyEvent;
+import net.kasax.raft.compat.gui.MouseButtonEvent;
+import net.kasax.raft.compat.gui.RenderPipelines;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +20,8 @@ import java.util.List;
  * A Meridian Expedition terminal: a cream steel CRT monitor with green phosphor text. The log is typed out a few
  * characters per tick (click or press a key to show it all), paged with the arrow buttons or the arrow keys.
  */
-public class TerminalScreen extends Screen {
-    private static final Identifier TEXTURE = Raft.id("textures/gui/terminal.png");
+public class TerminalScreen extends net.kasax.raft.compat.gui.BaseScreen {
+    private static final ResourceLocation TEXTURE = Raft.id("textures/gui/terminal.png");
     private static final int W = 300, H = 200;
     private static final int TEXT_X = 28, TEXT_Y = 52, TEXT_W = 244, LINES = 9;
     private static final int HEADER = 0xFF3FAF80, TITLE = 0xFFD0FFE4, TEXT = 0xFF7FF0B8, DIM = 0xFF2F7A5A;

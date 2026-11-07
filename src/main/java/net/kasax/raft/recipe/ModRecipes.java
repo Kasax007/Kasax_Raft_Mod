@@ -19,7 +19,17 @@ public class ModRecipes {
 
     public static final RecipeSerializer<ItemCatchingRecipe> ITEM_CATCHING_SERIALIZER = Registry.register(
             BuiltInRegistries.RECIPE_SERIALIZER, Raft.id(ITEM_CATCHING_ID),
-            new RecipeSerializer<>(ItemCatchingRecipe.CODEC, ItemCatchingRecipe.STREAM_CODEC));
+            new RecipeSerializer<ItemCatchingRecipe>() {
+                @Override
+                public com.mojang.serialization.MapCodec<ItemCatchingRecipe> codec() {
+                    return ItemCatchingRecipe.CODEC;
+                }
+
+                @Override
+                public net.minecraft.network.codec.StreamCodec<net.minecraft.network.RegistryFriendlyByteBuf, ItemCatchingRecipe> streamCodec() {
+                    return ItemCatchingRecipe.STREAM_CODEC;
+                }
+            });
 
     public static void registerRecipes() {
         // static initializers do the registration

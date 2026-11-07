@@ -5,15 +5,15 @@ import net.kasax.raft.content.marine.client.model.JellyfishModel;
 import net.kasax.raft.content.marine.client.model.JellyfishRenderState;
 import net.kasax.raft.content.marine.entity.JellyfishEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
+import net.kasax.raft.compat.render.MobRenderer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
 /** Renders the translucent jellyfish in its variant colour; the glow jellyfish is drawn full-bright. */
 public class JellyfishRenderer extends MobRenderer<JellyfishEntity, JellyfishRenderState, JellyfishModel> {
-    private static final Identifier[] TEXTURES = {
+    private static final ResourceLocation[] TEXTURES = {
             Raft.id("textures/entity/jellyfish/moon.png"),
             Raft.id("textures/entity/jellyfish/crimson.png"),
             Raft.id("textures/entity/jellyfish/glow.png")};
@@ -24,7 +24,7 @@ public class JellyfishRenderer extends MobRenderer<JellyfishEntity, JellyfishRen
     }
 
     @Override
-    public Identifier getTextureLocation(JellyfishRenderState state) {
+    public ResourceLocation getTextureLocation(JellyfishRenderState state) {
         return TEXTURES[state.variant.ordinal()];
     }
 

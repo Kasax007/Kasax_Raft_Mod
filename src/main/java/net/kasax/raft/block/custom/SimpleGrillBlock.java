@@ -34,13 +34,20 @@ import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
+import net.kasax.raft.compat.VShapes;
+import net.minecraft.world.ItemInteractionResult;
 
 /** A small iron grill. Put planks, logs or coal in as fuel and raw food on top. */
 public class SimpleGrillBlock extends BaseEntityBlock {
+    @Override
+    protected com.mojang.serialization.MapCodec<? extends BaseEntityBlock> codec() {
+        return simpleCodec(SimpleGrillBlock::new);
+    }
+
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
-    private static final VoxelShape SHAPE = Block.column(14.0, 0.0, 10.0);
+    private static final VoxelShape SHAPE = VShapes.column(14.0, 0.0, 10.0);
 
     private final RecipeManager.CachedCheck<SingleRecipeInput, CampfireCookingRecipe> recipes = SimpleGrillBlockEntity.createRecipeCheck();
 
@@ -81,36 +88,35 @@ public class SimpleGrillBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
-                                          InteractionHand hand, BlockHitResult hit) {
+    protected net.minecraft.world.ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (level.getBlockEntity(pos) instanceof SimpleGrillBlockEntity grill) {
             if (SimpleGrillBlockEntity.fuelValue(stack) > 0) {
                 if (!level.isClientSide()) {
                     if (grill.addFuel(stack, !player.getAbilities().instabuild)) {
                         level.playSound(null, pos, SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 0.6f, 1.0f);
-                        return InteractionResult.SUCCESS_SERVER;
+                        return ItemInteractionResult.SUCCESS;
                     }
-                    return InteractionResult.CONSUME;
+                    return ItemInteractionResult.CONSUME;
                 }
-                return InteractionResult.SUCCESS;
+                return ItemInteractionResult.SUCCESS;
             }
             if (level instanceof ServerLevel serverLevel) {
                 if (grill.placeFood(serverLevel, player, stack, recipes)) {
                     level.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 0.8f, 1.0f);
-                    return InteractionResult.SUCCESS_SERVER;
+                    return ItemInteractionResult.SUCCESS;
                 }
                 if (!stack.isEmpty()) {
                     // full grill or not cookable: do nothing here (do not take food back), let the item do its own thing
-                    return serverLevel.recipeAccess().propertySet(net.minecraft.world.item.crafting.RecipePropertySet.CAMPFIRE_INPUT).test(stack)
-                            ? InteractionResult.CONSUME : InteractionResult.PASS;
+                    return isCampfireFood(level, stack)
+                            ? ItemInteractionResult.CONSUME : ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
                 }
-            } else if (level.recipeAccess().propertySet(net.minecraft.world.item.crafting.RecipePropertySet.CAMPFIRE_INPUT).test(stack)) {
-                return InteractionResult.SUCCESS;
+            } else if (isCampfireFood(level, stack)) {
+                return ItemInteractionResult.SUCCESS;
             } else if (!stack.isEmpty()) {
-                return InteractionResult.PASS;
+                return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
             }
         }
-        return InteractionResult.TRY_WITH_EMPTY_HAND;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override
@@ -123,7 +129,7 @@ public class SimpleGrillBlock extends BaseEntityBlock {
                     if (!player.getInventory().add(taken)) {
                         net.minecraft.world.Containers.dropItemStack(level, player.getX(), player.getY(), player.getZ(), taken);
                     }
-                    return InteractionResult.SUCCESS_SERVER;
+                    return InteractionResult.SUCCESS;
                 }
                 return InteractionResult.PASS;
             }
@@ -159,5 +165,10 @@ public class SimpleGrillBlock extends BaseEntityBlock {
     @Override
     protected boolean hasAnalogOutputSignal(BlockState state) {
         return false;
+    }
+
+    private static boolean isCampfireFood(Level level, ItemStack stack) {
+        return !stack.isEmpty() && level.getRecipeManager().getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CAMPFIRE_COOKING,
+                new net.minecraft.world.item.crafting.SingleRecipeInput(stack), level).isPresent();
     }
 }

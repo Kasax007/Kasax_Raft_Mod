@@ -1,11 +1,11 @@
 package net.kasax.raft.content.voyage.mixin;
 
-import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
+import net.minecraft.world.entity.vehicle.Boat;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 /** Access to the private steering state of vanilla boats (the Expedition Raft turns slower and never ejects riders). */
-@Mixin(AbstractBoat.class)
+@Mixin(Boat.class)
 public interface AbstractBoatAccessor {
     @Accessor("deltaRotation")
     float raft$getDeltaRotation();

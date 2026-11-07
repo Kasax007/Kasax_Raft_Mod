@@ -1,101 +1,73 @@
 package net.kasax.raft.content.npc.client;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.npc.NpcCharacter;
 import net.kasax.raft.content.npc.entity.NpcEntity;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
-import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.phys.Vec3;
 
 /** Renders a person of the sea with their own skin ({@code textures/entity/npc/<id>.png}, player skin layout). */
-public class NpcRenderer extends HumanoidMobRenderer<NpcEntity, NpcRenderState, NpcModel> {
-    private final Identifier texture;
+public class NpcRenderer extends HumanoidMobRenderer<NpcEntity, NpcModel> {
+    private final ResourceLocation texture;
 
     public NpcRenderer(EntityRendererProvider.Context context, NpcCharacter character) {
         super(context, new NpcModel(context.bakeLayer(character.slim ? ModelLayers.PLAYER_SLIM : ModelLayers.PLAYER), character.slim), 0.5F);
         this.texture = Raft.id("textures/entity/npc/" + character.id + ".png");
         ModelLayerLocation extra = NpcAccessories.of(character);
         if (extra != null) {
-            this.addLayer(new ExtraLayer(this, new NpcModel(context.bakeLayer(extra), false), NpcAccessories.texture(character)));
+            this.addLayer(new ExtraLayer(this, new HumanoidModel<>(context.bakeLayer(extra)), NpcAccessories.texture(character)));
         }
     }
 
     /** Straw hat brim, hard hat visor, hair bun or flower (NpcAccessories), moving with the head. */
-    private static class ExtraLayer extends RenderLayer<NpcRenderState, NpcModel> {
-        private final NpcModel model;
-        private final Identifier texture;
+    private static class ExtraLayer extends RenderLayer<NpcEntity, NpcModel> {
+        private final HumanoidModel<NpcEntity> model;
+        private final ResourceLocation texture;
 
-        ExtraLayer(RenderLayerParent<NpcRenderState, NpcModel> parent, NpcModel model, Identifier texture) {
+        ExtraLayer(RenderLayerParent<NpcEntity, NpcModel> parent, HumanoidModel<NpcEntity> model, ResourceLocation texture) {
             super(parent);
             this.model = model;
             this.texture = texture;
         }
 
         @Override
-        public void submit(PoseStack poseStack, SubmitNodeCollector collector, int lightCoords, NpcRenderState state,
-                           float yRot, float xRot) {
-            if (state.headEquipment.isEmpty() && state.headItem.isEmpty() && state.wornHeadType == null) {
-                coloredCutoutModelCopyLayerRender(this.model, this.texture, poseStack, collector, lightCoords, state, -1, 1);
+        public void render(PoseStack poseStack, MultiBufferSource buffers, int light, NpcEntity npc, float limbSwing,
+                           float limbSwingAmount, float partialTick, float ageInTicks, float netHeadYaw, float headPitch) {
+            if (npc.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
+                coloredCutoutModelCopyLayerRender(this.getParentModel(), this.model, this.texture, poseStack, buffers, light, npc,
+                        limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, partialTick, -1);
             }
         }
     }
 
     @Override
-    public NpcRenderState createRenderState() {
-        return new NpcRenderState();
+    public ResourceLocation getTextureLocation(NpcEntity npc) {
+        return this.texture;
     }
 
     @Override
-    public void extractRenderState(NpcEntity entity, NpcRenderState state, float partialTicks) {
-        super.extractRenderState(entity, state, partialTicks);
-        state.texture = this.texture;
-        state.sitting = entity.isSitting();
-        if (state.sitting) {
-            state.isPassenger = true;
-        }
-    }
-
-    @Override
-    public Identifier getTextureLocation(NpcRenderState state) {
-        return state.texture != null ? state.texture : this.texture;
-    }
-
-    @Override
-    protected HumanoidModel.ArmPose getArmPose(NpcEntity mob, HumanoidArm arm) {
-        ItemStack held = mob.getItemHeldByArm(arm);
-        if (held.isEmpty()) {
-            return HumanoidModel.ArmPose.EMPTY;
-        }
-        if (mob.isUsingItem() && mob.getUsedItemHand().asArm(mob.getMainArm()) == arm && held.is(Items.SPYGLASS)) {
-            return HumanoidModel.ArmPose.SPYGLASS;
-        }
-        return HumanoidModel.ArmPose.ITEM;
-    }
-
-    @Override
-    public Vec3 getRenderOffset(NpcRenderState state) {
+    public Vec3 getRenderOffset(NpcEntity npc, float partialTick) {
         // sitting on the ground: the legs stick out forward, so the body sits lower
-        return state.sitting ? new Vec3(0.0, -0.62, 0.0) : super.getRenderOffset(state);
+        return npc.isSitting() ? new Vec3(0.0, -0.62, 0.0) : super.getRenderOffset(npc, partialTick);
     }
 
     @Override
-    protected boolean shouldShowName(NpcEntity entity, double distanceToCameraSq) {
-        if (entity.hasCustomName() && entity.isCustomNameVisible()) {
-            return super.shouldShowName(entity, distanceToCameraSq);
+    protected boolean shouldShowName(NpcEntity npc) {
+        if (npc.hasCustomName() && npc.isCustomNameVisible()) {
+            return super.shouldShowName(npc);
         }
         // the name shows when the player looks at the NPC from up close
-        return distanceToCameraSq < 100.0 && entity == this.entityRenderDispatcher.crosshairPickEntity
-                && super.shouldShowName(entity, distanceToCameraSq);
+        return this.entityRenderDispatcher.distanceToSqr(npc) < 100.0 && npc == this.entityRenderDispatcher.crosshairPickEntity
+                && super.shouldShowName(npc);
     }
 }

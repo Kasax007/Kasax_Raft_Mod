@@ -17,8 +17,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.kasax.raft.compat.ValueInput;
+import net.kasax.raft.compat.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -47,7 +47,7 @@ public class SeatEntity extends Entity {
         AABB box = new AABB(pos);
         for (SeatEntity seat : level.getEntitiesOfClass(SeatEntity.class, box)) {
             if (seat.isVehicle()) {
-                player.sendOverlayMessage(Component.translatable("message.raft.seat.occupied"));
+                player.displayClientMessage(Component.translatable("message.raft.seat.occupied"), true);
                 return false;
             }
             seat.discard();
@@ -121,21 +121,24 @@ public class SeatEntity extends Entity {
     }
 
     @Override
-    protected void readAdditionalSaveData(ValueInput input) {
+    public void readAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueInput input = ValueInput.of(tag121, this.registryAccess());
     }
 
     @Override
-    protected void addAdditionalSaveData(ValueOutput output) {
+    public void addAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueOutput output = ValueOutput.of(tag121, this.registryAccess());
     }
 
     @Override
-    public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
+    public boolean hurt(DamageSource source, float damage) {
+        if (!(this.level() instanceof ServerLevel level)) return false;
         return false;
     }
 
     @Override
     public PushReaction getPistonPushReaction() {
-        return PushReaction.IGNORE_ENTITY;
+        return PushReaction.IGNORE;
     }
 
     @Override

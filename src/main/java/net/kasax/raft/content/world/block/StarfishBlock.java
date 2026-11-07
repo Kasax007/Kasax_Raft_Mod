@@ -7,7 +7,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -21,15 +20,24 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import net.kasax.raft.compat.VShapes;
 
 /** A starfish lying flat on a floor, wall or ceiling (attaches like a button), in or out of water. */
 public class StarfishBlock extends FaceAttachedHorizontalDirectionalBlock implements SimpleWaterloggedBlock {
+    @Override
+    protected com.mojang.serialization.MapCodec<? extends FaceAttachedHorizontalDirectionalBlock> codec() {
+        return simpleCodec(StarfishBlock::new);
+    }
+
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     private static final Map<AttachFace, Map<Direction, VoxelShape>> SHAPES =
-            Shapes.rotateAttachFace(Block.boxZ(14.0, 14.0, 15.0, 16.0));
+            java.util.Map.of(
+                    AttachFace.WALL, VShapes.rotateHorizontal(VShapes.boxZ(14.0, 14.0, 15.0, 16.0)),
+                    AttachFace.FLOOR, VShapes.rotateHorizontal(Block.box(1.0, 0.0, 1.0, 15.0, 1.0, 15.0)),
+                    AttachFace.CEILING, VShapes.rotateHorizontal(Block.box(1.0, 15.0, 1.0, 15.0, 16.0, 15.0)));
 
     public StarfishBlock(Properties properties) {
         super(properties);
@@ -48,12 +56,11 @@ public class StarfishBlock extends FaceAttachedHorizontalDirectionalBlock implem
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos,
-                                     Direction direction, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
+    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, net.minecraft.world.level.LevelAccessor level, BlockPos pos, BlockPos neighbourPos) {
         if (state.getValue(WATERLOGGED)) {
-            ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+            level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
-        return super.updateShape(state, level, ticks, pos, direction, neighbourPos, neighbourState, random);
+        return super.updateShape(state, direction, neighbourState, level, pos, neighbourPos);
     }
 
     @Override

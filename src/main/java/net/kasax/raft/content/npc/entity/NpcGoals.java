@@ -56,18 +56,18 @@ final class NpcGoals {
 
         @Override
         public boolean canUse() {
-            if (!this.npc.hasHome() || this.npc.isTalking()) {
+            if (!this.npc.hasRestriction() || this.npc.isTalking()) {
                 return false;
             }
             // a little slack beyond the radius: the places of interest at the edge of home are fine
-            double r = this.npc.getHomeRadius() + 2.0;
-            return this.npc.getHomePosition().distToCenterSqr(this.npc.position()) > r * r;
+            double r = this.npc.getRestrictRadius() + 2.0;
+            return this.npc.getRestrictCenter().distToCenterSqr(this.npc.position()) > r * r;
         }
 
         @Override
         public boolean canContinueToUse() {
-            return !this.npc.isTalking() && this.npc.hasHome()
-                    && this.npc.getHomePosition().distToCenterSqr(this.npc.position()) > 4.0;
+            return !this.npc.isTalking() && this.npc.hasRestriction()
+                    && this.npc.getRestrictCenter().distToCenterSqr(this.npc.position()) > 4.0;
         }
 
         @Override
@@ -80,7 +80,7 @@ final class NpcGoals {
         public void tick() {
             if (--this.recalc <= 0) {
                 this.recalc = 40;
-                BlockPos home = this.npc.getHomePosition();
+                BlockPos home = this.npc.getRestrictCenter();
                 this.npc.getNavigation().moveTo(home.getX() + 0.5, home.getY(), home.getZ() + 0.5, 0.6);
             }
         }

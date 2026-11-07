@@ -89,10 +89,10 @@ public class BrineBoltEntity extends Projectile {
             Entity target = hitResult.getEntity();
             LivingEntity owner = this.getOwner() instanceof LivingEntity living ? living : null;
             DamageSource source = this.damageSources().mobProjectile(this, owner);
-            if (target.hurtServer(serverLevel, source, 5.0F)) {
+            if (target.hurt(source, 5.0F)) {
                 EnchantmentHelper.doPostAttackEffects(serverLevel, target, source);
                 if (target instanceof LivingEntity living) {
-                    living.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 40, 1), owner);
+                    living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 1), owner);
                 }
             }
         }
@@ -108,7 +108,7 @@ public class BrineBoltEntity extends Projectile {
     private void burst() {
         if (this.level() instanceof ServerLevel level) {
             level.sendParticles(ParticleTypes.SPLASH, this.getX(), this.getY() + 0.25, this.getZ(), 30, 0.3, 0.3, 0.3, 0.3);
-            level.sendParticles(new DustParticleOptions(TEAL, 1.4F), this.getX(), this.getY() + 0.25, this.getZ(), 12, 0.35, 0.35, 0.35, 0.0);
+            level.sendParticles(new DustParticleOptions(net.minecraft.world.phys.Vec3.fromRGB24(TEAL).toVector3f(), 1.4F), this.getX(), this.getY() + 0.25, this.getZ(), 12, 0.35, 0.35, 0.35, 0.0);
             level.sendParticles(ParticleTypes.GLOW, this.getX(), this.getY() + 0.25, this.getZ(), 6, 0.2, 0.2, 0.2, 0.05);
             level.playSound(null, this.getX(), this.getY(), this.getZ(), BossSounds.BRINE_BOLT_HIT, SoundSource.HOSTILE, 1.2F,
                     0.9F + this.random.nextFloat() * 0.3F);
@@ -123,6 +123,6 @@ public class BrineBoltEntity extends Projectile {
     @Override
     public void recreateFromPacket(ClientboundAddEntityPacket packet) {
         super.recreateFromPacket(packet);
-        this.setDeltaMovement(packet.getMovement());
+        this.setDeltaMovement(new net.minecraft.world.phys.Vec3(packet.getXa(), packet.getYa(), packet.getZa()));
     }
 }

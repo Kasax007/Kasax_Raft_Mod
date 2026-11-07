@@ -3,20 +3,19 @@ package net.kasax.raft.block.entity.renderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.kasax.raft.block.entity.SimpleGrillBlockEntity;
-import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.kasax.raft.compat.render.SubmitNodeCollector;
+import net.kasax.raft.compat.render.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
-import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
-import net.minecraft.client.renderer.item.ItemModelResolver;
-import net.minecraft.client.renderer.item.ItemStackRenderState;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.kasax.raft.compat.render.BlockEntityRenderState;
+import net.kasax.raft.compat.render.ItemModelResolver;
+import net.kasax.raft.compat.render.ItemStackRenderState;
+import net.kasax.raft.compat.render.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +25,7 @@ public class SimpleGrillBlockEntityRenderer implements BlockEntityRenderer<Simpl
     private final ItemModelResolver itemModelResolver;
 
     public SimpleGrillBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
-        this.itemModelResolver = context.itemModelResolver();
+        this.itemModelResolver = new ItemModelResolver();
     }
 
     @Override
@@ -36,7 +35,7 @@ public class SimpleGrillBlockEntityRenderer implements BlockEntityRenderer<Simpl
 
     @Override
     public void extractRenderState(SimpleGrillBlockEntity grill, State state, float partialTicks, Vec3 cameraPosition,
-                                   ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+                                   @Nullable Object breakProgress) {
         BlockEntityRenderer.super.extractRenderState(grill, state, partialTicks, cameraPosition, breakProgress);
         state.facing = grill.getBlockState().getValue(HorizontalDirectionalBlock.FACING);
         int seed = (int) grill.getBlockPos().asLong();
@@ -57,8 +56,8 @@ public class SimpleGrillBlockEntityRenderer implements BlockEntityRenderer<Simpl
             }
             poseStack.pushPose();
             poseStack.translate(0.5f, 0.65f, 0.5f);
-            poseStack.rotateDegrees(Axis.YP, -state.facing.toYRot());
-            poseStack.rotateDegrees(Axis.XP, 90.0f);
+            poseStack.mulPose(Axis.YP.rotationDegrees(-state.facing.toYRot()));
+            poseStack.mulPose(Axis.XP.rotationDegrees(90.0f));
             poseStack.translate(slot == 0 ? -0.2f : 0.2f, 0.0f, 0.0f);
             poseStack.scale(0.4f, 0.4f, 0.4f);
             itemState.submit(poseStack, collector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);

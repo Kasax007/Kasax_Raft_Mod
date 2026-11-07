@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.Structure;
@@ -47,7 +47,7 @@ public abstract class StructureSiteMixin {
         if (stub.isEmpty()) {
             return;
         }
-        Identifier id = context.registryAccess().lookupOrThrow(Registries.STRUCTURE).getKey((Structure) (Object) this);
+        ResourceLocation id = context.registryAccess().registryOrThrow(Registries.STRUCTURE).getKey((Structure) (Object) this);
         if (id == null || !"raft".equals(id.getNamespace())) {
             return;
         }

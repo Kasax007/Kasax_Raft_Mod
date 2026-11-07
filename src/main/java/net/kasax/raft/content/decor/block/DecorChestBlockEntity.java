@@ -7,7 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.entity.ContainerUser;
+
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -18,8 +18,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.ContainerOpenersCounter;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.kasax.raft.compat.ValueInput;
+import net.kasax.raft.compat.ValueOutput;
 
 import java.util.List;
 
@@ -58,16 +58,18 @@ public class DecorChestBlockEntity extends RandomizableContainerBlockEntity {
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
-        if (!trySaveLootTable(output)) ContainerHelper.saveAllItems(output, items);
+    protected void saveAdditional(net.minecraft.nbt.CompoundTag tag121, net.minecraft.core.HolderLookup.Provider reg121) {
+        ValueOutput output = ValueOutput.of(tag121, reg121);
+        super.saveAdditional(output.tag(), output.lookup());
+        if (!trySaveLootTable(output.tag())) ContainerHelper.saveAllItems(output.tag(), items, output.lookup());
     }
 
     @Override
-    protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);
+    protected void loadAdditional(net.minecraft.nbt.CompoundTag tag121, net.minecraft.core.HolderLookup.Provider reg121) {
+        ValueInput input = ValueInput.of(tag121, reg121);
+        super.loadAdditional(input.tag(), input.lookup());
         items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
-        if (!tryLoadLootTable(input)) ContainerHelper.loadAllItems(input, items);
+        if (!tryLoadLootTable(input.tag())) ContainerHelper.loadAllItems(input.tag(), items, input.lookup());
     }
 
     @Override
@@ -96,22 +98,17 @@ public class DecorChestBlockEntity extends RandomizableContainerBlockEntity {
     }
 
     @Override
-    public void startOpen(ContainerUser user) {
-        if (!remove && !user.getLivingEntity().isSpectator()) {
-            openers.incrementOpeners(user.getLivingEntity(), getLevel(), getBlockPos(), getBlockState(), user.getContainerInteractionRange());
+    public void startOpen(net.minecraft.world.entity.player.Player user) {
+        if (!remove && !user.isSpectator()) {
+            openers.incrementOpeners(user, getLevel(), getBlockPos(), getBlockState());
         }
     }
 
     @Override
-    public void stopOpen(ContainerUser user) {
-        if (!remove && !user.getLivingEntity().isSpectator()) {
-            openers.decrementOpeners(user.getLivingEntity(), getLevel(), getBlockPos(), getBlockState());
+    public void stopOpen(net.minecraft.world.entity.player.Player user) {
+        if (!remove && !user.isSpectator()) {
+            openers.decrementOpeners(user, getLevel(), getBlockPos(), getBlockState());
         }
-    }
-
-    @Override
-    public List<ContainerUser> getEntitiesWithContainerOpen() {
-        return openers.getEntitiesWithContainerOpen(getLevel(), getBlockPos());
     }
 
     void recheckOpen() {

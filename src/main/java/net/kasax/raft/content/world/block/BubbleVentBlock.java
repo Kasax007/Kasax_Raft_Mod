@@ -30,7 +30,7 @@ public class BubbleVentBlock extends Block {
 
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        BubbleColumnBlock.updateColumn(Blocks.BUBBLE_COLUMN, level, pos.above(), state);
+        BubbleColumnBlock.updateColumn(level, pos.above(), state);
     }
 
     @Override

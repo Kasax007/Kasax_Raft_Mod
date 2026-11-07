@@ -99,7 +99,7 @@ public final class VesselInteractions {
         }
         BlockState state = level.getBlockState(at);
         if (state.getBlock() instanceof BedBlock) {
-            player.sendOverlayMessage(Component.translatable("message.raft.vessel.no_sleep"));
+            player.displayClientMessage(Component.translatable("message.raft.vessel.no_sleep"), true);
             return;
         }
         BlockPos origin = VesselShipyard.origin(level, vessel.plot());
@@ -108,7 +108,7 @@ public final class VesselInteractions {
             ItemStack stack = player.getItemInHand(hand);
             if (state.getBlock() instanceof SignBlock && stack.isEmpty()) {
                 // sign text is edited on the client, which has no block there: only once anchored
-                player.sendOverlayMessage(Component.translatable("message.raft.vessel.anchor_first"));
+                player.displayClientMessage(Component.translatable("message.raft.vessel.anchor_first"), true);
                 return;
             }
             if (!fitsOnRaft(vessel, level, player, hand, stack, plotHit)) {
@@ -123,10 +123,10 @@ public final class VesselInteractions {
             });
             if (result.consumesAction()) {
                 // the player's own client swung already (it predicts); the others see it now
-                player.swing(hand, stack.getInteractAnimation(), false);
+                player.swing(hand, true);
                 return;
             }
-            if (result instanceof InteractionResult.Fail) {
+            if (result == InteractionResult.FAIL) {
                 break;
             }
         }
@@ -153,11 +153,11 @@ public final class VesselInteractions {
         // inside the plot, and (except new foundations, which grow the hull) above the hull, as when setting sail
         if (VesselShipyard.plotAt(level, target.getX(), target.getY(), target.getZ()) != vessel.plot()
                 || !hull && structure != null && !structure.insideOutline(target.getX() - origin.getX(), target.getZ() - origin.getZ())) {
-            player.sendOverlayMessage(Component.translatable("message.raft.vessel.too_far_out"));
+            player.displayClientMessage(Component.translatable("message.raft.vessel.too_far_out"), true);
             return false;
         }
         if (structure != null && structure.blockCount() >= VesselStructure.MAX_BLOCKS_AT_SEA && level.getBlockState(target).isAir()) {
-            player.sendOverlayMessage(Component.translatable("message.raft.vessel.too_big", VesselStructure.MAX_BLOCKS_AT_SEA));
+            player.displayClientMessage(Component.translatable("message.raft.vessel.too_big", VesselStructure.MAX_BLOCKS_AT_SEA), true);
             return false;
         }
         return true;
@@ -175,13 +175,13 @@ public final class VesselInteractions {
         }
         BlockPos pos = hit.getBlockPos();
         if (!(level.getBlockState(pos).getBlock() instanceof LiquidBlockContainer) || !bucket.emptyContents(player, level, pos, hit)) {
-            player.sendOverlayMessage(Component.translatable("message.raft.vessel.no_open_water"));
+            player.displayClientMessage(Component.translatable("message.raft.vessel.no_open_water"), true);
             return InteractionResult.FAIL;
         }
         bucket.checkExtraContent(player, level, stack, pos);
         player.awardStat(Stats.ITEM_USED.get(bucket));
         player.setItemInHand(hand, ItemUtils.createFilledResult(stack, player, BucketItem.getEmptySuccessItem(stack, player)));
-        return InteractionResult.SUCCESS_SERVER;
+        return InteractionResult.SUCCESS;
     }
 
     // ------------------------------------------------------------------------------------------- break
@@ -258,7 +258,7 @@ public final class VesselInteractions {
             return;
         }
         if (local.equals(structure.helm())) {
-            player.sendOverlayMessage(Component.translatable("message.raft.vessel.anchor_first"));
+            player.displayClientMessage(Component.translatable("message.raft.vessel.anchor_first"), true);
             return;
         }
         BlockPos at = plotPos(vessel, level, local);

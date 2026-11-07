@@ -23,8 +23,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.kasax.raft.compat.ValueInput;
+import net.kasax.raft.compat.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 
 /**
@@ -79,11 +79,6 @@ public class TidelingEntity extends Monster {
     }
 
     @Override
-    public boolean canBreatheUnderwater() {
-        return true;
-    }
-
-    @Override
     public boolean isPushedByFluid() {
         return false;
     }
@@ -108,7 +103,7 @@ public class TidelingEntity extends Monster {
     }
 
     @Override
-    public boolean causeFallDamage(double fallDistance, float damageModifier, DamageSource damageSource) {
+    public boolean causeFallDamage(float fallDistance, float damageModifier, DamageSource damageSource) {
         return false;
     }
 
@@ -132,31 +127,46 @@ public class TidelingEntity extends Monster {
     }
 
     @Override
-    public boolean hurtServer(ServerLevel level, DamageSource source, float amount) {
+    public boolean hurt(DamageSource source, float amount) {
+        if (!(this.level() instanceof ServerLevel level)) return false;
         if (source.getEntity() instanceof LeviathanEntity || source.getDirectEntity() instanceof BrineBoltEntity) {
             return false;
         }
-        return super.hurtServer(level, source, amount);
+        return super.hurt(source, amount);
     }
 
     @Override
-    protected void addAdditionalSaveData(ValueOutput output) {
-        super.addAdditionalSaveData(output);
+    public void addAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueOutput output = ValueOutput.of(tag121, this.registryAccess());
+        super.addAdditionalSaveData(output.tag());
         output.putBoolean("Summoned", this.summoned);
         output.putInt("LandTicks", this.landTicks);
     }
 
     @Override
-    protected void readAdditionalSaveData(ValueInput input) {
-        super.readAdditionalSaveData(input);
+    public void readAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueInput input = ValueInput.of(tag121, this.registryAccess());
+        super.readAdditionalSaveData(input.tag());
         this.summoned = input.getBooleanOr("Summoned", false);
         this.landTicks = input.getIntOr("LandTicks", 0);
     }
 
-    @Override
+    
     protected void travelInWater(Vec3 input, double baseGravity, boolean isFalling, double oldY) {
         this.move(MoverType.SELF, this.getDeltaMovement());
         this.setDeltaMovement(this.getDeltaMovement().scale(0.9));
+    }
+
+    /** 1.21.1 port: the newer game moves an entity in water through {@code travelInWater}; 1.21.1 only has travel. */
+    @Override
+    public void travel(Vec3 input) {
+        if (this.isControlledByLocalInstance() && this.isInWater() && this.isAffectedByFluids()
+                && !this.canStandOnFluid(this.level().getFluidState(this.blockPosition()))) {
+            this.travelInWater(input, this.getGravity(), this.getDeltaMovement().y <= 0.0, this.getY());
+            this.calculateEntityAnimation(false);
+        } else {
+            super.travel(input);
+        }
     }
 
     @Override
@@ -174,8 +184,9 @@ public class TidelingEntity extends Monster {
     }
 
     @Override
-    protected void customServerAiStep(ServerLevel level) {
-        super.customServerAiStep(level);
+    protected void customServerAiStep() {
+        ServerLevel level = (ServerLevel) this.level();
+        super.customServerAiStep();
         if (this.hopCooldown > 0) {
             this.hopCooldown--;
         }
@@ -204,7 +215,7 @@ public class TidelingEntity extends Monster {
         if (target != null && this.landTicks <= LAND_HUNT_TICKS && this.attackCooldown == 0
                 && this.getBoundingBox().inflate(0.35).intersects(target.getBoundingBox())) {
             this.attackCooldown = 20;
-            if (this.doHurtTarget(level, target)) {
+            if (this.doHurtTarget(target)) {
                 level.broadcastEntityEvent(this, EVENT_BITE);
                 this.playSound(BossSounds.TIDELING_BITE, 1.0F, 1.0F + this.random.nextFloat() * 0.2F);
             }
@@ -270,7 +281,7 @@ public class TidelingEntity extends Monster {
         }
         // stranded: it slowly dries out
         if (this.landTicks > LAND_HUNT_TICKS + 200 && this.tickCount % 20 == 0) {
-            this.hurtServer(level, this.damageSources().dryOut(), 1.0F);
+            this.hurt(this.damageSources().dryOut(), 1.0F);
         }
     }
 

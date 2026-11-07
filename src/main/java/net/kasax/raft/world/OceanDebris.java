@@ -54,7 +54,7 @@ public class OceanDebris {
     public static final float SUPPLY_BARREL_CHANCE = 0.02f;
 
     public static void register() {
-        ServerTickEvents.END_LEVEL_TICK.register(OceanDebris::tick);
+        ServerTickEvents.END_WORLD_TICK.register(OceanDebris::tick);
     }
 
     private static void tick(ServerLevel level) {
@@ -75,7 +75,7 @@ public class OceanDebris {
     }
 
     public static boolean isDebris(Entity entity) {
-        return entity instanceof ItemEntity && entity.entityTags().contains(TAG);
+        return entity instanceof ItemEntity && entity.getTags().contains(TAG);
     }
 
     private static void driftAndDespawn(ServerLevel level) {

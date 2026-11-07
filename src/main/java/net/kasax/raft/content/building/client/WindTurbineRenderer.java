@@ -5,21 +5,20 @@ import com.mojang.math.Axis;
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.building.block.WindTurbineBlock;
 import net.kasax.raft.content.building.block.WindTurbineBlockEntity;
-import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.kasax.raft.compat.render.SubmitNodeCollector;
+import net.kasax.raft.compat.render.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
-import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.kasax.raft.compat.render.BlockEntityRenderState;
+import net.kasax.raft.compat.render.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /** Draws the spinning rotor of the wind turbine in front of the block. */
 public class WindTurbineRenderer implements BlockEntityRenderer<WindTurbineBlockEntity, WindTurbineRenderer.State> {
-    public static final Identifier TEXTURE = Raft.id("textures/entity/wind_turbine_rotor.png");
+    public static final ResourceLocation TEXTURE = Raft.id("textures/entity/wind_turbine_rotor.png");
 
     private final WindTurbineRotorModel model;
 
@@ -34,7 +33,7 @@ public class WindTurbineRenderer implements BlockEntityRenderer<WindTurbineBlock
 
     @Override
     public void extractRenderState(WindTurbineBlockEntity entity, State state, float partialTicks, Vec3 cameraPosition,
-                                   ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+                                   @Nullable Object breakProgress) {
         BlockEntityRenderer.super.extractRenderState(entity, state, partialTicks, cameraPosition, breakProgress);
         state.facing = entity.getBlockState().hasProperty(WindTurbineBlock.FACING)
                 ? entity.getBlockState().getValue(WindTurbineBlock.FACING) : Direction.NORTH;
@@ -46,7 +45,7 @@ public class WindTurbineRenderer implements BlockEntityRenderer<WindTurbineBlock
     public void submit(State state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
         poseStack.pushPose();
         poseStack.translate(0.5F, 0.5F, 0.5F);
-        poseStack.rotateDegrees(Axis.YP, 180.0F - state.facing.toYRot());
+        poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - state.facing.toYRot()));
         // rotor axis: block centre height, front face of the block (north side before turning)
         poseStack.translate(0.0F, 0.0F, -0.5F);
         model.setupAnim(state.angle);

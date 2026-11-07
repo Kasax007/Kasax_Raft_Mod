@@ -9,7 +9,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -25,7 +24,8 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.ItemInteractionResult;
 
 /**
  * An iron fire bowl ({@code lit}, {@code waterlogged}). Lit it glows (light 15), crackles and burns whoever stands
@@ -56,20 +56,19 @@ public class BrazierBlock extends DecorBlock {
     }
 
     @Override
-    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
-                                          InteractionHand hand, BlockHitResult hit) {
+    protected net.minecraft.world.ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         boolean lit = state.getValue(LIT);
         if (!lit && !state.getValue(WATERLOGGED) && FireHelper.isIgniter(stack)) {
             FireHelper.ignite(level, pos, player, hand, stack);
             if (!level.isClientSide()) level.setBlock(pos, state.setValue(LIT, true), Block.UPDATE_ALL_IMMEDIATE);
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         }
         if (lit && FireHelper.isDouser(stack)) {
             FireHelper.douse(level, pos, player, hand, stack, 0.7);
             if (!level.isClientSide()) level.setBlock(pos, state.setValue(LIT, false), Block.UPDATE_ALL_IMMEDIATE);
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         }
-        return InteractionResult.TRY_WITH_EMPTY_HAND;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override
@@ -97,13 +96,12 @@ public class BrazierBlock extends DecorBlock {
     }
 
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effects,
-                                boolean isPrecise) {
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         if (state.getValue(LIT) && entity instanceof LivingEntity && entity.getY() >= pos.getY() + 0.5
                 && level instanceof ServerLevel serverLevel) {
-            entity.hurtServer(serverLevel, level.damageSources().campfire(), 1.0F);
+            entity.hurt(level.damageSources().campfire(), 1.0F);
         }
-        super.entityInside(state, level, pos, entity, effects, isPrecise);
+        super.entityInside(state, level, pos, entity);
     }
 
     @Override

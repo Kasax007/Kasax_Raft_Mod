@@ -3,12 +3,11 @@ package net.kasax.raft.content.diving.item;
 import net.kasax.raft.content.diving.DivingContent;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.ARGB;
+import net.kasax.raft.compat.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipDisplay;
 
 import java.util.function.Consumer;
 
@@ -16,7 +15,7 @@ import java.util.function.Consumer;
  * An oxygen tank worn on the chest. It stores air in ticks ({@code raft:stored_air}); with a diving helmet the wearer
  * breathes from it under water. Refills at the surface, in bubble columns and in the air compressor.
  */
-public class OxygenTankItem extends Item {
+public class OxygenTankItem extends net.kasax.raft.compat.GearItem {
     private final int capacity;
 
     public OxygenTankItem(Properties properties, int capacity) {
@@ -81,13 +80,13 @@ public class OxygenTankItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder,
-                                TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, java.util.List<net.minecraft.network.chat.Component> builderList121, TooltipFlag flag) {
+        java.util.function.Consumer<net.minecraft.network.chat.Component> builder = builderList121::add;
         int air = getAir(stack);
         builder.accept(Component.translatable("tooltip.raft.oxygen_tank.air", formatTime(air), formatTime(capacity))
                 .withStyle(ChatFormatting.AQUA));
         builder.accept(Component.translatable("tooltip.raft.oxygen_tank").withStyle(ChatFormatting.GRAY));
-        super.appendHoverText(stack, context, display, builder, flag);
+        super.appendHoverText(stack, context, builderList121, flag);
     }
 
     /** Ticks as m:ss. */

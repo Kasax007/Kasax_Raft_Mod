@@ -16,8 +16,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.kasax.raft.compat.ValueInput;
+import net.kasax.raft.compat.ValueOutput;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import team.reborn.energy.api.base.SimpleEnergyStorage;
@@ -76,7 +76,7 @@ public class ChunkDestroyerBlockEntity extends BlockEntity implements TickableBl
         List<ItemStack> drops = new ArrayList<>();
         BlockPos.MutableBlockPos currentPos = new BlockPos.MutableBlockPos();
 
-        for (int y = this.miningPos.getY(); y >= this.level.getMinY(); y--) {
+        for (int y = this.miningPos.getY(); y >= this.level.getMinBuildHeight(); y--) {
             currentPos.set(this.miningPos.getX(), y, this.miningPos.getZ());
 
             BlockState state = this.level.getBlockState(currentPos);
@@ -148,7 +148,7 @@ public class ChunkDestroyerBlockEntity extends BlockEntity implements TickableBl
         // Iterate over all X and Z coordinates within the chunk, and from current Y down to bottom
         for (int x = (chunkX << 4); x < (chunkX << 4) + 16; x++) {
             for (int z = (chunkZ << 4); z < (chunkZ << 4) + 16; z++) {
-                for (int y = this.worldPosition.getY(); y >= this.level.getMinY(); y--) { // Loop from current Y to bottom
+                for (int y = this.worldPosition.getY(); y >= this.level.getMinBuildHeight(); y--) { // Loop from current Y to bottom
                     mutablePos.set(x, y, z); // Set the current block position
 
                     BlockState blockState = this.level.getBlockState(mutablePos);
@@ -173,7 +173,7 @@ public class ChunkDestroyerBlockEntity extends BlockEntity implements TickableBl
                 }
 
                 // Iterate from the current Y position down to the world's bottom
-                for (int y = this.worldPosition.getY(); y >= this.level.getMinY(); y--) {
+                for (int y = this.worldPosition.getY(); y >= this.level.getMinBuildHeight(); y--) {
                     mutablePos.set(x, y, z); // Set the current block position
 
                     BlockState blockState = this.level.getBlockState(mutablePos);
@@ -211,8 +211,9 @@ public class ChunkDestroyerBlockEntity extends BlockEntity implements TickableBl
     }
 
     @Override
-    protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);
+    protected void loadAdditional(net.minecraft.nbt.CompoundTag tag121, net.minecraft.core.HolderLookup.Provider reg121) {
+        ValueInput input = ValueInput.of(tag121, reg121);
+        super.loadAdditional(input.tag(), input.lookup());
         this.ticks = input.getIntOr("Ticks", 0);
         input.getLong("MiningPos").ifPresent(l -> this.miningPos = BlockPos.of(l));
         this.energyStorage.amount = input.getLongOr("Energy", 0L);
@@ -222,8 +223,9 @@ public class ChunkDestroyerBlockEntity extends BlockEntity implements TickableBl
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
+    protected void saveAdditional(net.minecraft.nbt.CompoundTag tag121, net.minecraft.core.HolderLookup.Provider reg121) {
+        ValueOutput output = ValueOutput.of(tag121, reg121);
+        super.saveAdditional(output.tag(), output.lookup());
         output.putInt("Ticks", this.ticks);
         output.putLong("MiningPos", this.miningPos.asLong());
         output.putLong("Energy", this.energyStorage.amount);

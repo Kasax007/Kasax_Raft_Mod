@@ -49,8 +49,7 @@ public final class VesselContent {
 
     /** The sailing raft. Created only by a helm (no summon); its size comes from its blocks, not from the type. */
     public static final EntityType<VesselEntity> VESSEL = BcReg.entity("vessel",
-            EntityType.Builder.<VesselEntity>of(VesselEntity::new, MobCategory.MISC)
-                    .noLootTable().noSummon().fireImmune().sized(1.0F, 1.0F).clientTrackingRange(10).updateInterval(1));
+            EntityType.Builder.<VesselEntity>of(VesselEntity::new, MobCategory.MISC).noSummon().fireImmune().sized(1.0F, 1.0F).clientTrackingRange(10).updateInterval(1));
 
     /** Loads the class (all fields above register themselves). */
     public static void register() {

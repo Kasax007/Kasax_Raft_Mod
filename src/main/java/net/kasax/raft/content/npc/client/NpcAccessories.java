@@ -1,6 +1,6 @@
 package net.kasax.raft.content.npc.client;
 
-import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.npc.NpcCharacter;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -9,7 +9,7 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Consumer;
 
@@ -32,15 +32,15 @@ public final class NpcAccessories {
     }
 
     static void register() {
-        ModelLayerRegistry.registerModelLayer(STRAW_HAT, () -> head(h -> h.addOrReplaceChild("brim",
+        EntityModelLayerRegistry.registerModelLayer(STRAW_HAT, () -> head(h -> h.addOrReplaceChild("brim",
                 CubeListBuilder.create().texOffs(0, 0).addBox(-7.0F, -5.6F, -7.0F, 14.0F, 1.0F, 14.0F), PartPose.ZERO)));
-        ModelLayerRegistry.registerModelLayer(HARD_HAT, () -> head(h -> {
+        EntityModelLayerRegistry.registerModelLayer(HARD_HAT, () -> head(h -> {
             h.addOrReplaceChild("visor", CubeListBuilder.create().texOffs(0, 0).addBox(-4.5F, -6.2F, -6.6F, 9.0F, 1.0F, 2.0F), PartPose.ZERO);
             h.addOrReplaceChild("ridge", CubeListBuilder.create().texOffs(0, 4).addBox(-0.5F, -9.1F, -4.0F, 1.0F, 1.0F, 8.0F), PartPose.ZERO);
         }));
-        ModelLayerRegistry.registerModelLayer(BUN, () -> head(h -> h.addOrReplaceChild("bun",
+        EntityModelLayerRegistry.registerModelLayer(BUN, () -> head(h -> h.addOrReplaceChild("bun",
                 CubeListBuilder.create().texOffs(0, 0).addBox(-1.5F, -10.0F, 0.5F, 3.0F, 2.0F, 3.0F), PartPose.ZERO)));
-        ModelLayerRegistry.registerModelLayer(FLOWER, () -> head(h -> h.addOrReplaceChild("flower",
+        EntityModelLayerRegistry.registerModelLayer(FLOWER, () -> head(h -> h.addOrReplaceChild("flower",
                 CubeListBuilder.create().texOffs(0, 0).addBox(4.1F, -6.5F, -1.5F, 1.0F, 2.0F, 2.0F), PartPose.ZERO)));
     }
 
@@ -49,7 +49,7 @@ public final class NpcAccessories {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition root = mesh.getRoot();
         PartDefinition head = root.addOrReplaceChild("head", CubeListBuilder.create(), PartPose.ZERO);
-        head.addOrReplaceChild("hat", CubeListBuilder.create(), PartPose.ZERO);
+        root.addOrReplaceChild("hat", CubeListBuilder.create(), PartPose.ZERO);
         cubes.accept(head);
         root.addOrReplaceChild("body", CubeListBuilder.create(), PartPose.ZERO);
         root.addOrReplaceChild("right_arm", CubeListBuilder.create(), PartPose.offset(-5.0F, 2.0F, 0.0F));
@@ -70,7 +70,7 @@ public final class NpcAccessories {
         };
     }
 
-    static Identifier texture(NpcCharacter c) {
+    static ResourceLocation texture(NpcCharacter c) {
         return Raft.id("textures/entity/npc/" + c.id + "_extra.png");
     }
 }

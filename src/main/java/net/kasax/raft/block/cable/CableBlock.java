@@ -28,7 +28,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
-import net.minecraft.util.Util;
+import net.minecraft.Util;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -36,7 +36,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -53,10 +52,9 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -65,6 +63,11 @@ import java.util.Map;
  * Created by modmuss50 on 19/05/2017.
  */
 public class CableBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
+    @Override
+    protected com.mojang.serialization.MapCodec<? extends BaseEntityBlock> codec() {
+        return null;
+    }
+
 
     public static final BooleanProperty EAST = BooleanProperty.create("east");
     public static final BooleanProperty WEST = BooleanProperty.create("west");
@@ -88,7 +91,7 @@ public class CableBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
 
     public CableBlock(RaftCable.Cables type) {
         super(BlockBehaviour.Properties.of()
-                .setId(ResourceKey.create(Registries.BLOCK, Raft.id(type.name)))
+                
                 .sound(SoundType.METAL)
                 .mapColor(MapColor.METAL)
                 .noOcclusion()
@@ -129,20 +132,19 @@ public class CableBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
     }
 
     @Override
-    protected BlockState updateShape(BlockState ourState, LevelReader level, ScheduledTickAccess ticks, BlockPos ourPos,
-                                     Direction directionToNeighbour, BlockPos otherPos, BlockState otherState, RandomSource random) {
+    protected BlockState updateShape(BlockState ourState, Direction directionToNeighbour, BlockState otherState, net.minecraft.world.level.LevelAccessor level, BlockPos ourPos, BlockPos otherPos) {
         if (ourState.getValue(WATERLOGGED)) {
-            ticks.scheduleTick(ourPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+            level.scheduleTick(ourPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
         return ourState;
     }
 
     @Override
-    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, @Nullable Orientation orientation, boolean movedByPiston) {
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean movedByPiston) {
         if (level.getBlockEntity(pos) instanceof CableBlockEntity cable) {
             cable.neighborUpdate();
         }
-        super.neighborChanged(state, level, pos, block, orientation, movedByPiston);
+        super.neighborChanged(state, level, pos, block, fromPos, movedByPiston);
     }
 
     @Override
@@ -156,7 +158,7 @@ public class CableBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
     }
 
     @Override
-    public boolean canPlaceLiquid(@Nullable LivingEntity user, BlockGetter level, BlockPos pos, BlockState state, Fluid fluid) {
+    public boolean canPlaceLiquid(@org.jetbrains.annotations.Nullable net.minecraft.world.entity.player.Player user, BlockGetter level, BlockPos pos, BlockState state, Fluid fluid) {
         return !state.getValue(COVERED) && SimpleWaterloggedBlock.super.canPlaceLiquid(user, level, pos, state, fluid);
     }
 

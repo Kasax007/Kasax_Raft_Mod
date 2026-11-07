@@ -3,7 +3,7 @@ package net.kasax.raft;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
-import net.fabricmc.fabric.api.item.v1.BlockTransformerHelper;
+import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 import net.kasax.raft.block.ModBlocks;
 import net.kasax.raft.block.cable.CableBlockEntity;
 import net.kasax.raft.block.entity.*;
@@ -20,8 +20,7 @@ import net.kasax.raft.world.gen.RandomizedBlockStateProvider;
 import net.kasax.raft.world.portal.ModPoiTypes;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.level.levelgen.feature.stateproviders.CopyPropertiesProvider;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import team.reborn.energy.api.EnergyStorage;
@@ -33,20 +32,20 @@ public class Raft implements ModInitializer {
 	public static final String MOD_ID = "raft";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-	public static Identifier id(String path) {
-		return Identifier.fromNamespaceAndPath(MOD_ID, path);
+	public static ResourceLocation id(String path) {
+		return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
 	}
 
 	/** Axes strip the log and keep its axis. */
 	private static void strippable(net.minecraft.world.level.block.Block block, net.minecraft.world.level.block.Block stripped) {
-		BlockTransformerHelper.registerStripping(block, new CopyPropertiesProvider(stripped));
+		StrippableBlockRegistry.register(block, stripped);
 	}
 
 	@Override
 	public void onInitialize() {
 		// Block state provider used by the palm tree (5% coconut leaves)
-		Registry.register(BuiltInRegistries.BLOCK_STATE_PROVIDER_TYPE, id("randomized_block_state_provider"),
-				RandomizedBlockStateProvider.CODEC);
+		Registry.register(BuiltInRegistries.BLOCKSTATE_PROVIDER_TYPE, id("randomized_block_state_provider"),
+				RandomizedBlockStateProvider.TYPE);
 
 		ModItems.registerModItems();
 		ModBlocks.registerModBlocks();
@@ -102,7 +101,7 @@ public class Raft implements ModInitializer {
 		ModPoiTypes.register();
 
 		// Register the codec for the energy sync payload
-		PayloadTypeRegistry.clientboundPlay().register(EnergySyncPayload.ID, EnergySyncPayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(EnergySyncPayload.ID, EnergySyncPayload.CODEC);
 
 		EnergyStorage.SIDED.registerForBlockEntity(MakeshiftSolarPanelBlockEntity::getEnergyProvider, ModBlockEntities.MAKESHIFT_SOLAR_PANEL_BLOCK_ENTITY);
 		EnergyStorage.SIDED.registerForBlockEntity(MakeshiftBatteryBlockEntity::getEnergyProvider, ModBlockEntities.MAKESHIFT_BATTERY_BLOCK_ENTITY);

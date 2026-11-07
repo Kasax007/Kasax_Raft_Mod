@@ -18,7 +18,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.Mirror;
@@ -35,9 +34,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import net.kasax.raft.compat.VShapes;
 
 /**
  * Giant clam of the reefs. Under water it slowly opens and closes; an open clam with a pearl gives the pearl on
@@ -45,15 +45,20 @@ import java.util.Map;
  * makes it snap shut too. The hinge is at the back, the opening faces {@code facing}.
  */
 public class GiantClamBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock {
+    @Override
+    protected com.mojang.serialization.MapCodec<? extends HorizontalDirectionalBlock> codec() {
+        return simpleCodec(GiantClamBlock::new);
+    }
+
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
     public static final BooleanProperty PEARL = BooleanProperty.create("pearl");
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     /** Ticks until a harvested clam has a new pearl (about ten minutes, a bit random). */
     public static final int REGROW_TICKS = 12000;
 
-    private static final VoxelShape CLOSED = Block.column(14.0, 0.0, 7.0);
-    private static final Map<Direction, VoxelShape> OPEN_SHAPES = Shapes.rotateHorizontal(
-            Shapes.or(Block.column(14.0, 0.0, 4.0), Block.box(1.0, 4.0, 11.0, 15.0, 13.0, 15.0)));
+    private static final VoxelShape CLOSED = VShapes.column(14.0, 0.0, 7.0);
+    private static final Map<Direction, VoxelShape> OPEN_SHAPES = VShapes.rotateHorizontal(
+            Shapes.or(VShapes.column(14.0, 0.0, 4.0), Block.box(1.0, 4.0, 11.0, 15.0, 13.0, 15.0)));
 
     public GiantClamBlock(Properties properties) {
         super(properties);
@@ -115,11 +120,11 @@ public class GiantClamBlock extends HorizontalDirectionalBlock implements Simple
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (!state.getValue(OPEN)) {
-            if (!level.isClientSide()) player.sendOverlayMessage(Component.translatable("block.raft.giant_clam.closed"));
+            if (!level.isClientSide()) player.displayClientMessage(Component.translatable("block.raft.giant_clam.closed"), true);
             return InteractionResult.PASS;
         }
         if (!state.getValue(PEARL)) {
-            if (!level.isClientSide()) player.sendOverlayMessage(Component.translatable("block.raft.giant_clam.empty"));
+            if (!level.isClientSide()) player.displayClientMessage(Component.translatable("block.raft.giant_clam.empty"), true);
             return InteractionResult.PASS;
         }
         if (level instanceof ServerLevel serverLevel) {
@@ -151,12 +156,11 @@ public class GiantClamBlock extends HorizontalDirectionalBlock implements Simple
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos,
-                                     Direction direction, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
+    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, net.minecraft.world.level.LevelAccessor level, BlockPos pos, BlockPos neighbourPos) {
         if (state.getValue(WATERLOGGED)) {
-            ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+            level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
-        return super.updateShape(state, level, ticks, pos, direction, neighbourPos, neighbourState, random);
+        return super.updateShape(state, direction, neighbourState, level, pos, neighbourPos);
     }
 
     @Override

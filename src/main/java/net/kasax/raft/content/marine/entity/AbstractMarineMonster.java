@@ -38,7 +38,7 @@ public abstract class AbstractMarineMonster extends Monster {
     protected AbstractMarineMonster(EntityType<? extends AbstractMarineMonster> type, Level level, int maxTurnX, int maxTurnY) {
         super(type, level);
         this.setPathfindingMalus(PathType.WATER, 0.0F);
-        this.moveControl = new SmoothSwimmingMoveControl<>(this, maxTurnX, maxTurnY, 0.02F, 0.1F, true);
+        this.moveControl = new SmoothSwimmingMoveControl(this, maxTurnX, maxTurnY, 0.02F, 0.1F, true);
         this.lookControl = new SmoothSwimmingLookControl(this, 10);
     }
 
@@ -58,13 +58,25 @@ public abstract class AbstractMarineMonster extends Monster {
         return new WaterBoundPathNavigation(this, level);
     }
 
-    @Override
+    
     protected void travelInWater(Vec3 input, double baseGravity, boolean isFalling, double oldY) {
         this.moveRelative(this.getSpeed(), input);
         this.move(MoverType.SELF, this.getDeltaMovement());
         this.setDeltaMovement(this.getDeltaMovement().scale(0.9));
         if (this.getTarget() == null && this.sinksWhenIdle()) {
             this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.005, 0.0));
+        }
+    }
+
+    /** 1.21.1 port: the newer game moves an entity in water through {@code travelInWater}; 1.21.1 only has travel. */
+    @Override
+    public void travel(Vec3 input) {
+        if (this.isControlledByLocalInstance() && this.isInWater() && this.isAffectedByFluids()
+                && !this.canStandOnFluid(this.level().getFluidState(this.blockPosition()))) {
+            this.travelInWater(input, this.getGravity(), this.getDeltaMovement().y <= 0.0, this.getY());
+            this.calculateEntityAnimation(false);
+        } else {
+            super.travel(input);
         }
     }
 
@@ -90,7 +102,7 @@ public abstract class AbstractMarineMonster extends Monster {
 
     /** Sea monsters cannot leave the water: a shark circling the raft must not keep the player out of the hammock. */
     @Override
-    public boolean isPreventingPlayerRest(ServerLevel level, Player player) {
+    public boolean isPreventingPlayerRest(Player player) {
         return false;
     }
 
@@ -106,9 +118,9 @@ public abstract class AbstractMarineMonster extends Monster {
         if (this.level() instanceof ServerLevel serverLevel) {
             if (this.isAlive() && !this.isInWater()) {
                 this.setAirSupply(air - 1);
-                if (this.shouldTakeDrowningDamage()) {
+                if (this.getAirSupply() <= -20) {
                     this.setAirSupply(0);
-                    this.hurtServer(serverLevel, this.damageSources().drown(), 2.0F);
+                    this.hurt(this.damageSources().drown(), 2.0F);
                 }
             } else {
                 this.setAirSupply(300);
@@ -122,7 +134,7 @@ public abstract class AbstractMarineMonster extends Monster {
             this.setDeltaMovement(this.getDeltaMovement().add((this.random.nextFloat() * 2.0F - 1.0F) * 0.05F, 0.4F,
                     (this.random.nextFloat() * 2.0F - 1.0F) * 0.05F));
             this.setOnGround(false);
-            this.needsSync = true;
+            this.hurtMarked = true;
             if (this.tickCount - this.lastFlopSound >= 20) {
                 this.lastFlopSound = this.tickCount;
                 this.playSound(this.getFlopSound(), this.getSoundVolume(), this.getVoicePitch());
@@ -140,9 +152,10 @@ public abstract class AbstractMarineMonster extends Monster {
 
     /** Every melee bite shows the jaw animation on the clients. */
     @Override
-    public boolean doHurtTarget(ServerLevel level, Entity target) {
+    public boolean doHurtTarget(Entity target) {
+        if (!(this.level() instanceof ServerLevel level)) return false;
         this.level().broadcastEntityEvent(this, EVENT_BITE);
-        return super.doHurtTarget(level, target);
+        return super.doHurtTarget(target);
     }
 
     @Override

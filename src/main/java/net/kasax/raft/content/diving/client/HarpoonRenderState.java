@@ -1,6 +1,6 @@
 package net.kasax.raft.content.diving.client;
 
-import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.kasax.raft.compat.render.EntityRenderState;
 
 /** Render state of a flying or stuck harpoon. */
 public class HarpoonRenderState extends EntityRenderState {

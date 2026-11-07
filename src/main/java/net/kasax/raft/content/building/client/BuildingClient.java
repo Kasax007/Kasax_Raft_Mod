@@ -1,6 +1,6 @@
 package net.kasax.raft.content.building.client;
 
-import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.kasax.raft.content.building.BuildingBlocks;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 
@@ -10,7 +10,7 @@ public final class BuildingClient {
     }
 
     public static void init() {
-        ModelLayerRegistry.registerModelLayer(WindTurbineRotorModel.LAYER, WindTurbineRotorModel::createLayer);
+        EntityModelLayerRegistry.registerModelLayer(WindTurbineRotorModel.LAYER, WindTurbineRotorModel::createLayer);
         BlockEntityRenderers.register(BuildingBlocks.WIND_TURBINE_BE, WindTurbineRenderer::new);
     }
 }

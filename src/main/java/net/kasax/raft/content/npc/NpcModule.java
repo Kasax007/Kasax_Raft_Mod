@@ -25,8 +25,8 @@ public class NpcModule implements ContentModule {
     public void init() {
         NpcContent.register();
         NpcRetrofit.register();
-        PayloadTypeRegistry.clientboundPlay().register(NpcDialogPayload.TYPE, NpcDialogPayload.CODEC);
-        PayloadTypeRegistry.serverboundPlay().register(NpcActionPayload.TYPE, NpcActionPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(NpcDialogPayload.TYPE, NpcDialogPayload.CODEC);
+        PayloadTypeRegistry.playC2S().register(NpcActionPayload.TYPE, NpcActionPayload.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(NpcActionPayload.TYPE, (payload, context) -> {
             ServerPlayer player = context.player();
             context.server().execute(() -> {

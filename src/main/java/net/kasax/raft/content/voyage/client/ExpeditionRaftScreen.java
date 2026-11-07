@@ -3,20 +3,20 @@ package net.kasax.raft.content.voyage.client;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.kasax.raft.content.voyage.ExpeditionRaftMenu;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.kasax.raft.compat.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.RenderPipelines;
+import net.kasax.raft.compat.gui.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /** Raft storage: 3 or 6 rows of cargo, plus the engine panel (fuel slot, flame) and the anchor lever on the right. */
 @Environment(EnvType.CLIENT)
-public class ExpeditionRaftScreen extends AbstractContainerScreen<ExpeditionRaftMenu> {
-    private static final Identifier TEXTURE = net.kasax.raft.Raft.id("textures/gui/expedition_raft.png");
+public class ExpeditionRaftScreen extends net.kasax.raft.compat.gui.ContainerScreen<ExpeditionRaftMenu> {
+    private static final ResourceLocation TEXTURE = net.kasax.raft.Raft.id("textures/gui/expedition_raft.png");
     private static final int WIDTH = 210;
     private static final int BOTTOM_V = 126;
     private static final int FLAME_X = 187;

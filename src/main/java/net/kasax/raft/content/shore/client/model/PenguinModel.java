@@ -2,7 +2,7 @@ package net.kasax.raft.content.shore.client.model;
 
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.shore.client.render.PenguinRenderState;
-import net.minecraft.client.model.EntityModel;
+import net.kasax.raft.compat.render.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;

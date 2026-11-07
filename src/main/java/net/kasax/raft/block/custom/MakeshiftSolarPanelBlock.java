@@ -13,9 +13,14 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class MakeshiftSolarPanelBlock extends BaseEntityBlock {
+    @Override
+    protected com.mojang.serialization.MapCodec<? extends BaseEntityBlock> codec() {
+        return simpleCodec(MakeshiftSolarPanelBlock::new);
+    }
+
     public MakeshiftSolarPanelBlock(Properties properties) {
         super(properties);
     }
@@ -40,7 +45,7 @@ public class MakeshiftSolarPanelBlock extends BaseEntityBlock {
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (!level.isClientSide()) {
             if (level.getBlockEntity(pos) instanceof MakeshiftSolarPanelBlockEntity solarPanel) {
-                player.sendOverlayMessage(Component.translatable("message.raft.solar_panel.energy", solarPanel.getEnergy(), solarPanel.getMaxEnergy()));
+                player.displayClientMessage(Component.translatable("message.raft.solar_panel.energy", solarPanel.getEnergy(), solarPanel.getMaxEnergy()), true);
             }
         }
         return InteractionResult.SUCCESS;

@@ -1,10 +1,9 @@
 package net.kasax.raft.content.voyage;
 
-import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.kasax.raft.content.voyage.mixin.AbstractBoatAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
@@ -23,7 +22,7 @@ import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.ContainerUser;
+
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
@@ -36,28 +35,26 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.ContainerEntity;
 import net.minecraft.world.entity.vehicle.DismountHelper;
-import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
+import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemStackTemplate;
-import net.minecraft.world.item.component.CookingFuel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.gamerules.GameRules;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.GameRules;
+import net.kasax.raft.compat.ValueInput;
+import net.kasax.raft.compat.ValueOutput;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.minecraft.world.level.storage.loot.providers.number.ints.ResolvableInt;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -68,7 +65,7 @@ import java.util.UUID;
  * the engine and five upgrades that show on the model. It never sinks, never throws riders off, ignores damage from
  * anything but players (three hits within two seconds, or one sneaking hit) and carries everything standing on its deck.
  */
-public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, HasCustomInventoryScreen, ExtendedMenuProvider<Integer> {
+public class ExpeditionRaft extends Boat implements ContainerEntity, HasCustomInventoryScreen, ExtendedScreenHandlerFactory<Integer> {
     public static final int ROW = 27;
     public static final int CARGO_SLOTS = 54;
     public static final int FUEL_SLOT = 54;
@@ -152,7 +149,7 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
     };
 
     public ExpeditionRaft(EntityType<? extends ExpeditionRaft> type, Level level) {
-        super(type, level, () -> VoyageContent.EXPEDITION_RAFT_ITEM);
+        super(type, level);
     }
 
     @Override
@@ -219,7 +216,7 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
             this.playSound(SoundEvents.GENERIC_SPLASH, 0.6F, 1.2F);
         }
         if (player != null) {
-            player.sendOverlayMessage(Component.translatable(anchored ? "message.raft.expedition_raft.anchor_down" : "message.raft.expedition_raft.anchor_up"));
+            player.displayClientMessage(Component.translatable(anchored ? "message.raft.expedition_raft.anchor_down" : "message.raft.expedition_raft.anchor_up"), true);
         }
         return true;
     }
@@ -233,7 +230,7 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
                 return InteractionResult.SUCCESS;
             }
             if (!this.level().isClientSide()) {
-                player.sendOverlayMessage(Component.translatable("message.raft.expedition_raft.has_upgrade", Component.translatable(upgrade.langKey())));
+                player.displayClientMessage(Component.translatable("message.raft.expedition_raft.has_upgrade", Component.translatable(upgrade.langKey())), true);
             }
             return InteractionResult.FAIL;
         }
@@ -242,7 +239,7 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
             stack.consume(1, player);
             this.playSound(installSound(upgrade), 1.0F, 1.0F);
             this.gameEvent(GameEvent.ENTITY_INTERACT, player);
-            player.sendOverlayMessage(Component.translatable("message.raft.expedition_raft.installed", Component.translatable(upgrade.langKey())));
+            player.displayClientMessage(Component.translatable("message.raft.expedition_raft.installed", Component.translatable(upgrade.langKey())), true);
         }
         return InteractionResult.SUCCESS;
     }
@@ -258,7 +255,6 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
     }
 
     // ------------------------------------------------------------------------------------------- seats
-    @Override
     protected double rideHeight(EntityDimensions dimensions) {
         return 0.6;
     }
@@ -319,7 +315,7 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
         if (!this.level().isClientSide()) {
             this.trackSteering();
         }
-        if (this.isLocalInstanceAuthoritative()) {
+        if (this.isControlledByLocalInstance()) {
             if (this.isAnchored()) {
                 this.setDeltaMovement(0.0, this.getDeltaMovement().y, 0.0);
             } else if (this.level().isClientSide() && this.inputUp && this.getControllingPassenger() instanceof Player) {
@@ -346,7 +342,7 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
      */
     private void trackSteering() {
         Vec3 now = this.position();
-        boolean steered = this.isClientAuthoritative() && this.getControllingPassenger() instanceof Player;
+        boolean steered = this.getControllingPassenger() instanceof Player;
         Vec3 motion = steered && this.steeredFrom != null
                 ? new Vec3(now.x - this.steeredFrom.x, 0.0, now.z - this.steeredFrom.z) : Vec3.ZERO;
         this.steeredMotion = motion.lengthSqr() < 2.25 ? motion : Vec3.ZERO;
@@ -375,7 +371,7 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
      */
     @Override
     public boolean canCollideWith(Entity entity) {
-        return entity instanceof AbstractBoat && super.canCollideWith(entity);
+        return entity instanceof Boat && super.canCollideWith(entity);
     }
 
     /**
@@ -390,9 +386,9 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
     /**
      * Players stand on the deck of the raft on their own client, which also carries them along. The server's copy of the
      * raft is a few ticks ahead of the one the client sees, so the server must not test players against it: it would
-     * reject their moves as "inside an entity" and pull them back until they fall off.
+     * reject their moves as "inside an entity" and pull them back until they fall off. (1.21.1: asked by
+     * {@code voyage.mixin.EntityCollideMixin}.)
      */
-    @Override
     public boolean canBeCollidedWith(@Nullable Entity other) {
         return !(other instanceof Player) || this.level().isClientSide();
     }
@@ -405,7 +401,7 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
 
     /** The raft floats over bubble columns instead of being pulled under. */
     @Override
-    public void onAboveBubbleColumn(boolean dragDown, BlockPos pos) {
+    public void onAboveBubbleCol(boolean dragDown) {
     }
 
     private void tickEngine(ServerLevel level) {
@@ -421,10 +417,10 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
             if (duration > 0) {
                 this.burnTime = duration;
                 this.burnTotal = duration;
-                ItemStackTemplate remainder = fuel.getItem().getCraftingRemainder();
+                net.minecraft.world.item.Item remainder = fuel.getItem().getCraftingRemainingItem();
                 fuel.shrink(1);
                 if (fuel.isEmpty() && remainder != null) {
-                    this.items.set(FUEL_SLOT, remainder.create());
+                    this.items.set(FUEL_SLOT, new ItemStack(remainder));
                 }
             }
         }
@@ -435,20 +431,12 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
     }
 
     public static boolean isFuel(ItemStack stack) {
-        return !stack.isEmpty() && stack.has(DataComponents.COOKING_FUEL);
+        return net.kasax.raft.compat.ItemProps.isFuel(stack);
     }
 
     /** Burn time of a fuel item in a furnace (the same data driven value the furnace uses). */
     private int burnDuration(ServerLevel level, ItemStack stack) {
-        FurnaceBlockEntity probe = new FurnaceBlockEntity(this.blockPosition(), Blocks.FURNACE.defaultBlockState());
-        LootContext context = new LootContext.Builder(new LootParams.Builder(level)
-                .withParameter(LootContextParams.BLOCK_STATE, Blocks.FURNACE.defaultBlockState())
-                .withParameter(LootContextParams.BLOCK_ENTITY, probe)
-                .withParameter(LootContextParams.ORIGIN, this.position())
-                .withParameter(LootContextParams.CONTAINER, this)
-                .create(LootContextParamSets.CONTAINER_PROCESS))
-                .create(Optional.empty());
-        return ResolvableInt.getFromItem(stack, DataComponents.COOKING_FUEL, CookingFuel::burnTime, context, 0);
+        return net.kasax.raft.compat.ItemProps.burnTime(stack);
     }
 
     private Vec3 local(double x, double y, double z) {
@@ -527,7 +515,7 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
         AABB zone = new AABB(Math.min(old.minX, now.minX), Math.min(oldTop, top) - 4.0, Math.min(old.minZ, now.minZ),
                 Math.max(old.maxX, now.maxX), Math.max(oldTop, top) + 0.8, Math.max(old.maxZ, now.maxZ));
         List<Entity> riders = this.level().getEntities(this, zone, e -> !e.isPassenger() && !e.noPhysics && !e.isSpectator()
-                && e.isLocalInstanceAuthoritative() && !(e instanceof AbstractBoat) && !e.isNoGravity());
+                && e.isControlledByLocalInstance() && !(e instanceof Boat) && !e.isNoGravity());
         if (riders.isEmpty()) {
             return;
         }
@@ -582,12 +570,13 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
 
     // ------------------------------------------------------------------------------------------- damage
     @Override
-    public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
+    public boolean hurt(DamageSource source, float damage) {
+        if (!(this.level() instanceof ServerLevel level)) return false;
         if (this.isRemoved()) {
             return true;
         }
         // waves, rain, mobs, sharks, arrows and explosions do not hurt the raft: only a player's own hits count
-        if (!(source.getDirectEntity() instanceof Player player) || source.getEntity() != player || this.isInvulnerableToBase(source)) {
+        if (!(source.getDirectEntity() instanceof Player player) || source.getEntity() != player || this.isInvulnerableTo(source)) {
             return false;
         }
         this.setHurtDir(-this.getHurtDir());
@@ -611,21 +600,21 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
             this.breakApart(level, true);
         } else {
             int left = 3 - this.hits;
-            player.sendOverlayMessage(left == 1 ? Component.translatable("message.raft.expedition_raft.hit_last")
-                    : Component.translatable("message.raft.expedition_raft.hit", left));
+            player.displayClientMessage(left == 1 ? Component.translatable("message.raft.expedition_raft.hit_last")
+                    : Component.translatable("message.raft.expedition_raft.hit", left), true);
         }
         return true;
     }
 
     private void breakApart(ServerLevel level, boolean dropItem) {
-        if (dropItem && level.getGameRules().get(GameRules.ENTITY_DROPS)) {
+        if (dropItem && level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
             ItemStack stack = new ItemStack(this.getDropItem());
             stack.set(VoyageContent.RAFT_UPGRADES, this.getUpgrades());
             stack.set(DataComponents.CUSTOM_NAME, this.getCustomName());
-            this.spawnAtLocation(level, stack);
+            this.spawnAtLocation(stack);
         }
         level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.WOOD_BREAK, SoundSource.NEUTRAL, 1.0F, 0.9F);
-        this.kill(level);
+        this.kill();
     }
 
     @Override
@@ -638,7 +627,7 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
 
     // ------------------------------------------------------------------------------------------- interaction
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand, Vec3 location) {
+    public InteractionResult interact(Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (stack.getItem() instanceof RaftUpgradeItem upgradeItem) {
             return this.applyUpgrade(player, stack, upgradeItem.upgrade());
@@ -649,7 +638,7 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
             }
             return InteractionResult.SUCCESS;
         }
-        return super.interact(player, hand, location);
+        return super.interact(player, hand);
     }
 
     @Override
@@ -728,22 +717,22 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
     }
 
     @Override
-    public @Nullable ResourceKey<LootTable> getContainerLootTable() {
+    public @Nullable ResourceKey<LootTable> getLootTable() {
         return this.lootTable;
     }
 
     @Override
-    public void setContainerLootTable(@Nullable ResourceKey<LootTable> lootTable) {
+    public void setLootTable(@Nullable ResourceKey<LootTable> lootTable) {
         this.lootTable = lootTable;
     }
 
     @Override
-    public long getContainerLootTableSeed() {
+    public long getLootTableSeed() {
         return this.lootTableSeed;
     }
 
     @Override
-    public void setContainerLootTableSeed(long seed) {
+    public void setLootTableSeed(long seed) {
         this.lootTableSeed = seed;
     }
 
@@ -758,15 +747,16 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
     }
 
     @Override
-    public void stopOpen(ContainerUser user) {
-        this.level().gameEvent(GameEvent.CONTAINER_CLOSE, this.position(), GameEvent.Context.of(user.getLivingEntity()));
+    public void stopOpen(net.minecraft.world.entity.player.Player user) {
+        this.level().gameEvent(GameEvent.CONTAINER_CLOSE, this.position(), GameEvent.Context.of(user));
     }
 
     // ------------------------------------------------------------------------------------------- save / components
     @Override
-    protected void addAdditionalSaveData(ValueOutput output) {
-        super.addAdditionalSaveData(output);
-        this.addChestVehicleSaveData(output);
+    public void addAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueOutput output = ValueOutput.of(tag121, this.registryAccess());
+        super.addAdditionalSaveData(output.tag());
+        this.addChestVehicleSaveData(output.tag(), output.lookup());
         output.putInt("Upgrades", this.getUpgrades());
         output.putBoolean("Anchored", this.isAnchored());
         output.putInt("BurnTime", this.burnTime);
@@ -774,9 +764,10 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
     }
 
     @Override
-    protected void readAdditionalSaveData(ValueInput input) {
-        super.readAdditionalSaveData(input);
-        this.readChestVehicleSaveData(input);
+    public void readAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueInput input = ValueInput.of(tag121, this.registryAccess());
+        super.readAdditionalSaveData(input.tag());
+        this.readChestVehicleSaveData(input.tag(), input.lookup());
         this.setUpgrades(input.getIntOr("Upgrades", 0));
         this.entityData.set(DATA_ANCHORED, this.hasUpgrade(RaftUpgrade.ANCHOR) && input.getBooleanOr("Anchored", false));
         this.burnTime = input.getIntOr("BurnTime", 0);
@@ -785,27 +776,16 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentGetter components) {
-        super.applyImplicitComponents(components);
-        this.applyImplicitComponentIfPresent(components, VoyageContent.RAFT_UPGRADES);
+    public Item getDropItem() {
+        return VoyageContent.EXPEDITION_RAFT_ITEM;
     }
 
+    /** Middle click gives the raft item with its upgrades (the newer game reads them as an entity component). */
     @Override
-    protected <T> boolean applyImplicitComponent(DataComponentType<T> type, T value) {
-        if (type == VoyageContent.RAFT_UPGRADES) {
-            this.setUpgrades(castComponentValue(VoyageContent.RAFT_UPGRADES, value));
-            return true;
-        }
-        return super.applyImplicitComponent(type, value);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> @Nullable T get(DataComponentType<? extends T> type) {
-        if (type == VoyageContent.RAFT_UPGRADES) {
-            return castComponentValue((DataComponentType<T>) type, this.getUpgrades());
-        }
-        return super.get(type);
+    public ItemStack getPickResult() {
+        ItemStack stack = new ItemStack(this.getDropItem());
+        stack.set(VoyageContent.RAFT_UPGRADES, this.getUpgrades());
+        return stack;
     }
 
     // ------------------------------------------------------------------------------------------- client animation getters

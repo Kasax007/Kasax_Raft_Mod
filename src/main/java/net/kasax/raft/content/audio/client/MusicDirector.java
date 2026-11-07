@@ -9,11 +9,11 @@ import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.contents.TranslatableContents;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.Music;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Picks the music of the raft dimension on the client (called from {@code Minecraft.getSituationalMusic} by
@@ -22,7 +22,7 @@ import org.jspecify.annotations.Nullable;
  * night theme after dusk. When the fight ends the boss theme fades out through the vanilla music fade.
  */
 public final class MusicDirector {
-    private static final Identifier LEVIATHAN = Raft.id("leviathan");
+    private static final ResourceLocation LEVIATHAN = Raft.id("leviathan");
     private static final String LEVIATHAN_NAME = "entity.raft.leviathan";
     static String place = "";
     private static boolean fight;
@@ -35,7 +35,7 @@ public final class MusicDirector {
         if (mc.player == null || mc.level == null) {
             return null;
         }
-        Screen screen = mc.gui.screen();
+        Screen screen = mc.screen;
         if (screen != null && screen.getBackgroundMusic() != null) {
             return null;
         }
@@ -47,7 +47,7 @@ public final class MusicDirector {
 
     /** The sea's day theme turns into the night theme between dusk and dawn. */
     public static @Nullable Music dayNight(Minecraft mc, @Nullable Music music) {
-        if (music != null && mc.level != null && music.sound().is(AudioSounds.MUSIC_SEA_DAY.key()) && isNight(mc.level)) {
+        if (music != null && mc.level != null && music.getEvent().is(AudioSounds.MUSIC_SEA_DAY.key()) && isNight(mc.level)) {
             return AudioMusic.SEA_NIGHT;
         }
         return music;
@@ -62,7 +62,7 @@ public final class MusicDirector {
     }
 
     public static boolean isNight(Level level) {
-        long time = Math.floorMod(level.getDefaultClockTime(), 24000L);
+        long time = Math.floorMod(level.getDayTime(), 24000L);
         return time >= 12800L && time < 23200L;
     }
 
@@ -85,13 +85,9 @@ public final class MusicDirector {
 
     /** True while a boss bar of the Leviathan is on screen (the bar's id is the entity's UUID). */
     private static boolean leviathanBarShown(Minecraft mc) {
-        for (LerpingBossEvent event : ((BossHealthOverlayAccessor) mc.gui.hud.getBossOverlay()).raft$events().values()) {
-            Entity entity = mc.level.getEntity(event.getId());
-            if (entity != null) {
-                if (LEVIATHAN.equals(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()))) {
-                    return true;
-                }
-            } else if (event.getName().getContents() instanceof TranslatableContents name && LEVIATHAN_NAME.equals(name.getKey())) {
+        // 1.21.1: boss bars have their own ids, so the bar is known by the Leviathan's name
+        for (LerpingBossEvent event : ((BossHealthOverlayAccessor) mc.gui.getBossOverlay()).raft$events().values()) {
+            if (event.getName().getContents() instanceof TranslatableContents name && LEVIATHAN_NAME.equals(name.getKey())) {
                 return true;
             }
         }

@@ -32,13 +32,19 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.ItemInteractionResult;
 
 /**
  * The air compressor: a small red-painted pump on a steel skid. Use it to open the GUI, use it with a tank or the sea
  * scooter in hand to put it in, sneak-use with an empty hand to turn the hand crank.
  */
 public class AirCompressorBlock extends BaseEntityBlock {
+    @Override
+    protected com.mojang.serialization.MapCodec<? extends BaseEntityBlock> codec() {
+        return simpleCodec(AirCompressorBlock::new);
+    }
+
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty RUNNING = BooleanProperty.create("running");
     private static final VoxelShape SHAPE = Shapes.or(
@@ -91,17 +97,16 @@ public class AirCompressorBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
-                                          InteractionHand hand, BlockHitResult hit) {
+    protected net.minecraft.world.ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (AirCompressorBlockEntity.accepts(stack) && level.getBlockEntity(pos) instanceof AirCompressorBlockEntity be
                 && be.getItem(AirCompressorBlockEntity.SLOT).isEmpty()) {
             if (!level.isClientSide()) {
                 be.setItem(AirCompressorBlockEntity.SLOT, stack.split(1));
                 level.playSound(null, pos, SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.BLOCKS, 0.6F, 1.4F);
             }
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         }
-        return InteractionResult.TRY_WITH_EMPTY_HAND;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override
@@ -123,7 +128,7 @@ public class AirCompressorBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction direction) {
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
         return level.getBlockEntity(pos) instanceof AirCompressorBlockEntity be ? be.comparatorSignal() : 0;
     }
 

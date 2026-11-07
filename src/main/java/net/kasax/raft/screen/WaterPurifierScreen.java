@@ -1,15 +1,15 @@
 package net.kasax.raft.screen;
 
 import net.kasax.raft.Raft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.kasax.raft.compat.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.RenderPipelines;
+import net.kasax.raft.compat.gui.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class WaterPurifierScreen extends AbstractContainerScreen<WaterPurifierMenu> {
-    private static final Identifier TEXTURE = Raft.id("textures/gui/water_purifier_gui.png");
+public class WaterPurifierScreen extends net.kasax.raft.compat.gui.ContainerScreen<WaterPurifierMenu> {
+    private static final ResourceLocation TEXTURE = Raft.id("textures/gui/water_purifier_gui.png");
 
     public WaterPurifierScreen(WaterPurifierMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);

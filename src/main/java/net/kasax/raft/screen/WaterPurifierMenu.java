@@ -44,7 +44,7 @@ public class WaterPurifierMenu extends AbstractContainerMenu {
                 return false;
             }
         });
-        addStandardInventorySlots(inventory, 8, 84);
+        net.kasax.raft.compat.Menus.addStandardInventorySlots(this::addSlot, inventory, 8, 84);
         addDataSlots(data);
     }
 

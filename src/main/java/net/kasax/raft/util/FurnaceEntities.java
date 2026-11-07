@@ -16,7 +16,7 @@ import java.util.Set;
 public class FurnaceEntities {
     public static BlockEntityType<FurnaceEntity> RAFT_FURNACE = register(
             "furnace",
-            new BlockEntityType<>(FurnaceEntity::new, Set.copyOf(FurnaceBlocks.getFurnaces())));
+            BlockEntityType.Builder.of(FurnaceEntity::new, FurnaceBlocks.getFurnaces().toArray(new net.minecraft.world.level.block.Block[0])).build(null));
 
     public static void init() {
         // no-op, forces the static initializer

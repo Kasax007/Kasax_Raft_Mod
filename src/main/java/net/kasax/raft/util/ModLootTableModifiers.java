@@ -8,17 +8,18 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
-import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
 /** Adds the mod's items to the vanilla shipwreck treasure and fishing treasure loot tables. */
 public class ModLootTableModifiers {
 
     private static LootPool.Builder extraPool(Item item, float chance, int minCount, int maxCount) {
         return LootPool.lootPool()
-                .setRolls(ContextIntProviders.exactly(1))
+                .setRolls(ConstantValue.exactly(1))
                 .when(LootItemRandomChanceCondition.randomChance(chance))
                 .add(LootItem.lootTableItem(item))
-                .apply(SetItemCountFunction.setCount(ContextIntProviders.between(minCount, maxCount)));
+                .apply(SetItemCountFunction.setCount(UniformGenerator.between(minCount, maxCount)));
     }
 
     public static void modifyLootTables() {

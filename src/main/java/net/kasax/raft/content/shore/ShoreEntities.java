@@ -42,7 +42,7 @@ public final class ShoreEntities {
                 .sized(0.7F, 0.4F).eyeHeight(0.3F).clientTrackingRange(10));
         DROWNED_CORSAIR = BcReg.entity("drowned_corsair", EntityType.Builder.of(DrownedCorsairEntity::new, MobCategory.MONSTER)
                 .sized(0.6F, 1.95F).eyeHeight(1.74F).passengerAttachments(2.0125F).ridingOffset(-0.7F)
-                .clientTrackingRange(8).notInPeaceful());
+                .clientTrackingRange(8));
 
         FabricDefaultAttributeRegistry.register(CRAB, CrabEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(EMBER_CRAB, EmberCrabEntity.createAttributes());

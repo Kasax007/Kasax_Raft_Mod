@@ -4,7 +4,7 @@ import net.kasax.raft.entity.SharkEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -39,7 +39,7 @@ public class HammerheadSharkEntity extends SharkEntity {
 
     /** Natural spawning: deeper water (6–50 blocks below the surface), never in peaceful. */
     public static boolean checkHammerheadSpawnRules(EntityType<HammerheadSharkEntity> type, ServerLevelAccessor level,
-                                                    EntitySpawnReason reason, BlockPos pos, RandomSource random) {
+                                                    MobSpawnType reason, BlockPos pos, RandomSource random) {
         if (level.getDifficulty() == Difficulty.PEACEFUL) {
             return false;
         }

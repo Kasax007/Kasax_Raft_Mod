@@ -17,9 +17,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraft.world.level.saveddata.SavedDataType;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,14 +47,14 @@ public final class VesselShipyard extends SavedData {
     public static final int MAX_PLOTS = 4096;
 
     /** Keeps a plot's chunks loaded and ticking (block entities, random and scheduled ticks) while its raft is loaded. */
-    public static final TicketType TICKET = Registry.register(BuiltInRegistries.TICKET_TYPE, Raft.id("vessel_plot"),
-            new TicketType(0L, TicketType.FLAG_LOADING | TicketType.FLAG_SIMULATION));
+    public static final TicketType<net.minecraft.world.level.ChunkPos> TICKET = TicketType.create("raft_vessel_plot",
+            java.util.Comparator.comparingLong(net.minecraft.world.level.ChunkPos::toLong));
 
     private static final Codec<VesselShipyard> CODEC = RecordCodecBuilder.create(i -> i.group(
             Codec.INT.listOf().optionalFieldOf("plots", List.of()).forGetter(s -> new ArrayList<>(s.used))
     ).apply(i, VesselShipyard::new));
-    private static final SavedDataType<VesselShipyard> TYPE = new SavedDataType<>(Raft.id("vessel_shipyard"), VesselShipyard::new, CODEC,
-            DataFixTypes.SAVED_DATA_COMMAND_STORAGE);
+    private static final SavedData.Factory<VesselShipyard> TYPE = new SavedData.Factory<>(VesselShipyard::new,
+            (tag, registries) -> CODEC.parse(net.minecraft.nbt.NbtOps.INSTANCE, tag).result().orElseGet(VesselShipyard::new), null);
 
     private final IntSortedSet used = new IntAVLTreeSet();
     /** Not saved: the raft that sails with each plot now, and how many holders keep each plot loaded. */
@@ -73,8 +72,16 @@ public final class VesselShipyard extends SavedData {
         this.used.addAll(plots);
     }
 
+    @Override
+    public net.minecraft.nbt.CompoundTag save(net.minecraft.nbt.CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        CODEC.encodeStart(net.minecraft.nbt.NbtOps.INSTANCE, this).result().ifPresent(t -> {
+            if (t instanceof net.minecraft.nbt.CompoundTag c) tag.merge(c);
+        });
+        return tag;
+    }
+
     public static VesselShipyard get(ServerLevel level) {
-        return level.getDataStorage().computeIfAbsent(TYPE);
+        return level.getDataStorage().computeIfAbsent(TYPE, "raft_vessel_shipyard");
     }
 
     // ------------------------------------------------------------------------------------------- allocation
@@ -122,7 +129,7 @@ public final class VesselShipyard extends SavedData {
     }
 
     public static int originY(Level level) {
-        return level.getMaxY() - SIZE_Y - 7;
+        return level.getMaxBuildHeight() - 1 - SIZE_Y - 7;
     }
 
     public static BlockPos origin(Level level, int plot) {
@@ -196,7 +203,7 @@ public final class VesselShipyard extends SavedData {
         if (n == 0) {
             for (ChunkPos pos : chunks(level, plot)) {
                 // radius 2: ticket level 31, the chunk itself ticks entities, blocks and random ticks
-                level.getChunkSource().addTicketWithRadius(TICKET, pos, 2);
+                level.getChunkSource().addRegionTicket(TICKET, pos, 2, pos);
             }
         }
     }
@@ -208,7 +215,7 @@ public final class VesselShipyard extends SavedData {
             yard.holds.remove(plot);
             if (n == 1) {
                 for (ChunkPos pos : chunks(level, plot)) {
-                    level.getChunkSource().removeTicketWithRadius(TICKET, pos, 2);
+                    level.getChunkSource().removeRegionTicket(TICKET, pos, 2, pos);
                 }
             }
         } else {
@@ -219,7 +226,7 @@ public final class VesselShipyard extends SavedData {
     /** Are all chunks of the plot loaded (and ticking)? */
     static boolean loaded(ServerLevel level, int plot) {
         for (ChunkPos pos : chunks(level, plot)) {
-            if (level.getChunkSource().getChunkNow(pos.x(), pos.z()) == null || !level.shouldTickBlocksAt(pos.pack())) {
+            if (level.getChunkSource().getChunkNow(pos.x, pos.z) == null || !level.shouldTickBlocksAt(pos.toLong())) {
                 return false;
             }
         }
@@ -247,7 +254,7 @@ public final class VesselShipyard extends SavedData {
         double cos = Math.cos(rad);
         double sin = Math.sin(rad);
         entity.setDeltaMovement(motion.x * cos - motion.z * sin, motion.y, motion.z * cos + motion.x * sin);
-        entity.snapTo(at.x, at.y, at.z, entity.getYRot() + pose.yaw, entity.getXRot());
+        entity.moveTo(at.x, at.y, at.z, entity.getYRot() + pose.yaw, entity.getXRot());
     }
 
     /** Server: a block in a plot changed (sent to clients): its raft passes it on to the players who see it. */

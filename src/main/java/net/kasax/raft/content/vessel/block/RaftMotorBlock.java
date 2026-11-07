@@ -26,15 +26,22 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import net.kasax.raft.compat.VShapes;
+import net.minecraft.world.ItemInteractionResult;
 
 /**
  * An outboard motor for a built raft. Set it on the deck at the stern; {@code facing} points aft, where the shaft and
  * propeller hang over the edge into the water. It burns furnace fuel (use the fuel on it) while the helmsman sails.
  */
 public class RaftMotorBlock extends BaseEntityBlock {
+    @Override
+    protected com.mojang.serialization.MapCodec<? extends BaseEntityBlock> codec() {
+        return simpleCodec(RaftMotorBlock::new);
+    }
+
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 
     /** Shape for facing=north: mounting clamp at the north edge, engine cowling, tiller to the south. */
@@ -42,7 +49,7 @@ public class RaftMotorBlock extends BaseEntityBlock {
             Block.box(4.0, 0.0, 0.0, 12.0, 3.0, 5.0),
             Block.box(4.0, 3.0, 2.0, 12.0, 13.0, 11.0),
             Block.box(7.0, 7.0, 11.0, 9.0, 9.0, 16.0));
-    private static final Map<Direction, VoxelShape> SHAPES = Shapes.rotateHorizontal(NORTH_SHAPE);
+    private static final Map<Direction, VoxelShape> SHAPES = VShapes.rotateHorizontal(NORTH_SHAPE);
 
     public RaftMotorBlock(Properties properties) {
         super(properties);
@@ -90,10 +97,9 @@ public class RaftMotorBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
-                                          BlockHitResult hitResult) {
+    protected net.minecraft.world.ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (!VesselFuel.isFuel(stack)) {
-            return InteractionResult.TRY_WITH_EMPTY_HAND;
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
         if (level instanceof ServerLevel serverLevel && level.getBlockEntity(pos) instanceof RaftMotorBlockEntity motor) {
             int fuel = VesselFuel.refuel(serverLevel, pos, player, stack, motor.getFuel());
@@ -101,7 +107,7 @@ public class RaftMotorBlock extends BaseEntityBlock {
                 motor.setFuel(fuel);
             }
         }
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 
     @Override

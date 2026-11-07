@@ -1,7 +1,7 @@
 package net.kasax.raft.content.boss.client;
 
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.kasax.raft.content.boss.BossEntities;
 import net.kasax.raft.content.boss.client.model.BrineBoltModel;
 import net.kasax.raft.content.boss.client.model.LeviathanModel;
@@ -16,9 +16,9 @@ public final class BossClient {
     }
 
     public static void init() {
-        ModelLayerRegistry.registerModelLayer(LeviathanModel.LAYER, LeviathanModel::createBodyLayer);
-        ModelLayerRegistry.registerModelLayer(TidelingModel.LAYER, TidelingModel::createBodyLayer);
-        ModelLayerRegistry.registerModelLayer(BrineBoltModel.LAYER, BrineBoltModel::createBodyLayer);
+        EntityModelLayerRegistry.registerModelLayer(LeviathanModel.LAYER, LeviathanModel::createBodyLayer);
+        EntityModelLayerRegistry.registerModelLayer(TidelingModel.LAYER, TidelingModel::createBodyLayer);
+        EntityModelLayerRegistry.registerModelLayer(BrineBoltModel.LAYER, BrineBoltModel::createBodyLayer);
         EntityRendererRegistry.register(BossEntities.LEVIATHAN, LeviathanRenderer::new);
         EntityRendererRegistry.register(BossEntities.TIDELING, TidelingRenderer::new);
         EntityRendererRegistry.register(BossEntities.BRINE_BOLT, BrineBoltRenderer::new);

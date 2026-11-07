@@ -1,15 +1,15 @@
 package net.kasax.raft.screen;
 
 import net.kasax.raft.Raft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.kasax.raft.compat.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.RenderPipelines;
+import net.kasax.raft.compat.gui.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class ItemCollectorScreen extends AbstractContainerScreen<ItemCollectorScreenHandler> {
-    private static final Identifier TEXTURE = Raft.id("textures/gui/item_collector_gui.png");
+public class ItemCollectorScreen extends net.kasax.raft.compat.gui.ContainerScreen<ItemCollectorScreenHandler> {
+    private static final ResourceLocation TEXTURE = Raft.id("textures/gui/item_collector_gui.png");
 
     public ItemCollectorScreen(ItemCollectorScreenHandler handler, Inventory inventory, Component title) {
         super(handler, inventory, title);

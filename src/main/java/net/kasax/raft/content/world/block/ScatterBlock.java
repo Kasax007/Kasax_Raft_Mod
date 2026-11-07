@@ -7,7 +7,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -20,7 +19,8 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
+import net.kasax.raft.compat.VShapes;
 
 /**
  * A few small things lying on the ground (seashells: {@code shells=1..4}, sea glass pebbles: {@code pebbles=1..3}).
@@ -65,15 +65,14 @@ public abstract class ScatterBlock extends Block implements SimpleWaterloggedBlo
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos,
-                                     Direction direction, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
+    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, net.minecraft.world.level.LevelAccessor level, BlockPos pos, BlockPos neighbourPos) {
         if (!state.canSurvive(level, pos)) {
             return Blocks.AIR.defaultBlockState();
         }
         if (state.getValue(WATERLOGGED)) {
-            ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+            level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
-        return super.updateShape(state, level, ticks, pos, direction, neighbourPos, neighbourState, random);
+        return super.updateShape(state, direction, neighbourState, level, pos, neighbourPos);
     }
 
     @Override
@@ -87,7 +86,7 @@ public abstract class ScatterBlock extends Block implements SimpleWaterloggedBlo
     }
 
     @Override
-    protected boolean propagatesSkylightDown(BlockState state) {
+    protected boolean propagatesSkylightDown(BlockState state, net.minecraft.world.level.BlockGetter level121, BlockPos pos121) {
         return true;
     }
 
@@ -96,8 +95,8 @@ public abstract class ScatterBlock extends Block implements SimpleWaterloggedBlo
         public static final IntegerProperty SHELLS = IntegerProperty.create("shells", 1, 4);
 
         public Seashells(Properties properties) {
-            super(properties, Block.column(6.0, 0.0, 3.0), Block.column(10.0, 0.0, 3.0), Block.column(12.0, 0.0, 3.0),
-                    Block.column(14.0, 0.0, 3.0));
+            super(properties, VShapes.column(6.0, 0.0, 3.0), VShapes.column(10.0, 0.0, 3.0), VShapes.column(12.0, 0.0, 3.0),
+                    VShapes.column(14.0, 0.0, 3.0));
             registerDefaultState(stateDefinition.any().setValue(SHELLS, 1).setValue(WATERLOGGED, false));
         }
 
@@ -117,7 +116,7 @@ public abstract class ScatterBlock extends Block implements SimpleWaterloggedBlo
         public static final IntegerProperty PEBBLES = IntegerProperty.create("pebbles", 1, 3);
 
         public SeaGlass(Properties properties) {
-            super(properties, Block.column(6.0, 0.0, 2.0), Block.column(10.0, 0.0, 2.0), Block.column(14.0, 0.0, 2.0));
+            super(properties, VShapes.column(6.0, 0.0, 2.0), VShapes.column(10.0, 0.0, 2.0), VShapes.column(14.0, 0.0, 2.0));
             registerDefaultState(stateDefinition.any().setValue(PEBBLES, 1).setValue(WATERLOGGED, false));
         }
 

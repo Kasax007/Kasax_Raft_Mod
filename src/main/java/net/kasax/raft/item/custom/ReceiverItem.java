@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
@@ -27,22 +28,26 @@ public class ReceiverItem extends TooltipItem {
     }
 
     @Override
-    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+    public net.minecraft.world.InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        return net.kasax.raft.compat.Results.holder(this.use26(level, player, hand), player.getItemInHand(hand));
+    }
+
+    private InteractionResult use26(Level level, Player player, InteractionHand hand) {
         if (level instanceof ServerLevel serverLevel && player instanceof ServerPlayer serverPlayer) {
-            if (player.getCooldowns().isOnCooldown(player.getItemInHand(hand))) {
+            if (player.getCooldowns().isOnCooldown(player.getItemInHand(hand).getItem())) {
                 return InteractionResult.FAIL;
             }
-            player.getCooldowns().addCooldown(player.getItemInHand(hand), COOLDOWN_TICKS);
+            player.getCooldowns().addCooldown(player.getItemInHand(hand).getItem(), COOLDOWN_TICKS);
             BlockPos target = serverLevel.findNearestMapStructure(ModTags.Structures.RECEIVER_TARGETS, player.blockPosition(), SEARCH_RADIUS, false);
             if (target == null) {
-                serverPlayer.sendOverlayMessage(Component.translatable("item.raft.receiver.nothing").withStyle(ChatFormatting.RED));
+                serverPlayer.displayClientMessage(Component.translatable("item.raft.receiver.nothing").withStyle(ChatFormatting.RED), true);
             } else {
                 double dx = target.getX() + 0.5 - player.getX();
                 double dz = target.getZ() + 0.5 - player.getZ();
                 int distance = (int) Math.round(Math.sqrt(dx * dx + dz * dz));
                 int degrees = bearing(dx, dz);
-                serverPlayer.sendOverlayMessage(Component.translatable("item.raft.receiver.found",
-                        cardinal(degrees), String.format("%03d", degrees), distance).withStyle(ChatFormatting.AQUA));
+                serverPlayer.displayClientMessage(Component.translatable("item.raft.receiver.found",
+                        cardinal(degrees), String.format("%03d", degrees), distance).withStyle(ChatFormatting.AQUA), true);
             }
         }
         return InteractionResult.SUCCESS;

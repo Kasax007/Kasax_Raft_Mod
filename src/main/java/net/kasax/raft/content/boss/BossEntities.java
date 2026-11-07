@@ -27,9 +27,8 @@ public final class BossEntities {
         LEVIATHAN = BcReg.entity("leviathan", EntityType.Builder.of(LeviathanEntity::new, MobCategory.MONSTER)
                 .sized(3.0F, 2.5F).eyeHeight(1.4F).fireImmune().clientTrackingRange(16).updateInterval(2));
         TIDELING = BcReg.entity("tideling", EntityType.Builder.of(TidelingEntity::new, MobCategory.MONSTER)
-                .sized(0.7F, 0.7F).eyeHeight(0.4F).clientTrackingRange(8).notInPeaceful());
-        BRINE_BOLT = BcReg.entity("brine_bolt", EntityType.Builder.<BrineBoltEntity>of(BrineBoltEntity::new, MobCategory.MISC)
-                .noLootTable().sized(0.5F, 0.5F).clientTrackingRange(6).updateInterval(10).dontTrackDeltas());
+                .sized(0.7F, 0.7F).eyeHeight(0.4F).clientTrackingRange(8));
+        BRINE_BOLT = BcReg.entity("brine_bolt", EntityType.Builder.<BrineBoltEntity>of(BrineBoltEntity::new, MobCategory.MISC).sized(0.5F, 0.5F).clientTrackingRange(6).updateInterval(10));
 
         FabricDefaultAttributeRegistry.register(LEVIATHAN, LeviathanEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(TIDELING, TidelingEntity.createAttributes());

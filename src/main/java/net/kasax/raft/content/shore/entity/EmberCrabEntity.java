@@ -12,7 +12,7 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -30,7 +30,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.AABB;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Ember crab of the volcanic isles: a basalt-shelled crab with glowing cracks. It ignores players that keep their
@@ -52,8 +52,8 @@ public class EmberCrabEntity extends Monster implements CrabAnimated {
         this.xpReward = 6;
         this.setPathfindingMalus(PathType.WATER, -1.0F);
         this.setPathfindingMalus(PathType.LAVA, 8.0F);
-        this.setPathfindingMalus(PathType.FIRE_IN_NEIGHBOR, 0.0F);
-        this.setPathfindingMalus(PathType.FIRE, 0.0F);
+        this.setPathfindingMalus(PathType.DANGER_FIRE, 0.0F);
+        this.setPathfindingMalus(PathType.DAMAGE_FIRE, 0.0F);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -74,12 +74,13 @@ public class EmberCrabEntity extends Monster implements CrabAnimated {
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false,
-                (target, level) -> target.distanceToSqr(this) < AGGRO_RANGE * AGGRO_RANGE));
+                target -> target.distanceToSqr(this) < AGGRO_RANGE * AGGRO_RANGE));
     }
 
     @Override
-    public boolean doHurtTarget(ServerLevel level, Entity target) {
-        boolean hit = super.doHurtTarget(level, target);
+    public boolean doHurtTarget(Entity target) {
+        if (!(this.level() instanceof ServerLevel level)) return false;
+        boolean hit = super.doHurtTarget(target);
         if (hit) {
             target.igniteForSeconds(2.0F);
             level.broadcastEntityEvent(this, CrabEntity.EVENT_PINCH);
@@ -198,13 +199,13 @@ public class EmberCrabEntity extends Monster implements CrabAnimated {
      * the light, so a local limit keeps the monster cap from filling up with ember crabs: no new one while
      * {@value #MAX_NEARBY} are within {@value #NEARBY_RANGE} blocks.
      */
-    public static boolean checkEmberCrabSpawnRules(EntityType<EmberCrabEntity> type, ServerLevelAccessor level, EntitySpawnReason reason,
+    public static boolean checkEmberCrabSpawnRules(EntityType<EmberCrabEntity> type, ServerLevelAccessor level, MobSpawnType reason,
                                                    BlockPos pos, RandomSource random) {
         if (level.getDifficulty() == Difficulty.PEACEFUL || !checkMobSpawnRules(type, level, reason, pos, random)
                 || level.getFluidState(pos).is(net.minecraft.tags.FluidTags.WATER)) {
             return false;
         }
-        return EntitySpawnReason.isSpawner(reason) || random.nextInt(4) == 0
+        return MobSpawnType.isSpawner(reason) || random.nextInt(4) == 0
                 && level.getEntitiesOfClass(EmberCrabEntity.class, new AABB(pos).inflate(NEARBY_RANGE)).size() < MAX_NEARBY;
     }
 }

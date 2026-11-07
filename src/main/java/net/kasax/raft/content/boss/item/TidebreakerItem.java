@@ -18,9 +18,8 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemUseAnimation;
+import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -31,23 +30,23 @@ import java.util.function.Consumer;
  * sea ({@code #raft:tidebreaker_prey}), and in water or rain a charged use (hold like a trident) hurls its wielder
  * forward in a Riptide-like spinning dash.
  */
-public class TidebreakerItem extends Item {
+public class TidebreakerItem extends net.minecraft.world.item.SwordItem {
     public static final TagKey<EntityType<?>> PREY = TagKey.create(Registries.ENTITY_TYPE, Raft.id("tidebreaker_prey"));
     private static final int CHARGE_TICKS = 10;
     private static final float DASH_STRENGTH = 3.2F;
 
     public TidebreakerItem(Properties properties) {
-        super(properties);
+        super(net.kasax.raft.content.boss.BossItems.TIDEBREAKER_MATERIAL, properties);
     }
 
     @Override
     public float getAttackDamageBonus(Entity victim, float damage, DamageSource damageSource) {
-        return victim.is(PREY) ? damage * 0.5F : 0.0F;
+        return victim.getType().is(PREY) ? damage * 0.5F : 0.0F;
     }
 
     @Override
-    public ItemUseAnimation getUseAnimation(ItemStack stack) {
-        return ItemUseAnimation.TRIDENT;
+    public UseAnim getUseAnimation(ItemStack stack) {
+        return UseAnim.SPEAR;
     }
 
     @Override
@@ -56,9 +55,13 @@ public class TidebreakerItem extends Item {
     }
 
     @Override
-    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+    public net.minecraft.world.InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        return net.kasax.raft.compat.Results.holder(this.use26(level, player, hand), player.getItemInHand(hand));
+    }
+
+    private InteractionResult use26(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.nextDamageWillBreak() || !player.isInWaterOrRain() || player.isPassenger()) {
+        if (stack.getDamageValue() >= stack.getMaxDamage() - 1 || !player.isInWaterOrRain() || player.isPassenger()) {
             return InteractionResult.FAIL;
         }
         player.startUsingItem(hand);
@@ -66,13 +69,13 @@ public class TidebreakerItem extends Item {
     }
 
     @Override
-    public boolean releaseUsing(ItemStack stack, Level level, LivingEntity entity, int remainingTime) {
+    public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int remainingTime) {
         if (!(entity instanceof Player player)) {
-            return false;
+            return;
         }
         int held = this.getUseDuration(stack, entity) - remainingTime;
         if (held < CHARGE_TICKS || !player.isInWaterOrRain() || player.isPassenger()) {
-            return false;
+            return;
         }
         float yRot = player.getYRot();
         float xRot = player.getXRot();
@@ -87,15 +90,16 @@ public class TidebreakerItem extends Item {
         }
         player.awardStat(Stats.ITEM_USED.get(this));
         if (!level.isClientSide()) {
-            stack.hurtWithoutBreaking(1, player);
-            player.getCooldowns().addCooldown(stack, 16);
+            stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(player.getUsedItemHand()));
+            player.getCooldowns().addCooldown(stack.getItem(), 16);
         }
         level.playSound(null, player, BossSounds.TIDEBREAKER_DASH, SoundSource.PLAYERS, 1.0F, 1.0F);
-        return true;
+        
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, java.util.List<net.minecraft.network.chat.Component> builderList121, TooltipFlag flag) {
+        java.util.function.Consumer<net.minecraft.network.chat.Component> builder = builderList121::add;
         builder.accept(Component.translatable("tooltip.raft.tidebreaker.1").withStyle(net.minecraft.ChatFormatting.DARK_AQUA));
         builder.accept(Component.translatable("tooltip.raft.tidebreaker.2").withStyle(net.minecraft.ChatFormatting.GRAY));
     }

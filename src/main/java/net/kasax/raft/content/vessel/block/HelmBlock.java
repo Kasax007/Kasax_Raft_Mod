@@ -23,19 +23,25 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.Map;
+import net.kasax.raft.compat.VShapes;
 
 /**
  * The helm of a built raft: a ship's wheel on a pedestal with a stool behind it. {@code facing} is the bow (the
  * direction the helmsman looks). Using it turns the raft it stands on into a sailing vessel and seats the player.
  */
 public class HelmBlock extends HorizontalDirectionalBlock {
+    @Override
+    protected com.mojang.serialization.MapCodec<? extends HorizontalDirectionalBlock> codec() {
+        return simpleCodec(HelmBlock::new);
+    }
+
     /** Shape for facing=north: stool at the south (stern) side, pedestal and wheel at the north side. */
     private static final VoxelShape NORTH_SHAPE = Shapes.or(
             Block.box(5.0, 0.0, 3.0, 11.0, 2.0, 8.0),
             Block.box(6.5, 2.0, 4.0, 9.5, 12.0, 7.0),
             Block.box(0.0, 4.0, 7.5, 16.0, 16.0, 8.5),
             Block.box(4.0, 0.0, 10.0, 12.0, 7.5, 15.5));
-    private static final Map<Direction, VoxelShape> SHAPES = Shapes.rotateHorizontal(NORTH_SHAPE);
+    private static final Map<Direction, VoxelShape> SHAPES = VShapes.rotateHorizontal(NORTH_SHAPE);
 
     public HelmBlock(Properties properties) {
         super(properties);

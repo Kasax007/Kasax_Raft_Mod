@@ -8,13 +8,12 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -32,7 +31,11 @@ public class ExpeditionRaftItem extends Item {
     }
 
     @Override
-    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+    public net.minecraft.world.InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        return net.kasax.raft.compat.Results.holder(this.use26(level, player, hand), player.getItemInHand(hand));
+    }
+
+    private InteractionResult use26(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         HitResult hit = getPlayerPOVHitResult(level, player, ClipContext.Fluid.ANY);
         if (hit.getType() != HitResult.Type.BLOCK) {
@@ -40,7 +43,7 @@ public class ExpeditionRaftItem extends Item {
         }
         Vec3 view = player.getViewVector(1.0F);
         List<Entity> entities = level.getEntities(player, player.getBoundingBox().expandTowards(view.scale(5.0)).inflate(1.0),
-                EntitySelector.CAN_BE_PICKED);
+                EntitySelector.NO_SPECTATORS.and(net.minecraft.world.entity.Entity::isPickable));
         Vec3 eye = player.getEyePosition();
         for (Entity entity : entities) {
             AABB box = entity.getBoundingBox().inflate(entity.getPickRadius());
@@ -48,21 +51,25 @@ public class ExpeditionRaftItem extends Item {
                 return InteractionResult.PASS;
             }
         }
-        ExpeditionRaft raft = VoyageContent.EXPEDITION_RAFT.create(level, EntitySpawnReason.SPAWN_ITEM_USE);
+        ExpeditionRaft raft = VoyageContent.EXPEDITION_RAFT.create(level);
         if (raft == null) {
             return InteractionResult.FAIL;
         }
         Vec3 at = hit.getLocation();
-        raft.setInitialPos(at.x, at.y, at.z);
+        raft.setPos(at.x, at.y, at.z);
+        raft.xo = at.x;
+        raft.yo = at.y;
+        raft.zo = at.z;
+        raft.setUpgrades(stack.getOrDefault(VoyageContent.RAFT_UPGRADES, 0));
         raft.setYRot(player.getYRot());
         if (!level.noCollision(raft, raft.getBoundingBox())) {
             if (!level.isClientSide()) {
-                player.sendOverlayMessage(Component.translatable("message.raft.expedition_raft.no_room"));
+                player.displayClientMessage(Component.translatable("message.raft.expedition_raft.no_room"), true);
             }
             return InteractionResult.FAIL;
         }
         if (level instanceof ServerLevel serverLevel) {
-            EntityType.<ExpeditionRaft>createDefaultStackConfig(serverLevel, stack, player).apply(raft);
+            EntityType.<ExpeditionRaft>createDefaultStackConfig(serverLevel, stack, player).accept(raft);
             serverLevel.addFreshEntity(raft);
             serverLevel.gameEvent(player, GameEvent.ENTITY_PLACE, at);
             stack.consume(1, player);
@@ -72,8 +79,8 @@ public class ExpeditionRaftItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> builder,
-                                TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, java.util.List<net.minecraft.network.chat.Component> builderList121, TooltipFlag flag) {
+        java.util.function.Consumer<net.minecraft.network.chat.Component> builder = builderList121::add;
         builder.accept(Component.translatable("tooltip.raft.expedition_raft").withStyle(ChatFormatting.AQUA));
         int mask = stack.getOrDefault(VoyageContent.RAFT_UPGRADES, 0);
         if (mask != 0) {
@@ -86,6 +93,6 @@ public class ExpeditionRaftItem extends Item {
         } else {
             builder.accept(Component.translatable("tooltip.raft.expedition_raft.no_upgrades").withStyle(ChatFormatting.GRAY));
         }
-        super.appendHoverText(stack, context, display, builder, flag);
+        super.appendHoverText(stack, context, builderList121, flag);
     }
 }

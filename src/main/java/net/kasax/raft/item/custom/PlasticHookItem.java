@@ -9,7 +9,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemUseAnimation;
+import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -28,14 +28,18 @@ public class PlasticHookItem extends TooltipItem {
     }
 
     @Override
-    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+    public net.minecraft.world.InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        return net.kasax.raft.compat.Results.holder(this.use26(level, player, hand), player.getItemInHand(hand));
+    }
+
+    private InteractionResult use26(Level level, Player player, InteractionHand hand) {
         player.startUsingItem(hand);
         return InteractionResult.CONSUME;
     }
 
     @Override
-    public ItemUseAnimation getUseAnimation(ItemStack stack) {
-        return ItemUseAnimation.BOW;
+    public UseAnim getUseAnimation(ItemStack stack) {
+        return UseAnim.BOW;
     }
 
     @Override
@@ -62,14 +66,14 @@ public class PlasticHookItem extends TooltipItem {
             Vec3 wanted = distance < 1.0E-4 ? Vec3.ZERO : toPlayer.scale(speed / distance);
             // the small upward push cancels gravity, so the item does not sink while it is pulled
             item.setDeltaMovement(item.getDeltaMovement().scale(0.4).add(wanted.scale(0.6)).add(0.0, 0.04, 0.0));
-            item.needsSync = true;
+            item.hurtMarked = true;
         }
         if (!items.isEmpty() && remainingUseTicks % 10 == 0) {
             serverLevel.playSound(null, user.getX(), user.getY(), user.getZ(), AudioSounds.PLASTIC_HOOK_REEL, SoundSource.PLAYERS,
                     0.7F, 0.9F + user.getRandom().nextFloat() * 0.2F);
         }
         if (!items.isEmpty() && remainingUseTicks % 20 == 0) {
-            stack.hurtAndBreak(1, user, user.getUsedItemHand());
+            stack.hurtAndBreak(1, user, net.minecraft.world.entity.LivingEntity.getSlotForHand(user.getUsedItemHand()));
             if (stack.isEmpty()) {
                 user.stopUsingItem();
             }

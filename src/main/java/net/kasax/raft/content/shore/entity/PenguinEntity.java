@@ -10,7 +10,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.FluidTags;
@@ -20,7 +20,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
@@ -43,7 +43,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.AmphibiousPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.fish.AbstractFish;
+import net.minecraft.world.entity.animal.AbstractFish;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -53,10 +53,10 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathType;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.kasax.raft.compat.ValueInput;
+import net.kasax.raft.compat.ValueOutput;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Penguin of the frost floes: waddles over the ice, slides on its belly across ice and snow, dives into the sea to
@@ -66,7 +66,7 @@ public class PenguinEntity extends Animal {
     public static final TagKey<Block> SLIDES_ON = TagKey.create(Registries.BLOCK, Raft.id("penguin_slides_on"));
     public static final TagKey<Block> SPAWNABLE_ON = TagKey.create(Registries.BLOCK, Raft.id("penguin_spawnable_on"));
     public static final TagKey<Item> FOOD = TagKey.create(Registries.ITEM, Raft.id("penguin_food"));
-    private static final Identifier SLIDE_SPEED_ID = Raft.id("penguin_slide");
+    private static final ResourceLocation SLIDE_SPEED_ID = Raft.id("penguin_slide");
     private static final AttributeModifier SLIDE_SPEED = new AttributeModifier(SLIDE_SPEED_ID, 0.9, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
     private static final EntityDataAccessor<Boolean> DATA_SLIDING = SynchedEntityData.defineId(PenguinEntity.class, EntityDataSerializers.BOOLEAN);
 
@@ -82,11 +82,11 @@ public class PenguinEntity extends Animal {
     public PenguinEntity(EntityType<? extends PenguinEntity> type, Level level) {
         super(type, level);
         this.setPathfindingMalus(PathType.WATER, 0.0F);
-        this.moveControl = new SmoothSwimmingMoveControl<>(this, 85, 12, 0.8F, 1.0F, false);
+        this.moveControl = new SmoothSwimmingMoveControl(this, 85, 12, 0.8F, 1.0F, false);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Animal.createAnimalAttributes()
+        return net.minecraft.world.entity.Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 10.0)
                 .add(Attributes.MOVEMENT_SPEED, 0.2)
                 .add(Attributes.ATTACK_DAMAGE, 2.0)
@@ -114,7 +114,7 @@ public class PenguinEntity extends Animal {
         this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
         // dives for fish now and then
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, AbstractFish.class, 20, false, false,
-                (target, level) -> this.huntCooldown <= 0 && !this.isBaby() && target.isInWater()));
+                target -> this.huntCooldown <= 0 && !this.isBaby() && target.isInWater()));
     }
 
     @Override
@@ -167,8 +167,9 @@ public class PenguinEntity extends Animal {
     }
 
     @Override
-    protected void customServerAiStep(ServerLevel level) {
-        super.customServerAiStep(level);
+    protected void customServerAiStep() {
+        ServerLevel level = (ServerLevel) this.level();
+        super.customServerAiStep();
         if (this.huntCooldown > 0) {
             this.huntCooldown--;
         }
@@ -196,13 +197,25 @@ public class PenguinEntity extends Animal {
     }
 
     /** Swims like a torpedo; drifts up to the surface when it has nothing to do. */
-    @Override
+    
     protected void travelInWater(Vec3 input, double baseGravity, boolean isFalling, double oldY) {
         this.moveRelative(this.getSpeed(), input);
         this.move(MoverType.SELF, this.getDeltaMovement());
         this.setDeltaMovement(this.getDeltaMovement().scale(0.88));
         if (this.getTarget() == null && this.getNavigation().isDone()) {
             this.setDeltaMovement(this.getDeltaMovement().add(0.0, 0.006, 0.0));
+        }
+    }
+
+    /** 1.21.1 port: the newer game moves an entity in water through {@code travelInWater}; 1.21.1 only has travel. */
+    @Override
+    public void travel(Vec3 input) {
+        if (this.isControlledByLocalInstance() && this.isInWater() && this.isAffectedByFluids()
+                && !this.canStandOnFluid(this.level().getFluidState(this.blockPosition()))) {
+            this.travelInWater(input, this.getGravity(), this.getDeltaMovement().y <= 0.0, this.getY());
+            this.calculateEntityAnimation(false);
+        } else {
+            super.travel(input);
         }
     }
 
@@ -225,19 +238,21 @@ public class PenguinEntity extends Animal {
     }
 
     @Override
-    public boolean doHurtTarget(ServerLevel level, Entity target) {
-        boolean hit = super.doHurtTarget(level, target);
+    public boolean doHurtTarget(Entity target) {
+        if (!(this.level() instanceof ServerLevel level)) return false;
+        boolean hit = super.doHurtTarget(target);
         if (hit && target instanceof LivingEntity living && !living.isAlive()) {
             this.huntCooldown = 1200 + this.random.nextInt(1200);
             this.heal(2.0F);
-            this.playSound(net.minecraft.sounds.SoundEvents.GENERIC_EAT.value(), 0.6F, 1.3F);
+            this.playSound(net.minecraft.sounds.SoundEvents.GENERIC_EAT, 0.6F, 1.3F);
         }
         return hit;
     }
 
     @Override
-    public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
-        boolean hurt = super.hurtServer(level, source, damage);
+    public boolean hurt(DamageSource source, float damage) {
+        if (!(this.level() instanceof ServerLevel level)) return false;
+        boolean hurt = super.hurt(source, damage);
         if (hurt) {
             this.setTarget(null);
         }
@@ -252,7 +267,7 @@ public class PenguinEntity extends Animal {
 
     @Override
     public @Nullable AgeableMob getBreedOffspring(ServerLevel level, AgeableMob partner) {
-        return ShoreEntities.PENGUIN.create(level, EntitySpawnReason.BREEDING);
+        return ShoreEntities.PENGUIN.create(level);
     }
 
     // ------------------------------------------------------------------------------------------ sounds
@@ -290,21 +305,23 @@ public class PenguinEntity extends Animal {
 
     // ------------------------------------------------------------------------------------------ save
     @Override
-    protected void addAdditionalSaveData(ValueOutput output) {
-        super.addAdditionalSaveData(output);
+    public void addAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueOutput output = ValueOutput.of(tag121, this.registryAccess());
+        super.addAdditionalSaveData(output.tag());
         output.putInt("HuntCooldown", this.huntCooldown);
     }
 
     @Override
-    protected void readAdditionalSaveData(ValueInput input) {
-        super.readAdditionalSaveData(input);
+    public void readAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueInput input = ValueInput.of(tag121, this.registryAccess());
+        super.readAdditionalSaveData(input.tag());
         this.huntCooldown = input.getIntOr("HuntCooldown", 400);
     }
 
-    public static boolean checkPenguinSpawnRules(EntityType<PenguinEntity> type, ServerLevelAccessor level, EntitySpawnReason reason,
+    public static boolean checkPenguinSpawnRules(EntityType<PenguinEntity> type, ServerLevelAccessor level, MobSpawnType reason,
                                                  BlockPos pos, RandomSource random) {
         return level.getBlockState(pos.below()).is(SPAWNABLE_ON)
-                && (EntitySpawnReason.ignoresLightRequirements(reason) || isBrightEnoughToSpawn(level, pos));
+                && (MobSpawnType.ignoresLightRequirements(reason) || isBrightEnoughToSpawn(level, pos));
     }
 
     // ------------------------------------------------------------------------------------------ goals

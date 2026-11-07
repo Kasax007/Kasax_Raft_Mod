@@ -12,14 +12,14 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.animal.fish.WaterAnimal;
+import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -70,11 +70,23 @@ public class WhaleEntity extends WaterAnimal {
     }
 
     // ------------------------------------------------------------------------------------------------ movement
-    @Override
+    
     protected void travelInWater(Vec3 input, double baseGravity, boolean isFalling, double oldY) {
         this.moveRelative(this.getSpeed(), input);
         this.move(MoverType.SELF, this.getDeltaMovement());
         this.setDeltaMovement(this.getDeltaMovement().scale(0.9));
+    }
+
+    /** 1.21.1 port: the newer game moves an entity in water through {@code travelInWater}; 1.21.1 only has travel. */
+    @Override
+    public void travel(Vec3 input) {
+        if (this.isControlledByLocalInstance() && this.isInWater() && this.isAffectedByFluids()
+                && !this.canStandOnFluid(this.level().getFluidState(this.blockPosition()))) {
+            this.travelInWater(input, this.getGravity(), this.getDeltaMovement().y <= 0.0, this.getY());
+            this.calculateEntityAnimation(false);
+        } else {
+            super.travel(input);
+        }
     }
 
     @Override
@@ -220,8 +232,9 @@ public class WhaleEntity extends WaterAnimal {
     }
 
     @Override
-    public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
-        boolean hurt = super.hurtServer(level, source, damage);
+    public boolean hurt(DamageSource source, float damage) {
+        if (!(this.level() instanceof ServerLevel level)) return false;
+        boolean hurt = super.hurt(source, damage);
         if (hurt) {
             this.panicTicks = 100;
         }
@@ -297,7 +310,7 @@ public class WhaleEntity extends WaterAnimal {
     }
 
     /** Natural spawning: open water 5–25 blocks deep with room for the whole body. */
-    public static boolean checkWhaleSpawnRules(EntityType<WhaleEntity> type, ServerLevelAccessor level, EntitySpawnReason reason,
+    public static boolean checkWhaleSpawnRules(EntityType<WhaleEntity> type, ServerLevelAccessor level, MobSpawnType reason,
                                                BlockPos pos, RandomSource random) {
         int seaLevel = level.getSeaLevel();
         if (pos.getY() > seaLevel - 5 || pos.getY() < seaLevel - 25) {
@@ -360,14 +373,14 @@ public class WhaleEntity extends WaterAnimal {
                     this.pick();
                 }
                 if (this.target == null) {
-                    w.getMoveControl().setWait();
+                    w.getMoveControl().setWantedPosition(w.getX(), w.getY(), w.getZ(), 0.0);
                     return;
                 }
             } else if (this.ticks > 500 || w.position().distanceToSqr(this.target) < 16.0
                     || (w.horizontalCollision && this.ticks > 20) || (w.shallowTicks > 40 && this.ticks > 60)) {
                 this.pick();
                 if (this.target == null) {
-                    w.getMoveControl().setWait();
+                    w.getMoveControl().setWantedPosition(w.getX(), w.getY(), w.getZ(), 0.0);
                     return;
                 }
             }
@@ -465,7 +478,7 @@ public class WhaleEntity extends WaterAnimal {
 
         @Override
         public void stop() {
-            WhaleEntity.this.getMoveControl().setWait();
+            WhaleEntity.this.getMoveControl().setWantedPosition(WhaleEntity.this.getX(), WhaleEntity.this.getY(), WhaleEntity.this.getZ(), 0.0);
         }
     }
 }

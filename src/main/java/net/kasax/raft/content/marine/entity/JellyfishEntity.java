@@ -20,7 +20,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -29,18 +29,18 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.animal.fish.WaterAnimal;
+import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.kasax.raft.compat.ValueInput;
+import net.kasax.raft.compat.ValueOutput;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 
 /**
@@ -108,19 +108,21 @@ public class JellyfishEntity extends WaterAnimal {
     }
 
     @Override
-    protected void addAdditionalSaveData(ValueOutput output) {
-        super.addAdditionalSaveData(output);
+    public void addAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueOutput output = ValueOutput.of(tag121, this.registryAccess());
+        super.addAdditionalSaveData(output.tag());
         output.putString("Variant", this.getVariant().id);
     }
 
     @Override
-    protected void readAdditionalSaveData(ValueInput input) {
-        super.readAdditionalSaveData(input);
+    public void readAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueInput input = ValueInput.of(tag121, this.registryAccess());
+        super.readAdditionalSaveData(input.tag());
         this.setVariant(Variant.byName(input.getStringOr("Variant", "moon")));
     }
 
     @Override
-    public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason reason,
+    public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason,
                                                   @Nullable SpawnGroupData groupData) {
         this.setVariant(pickVariant(level, this.blockPosition(), this.random));
         return super.finalizeSpawn(level, difficulty, reason, groupData);
@@ -130,7 +132,7 @@ public class JellyfishEntity extends WaterAnimal {
     private static Variant pickVariant(ServerLevelAccessor level, BlockPos pos, RandomSource random) {
         var biome = level.getBiome(pos);
         ResourceKey<Biome> key = biome.unwrapKey().orElse(null);
-        String path = key == null ? "" : key.identifier().getPath();
+        String path = key == null ? "" : key.location().getPath();
         if (path.equals("glowing_lagoon")) {
             return random.nextInt(6) == 0 ? Variant.MOON : Variant.GLOW;
         }
@@ -143,12 +145,8 @@ public class JellyfishEntity extends WaterAnimal {
 
     /** Glow jellies use their own loot table ({@code raft:entities/jellyfish_glow}). */
     @Override
-    protected void dropFromLootTable(ServerLevel level, DamageSource source, boolean playerKilled) {
-        if (this.getVariant() == Variant.GLOW) {
-            this.dropFromLootTable(level, source, playerKilled, GLOW_LOOT);
-        } else {
-            super.dropFromLootTable(level, source, playerKilled);
-        }
+    protected net.minecraft.resources.ResourceKey<net.minecraft.world.level.storage.loot.LootTable> getDefaultLootTable() {
+        return this.getVariant() == Variant.GLOW ? GLOW_LOOT : super.getDefaultLootTable();
     }
 
     // ------------------------------------------------------------------------------------------------ movement
@@ -213,7 +211,7 @@ public class JellyfishEntity extends WaterAnimal {
     // ------------------------------------------------------------------------------------------------ sting
     private static @Nullable Item wetsuit() {
         if (wetsuit == null) {
-            Item item = BuiltInRegistries.ITEM.getValue(Raft.id("wetsuit"));
+            Item item = BuiltInRegistries.ITEM.get(Raft.id("wetsuit"));
             wetsuit = item == Items.AIR ? null : item;
         }
         return wetsuit;
@@ -230,7 +228,7 @@ public class JellyfishEntity extends WaterAnimal {
             if (isProtected(e)) {
                 continue;
             }
-            if (e.hurtServer(level, this.damageSources().mobAttack(this), 1.0F)) {
+            if (e.hurt(this.damageSources().mobAttack(this), 1.0F)) {
                 e.addEffect(new MobEffectInstance(MobEffects.POISON, 60, 0), this);
                 this.playSound(AudioSounds.JELLYFISH_STING, 1.0F, 0.9F + this.random.nextFloat() * 0.2F);
                 this.stingCooldown = 20;
@@ -272,7 +270,7 @@ public class JellyfishEntity extends WaterAnimal {
     }
 
     /** Natural spawning: water at least 2 blocks below the surface and 40 at most. */
-    public static boolean checkJellyfishSpawnRules(EntityType<JellyfishEntity> type, ServerLevelAccessor level, EntitySpawnReason reason,
+    public static boolean checkJellyfishSpawnRules(EntityType<JellyfishEntity> type, ServerLevelAccessor level, MobSpawnType reason,
                                                    BlockPos pos, RandomSource random) {
         int sea = level.getSeaLevel();
         return pos.getY() <= sea - 2 && pos.getY() >= sea - 60

@@ -11,7 +11,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LeavesBlock;
-import net.minecraft.world.level.block.sounds.AmbientLeavesBlockSoundPlayer;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -22,7 +21,7 @@ public class PalmCoconutLeaves extends LeavesBlock {
     public static final BooleanProperty HAS_COCONUT = BooleanProperty.create("has_coconut");
 
     public PalmCoconutLeaves(Properties properties) {
-        super(AmbientLeavesBlockSoundPlayer.noAmbientSound(), properties);
+        super(properties);
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(DISTANCE, 7).setValue(PERSISTENT, false).setValue(WATERLOGGED, false)
                 .setValue(HAS_COCONUT, true));

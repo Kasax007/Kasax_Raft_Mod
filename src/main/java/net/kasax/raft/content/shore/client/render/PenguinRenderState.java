@@ -1,6 +1,6 @@
 package net.kasax.raft.content.shore.client.render;
 
-import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.kasax.raft.compat.render.LivingEntityRenderState;
 
 /** Render state of the penguin. */
 public class PenguinRenderState extends LivingEntityRenderState {

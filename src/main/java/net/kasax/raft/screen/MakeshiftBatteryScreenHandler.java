@@ -30,7 +30,7 @@ public class MakeshiftBatteryScreenHandler extends AbstractContainerMenu {
         this.energy = blockEntity.getEnergyStorage().getAmount();
         this.maxEnergy = blockEntity.getEnergyStorage().getCapacity();
 
-        addStandardInventorySlots(playerInventory, 8, 84);
+        net.kasax.raft.compat.Menus.addStandardInventorySlots(this::addSlot, playerInventory, 8, 84);
     }
 
     @Override

@@ -4,23 +4,22 @@ import net.kasax.raft.Raft;
 import net.kasax.raft.content.diving.block.AirCompressorBlockEntity;
 import net.kasax.raft.content.diving.block.AirCompressorMenu;
 import net.kasax.raft.content.diving.item.OxygenTankItem;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.kasax.raft.compat.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.input.InputWithModifiers;
-import net.minecraft.client.renderer.RenderPipelines;
+import net.kasax.raft.compat.gui.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 /**
  * Air compressor GUI: the tank slot, a fill bar with the air time (or the scooter's FE), the energy column, a pressure
  * gauge whose needle follows the fill level and the hand crank button.
  */
-public class AirCompressorScreen extends AbstractContainerScreen<AirCompressorMenu> {
-    private static final Identifier TEXTURE = Raft.id("textures/gui/container/air_compressor.png");
+public class AirCompressorScreen extends net.kasax.raft.compat.gui.ContainerScreen<AirCompressorMenu> {
+    private static final ResourceLocation TEXTURE = Raft.id("textures/gui/container/air_compressor.png");
     private static final int ENERGY_X = 152, ENERGY_Y = 17, ENERGY_W = 12, ENERGY_H = 52;
     private static final int BAR_X = 66, BAR_Y = 38, BAR_W = 54, BAR_H = 10;
     private static final int GAUGE_CX = 93, GAUGE_CY = 24;
@@ -108,14 +107,15 @@ public class AirCompressorScreen extends AbstractContainerScreen<AirCompressorMe
         }
 
         @Override
-        public void onPress(InputWithModifiers input) {
+        public void onPress() {
             if (minecraft != null && minecraft.gameMode != null) {
                 minecraft.gameMode.handleInventoryButtonClick(menu.containerId, AirCompressorMenu.BUTTON_CRANK);
             }
         }
 
         @Override
-        protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        protected void renderWidget(net.minecraft.client.gui.GuiGraphics vanilla, int mouseX, int mouseY, float a) {
+            GuiGraphicsExtractor graphics = new GuiGraphicsExtractor(vanilla);
             int anim = menu.crankAnimation();
             int frame = anim > 0 ? (AirCompressorBlockEntity.CRANK_COOLDOWN - anim) % 4 : 0;
             int v = 80 + (isHoveredOrFocused() ? CRANK_SIZE : 0);

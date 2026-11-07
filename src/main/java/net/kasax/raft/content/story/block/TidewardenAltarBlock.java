@@ -22,7 +22,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -41,6 +40,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.world.ItemInteractionResult;
 
 /**
  * The Tidewarden altar of the Coral Temple. Use a Tide Sigil on it to set it into its hollow (shown as a glowing gem).
@@ -48,6 +48,11 @@ import java.util.List;
  * the light; the hollows are empty again (another key needs four new sigils). Breaking the altar gives the sigils back.
  */
 public class TidewardenAltarBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock {
+    @Override
+    protected com.mojang.serialization.MapCodec<? extends HorizontalDirectionalBlock> codec() {
+        return simpleCodec(TidewardenAltarBlock::new);
+    }
+
     public static final BooleanProperty CORAL = BooleanProperty.create("coral");
     public static final BooleanProperty PEARL = BooleanProperty.create("pearl");
     public static final BooleanProperty STORM = BooleanProperty.create("storm");
@@ -98,12 +103,11 @@ public class TidewardenAltarBlock extends HorizontalDirectionalBlock implements 
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos,
-                                     Direction direction, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
+    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, net.minecraft.world.level.LevelAccessor level, BlockPos pos, BlockPos neighbourPos) {
         if (state.getValue(WATERLOGGED)) {
-            ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+            level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
-        return super.updateShape(state, level, ticks, pos, direction, neighbourPos, neighbourState, random);
+        return super.updateShape(state, direction, neighbourState, level, pos, neighbourPos);
     }
 
     @Override
@@ -129,16 +133,15 @@ public class TidewardenAltarBlock extends HorizontalDirectionalBlock implements 
     }
 
     @Override
-    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
-                                          InteractionHand hand, BlockHitResult hit) {
+    protected net.minecraft.world.ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         String slot = slotOf(stack);
         if (slot == null) {
-            return InteractionResult.TRY_WITH_EMPTY_HAND;
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
         BooleanProperty prop = property(slot);
         if (state.getValue(prop)) {
             if (!level.isClientSide()) StoryUtil.tell(player, "altar.has");
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         }
         if (level instanceof ServerLevel server) {
             BlockState next = state.setValue(prop, true);
@@ -159,7 +162,7 @@ public class TidewardenAltarBlock extends HorizontalDirectionalBlock implements 
                 }
             }
         }
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 
     @Override

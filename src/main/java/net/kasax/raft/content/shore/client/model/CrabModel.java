@@ -2,7 +2,7 @@ package net.kasax.raft.content.shore.client.model;
 
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.shore.client.render.CrabRenderState;
-import net.minecraft.client.model.EntityModel;
+import net.kasax.raft.compat.render.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -11,7 +11,7 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.AnimationState;
+import net.kasax.raft.compat.render.AnimState;
 
 /**
  * Crab: a wide carapace on six jointed legs, two eye stalks and two claws of different size with a moving lower
@@ -137,7 +137,7 @@ public class CrabModel extends EntityModel<CrabRenderState> {
                 .texOffs(40, 0).addBox(-1.0F, -4.5F, -1.0F, 2.0F, 2.0F, 2.0F);
     }
 
-    private static float seconds(AnimationState anim, float ageInTicks) {
+    private static float seconds(AnimState anim, float ageInTicks) {
         return anim.isStarted() ? anim.getTimeInMillis(ageInTicks) / 1000.0F : -1.0F;
     }
 

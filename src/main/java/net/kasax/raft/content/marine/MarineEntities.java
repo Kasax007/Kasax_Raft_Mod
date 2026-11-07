@@ -31,7 +31,7 @@ public final class MarineEntities {
 
     static void register() {
         HAMMERHEAD_SHARK = BcReg.entity("hammerhead_shark", EntityType.Builder.of(HammerheadSharkEntity::new, MobCategory.WATER_CREATURE)
-                .sized(2.0F, 1.0F).eyeHeight(0.5F).clientTrackingRange(10).notInPeaceful());
+                .sized(2.0F, 1.0F).eyeHeight(0.5F).clientTrackingRange(10));
         WHALE = BcReg.entity("whale", EntityType.Builder.of(WhaleEntity::new, MobCategory.WATER_CREATURE)
                 .sized(6.0F, 3.0F).eyeHeight(1.6F).clientTrackingRange(16));
         MANTA_RAY = BcReg.entity("manta_ray", EntityType.Builder.of(MantaRayEntity::new, MobCategory.WATER_CREATURE)
@@ -39,10 +39,10 @@ public final class MarineEntities {
         JELLYFISH = BcReg.entity("jellyfish", EntityType.Builder.of(JellyfishEntity::new, MobCategory.WATER_AMBIENT)
                 .sized(0.6F, 0.8F).eyeHeight(0.5F).clientTrackingRange(8));
         ANGLERFISH = BcReg.entity("anglerfish", EntityType.Builder.of(AnglerfishEntity::new, MobCategory.UNDERGROUND_WATER_CREATURE)
-                .sized(0.9F, 0.7F).eyeHeight(0.4F).clientTrackingRange(8).notInPeaceful());
+                .sized(0.9F, 0.7F).eyeHeight(0.4F).clientTrackingRange(8));
         MORAY_EEL = BcReg.entity("moray_eel", EntityType.Builder.of(MorayEelEntity::new, MobCategory.WATER_AMBIENT)
                 // hitbox narrower than the 1.2 long body, so the eel fits into one-block crevices
-                .sized(0.6F, 0.4F).eyeHeight(0.25F).clientTrackingRange(8).notInPeaceful());
+                .sized(0.6F, 0.4F).eyeHeight(0.25F).clientTrackingRange(8));
 
         FabricDefaultAttributeRegistry.register(HAMMERHEAD_SHARK, HammerheadSharkEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(WHALE, WhaleEntity.createAttributes());

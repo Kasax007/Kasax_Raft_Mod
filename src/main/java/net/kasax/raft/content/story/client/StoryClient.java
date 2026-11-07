@@ -15,11 +15,11 @@ public final class StoryClient {
     public static void init() {
         ClientPlayNetworking.registerGlobalReceiver(OpenJournalPayload.TYPE, (payload, context) -> {
             Minecraft mc = context.client();
-            mc.execute(() -> mc.gui.setScreen(new JournalScreen(payload)));
+            mc.execute(() -> mc.setScreen(new JournalScreen(payload)));
         });
         ClientPlayNetworking.registerGlobalReceiver(OpenLogPayload.TYPE, (payload, context) -> {
             Minecraft mc = context.client();
-            mc.execute(() -> mc.gui.setScreen(new TerminalScreen(payload.logId())));
+            mc.execute(() -> mc.setScreen(new TerminalScreen(payload.logId())));
         });
         ClientTickEvents.END_CLIENT_TICK.register(mc -> {
             if (mc.level != null) {

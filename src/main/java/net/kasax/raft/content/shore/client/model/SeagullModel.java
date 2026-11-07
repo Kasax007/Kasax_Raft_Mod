@@ -3,7 +3,7 @@ package net.kasax.raft.content.shore.client.model;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.shore.client.render.SeagullRenderState;
-import net.minecraft.client.model.EntityModel;
+import net.kasax.raft.compat.render.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -12,7 +12,7 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.AnimationState;
+import net.kasax.raft.compat.render.AnimState;
 
 /**
  * Seagull: body, head with an opening beak, tail, two-part wings and legs. On the ground the wings lie folded along
@@ -87,7 +87,7 @@ public class SeagullModel extends EntityModel<SeagullRenderState> {
         return LayerDefinition.create(mesh, 64, 64);
     }
 
-    private static float seconds(AnimationState anim, float ageInTicks) {
+    private static float seconds(AnimState anim, float ageInTicks) {
         return anim.isStarted() ? anim.getTimeInMillis(ageInTicks) / 1000.0F : -1.0F;
     }
 

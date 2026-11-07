@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.kasax.raft.compat.VShapes;
 
 /**
  * A two block tall scarecrow. Natural hostile mob spawns within 24 blocks and crop trampling within
@@ -29,7 +30,7 @@ public class ScarecrowBlock extends DoublePlantBlock {
     public static final int SPAWN_RADIUS = 24;
     public static final int TRAMPLE_RADIUS = 8;
 
-    private static final VoxelShape SHAPE = Block.column(8.0, 0.0, 16.0);
+    private static final VoxelShape SHAPE = VShapes.column(8.0, 0.0, 16.0);
 
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 

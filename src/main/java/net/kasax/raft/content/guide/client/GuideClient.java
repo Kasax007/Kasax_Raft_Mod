@@ -11,7 +11,7 @@ public final class GuideClient {
     public static void init() {
         AlmanacItem.openScreen = stack -> {
             Minecraft mc = Minecraft.getInstance();
-            mc.gui.setScreen(new AlmanacScreen(stack));
+            mc.setScreen(new AlmanacScreen(stack));
         };
     }
 }

@@ -9,7 +9,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import org.apache.commons.lang3.mutable.MutableInt;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -72,7 +72,7 @@ public class RaftPortalShape {
     }
 
     private static @Nullable BlockPos calculateBottomLeft(BlockGetter level, Direction rightDir, BlockPos pos) {
-        int minY = Math.max(level.getMinY(), pos.getY() - MAX_HEIGHT);
+        int minY = Math.max(level.getMinBuildHeight(), pos.getY() - MAX_HEIGHT);
 
         while (pos.getY() > minY && isEmpty(level.getBlockState(pos.below()))) {
             pos = pos.below();

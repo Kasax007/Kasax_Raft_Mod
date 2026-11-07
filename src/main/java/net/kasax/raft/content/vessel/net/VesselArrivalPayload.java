@@ -16,7 +16,7 @@ public record VesselArrivalPayload(int entityId, Vec3 local) implements CustomPa
     public static final Type<VesselArrivalPayload> TYPE = new Type<>(Raft.id("vessel_arrival"));
     public static final StreamCodec<RegistryFriendlyByteBuf, VesselArrivalPayload> CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT, VesselArrivalPayload::entityId,
-            Vec3.STREAM_CODEC, VesselArrivalPayload::local,
+            net.kasax.raft.compat.Codecs.VEC3, VesselArrivalPayload::local,
             VesselArrivalPayload::new);
 
     @Override

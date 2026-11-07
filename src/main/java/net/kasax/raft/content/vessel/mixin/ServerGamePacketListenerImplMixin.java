@@ -4,8 +4,7 @@ import net.kasax.raft.content.vessel.VesselColliders;
 import net.kasax.raft.content.vessel.VesselEntity;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.PositionMoveRotation;
-import net.minecraft.world.entity.Relative;
+import net.minecraft.world.entity.RelativeMovement;
 import net.minecraft.server.level.ServerPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -36,16 +35,9 @@ public abstract class ServerGamePacketListenerImplMixin {
      * A player put onto a raft's deck by the server (teleport, login, dimension change, respawn) is told where on the
      * raft, so that their client does not let them fall through it before its copy of the raft is there.
      */
-    @Inject(method = "teleport(Lnet/minecraft/world/entity/PositionMoveRotation;Ljava/util/Set;)V", at = @At("TAIL"))
-    private void raft$arrivedOnRaft(PositionMoveRotation destination, Set<Relative> relatives, CallbackInfo ci) {
+    @Inject(method = "teleport(DDDFFLjava/util/Set;)V", at = @At("TAIL"))
+    private void raft$arrivedOnRaft(double x, double y, double z, float yRot, float xRot, Set<RelativeMovement> relatives, CallbackInfo ci) {
         VesselEntity.playerArrived(this.player, null);
     }
 
-    /** Nor are the (empty) world blocks under a player on a raft re-sent to their client every 10 seconds. */
-    @Inject(method = "forceSendPlayerSupportBlocks", at = @At("HEAD"), cancellable = true)
-    private void raft$supportedByRaft(CallbackInfo ci) {
-        if (VesselColliders.isAboard(this.player)) {
-            ci.cancel();
-        }
-    }
 }

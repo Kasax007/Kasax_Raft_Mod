@@ -20,7 +20,7 @@ public class ModEntities {
                     .sized(1.5F, 0.9F)
                     .eyeHeight(0.45F)
                     .clientTrackingRange(10)
-                    .build(SHARK_KEY));
+                    .build("shark"));
 
     public static void register() {
         FabricDefaultAttributeRegistry.register(SHARK, SharkEntity.createAttributes());

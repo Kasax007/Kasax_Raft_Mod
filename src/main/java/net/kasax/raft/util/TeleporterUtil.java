@@ -13,7 +13,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.Vec3;
 
 
@@ -44,7 +43,7 @@ public class TeleporterUtil {
         }
 
         // Check a number of times for a safe spot within 5 blocks of the player's X/Z
-        serverPlayer.sendOverlayMessage(Component.translatable("item.raft.teleporter1"));
+        serverPlayer.displayClientMessage(Component.translatable("item.raft.teleporter1"), true);
         net.minecraft.util.RandomSource rand = destWorld.getRandom();
         for (int i = 1; i < 6; i++) {
             BlockPos playerLoc = player.blockPosition();
@@ -53,7 +52,7 @@ public class TeleporterUtil {
             ChunkAccess chunk = destWorld.getChunk(x >> 4, z >> 4);
 
             // The ground is the first block from the top that is not air; two air blocks above it by construction.
-            int y = Math.min(heightMax, destWorld.getMaxY() + 2);
+            int y = Math.min(heightMax, destWorld.getMaxBuildHeight() - 1 + 2);
             while (y - 2 > heightMin && chunk.getBlockState(new BlockPos(x, y - 2, z)).isAir()) {
                 y--;
             }
@@ -68,14 +67,13 @@ public class TeleporterUtil {
             }
             serverPlayer.stopRiding();
             Vec3 destVec = new Vec3(x + 0.5, groundPos.getY() + 1, z + 0.5);
-            serverPlayer.teleport(new TeleportTransition(destWorld, destVec, Vec3.ZERO,
-                    player.getYRot(), player.getXRot(), TeleportTransition.DO_NOTHING));
+            serverPlayer.teleportTo(destWorld, destVec.x, destVec.y, destVec.z, player.getYRot(), player.getXRot());
             serverPlayer.fallDistance = 0.0F;
             destWorld.playSound(null, x, groundPos.getY() + 1, z, SoundEvents.LODESTONE_COMPASS_LOCK, SoundSource.NEUTRAL, 0.5F,
                     1F / (destWorld.getRandom().nextFloat() * 0.4F + 0.8F));
             return true;
         }
-        serverPlayer.sendOverlayMessage(Component.translatable("item.raft.teleporter3"));
+        serverPlayer.displayClientMessage(Component.translatable("item.raft.teleporter3"), true);
         return false;
     }
 }

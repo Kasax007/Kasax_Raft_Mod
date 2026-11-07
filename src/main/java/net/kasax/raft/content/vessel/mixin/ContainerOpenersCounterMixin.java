@@ -2,7 +2,7 @@ package net.kasax.raft.content.vessel.mixin;
 
 import net.kasax.raft.content.vessel.VesselShipyard;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.ContainerUser;
+
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -29,11 +29,11 @@ public abstract class ContainerOpenersCounterMixin {
     }
 
     @Inject(method = "getEntitiesWithContainerOpen", at = @At("RETURN"), cancellable = true)
-    private void raft$openersOnRaft(Level level, BlockPos pos, CallbackInfoReturnable<List<ContainerUser>> cir) {
+    private void raft$openersOnRaft(Level level, BlockPos pos, CallbackInfoReturnable<List<net.minecraft.world.entity.player.Player>> cir) {
         if (!VesselShipyard.maybePlot(pos.getX(), pos.getZ()) || level.isClientSide()) {
             return;
         }
-        List<ContainerUser> users = new ArrayList<>();
+        List<net.minecraft.world.entity.player.Player> users = new ArrayList<>();
         for (Player player : level.players()) {
             if (this.hasContainerOpen(player, pos)) {
                 users.add(player);

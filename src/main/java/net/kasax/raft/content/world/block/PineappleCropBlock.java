@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.kasax.raft.compat.VShapes;
 
 /**
  * Pineapple crop, planted from a pineapple crown on farmland or on the raft's crop plot (both are in
@@ -21,7 +22,7 @@ public class PineappleCropBlock extends CropBlock {
         int[] heights = {4, 5, 7, 8, 10, 11, 13, 14};
         int[] widths = {6, 8, 10, 10, 12, 12, 14, 14};
         for (int i = 0; i < 8; i++) {
-            SHAPES[i] = Block.column(widths[i], 0.0, heights[i]);
+            SHAPES[i] = VShapes.column(widths[i], 0.0, heights[i]);
         }
     }
 

@@ -13,7 +13,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -41,7 +40,7 @@ public class EnergyStaffItem extends Item {
             // the overworld side, and the raft side too (to repair a broken return portal)
             if (level.dimension() != Level.OVERWORLD && level.dimension() != net.kasax.raft.world.dimension.ModDimensions.RAFTDIM_LEVEL_KEY) {
                 if (!level.isClientSide() && user != null) {
-                    user.sendOverlayMessage(Component.translatable("chat.raft.energy_staff.overworld_only").withStyle(ChatFormatting.BLUE));
+                    user.displayClientMessage(Component.translatable("chat.raft.energy_staff.overworld_only").withStyle(ChatFormatting.BLUE), true);
                 }
                 return InteractionResult.FAIL;
             }
@@ -63,29 +62,30 @@ public class EnergyStaffItem extends Item {
                     level.playSound(null, pos, SoundEvents.LODESTONE_COMPASS_LOCK, SoundSource.NEUTRAL, 1.0F,
                             1F / (level.getRandom().nextFloat() * 0.4F + 0.8F));
                     if (user != null) {
-                        user.getCooldowns().addCooldown(context.getItemInHand(), 20);
-                        context.getItemInHand().hurtAndBreak(1, user, context.getHand());
+                        user.getCooldowns().addCooldown(context.getItemInHand().getItem(), 20);
+                        context.getItemInHand().hurtAndBreak(1, user, net.minecraft.world.entity.LivingEntity.getSlotForHand(context.getHand()));
                     }
                 }
                 return InteractionResult.SUCCESS;
             }
 
             if (!level.isClientSide() && user != null) {
-                user.sendOverlayMessage(Component.translatable("chat.raft.energy_staff.no_portal").withStyle(ChatFormatting.BLUE));
+                user.displayClientMessage(Component.translatable("chat.raft.energy_staff.no_portal").withStyle(ChatFormatting.BLUE), true);
             }
             return InteractionResult.FAIL;
         } else {
             // Display a message for other blocks
             if (!level.isClientSide() && user != null) {
-                user.sendOverlayMessage(Component.translatable("chat.raft.energy_staff.invalid_target").withStyle(ChatFormatting.BLUE));
+                user.displayClientMessage(Component.translatable("chat.raft.energy_staff.invalid_target").withStyle(ChatFormatting.BLUE), true);
             }
             return InteractionResult.FAIL;
         }
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, java.util.List<net.minecraft.network.chat.Component> builderList121, TooltipFlag flag) {
+        java.util.function.Consumer<net.minecraft.network.chat.Component> builder = builderList121::add;
         builder.accept(Component.translatable("tooltip.raft.energy_staff.tooltip").withStyle(ChatFormatting.AQUA));
-        super.appendHoverText(stack, context, display, builder, flag);
+        super.appendHoverText(stack, context, builderList121, flag);
     }
 }

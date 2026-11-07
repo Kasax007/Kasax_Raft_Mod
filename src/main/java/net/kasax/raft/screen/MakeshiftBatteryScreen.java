@@ -1,16 +1,16 @@
 package net.kasax.raft.screen;
 
 import net.kasax.raft.Raft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.kasax.raft.compat.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.RenderPipelines;
+import net.kasax.raft.compat.gui.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 
-public class MakeshiftBatteryScreen extends AbstractContainerScreen<MakeshiftBatteryScreenHandler> {
-    private static final Identifier TEXTURE = Raft.id("textures/gui/makeshift_battery_screen.png");
+public class MakeshiftBatteryScreen extends net.kasax.raft.compat.gui.ContainerScreen<MakeshiftBatteryScreenHandler> {
+    private static final ResourceLocation TEXTURE = Raft.id("textures/gui/makeshift_battery_screen.png");
 
     public MakeshiftBatteryScreen(MakeshiftBatteryScreenHandler handler, Inventory inventory, Component title) {
         super(handler, inventory, title);

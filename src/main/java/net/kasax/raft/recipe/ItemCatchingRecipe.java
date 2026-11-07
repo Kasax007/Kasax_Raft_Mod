@@ -2,28 +2,23 @@ package net.kasax.raft.recipe;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeBookCategories;
-import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
-import org.jspecify.annotations.Nullable;
 
 /** The item catcher turns a net into ocean garbage. The recipe type is {@code raft:item_catching}. */
 public class ItemCatchingRecipe implements Recipe<SingleRecipeInput> {
     private final Ingredient ingredient;
-    private final ItemStackTemplate output;
-    private @Nullable PlacementInfo placementInfo;
+    private final ItemStack output;
 
-    public ItemCatchingRecipe(Ingredient ingredient, ItemStackTemplate output) {
+    public ItemCatchingRecipe(Ingredient ingredient, ItemStack output) {
         this.ingredient = ingredient;
         this.output = output;
     }
@@ -34,8 +29,18 @@ public class ItemCatchingRecipe implements Recipe<SingleRecipeInput> {
     }
 
     @Override
-    public ItemStack assemble(SingleRecipeInput input) {
-        return output.create();
+    public ItemStack assemble(SingleRecipeInput input, HolderLookup.Provider registries) {
+        return output.copy();
+    }
+
+    @Override
+    public boolean canCraftInDimensions(int width, int height) {
+        return true;
+    }
+
+    @Override
+    public ItemStack getResultItem(HolderLookup.Provider registries) {
+        return output;
     }
 
     @Override
@@ -44,7 +49,12 @@ public class ItemCatchingRecipe implements Recipe<SingleRecipeInput> {
     }
 
     @Override
-    public String group() {
+    public boolean isSpecial() {
+        return true;
+    }
+
+    @Override
+    public String getGroup() {
         return "";
     }
 
@@ -58,34 +68,21 @@ public class ItemCatchingRecipe implements Recipe<SingleRecipeInput> {
         return ModRecipes.ITEM_CATCHING_TYPE;
     }
 
-    @Override
-    public PlacementInfo placementInfo() {
-        if (placementInfo == null) {
-            placementInfo = PlacementInfo.create(ingredient);
-        }
-        return placementInfo;
-    }
-
-    @Override
-    public RecipeBookCategory recipeBookCategory() {
-        return RecipeBookCategories.CRAFTING_MISC;
-    }
-
     public Ingredient ingredient() {
         return ingredient;
     }
 
-    public ItemStackTemplate output() {
+    public ItemStack output() {
         return output;
     }
 
     public static final MapCodec<ItemCatchingRecipe> CODEC = RecordCodecBuilder.mapCodec(in -> in.group(
-            Ingredient.CODEC.fieldOf("ingredient").forGetter(ItemCatchingRecipe::ingredient),
-            ItemStackTemplate.CODEC.fieldOf("output").forGetter(ItemCatchingRecipe::output)
+            Ingredient.CODEC_NONEMPTY.fieldOf("ingredient").forGetter(ItemCatchingRecipe::ingredient),
+            ItemStack.STRICT_CODEC.fieldOf("output").forGetter(ItemCatchingRecipe::output)
     ).apply(in, ItemCatchingRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ItemCatchingRecipe> STREAM_CODEC = StreamCodec.composite(
             Ingredient.CONTENTS_STREAM_CODEC, ItemCatchingRecipe::ingredient,
-            ItemStackTemplate.STREAM_CODEC, ItemCatchingRecipe::output,
+            ItemStack.STREAM_CODEC, ItemCatchingRecipe::output,
             ItemCatchingRecipe::new);
 }

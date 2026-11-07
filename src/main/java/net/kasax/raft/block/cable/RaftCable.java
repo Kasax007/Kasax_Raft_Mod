@@ -21,7 +21,7 @@ package net.kasax.raft.block.cable;
  * SOFTWARE.
  */
 import net.kasax.raft.Raft;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.item.ItemStack;
@@ -71,8 +71,8 @@ public class RaftCable {
         registerIdent(block, Raft.id(name));
         return block;
     }
-    public static void registerIdent(Object object, Identifier identifier){
-        final HashMap<Object, Identifier> objIdentMap = new HashMap<>();
+    public static void registerIdent(Object object, ResourceLocation identifier){
+        final HashMap<Object, ResourceLocation> objIdentMap = new HashMap<>();
         objIdentMap.put(object, identifier);
     }
     public enum RaftEnergyTier {

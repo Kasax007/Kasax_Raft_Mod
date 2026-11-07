@@ -8,7 +8,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.IntProvider;
-import net.minecraft.util.valueproviders.IntProviders;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -24,10 +23,10 @@ import net.minecraft.world.level.material.Fluids;
  * A cluster of bubble vents in the sea floor with their upward bubble columns already in place (blocks placed by
  * world generation get no neighbour updates, so the column is built here), ringed by basalt.
  */
-public record BubbleVentFeature(Block vent, IntProvider count, int spread) implements Feature {
+public record BubbleVentFeature(Block vent, IntProvider count, int spread) implements net.kasax.raft.compat.worldgen.WorldFeature {
     public static final MapCodec<BubbleVentFeature> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             BuiltInRegistries.BLOCK.byNameCodec().fieldOf("vent").forGetter(BubbleVentFeature::vent),
-            IntProviders.codec(1, 12).fieldOf("count").forGetter(BubbleVentFeature::count),
+            IntProvider.codec(1, 12).fieldOf("count").forGetter(BubbleVentFeature::count),
             Codec.intRange(0, 6).optionalFieldOf("spread", 2).forGetter(BubbleVentFeature::spread)
     ).apply(i, BubbleVentFeature::new));
 
@@ -53,7 +52,7 @@ public record BubbleVentFeature(Block vent, IntProvider count, int spread) imple
             level.setBlock(pos, vent.defaultBlockState(), 2);
             BlockState column = Blocks.BUBBLE_COLUMN.defaultBlockState().setValue(BubbleColumnBlock.DRAG_DOWN, false);
             pos.move(Direction.UP);
-            while (isWaterSource(level.getBlockState(pos)) && pos.getY() < level.getMaxY()) {
+            while (isWaterSource(level.getBlockState(pos)) && pos.getY() < level.getMaxBuildHeight() - 1) {
                 level.setBlock(pos, column, 2);
                 pos.move(Direction.UP);
             }

@@ -10,18 +10,15 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.BlockUtil;
+import net.minecraft.BlockUtil;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.InsideBlockEffectApplier;
-import net.minecraft.world.entity.Relative;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Portal;
@@ -32,17 +29,18 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.dimension.DimensionType;
-import net.minecraft.world.level.gamerules.GameRules;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.portal.PortalShape;
-import net.minecraft.world.level.portal.TeleportTransition;
+import net.minecraft.world.level.portal.DimensionTransition;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Optional;
+import net.kasax.raft.compat.VShapes;
 
 /**
  * The portal between the overworld and the raft dimension. It is created by lighting a
@@ -50,7 +48,7 @@ import java.util.Optional;
  */
 public class RaftPortalBlock extends Block implements Portal {
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
-    private static final Map<Direction.Axis, VoxelShape> SHAPES = Shapes.rotateHorizontalAxis(Block.column(4.0, 16.0, 0.0, 16.0));
+    private static final Map<Direction.Axis, VoxelShape> SHAPES = VShapes.rotateHorizontalAxis(VShapes.column(4.0, 16.0, 0.0, 16.0));
 
     public RaftPortalBlock(Properties properties) {
         super(properties);
@@ -63,18 +61,17 @@ public class RaftPortalBlock extends Block implements Portal {
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos,
-                                     Direction directionToNeighbour, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
+    protected BlockState updateShape(BlockState state, Direction directionToNeighbour, BlockState neighbourState, net.minecraft.world.level.LevelAccessor level, BlockPos pos, BlockPos neighbourPos) {
         Direction.Axis updateAxis = directionToNeighbour.getAxis();
         Direction.Axis axis = state.getValue(AXIS);
         boolean wrongAxis = axis != updateAxis && updateAxis.isHorizontal();
         return !wrongAxis && !neighbourState.is(this) && !RaftPortalShape.findAnyShape(level, pos, axis).isComplete()
                 ? Blocks.AIR.defaultBlockState()
-                : super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random);
+                : super.updateShape(state, directionToNeighbour, neighbourState, level, pos, neighbourPos);
     }
 
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean isPrecise) {
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         if (entity.canUsePortal(false)) {
             entity.setAsInsidePortal(this, pos);
         }
@@ -83,13 +80,13 @@ public class RaftPortalBlock extends Block implements Portal {
     @Override
     public int getPortalTransitionTime(ServerLevel level, Entity entity) {
         return entity instanceof Player player
-                ? Math.max(0, level.getGameRules().get(player.getAbilities().invulnerable
-                        ? GameRules.PLAYERS_NETHER_PORTAL_CREATIVE_DELAY : GameRules.PLAYERS_NETHER_PORTAL_DEFAULT_DELAY))
+                ? Math.max(1, level.getGameRules().getInt(player.getAbilities().invulnerable
+                        ? GameRules.RULE_PLAYERS_NETHER_PORTAL_CREATIVE_DELAY : GameRules.RULE_PLAYERS_NETHER_PORTAL_DEFAULT_DELAY))
                 : 0;
     }
 
     @Override
-    public @Nullable TeleportTransition getPortalDestination(ServerLevel currentLevel, Entity entity, BlockPos portalEntryPos) {
+    public @Nullable DimensionTransition getPortalDestination(ServerLevel currentLevel, Entity entity, BlockPos portalEntryPos) {
         ResourceKey<Level> newDimension = currentLevel.dimension() == ModDimensions.RAFTDIM_LEVEL_KEY
                 ? Level.OVERWORLD : ModDimensions.RAFTDIM_LEVEL_KEY;
         ServerLevel newLevel = currentLevel.getServer().getLevel(newDimension);
@@ -106,17 +103,17 @@ public class RaftPortalBlock extends Block implements Portal {
         return getExitPortal(newLevel, entity, portalEntryPos, approximateExitPos, worldBorder);
     }
 
-    private @Nullable TeleportTransition getExitPortal(ServerLevel newLevel, Entity entity, BlockPos portalEntryPos,
+    private @Nullable DimensionTransition getExitPortal(ServerLevel newLevel, Entity entity, BlockPos portalEntryPos,
                                                       BlockPos approximateExitPos, WorldBorder worldBorder) {
         Optional<BlockPos> exitPortalPos = RaftPortalForcer.findClosestPortalPosition(newLevel, approximateExitPos, worldBorder);
         BlockUtil.FoundRectangle exitPortal;
-        TeleportTransition.PostTeleportTransition post;
+        DimensionTransition.PostDimensionTransition post;
         if (exitPortalPos.isPresent()) {
             BlockPos pos = exitPortalPos.get();
             BlockState portalState = newLevel.getBlockState(pos);
             exitPortal = BlockUtil.getLargestRectangleAround(
                     pos, portalState.getValue(AXIS), 21, Direction.Axis.Y, 21, blockPos -> newLevel.getBlockState(blockPos) == portalState);
-            post = TeleportTransition.PLAY_PORTAL_SOUND.then(e -> e.placePortalTicket(pos));
+            post = DimensionTransition.PLAY_PORTAL_SOUND.then(e -> e.placePortalTicket(pos));
         } else {
             if (entity.isSpectator()) {
                 return null;
@@ -128,14 +125,14 @@ public class RaftPortalBlock extends Block implements Portal {
                 return null;
             }
             exitPortal = createdExit.get();
-            post = TeleportTransition.PLAY_PORTAL_SOUND.then(TeleportTransition.PLACE_PORTAL_TICKET);
+            post = DimensionTransition.PLAY_PORTAL_SOUND.then(DimensionTransition.PLACE_PORTAL_TICKET);
         }
 
         return getDimensionTransitionFromExit(entity, portalEntryPos, exitPortal, newLevel, post);
     }
 
-    private static TeleportTransition getDimensionTransitionFromExit(Entity entity, BlockPos portalEntryPos, BlockUtil.FoundRectangle exitPortal,
-                                                                     ServerLevel newLevel, TeleportTransition.PostTeleportTransition post) {
+    private static DimensionTransition getDimensionTransitionFromExit(Entity entity, BlockPos portalEntryPos, BlockUtil.FoundRectangle exitPortal,
+                                                                     ServerLevel newLevel, DimensionTransition.PostDimensionTransition post) {
         BlockState blockState = entity.level().getBlockState(portalEntryPos);
         Direction.Axis axis;
         Vec3 offset;
@@ -151,8 +148,8 @@ public class RaftPortalBlock extends Block implements Portal {
         return createDimensionTransition(newLevel, exitPortal, axis, offset, entity, post);
     }
 
-    private static TeleportTransition createDimensionTransition(ServerLevel newLevel, BlockUtil.FoundRectangle foundRectangle, Direction.Axis portalAxis,
-                                                                Vec3 offset, Entity entity, TeleportTransition.PostTeleportTransition post) {
+    private static DimensionTransition createDimensionTransition(ServerLevel newLevel, BlockUtil.FoundRectangle foundRectangle, Direction.Axis portalAxis,
+                                                                Vec3 offset, Entity entity, DimensionTransition.PostDimensionTransition post) {
         BlockPos bottomLeft = foundRectangle.minCorner;
         BlockState blockState = newLevel.getBlockState(bottomLeft);
         Direction.Axis axis = blockState.getOptionalValue(AXIS).orElse(Direction.Axis.X);
@@ -169,8 +166,9 @@ public class RaftPortalBlock extends Block implements Portal {
                 bottomLeft.getY() + offsetUp,
                 bottomLeft.getZ() + (xAligned ? offsetForward : offsetRight));
         Vec3 collisionFreePos = PortalShape.findCollisionFreePosition(targetPos, newLevel, entity, dimensions);
-        return new TeleportTransition(newLevel, collisionFreePos, Vec3.ZERO, outputRotation, 0.0F,
-                Relative.union(Relative.DELTA, Relative.ROTATION), post);
+        Vec3 speed = entity.getDeltaMovement();
+        if (outputRotation != 0) speed = new Vec3(speed.z, speed.y, -speed.x);
+        return new DimensionTransition(newLevel, collisionFreePos, speed, entity.getYRot() + outputRotation, entity.getXRot(), post);
     }
 
     @Override
@@ -206,7 +204,7 @@ public class RaftPortalBlock extends Block implements Portal {
     }
 
     @Override
-    protected ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData) {
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
         return ItemStack.EMPTY;
     }
 

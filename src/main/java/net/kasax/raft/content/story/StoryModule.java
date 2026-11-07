@@ -20,8 +20,8 @@ public class StoryModule implements ContentModule {
     @Override
     public void init() {
         StoryContent.register();
-        PayloadTypeRegistry.clientboundPlay().register(OpenJournalPayload.TYPE, OpenJournalPayload.CODEC);
-        PayloadTypeRegistry.clientboundPlay().register(OpenLogPayload.TYPE, OpenLogPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(OpenJournalPayload.TYPE, OpenJournalPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(OpenLogPayload.TYPE, OpenLogPayload.CODEC);
         StoryEvents.register();
     }
 

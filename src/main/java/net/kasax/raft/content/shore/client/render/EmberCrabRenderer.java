@@ -5,16 +5,16 @@ import net.kasax.raft.Raft;
 import net.kasax.raft.content.shore.client.model.CrabModel;
 import net.kasax.raft.content.shore.entity.EmberCrabEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.entity.layers.LivingEntityEmissiveLayer;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.resources.Identifier;
+import net.kasax.raft.compat.render.MobRenderer;
+import net.kasax.raft.compat.render.LivingEntityEmissiveLayer;
+import net.kasax.raft.compat.render.RenderTypes;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 /** Ember crab: basalt shell with spikes, and glowing ember cracks that pulse slowly (emissive layer). */
 public class EmberCrabRenderer extends MobRenderer<EmberCrabEntity, CrabRenderState, CrabModel> {
-    private static final Identifier TEXTURE = Raft.id("textures/entity/crab/ember_crab.png");
-    private static final Identifier GLOW = Raft.id("textures/entity/crab/ember_crab_glow.png");
+    private static final ResourceLocation TEXTURE = Raft.id("textures/entity/crab/ember_crab.png");
+    private static final ResourceLocation GLOW = Raft.id("textures/entity/crab/ember_crab_glow.png");
 
     public EmberCrabRenderer(EntityRendererProvider.Context context) {
         super(context, new CrabModel(context.bakeLayer(CrabModel.EMBER_LAYER)), 0.5F);
@@ -36,7 +36,7 @@ public class EmberCrabRenderer extends MobRenderer<EmberCrabEntity, CrabRenderSt
     }
 
     @Override
-    public Identifier getTextureLocation(CrabRenderState state) {
+    public ResourceLocation getTextureLocation(CrabRenderState state) {
         return TEXTURE;
     }
 

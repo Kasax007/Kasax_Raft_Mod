@@ -10,20 +10,20 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FarmlandBlock;
+import net.minecraft.world.level.block.FarmBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Farmland that is always fully hydrated, can never be trampled and gives the crop planted on it
  * additional chances to grow.
  */
-public class CropPlotBlock extends FarmlandBlock {
+public class CropPlotBlock extends FarmBlock {
     /** Chance (1 in N) per random tick that the crop above gets one extra growth tick. */
     public static final int EXTRA_GROWTH_ONE_IN = 2;
 
     public CropPlotBlock(Properties properties) {
-        super(Blocks.DIRT, properties);
+        super(properties);
         registerDefaultState(stateDefinition.any().setValue(MOISTURE, MAX_MOISTURE));
     }
 
@@ -59,8 +59,9 @@ public class CropPlotBlock extends FarmlandBlock {
         }
     }
 
-    /** Trampling is disabled. */
+    /** Trampling is disabled: falling on a crop plot only hurts like falling on any block. */
     @Override
-    public void turnToBaseBlock(@Nullable Entity sourceEntity, BlockState state, Level level, BlockPos pos) {
+    public void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, float fallDistance) {
+        entity.causeFallDamage(fallDistance, 1.0F, entity.damageSources().fall());
     }
 }

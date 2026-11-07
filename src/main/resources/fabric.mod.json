@@ -20,13 +20,11 @@
 		],
 		"client": [
 			"net.kasax.raft.RaftClient"
-		],
-		"fabric-datagen": [
-			"net.kasax.raft.RaftDataGenerator"
 		]
 	},
 	"mixins": [
 		"raft.mixins.json",
+		"raft-compat.mixins.json",
 		"raft-world.mixins.json",
 		"raft-building.mixins.json",
 		"raft-decor.mixins.json",
@@ -41,9 +39,9 @@
 		"raft-audio.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.19.5",
-		"minecraft": "~26.3",
-		"java": ">=25",
+		"fabricloader": ">=0.16.10",
+		"minecraft": "1.21.1",
+		"java": ">=21",
 		"fabric-api": "*"
 	}
 }

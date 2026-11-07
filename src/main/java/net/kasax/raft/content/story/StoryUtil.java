@@ -3,7 +3,6 @@ package net.kasax.raft.content.story;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Prediction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -15,14 +14,14 @@ public final class StoryUtil {
     /** Puts the stack into the inventory or drops it at the player's feet. */
     public static void give(Player player, ItemStack stack) {
         if (!player.getInventory().add(stack) && !stack.isEmpty()) {
-            player.drop(stack, false, Prediction.SERVER_ONLY);
+            player.drop(stack, false);
         }
     }
 
     /** A short status line above the hotbar ("message.raft.<key>"). */
     public static void tell(Player player, String key, Object... args) {
         if (player instanceof ServerPlayer sp) {
-            sp.sendOverlayMessage(Component.translatable("message.raft." + key, args).withStyle(ChatFormatting.AQUA));
+            sp.displayClientMessage(Component.translatable("message.raft." + key, args).withStyle(ChatFormatting.AQUA), true);
         }
     }
 

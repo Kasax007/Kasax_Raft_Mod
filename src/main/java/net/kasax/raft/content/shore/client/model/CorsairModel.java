@@ -1,24 +1,26 @@
 package net.kasax.raft.content.shore.client.model;
 
 import net.kasax.raft.Raft;
+import net.kasax.raft.content.shore.entity.DrownedCorsairEntity;
 import net.minecraft.client.model.AnimationUtils;
-import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.DrownedModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.renderer.entity.state.ZombieRenderState;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.HumanoidArm;
 
 /**
  * Drowned corsair: the vanilla humanoid (drowned) body. With a blade in hand it holds the weapon high and slashes down
  * like a buccaneer instead of stretching its arms out like a zombie; it swims like a drowned. The same class renders
  * the coat layer and the tricorn hat layer ({@link #HAT_LAYER}), so all layers move together.
  */
-public class CorsairModel extends HumanoidModel<ZombieRenderState> {
+public class CorsairModel extends DrownedModel<DrownedCorsairEntity> {
     public static final ModelLayerLocation HAT_LAYER = new ModelLayerLocation(Raft.id("drowned_corsair"), "hat");
 
     public CorsairModel(ModelPart root) {
@@ -30,9 +32,9 @@ public class CorsairModel extends HumanoidModel<ZombieRenderState> {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition root = mesh.getRoot();
         PartDefinition head = root.addOrReplaceChild("head", CubeListBuilder.create(), PartPose.ZERO);
-        head.addOrReplaceChild("hat", CubeListBuilder.create(), PartPose.ZERO);
+        root.addOrReplaceChild("hat", CubeListBuilder.create(), PartPose.ZERO);
         head.addOrReplaceChild("tricorn_crown",
-                CubeListBuilder.create().texOffs(0, 0).addBox(-3.5F, -11.0F, -3.5F, 7.0F, 3.0F, 7.0F, new net.minecraft.client.model.geom.builders.CubeDeformation(0.25F)),
+                CubeListBuilder.create().texOffs(0, 0).addBox(-3.5F, -11.0F, -3.5F, 7.0F, 3.0F, 7.0F, new CubeDeformation(0.25F)),
                 PartPose.ZERO);
         head.addOrReplaceChild("tricorn_back",
                 CubeListBuilder.create().texOffs(0, 10).addBox(-6.0F, -3.5F, -0.5F, 12.0F, 4.0F, 1.0F),
@@ -54,39 +56,31 @@ public class CorsairModel extends HumanoidModel<ZombieRenderState> {
         return LayerDefinition.create(mesh, 64, 32);
     }
 
-    private static boolean armed(ZombieRenderState state) {
-        return !state.getMainHandItemStack().isEmpty();
+    private static boolean armed(DrownedCorsairEntity corsair) {
+        return !corsair.getMainHandItem().isEmpty();
     }
 
     @Override
-    protected void setupAttackAnimation(ZombieRenderState state) {
-        if (state.isAggressive) {
-            if (armed(state)) {
-                AnimationUtils.swingWeaponDown(this.rightArm, this.leftArm, state.mainArm, state.swingAnimation, state.ageInTicks);
-            } else {
-                super.setupAttackAnimation(state);
-                AnimationUtils.animateZombieArms(this.leftArm, this.rightArm, true, state);
-            }
-        } else {
-            super.setupAttackAnimation(state);
+    public void setupAnim(DrownedCorsairEntity corsair, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw,
+                          float headPitch) {
+        super.setupAnim(corsair, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+        if (!corsair.isAggressive() || !armed(corsair)) {
+            return;
         }
-    }
-
-    @Override
-    protected void setupSwimAnimation(ZombieRenderState state, float animationPos, float swimAmount) {
-        boolean keepBlade = state.isAggressive && armed(state);
-        if (!keepBlade || state.mainArm != net.minecraft.world.entity.HumanoidArm.RIGHT) {
-            this.rightArm.xRot = Mth.rotLerpRad(swimAmount, this.rightArm.xRot, (float) (-Math.PI * 4.0 / 5.0))
-                    + swimAmount * 0.35F * Mth.sin(0.1F * state.ageInTicks);
-            this.rightArm.zRot = Mth.rotLerpRad(swimAmount, this.rightArm.zRot, -0.15F);
+        // a buccaneer's slash instead of the zombie's stretched arms
+        this.rightArm.resetPose();
+        this.leftArm.resetPose();
+        this.rightArm.setPos(-5.0F, 2.0F, 0.0F);
+        this.leftArm.setPos(5.0F, 2.0F, 0.0F);
+        AnimationUtils.swingWeaponDown(this.rightArm, this.leftArm, corsair, this.attackTime, ageInTicks);
+        float swimAmount = this.swimAmount;
+        if (swimAmount > 0.0F) {
+            // swimming: the free arm strokes, the blade stays up
+            ModelPart free = corsair.getMainArm() == HumanoidArm.RIGHT ? this.leftArm : this.rightArm;
+            float side = free == this.leftArm ? 1.0F : -1.0F;
+            free.xRot = Mth.rotLerp(swimAmount, free.xRot * Mth.RAD_TO_DEG, -144.0F) * Mth.DEG_TO_RAD
+                    - side * swimAmount * 0.35F * Mth.sin(0.1F * ageInTicks);
+            free.zRot = side * 0.15F * swimAmount;
         }
-        if (!keepBlade || state.mainArm != net.minecraft.world.entity.HumanoidArm.LEFT) {
-            this.leftArm.xRot = Mth.rotLerpRad(swimAmount, this.leftArm.xRot, (float) (-Math.PI * 4.0 / 5.0))
-                    - swimAmount * 0.35F * Mth.sin(0.1F * state.ageInTicks);
-            this.leftArm.zRot = Mth.rotLerpRad(swimAmount, this.leftArm.zRot, 0.15F);
-        }
-        this.leftLeg.xRot = this.leftLeg.xRot - swimAmount * 0.55F * Mth.sin(0.1F * state.ageInTicks);
-        this.rightLeg.xRot = this.rightLeg.xRot + swimAmount * 0.55F * Mth.sin(0.1F * state.ageInTicks);
-        this.head.xRot = 0.0F;
     }
 }

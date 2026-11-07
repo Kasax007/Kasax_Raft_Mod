@@ -11,7 +11,7 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -61,12 +61,13 @@ public class SharkEntity extends AbstractMarineMonster {
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         // Sharks only hunt players that are in the water.
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, false,
-                (target, level) -> target.isInWater() && !target.isSpectator()));
+                target -> target.isInWater() && !target.isSpectator()));
     }
 
     @Override
-    protected void customServerAiStep(ServerLevel level) {
-        super.customServerAiStep(level);
+    protected void customServerAiStep() {
+        ServerLevel level = (ServerLevel) this.level();
+        super.customServerAiStep();
         // Sharks only hunt swimmers: a player who climbs back onto the raft is safe again (a shark hit from the
         // raft flees instead, see SharkRaftGoal#onHurt).
         if (this.getTarget() instanceof Player player && !player.isInWater()
@@ -76,8 +77,9 @@ public class SharkEntity extends AbstractMarineMonster {
     }
 
     @Override
-    public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
-        boolean hurt = super.hurtServer(level, source, damage);
+    public boolean hurt(DamageSource source, float damage) {
+        if (!(this.level() instanceof ServerLevel level)) return false;
+        boolean hurt = super.hurt(source, damage);
         if (hurt && this.raftGoal != null) {
             this.raftGoal.onHurt(source);
         }
@@ -117,7 +119,7 @@ public class SharkEntity extends AbstractMarineMonster {
     }
 
     /** Natural spawning: in the water in the upper part of the ocean, never in peaceful. */
-    public static boolean checkSharkSpawnRules(EntityType<? extends SharkEntity> type, ServerLevelAccessor level, EntitySpawnReason reason,
+    public static boolean checkSharkSpawnRules(EntityType<? extends SharkEntity> type, ServerLevelAccessor level, MobSpawnType reason,
                                                BlockPos pos, RandomSource random) {
         if (level.getDifficulty() == Difficulty.PEACEFUL) {
             return false;

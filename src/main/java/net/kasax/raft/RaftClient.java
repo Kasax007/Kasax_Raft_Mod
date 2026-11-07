@@ -2,7 +2,7 @@ package net.kasax.raft;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.kasax.raft.client.render.SharkModel;
 import net.kasax.raft.client.render.SharkRenderer;
 import net.kasax.raft.entity.ModEntities;
@@ -33,7 +33,7 @@ public class RaftClient implements ClientModInitializer {
         BlockEntityRenderers.register(ModBlockEntities.ITEM_COLLECTOR_BLOCK_ENTITY, ItemCatcherBlockEntityRenderer::new);
         BlockEntityRenderers.register(ModBlockEntities.SIMPLE_GRILL_BLOCK_ENTITY, SimpleGrillBlockEntityRenderer::new);
 
-        ModelLayerRegistry.registerModelLayer(SharkModel.LAYER, SharkModel::createBodyLayer);
+        EntityModelLayerRegistry.registerModelLayer(SharkModel.LAYER, SharkModel::createBodyLayer);
         EntityRendererRegistry.register(ModEntities.SHARK, SharkRenderer::new);
 
         // Beach Craft 3 content modules

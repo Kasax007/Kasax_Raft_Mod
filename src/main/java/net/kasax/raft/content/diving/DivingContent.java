@@ -1,6 +1,6 @@
 package net.kasax.raft.content.diving;
 
-import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.BcReg;
 import net.kasax.raft.content.BcTabs;
@@ -30,9 +30,6 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.component.UseEffects;
-import net.minecraft.world.item.equipment.ArmorMaterial;
-import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -59,7 +56,7 @@ public final class DivingContent {
     public static final DataComponentType<Unit> DIVING_LAMP = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE,
             Raft.id("diving_lamp"), DataComponentType.<Unit>builder()
                     .persistent(Unit.CODEC)
-                    .networkSynchronized(Unit.STREAM_CODEC)
+                    .networkSynchronized(net.minecraft.network.codec.StreamCodec.unit(Unit.INSTANCE))
                     .build());
 
     static {
@@ -68,24 +65,23 @@ public final class DivingContent {
 
     // ------------------------------------------------------------------------------------------- armor
     public static final Item DIVING_HELMET = BcReg.item("diving_helmet", p -> new DivingGearItem(p, "tooltip.raft.diving_helmet"),
-            armor(DivingGear.DIVING_HELMET, ArmorType.HELMET).rarity(Rarity.UNCOMMON), null);
+            armor(DivingGear.DIVING_HELMET).rarity(Rarity.UNCOMMON), null);
     public static final OxygenTankItem OXYGEN_TANK = BcReg.item("oxygen_tank", p -> new OxygenTankItem(p, 2_400),
-            armor(DivingGear.OXYGEN_TANK, ArmorType.CHESTPLATE).component(STORED_AIR, 2_400), null);
+            armor(DivingGear.OXYGEN_TANK).component(STORED_AIR, 2_400), null);
     public static final OxygenTankItem TITANIUM_OXYGEN_TANK = BcReg.item("titanium_oxygen_tank", p -> new OxygenTankItem(p, 7_200),
-            armor(DivingGear.TITANIUM_OXYGEN_TANK, ArmorType.CHESTPLATE).component(STORED_AIR, 7_200).rarity(Rarity.RARE), null);
+            armor(DivingGear.TITANIUM_OXYGEN_TANK).component(STORED_AIR, 7_200).rarity(Rarity.RARE), null);
     public static final Item WETSUIT = BcReg.item("wetsuit", p -> new DivingGearItem(p, "tooltip.raft.wetsuit"),
-            armor(DivingGear.WETSUIT, ArmorType.LEGGINGS), null);
+            armor(DivingGear.WETSUIT), null);
     public static final Item FLIPPERS = BcReg.item("flippers", p -> new DivingGearItem(p, "tooltip.raft.flippers"),
-            armor(DivingGear.FLIPPERS, ArmorType.BOOTS), null);
+            armor(DivingGear.FLIPPERS), null);
 
     // ------------------------------------------------------------------------------------------- tools
     public static final Item HARPOON_ITEM = BcReg.item("harpoon", HarpoonItem::new, new Item.Properties().stacksTo(16), null);
     public static final Item HARPOON_GUN = BcReg.item("harpoon_gun", HarpoonGunItem::new,
-            new Item.Properties().durability(384).enchantable(1), null);
+            new Item.Properties().durability(384), null);
     public static final SeaScooterItem SEA_SCOOTER = BcReg.item("sea_scooter", SeaScooterItem::new,
             new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON)
-                    .component(EnergyStorage.ENERGY_COMPONENT, SeaScooterItem.CAPACITY)
-                    .component(DataComponents.USE_EFFECTS, new UseEffects(true, false, 1.0F)), null);
+                    .component(EnergyStorage.ENERGY_COMPONENT, SeaScooterItem.CAPACITY), null);
 
     // ------------------------------------------------------------------------------------------- block
     public static final AirCompressorBlock AIR_COMPRESSOR = BcReg.block("air_compressor", AirCompressorBlock::new,
@@ -100,7 +96,7 @@ public final class DivingContent {
 
     // ------------------------------------------------------------------------------------------- entity
     public static final EntityType<Harpoon> HARPOON = BcReg.entity("harpoon",
-            EntityType.Builder.<Harpoon>of(Harpoon::new, MobCategory.MISC).noLootTable().sized(0.5F, 0.5F)
+            EntityType.Builder.<Harpoon>of(Harpoon::new, MobCategory.MISC).sized(0.5F, 0.5F)
                     .eyeHeight(0.13F).clientTrackingRange(4).updateInterval(20));
 
     /** A diving helmet with the lamp fitted (what the diving_helmet_lamp recipe makes). */
@@ -110,8 +106,9 @@ public final class DivingContent {
         return stack;
     }
 
-    private static Item.Properties armor(ArmorMaterial material, ArmorType type) {
-        return new Item.Properties().humanoidArmor(material, type).attributes(DivingGear.attributes(material, type));
+    private static Item.Properties armor(DivingGear.Material material) {
+        return net.kasax.raft.compat.GearItem.gear(new Item.Properties().durability(material.maxDamage())
+                .attributes(DivingGear.attributes(material)), material.gear());
     }
 
     /** Loads the class (fields register themselves), fills the VOYAGE tab and hooks up energy and dispensers. */
@@ -127,8 +124,8 @@ public final class DivingContent {
         BcTabs.add(BcTabs.Tab.VOYAGE, HARPOON_ITEM);
         BcTabs.add(BcTabs.Tab.VOYAGE, SEA_SCOOTER);
         // the helmet with the lamp fitted shows up right after the plain one
-        CreativeModeTabEvents.modifyOutputEvent(ResourceKey.create(Registries.CREATIVE_MODE_TAB, Raft.id("bc_" + BcTabs.Tab.VOYAGE.id)))
-                .register(output -> output.insertAfter(DIVING_HELMET, lampHelmet()));
+        ItemGroupEvents.modifyEntriesEvent(ResourceKey.create(Registries.CREATIVE_MODE_TAB, Raft.id("bc_" + BcTabs.Tab.VOYAGE.id)))
+                .register(entries -> entries.addAfter(DIVING_HELMET, lampHelmet()));
         EnergyStorage.SIDED.registerForBlockEntity(AirCompressorBlockEntity::getEnergyStorage, AIR_COMPRESSOR_BE);
         DispenserBlock.registerBehavior(HARPOON_ITEM, new ProjectileDispenseBehavior(HARPOON_ITEM));
     }

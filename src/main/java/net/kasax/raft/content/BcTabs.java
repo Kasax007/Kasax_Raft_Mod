@@ -1,6 +1,6 @@
 package net.kasax.raft.content;
 
-import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.kasax.raft.Raft;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -56,7 +56,7 @@ public final class BcTabs {
     public static void register() {
         for (Tab tab : Tab.values()) {
             Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Raft.id("bc_" + tab.id),
-                    FabricCreativeModeTab.builder()
+                    FabricItemGroup.builder()
                             .title(Component.translatable("itemgroup.raft." + tab.id))
                             .icon(() -> {
                                 Supplier<ItemStack> icon = ICONS.get(tab);

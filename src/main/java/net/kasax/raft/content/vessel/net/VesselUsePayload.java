@@ -18,7 +18,7 @@ public record VesselUsePayload(int entityId, BlockPos local, Vec3 hit, Direction
     public static final StreamCodec<RegistryFriendlyByteBuf, VesselUsePayload> CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT, VesselUsePayload::entityId,
             BlockPos.STREAM_CODEC, VesselUsePayload::local,
-            Vec3.STREAM_CODEC, VesselUsePayload::hit,
+            net.kasax.raft.compat.Codecs.VEC3, VesselUsePayload::hit,
             Direction.STREAM_CODEC, VesselUsePayload::face,
             ByteBufCodecs.BOOL, VesselUsePayload::inside,
             VesselUsePayload::new);

@@ -6,7 +6,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
@@ -39,7 +39,7 @@ public final class BcReg {
     public static <T extends Block> T block(String name, Function<BlockBehaviour.Properties, T> factory,
                                             BlockBehaviour.Properties properties) {
         ResourceKey<Block> key = blockKey(name);
-        return Registry.register(BuiltInRegistries.BLOCK, key, factory.apply(properties.setId(key)));
+        return Registry.register(BuiltInRegistries.BLOCK, key, factory.apply(properties));
     }
 
     /** A block plus its plain block item, added to the given creative tab (tab may be null). */
@@ -53,7 +53,7 @@ public final class BcReg {
     /** The block item of a block; tooltips are lang keys shown in grey under the name. */
     public static Item blockItem(String name, Block block, Item.Properties properties, BcTabs.Tab tab, String... tooltips) {
         ResourceKey<Item> key = itemKey(name);
-        properties = properties.setId(key).useBlockDescriptionPrefix();
+        properties = properties;
         Item item = tooltips.length == 0 ? new BlockItem(block, properties) : new TooltipBlockItem(block, properties, tooltips);
         Registry.register(BuiltInRegistries.ITEM, key, item);
         if (tab != null) BcTabs.add(tab, item);
@@ -64,7 +64,7 @@ public final class BcReg {
     public static <T extends Item> T blockItem(String name, BiFunction<Block, Item.Properties, T> factory, Block block,
                                                Item.Properties properties, BcTabs.Tab tab) {
         ResourceKey<Item> key = itemKey(name);
-        T item = Registry.register(BuiltInRegistries.ITEM, key, factory.apply(block, properties.setId(key).useBlockDescriptionPrefix()));
+        T item = Registry.register(BuiltInRegistries.ITEM, key, factory.apply(block, properties));
         if (tab != null) BcTabs.add(tab, item);
         return item;
     }
@@ -72,7 +72,7 @@ public final class BcReg {
     public static <T extends Item> T item(String name, Function<Item.Properties, T> factory, Item.Properties properties,
                                           BcTabs.Tab tab) {
         ResourceKey<Item> key = itemKey(name);
-        T item = Registry.register(BuiltInRegistries.ITEM, key, factory.apply(properties.setId(key)));
+        T item = Registry.register(BuiltInRegistries.ITEM, key, factory.apply(properties));
         if (tab != null) BcTabs.add(tab, item);
         return item;
     }
@@ -83,23 +83,23 @@ public final class BcReg {
 
     public static <T extends Entity> EntityType<T> entity(String name, EntityType.Builder<T> builder) {
         ResourceKey<EntityType<?>> key = ResourceKey.create(Registries.ENTITY_TYPE, Raft.id(name));
-        return Registry.register(BuiltInRegistries.ENTITY_TYPE, key, builder.build(key));
+        return Registry.register(BuiltInRegistries.ENTITY_TYPE, key, builder.build(name));
     }
 
     public static <T extends BlockEntity> BlockEntityType<T> blockEntity(String name,
                                                                         BlockEntityType.BlockEntitySupplier<T> factory,
                                                                         Block... blocks) {
-        return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Raft.id(name), new BlockEntityType<>(factory, Set.of(blocks)));
+        return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Raft.id(name), BlockEntityType.Builder.of(factory, blocks).build(null));
     }
 
     /** A sound event {@code raft:<name>}; add it to the module's {@code assets/raft/sounds.json} fragment. */
     public static SoundEvent sound(String name) {
-        Identifier id = Raft.id(name);
+        ResourceLocation id = Raft.id(name);
         return Registry.register(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(id));
     }
 
     public static Holder.Reference<SoundEvent> soundHolder(String name) {
-        Identifier id = Raft.id(name);
+        ResourceLocation id = Raft.id(name);
         return Registry.registerForHolder(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(id));
     }
 }

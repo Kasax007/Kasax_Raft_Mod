@@ -39,16 +39,16 @@ public class ModBlockEntities {
 
     public static final BlockEntityType<CableBlockEntity> CABLE_BLOCK_ENTITY =
             Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Raft.id("cable_block_entity"),
-                    new BlockEntityType<>(CableBlockEntity::new,
+                    BlockEntityType.Builder.of(CableBlockEntity::new,
                             Arrays.stream(RaftCable.Cables.values())
                                     .map(cable -> (Block) cable.block)
-                                    .collect(Collectors.toSet())));
+                                    .toArray(Block[]::new)).build(null));
 
     private static <T extends BlockEntity> BlockEntityType<T> register(String name,
                                                                        BlockEntityType.BlockEntitySupplier<T> factory,
                                                                        Block... blocks) {
         return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Raft.id(name),
-                new BlockEntityType<>(factory, Set.of(blocks)));
+                BlockEntityType.Builder.of(factory, blocks).build(null));
     }
 
     public static void registerBlockEntities() {

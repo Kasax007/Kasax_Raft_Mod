@@ -10,7 +10,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipDisplay;
 
 import java.util.function.Consumer;
 
@@ -24,7 +23,8 @@ public class FurnaceItem extends BlockItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, java.util.List<net.minecraft.network.chat.Component> builderList121, TooltipFlag flag) {
+        java.util.function.Consumer<net.minecraft.network.chat.Component> builder = builderList121::add;
         // add top label section
         builder.accept(Component.literal(""));
         builder.accept(Component.translatable("raft.text.tooltiplabel").withStyle(ChatFormatting.GRAY));
@@ -37,7 +37,7 @@ public class FurnaceItem extends BlockItem {
             builder.accept(Component.translatable("raft.text.dupelabel", fmt(block.getDuplicationChance())).withStyle(ChatFormatting.DARK_GREEN).append(Component.literal("%").withStyle(ChatFormatting.DARK_GREEN)));
         }
 
-        super.appendHoverText(stack, context, display, builder, flag);
+        super.appendHoverText(stack, context, builderList121, flag);
     }
 
     /** 1.5 -> "1.5", 32.0 -> "32" */

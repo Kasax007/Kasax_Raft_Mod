@@ -39,7 +39,8 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
+import net.kasax.raft.compat.VShapes;
+import net.kasax.raft.compat.ItemProps;
 
 /**
  * Natural blocks and items of the raft dimension (docs/design/beachcraft3.md section 4.3), creative tab NATURE.
@@ -99,13 +100,13 @@ public final class WorldBlocks {
     }
 
     private static BlockBehaviour.Properties plant(MapColor color) {
-        return BlockBehaviour.Properties.of().mapColor(color).noCollision().instabreak().sound(SoundType.GRASS)
-                .ignitedByLava().pushReaction(PushReaction.POPPED);
+        return BlockBehaviour.Properties.of().mapColor(color).noCollission().instabreak().sound(SoundType.GRASS)
+                .ignitedByLava().pushReaction(PushReaction.DESTROY);
     }
 
     private static BlockBehaviour.Properties seaLife(MapColor color, SoundType sound) {
-        return BlockBehaviour.Properties.of().mapColor(color).noCollision().instabreak().sound(sound)
-                .pushReaction(PushReaction.POPPED);
+        return BlockBehaviour.Properties.of().mapColor(color).noCollission().instabreak().sound(sound)
+                .pushReaction(PushReaction.DESTROY);
     }
 
     public static void init() {
@@ -156,40 +157,39 @@ public final class WorldBlocks {
         ALOE_VERA = BcReg.blockWithItem("aloe_vera", p -> new BeachPlantBlock(null, p),
                 plant(MapColor.PLANT).offsetType(BlockBehaviour.OffsetType.XZ), TAB);
         PINEAPPLE_BUSH = BcReg.block("pineapple_bush", PineappleBushBlock::new,
-                BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).randomTicks().noCollision().sound(SoundType.GRASS)
-                        .ignitedByLava().pushReaction(PushReaction.POPPED));
+                BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).randomTicks().noCollission().sound(SoundType.GRASS)
+                        .ignitedByLava().pushReaction(PushReaction.DESTROY));
         BcReg.blockItem("pineapple_bush", (b, p) -> new TooltipBlockItem(b, p, tip("pineapple_bush")), PINEAPPLE_BUSH,
                 new Item.Properties(), TAB);
         PINEAPPLE_CROP = BcReg.block("pineapple_crop", PineappleCropBlock::new,
-                BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().randomTicks().instabreak()
-                        .sound(SoundType.CROP).pushReaction(PushReaction.POPPED));
-        POTTED_HIBISCUS = BcReg.block("potted_hibiscus", p -> new FlowerPotBlock(HIBISCUS, p), Blocks.flowerPotProperties());
+                BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollission().randomTicks().instabreak()
+                        .sound(SoundType.CROP).pushReaction(PushReaction.DESTROY));
+        POTTED_HIBISCUS = BcReg.block("potted_hibiscus", p -> new FlowerPotBlock(HIBISCUS, p), BlockBehaviour.Properties.of().instabreak().noOcclusion().pushReaction(net.minecraft.world.level.material.PushReaction.DESTROY));
         POTTED_TROPICAL_FERN = BcReg.block("potted_tropical_fern", p -> new FlowerPotBlock(TROPICAL_FERN, p),
-                Blocks.flowerPotProperties());
+                BlockBehaviour.Properties.of().instabreak().noOcclusion().pushReaction(net.minecraft.world.level.material.PushReaction.DESTROY));
         POTTED_PALM_SAPLING = BcReg.block("potted_palm_sapling", p -> new FlowerPotBlock(ModBlocks.PALM_SAPLING, p),
-                Blocks.flowerPotProperties());
-        POTTED_PLUMERIA = BcReg.block("potted_plumeria", p -> new FlowerPotBlock(PLUMERIA, p), Blocks.flowerPotProperties());
+                BlockBehaviour.Properties.of().instabreak().noOcclusion().pushReaction(net.minecraft.world.level.material.PushReaction.DESTROY));
+        POTTED_PLUMERIA = BcReg.block("potted_plumeria", p -> new FlowerPotBlock(PLUMERIA, p), BlockBehaviour.Properties.of().instabreak().noOcclusion().pushReaction(net.minecraft.world.level.material.PushReaction.DESTROY));
         POTTED_TROPICAL_ORCHID = BcReg.block("potted_tropical_orchid", p -> new FlowerPotBlock(TROPICAL_ORCHID, p),
-                Blocks.flowerPotProperties());
+                BlockBehaviour.Properties.of().instabreak().noOcclusion().pushReaction(net.minecraft.world.level.material.PushReaction.DESTROY));
         POTTED_ALOE_VERA = BcReg.block("potted_aloe_vera", p -> new FlowerPotBlock(ALOE_VERA, p),
-                Blocks.flowerPotProperties());
+                BlockBehaviour.Properties.of().instabreak().noOcclusion().pushReaction(net.minecraft.world.level.material.PushReaction.DESTROY));
 
         // ----------------------------------------------------------------------------------------- sea life
         GLOW_KELP = BcReg.block("glow_kelp", GlowKelpBlock::new,
                 seaLife(MapColor.WATER, SoundType.WET_GRASS).randomTicks().lightLevel(s -> 8));
         GLOW_KELP_PLANT = BcReg.block("glow_kelp_plant", GlowKelpPlantBlock::new,
                 seaLife(MapColor.WATER, SoundType.WET_GRASS).lightLevel(s -> 8));
-        GLOW_KELP_ITEM = BcReg.blockItem("glow_kelp", GLOW_KELP, new Item.Properties()
-                .compostable(ContextIntProviders.COMPOSTABLE_LOW), TAB);
+        GLOW_KELP_ITEM = BcReg.blockItem("glow_kelp", GLOW_KELP, ItemProps.compostable(new Item.Properties(), ItemProps.COMPOSTABLE_LOW), TAB);
         SEA_ANEMONE_RED = BcReg.blockWithItem("sea_anemone_red", UnderwaterPlantBlock::new,
                 seaLife(MapColor.COLOR_RED, SoundType.WET_GRASS), TAB);
         SEA_ANEMONE_PURPLE = BcReg.blockWithItem("sea_anemone_purple", UnderwaterPlantBlock::new,
                 seaLife(MapColor.COLOR_PURPLE, SoundType.WET_GRASS), TAB);
         SEA_ANEMONE_GLOW = BcReg.blockWithItem("sea_anemone_glow",
-                p -> new UnderwaterPlantBlock(Block.column(12.0, 0.0, 10.0), ParticleTypes.GLOW, p),
+                p -> new UnderwaterPlantBlock(VShapes.column(12.0, 0.0, 10.0), ParticleTypes.GLOW, p),
                 seaLife(MapColor.COLOR_CYAN, SoundType.WET_GRASS).lightLevel(s -> 10), TAB);
         TUBE_WORMS = BcReg.blockWithItem("tube_worms",
-                p -> new UnderwaterPlantBlock(Block.column(12.0, 0.0, 13.0), null, p),
+                p -> new UnderwaterPlantBlock(VShapes.column(12.0, 0.0, 13.0), null, p),
                 seaLife(MapColor.WOOL, SoundType.CORAL_BLOCK).lightLevel(s -> 6), TAB);
         GIANT_CLAM = BcReg.blockWithItem("giant_clam", GiantClamBlock::new,
                 BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_BLUE).requiresCorrectToolForDrops()
@@ -202,28 +202,27 @@ public final class WorldBlocks {
                 seaLife(MapColor.COLOR_RED, SoundType.CORAL_BLOCK).noOcclusion(), TAB);
         SEA_URCHIN = BcReg.blockWithItem("sea_urchin", SeaUrchinBlock::new,
                 BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).strength(0.3F).sound(SoundType.CORAL_BLOCK)
-                        .noOcclusion().pushReaction(PushReaction.POPPED), TAB, tip("sea_urchin"));
+                        .noOcclusion().pushReaction(PushReaction.DESTROY), TAB, tip("sea_urchin"));
         BARNACLES = BcReg.blockWithItem("barnacles", BarnaclesBlock::new,
-                BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_LIGHT_GRAY).noCollision().strength(0.3F)
-                        .sound(SoundType.CALCITE).pushReaction(PushReaction.POPPED), TAB);
+                BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_LIGHT_GRAY).noCollission().strength(0.3F)
+                        .sound(SoundType.CALCITE).pushReaction(PushReaction.DESTROY), TAB);
         SEASHELLS = BcReg.block("seashells", ScatterBlock.Seashells::new,
-                BlockBehaviour.Properties.of().mapColor(MapColor.SAND).noCollision().instabreak().sound(SoundType.BONE_BLOCK)
-                        .noOcclusion().pushReaction(PushReaction.POPPED));
+                BlockBehaviour.Properties.of().mapColor(MapColor.SAND).noCollission().instabreak().sound(SoundType.BONE_BLOCK)
+                        .noOcclusion().pushReaction(PushReaction.DESTROY));
         SEA_GLASS_SCATTER = BcReg.block("sea_glass_scatter", ScatterBlock.SeaGlass::new,
-                BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_BLUE).noCollision().instabreak()
-                        .sound(SoundType.GLASS).noOcclusion().pushReaction(PushReaction.POPPED));
+                BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_BLUE).noCollission().instabreak()
+                        .sound(SoundType.GLASS).noOcclusion().pushReaction(PushReaction.DESTROY));
 
         // ----------------------------------------------------------------------------------------- items
-        PINEAPPLE = BcReg.item("pineapple", Item::new, new Item.Properties()
-                .food(new FoodProperties.Builder().nutrition(4).saturationModifier(0.6F).build())
-                .compostable(ContextIntProviders.COMPOSTABLE_MEDIUM), TAB);
+        PINEAPPLE = BcReg.item("pineapple", Item::new, ItemProps.compostable(new Item.Properties()
+                .food(new FoodProperties.Builder().nutrition(4).saturationModifier(0.6F).build()), ItemProps.COMPOSTABLE_MEDIUM), TAB);
         PINEAPPLE_CROWN = BcReg.item("pineapple_crown",
-                p -> new TooltipBlockItem(PINEAPPLE_CROP, p.useItemDescriptionPrefix(), tip("pineapple_crown")),
-                new Item.Properties().compostable(ContextIntProviders.COMPOSTABLE_LOW), TAB);
+                p -> new TooltipBlockItem(PINEAPPLE_CROP, p, tip("pineapple_crown")),
+                ItemProps.compostable(new Item.Properties(), ItemProps.COMPOSTABLE_LOW), TAB);
         PEARL = BcReg.item("pearl", p -> new TooltipItem(p, tip("pearl")), new Item.Properties().rarity(Rarity.UNCOMMON), TAB);
-        SEASHELL = BcReg.item("seashell", p -> new BlockItem(SEASHELLS, p.useItemDescriptionPrefix()),
+        SEASHELL = BcReg.item("seashell", p -> new BlockItem(SEASHELLS, p),
                 new Item.Properties(), TAB);
-        SEA_GLASS_SHARD = BcReg.item("sea_glass_shard", p -> new BlockItem(SEA_GLASS_SCATTER, p.useItemDescriptionPrefix()),
+        SEA_GLASS_SHARD = BcReg.item("sea_glass_shard", p -> new BlockItem(SEA_GLASS_SCATTER, p),
                 new Item.Properties(), TAB);
         URCHIN_SPINE = BcReg.item("urchin_spine", p -> new TooltipItem(p, tip("urchin_spine")), new Item.Properties(), TAB);
 

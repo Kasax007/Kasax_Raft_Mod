@@ -44,7 +44,7 @@ public final class DivingEvents {
     private static final int LAMP_REFRESH = 220;
 
     public static void init() {
-        ServerTickEvents.END_LEVEL_TICK.register(level -> {
+        ServerTickEvents.END_WORLD_TICK.register(level -> {
             for (ServerPlayer player : level.players()) {
                 tickPlayer(level, player);
             }

@@ -1,12 +1,11 @@
 package net.kasax.raft.content.guide;
 
-import net.fabricmc.fabric.api.entity.event.v1.ServerEntityLevelChangeEvents;
+import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.kasax.raft.world.dimension.ModDimensions;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Prediction;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
@@ -16,7 +15,7 @@ public final class GuideEvents {
     }
 
     static void register() {
-        ServerEntityLevelChangeEvents.AFTER_PLAYER_CHANGE_LEVEL.register((player, origin, destination) -> check(player));
+        ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> check(player));
         ServerPlayerEvents.JOIN.register(GuideEvents::check);
     }
 
@@ -33,12 +32,12 @@ public final class GuideEvents {
     /** Into the backpack part of the inventory first, so the selected hotbar slot stays as it was. */
     private static void give(ServerPlayer player, ItemStack stack) {
         Inventory inv = player.getInventory();
-        for (int slot = Inventory.SELECTION_SIZE; slot < Inventory.INVENTORY_SIZE; slot++) {
+        for (int slot = Inventory.getSelectionSize(); slot < Inventory.INVENTORY_SIZE; slot++) {
             if (inv.getItem(slot).isEmpty()) {
                 inv.setItem(slot, stack);
                 return;
             }
         }
-        inv.placeItemBackInInventory(stack, Prediction.SERVER_ONLY);
+        inv.placeItemBackInInventory(stack);
     }
 }

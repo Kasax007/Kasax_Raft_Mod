@@ -46,13 +46,13 @@ public final class NpcContent {
     static void register() {
         for (NpcCharacter c : NpcCharacter.values()) {
             EntityType<NpcEntity> type = BcReg.entity(c.id, EntityType.Builder.<NpcEntity>of(NpcEntity::new, MobCategory.MISC)
-                    .sized(0.6F, 1.95F).eyeHeight(1.62F).clientTrackingRange(10).fireImmune().noLootTable());
+                    .sized(0.6F, 1.95F).eyeHeight(1.62F).clientTrackingRange(10).fireImmune());
             TYPES.put(c, type);
             BY_TYPE.put(type, c);
             FabricDefaultAttributeRegistry.register(type, NpcEntity.createAttributes());
         }
         for (NpcCharacter c : NpcCharacter.values()) {
-            BcReg.item(c.id + "_spawn_egg", SpawnEggItem::new, new Item.Properties().spawnEgg(TYPES.get(c)), BcTabs.Tab.CREATURES);
+            BcReg.item(c.id + "_spawn_egg", p -> new SpawnEggItem(TYPES.get(c), 0xFFFFFF, 0xFFFFFF, p), new Item.Properties(), BcTabs.Tab.CREATURES);
         }
     }
 

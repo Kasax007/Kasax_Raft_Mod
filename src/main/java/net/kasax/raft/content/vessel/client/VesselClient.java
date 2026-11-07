@@ -31,7 +31,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Client-only part of the vessel module: the raft renderer, the block payloads, and the player's hands on raft blocks.
@@ -129,7 +129,7 @@ public final class VesselClient {
             arrival = null;
             return;
         }
-        if (player.connection.hasClientLoaded()) {
+        if (!(Minecraft.getInstance().screen instanceof net.minecraft.client.gui.screens.ReceivingLevelScreen)) {
             a.ticksLeft()[0]--;
         }
         if (player.level().getEntity(a.vessel()) instanceof VesselEntity vessel && vessel.structure() != null) {
@@ -176,7 +176,7 @@ public final class VesselClient {
     /** The server found nothing to do with the raft block: use the held item in the air, as vanilla does then. */
     private static void useInAir(Minecraft mc) {
         LocalPlayer player = mc.player;
-        if (player == null || mc.gameMode == null || mc.gui.screen() != null || !mc.options.keyUse.isDown() || player.isUsingItem()) {
+        if (player == null || mc.gameMode == null || mc.screen != null || !mc.options.keyUse.isDown() || player.isUsingItem()) {
             return;
         }
         for (InteractionHand hand : InteractionHand.values()) {
@@ -184,11 +184,12 @@ public final class VesselClient {
             if (held.isEmpty()) {
                 continue;
             }
-            if (mc.gameMode.useItem(player, hand) instanceof InteractionResult.Success success) {
-                if (success.swingSource() == InteractionResult.SwingSource.PREDICTED) {
-                    player.swing(hand, held.getInteractAnimation(), false);
+            InteractionResult result = mc.gameMode.useItem(player, hand);
+            if (result.consumesAction()) {
+                if (result.shouldSwing()) {
+                    player.swing(hand);
                 }
-                player.itemUsed(hand);
+                mc.gameRenderer.itemInHandRenderer.itemUsed(hand);
                 return;
             }
         }
@@ -222,7 +223,7 @@ public final class VesselClient {
 
     private static void tickMining(Minecraft mc) {
         LocalPlayer player = mc.player;
-        if (player == null || mc.level == null || mc.gui.screen() != null || player.isSpectator() || !mc.options.keyAttack.isDown()
+        if (player == null || mc.level == null || mc.screen != null || player.isSpectator() || !mc.options.keyAttack.isDown()
                 || player.isUsingItem()) {
             stopMining();
             return;
@@ -262,7 +263,7 @@ public final class VesselClient {
             SoundType sound = state.getSoundType();
             mc.level.playLocalSound(at.x, at.y, at.z, sound.getHitSound(), SoundSource.BLOCKS, (sound.getVolume() + 1.0F) / 8.0F,
                     sound.getPitch() * 0.5F, false);
-            player.swing(InteractionHand.MAIN_HAND, player.getMainHandItem().getAttackAnimation(), false);
+            player.swing(InteractionHand.MAIN_HAND);
         }
         mc.level.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, state), at.x, at.y, at.z, 0.0, 0.0, 0.0);
         if (miningProgress >= 1.0F) {

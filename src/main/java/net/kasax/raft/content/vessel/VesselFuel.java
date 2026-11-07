@@ -8,15 +8,12 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemStackTemplate;
-import net.minecraft.world.item.component.CookingFuel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.minecraft.world.level.storage.loot.providers.number.ints.ResolvableInt;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Optional;
@@ -29,20 +26,12 @@ public final class VesselFuel {
     }
 
     public static boolean isFuel(ItemStack stack) {
-        return !stack.isEmpty() && stack.has(DataComponents.COOKING_FUEL);
+        return net.kasax.raft.compat.ItemProps.isFuel(stack);
     }
 
     /** Burn time of a fuel item in a furnace (the same data driven value the furnace uses). */
     public static int burnTicks(ServerLevel level, BlockPos pos, ItemStack stack) {
-        FurnaceBlockEntity probe = new FurnaceBlockEntity(pos, Blocks.FURNACE.defaultBlockState());
-        LootContext context = new LootContext.Builder(new LootParams.Builder(level)
-                .withParameter(LootContextParams.BLOCK_STATE, Blocks.FURNACE.defaultBlockState())
-                .withParameter(LootContextParams.BLOCK_ENTITY, probe)
-                .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos))
-                .withParameter(LootContextParams.CONTAINER, probe)
-                .create(LootContextParamSets.CONTAINER_PROCESS))
-                .create(Optional.empty());
-        return ResolvableInt.getFromItem(stack, DataComponents.COOKING_FUEL, CookingFuel::burnTime, context, 0);
+        return net.kasax.raft.compat.ItemProps.burnTime(stack);
     }
 
     /**
@@ -51,20 +40,20 @@ public final class VesselFuel {
      */
     public static int refuel(ServerLevel level, BlockPos pos, Player player, ItemStack stack, int fuel) {
         if (fuel >= MAX_FUEL) {
-            player.sendOverlayMessage(Component.translatable("message.raft.vessel.motor_full"));
+            player.displayClientMessage(Component.translatable("message.raft.vessel.motor_full"), true);
             return fuel;
         }
         int burn = burnTicks(level, pos, stack);
         if (burn <= 0) {
             return fuel;
         }
-        ItemStackTemplate remainder = stack.getItem().getCraftingRemainder();
+        net.minecraft.world.item.Item remainder = stack.getItem().getCraftingRemainingItem();
         if (!player.hasInfiniteMaterials()) {
             stack.shrink(1);
             if (remainder != null) {
-                ItemStack rest = remainder.create();
+                ItemStack rest = new ItemStack(remainder);
                 if (!player.getInventory().add(rest)) {
-                    player.drop(rest, false, net.minecraft.util.Prediction.SERVER_ONLY);
+                    player.drop(rest, false);
                 }
             }
         }
@@ -76,11 +65,11 @@ public final class VesselFuel {
 
     public static void showFuel(Player player, int fuel) {
         if (fuel <= 0) {
-            player.sendOverlayMessage(Component.translatable("message.raft.vessel.motor_empty"));
+            player.displayClientMessage(Component.translatable("message.raft.vessel.motor_empty"), true);
             return;
         }
         int seconds = fuel / 20;
-        player.sendOverlayMessage(Component.translatable("message.raft.vessel.motor_fuel",
-                String.format(java.util.Locale.ROOT, "%d:%02d", seconds / 60, seconds % 60)));
+        player.displayClientMessage(Component.translatable("message.raft.vessel.motor_fuel",
+                String.format(java.util.Locale.ROOT, "%d:%02d", seconds / 60, seconds % 60)), true);
     }
 }

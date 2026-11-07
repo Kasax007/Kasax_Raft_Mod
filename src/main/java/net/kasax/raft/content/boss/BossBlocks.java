@@ -26,7 +26,7 @@ public final class BossBlocks {
     static void register() {
         HEART_OF_THE_TIDE = BcReg.block("heart_of_the_tide", HeartOfTheTideBlock::new, BlockBehaviour.Properties.of()
                 .mapColor(MapColor.DIAMOND).strength(3.0F, 1200.0F).lightLevel(state -> 15).sound(SoundType.AMETHYST)
-                .noOcclusion().pushReaction(PushReaction.IMMOVEABLE).requiresCorrectToolForDrops());
+                .noOcclusion().pushReaction(PushReaction.BLOCK).requiresCorrectToolForDrops());
         LEVIATHAN_TROPHY = BcReg.block("leviathan_trophy", LeviathanTrophyBlock::new, BlockBehaviour.Properties.of()
                 .mapColor(MapColor.COLOR_CYAN).strength(2.0F, 6.0F).sound(SoundType.BONE_BLOCK).noOcclusion()
                 .requiresCorrectToolForDrops());

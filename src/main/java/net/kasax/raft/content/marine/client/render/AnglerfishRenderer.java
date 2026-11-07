@@ -5,15 +5,15 @@ import net.kasax.raft.content.marine.client.model.AnglerfishModel;
 import net.kasax.raft.content.marine.client.model.AnglerfishRenderState;
 import net.kasax.raft.content.marine.entity.AnglerfishEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.entity.layers.EyesLayer;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.resources.Identifier;
+import net.kasax.raft.compat.render.MobRenderer;
+import net.kasax.raft.compat.render.EyesLayer;
+import net.minecraft.client.renderer.RenderType;
+import net.kasax.raft.compat.render.RenderTypes;
+import net.minecraft.resources.ResourceLocation;
 
 /** Renders the anglerfish; its lure bulb (and a few photophores) glow full-bright through an emissive layer. */
 public class AnglerfishRenderer extends MobRenderer<AnglerfishEntity, AnglerfishRenderState, AnglerfishModel> {
-    private static final Identifier TEXTURE = Raft.id("textures/entity/anglerfish.png");
+    private static final ResourceLocation TEXTURE = Raft.id("textures/entity/anglerfish.png");
     private static final RenderType GLOW = RenderTypes.eyes(Raft.id("textures/entity/anglerfish_glow.png"));
 
     public AnglerfishRenderer(EntityRendererProvider.Context context) {
@@ -27,7 +27,7 @@ public class AnglerfishRenderer extends MobRenderer<AnglerfishEntity, Anglerfish
     }
 
     @Override
-    public Identifier getTextureLocation(AnglerfishRenderState state) {
+    public ResourceLocation getTextureLocation(AnglerfishRenderState state) {
         return TEXTURE;
     }
 

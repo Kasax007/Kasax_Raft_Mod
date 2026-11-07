@@ -6,21 +6,21 @@ import net.kasax.raft.content.marine.client.model.WhaleModel;
 import net.kasax.raft.content.marine.client.model.WhaleRenderState;
 import net.kasax.raft.content.marine.entity.WhaleEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.Identifier;
+import net.kasax.raft.compat.render.MobRenderer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.AABB;
 
 /** Renders the whale at twice the model size; the body reaches beyond the hitbox, so culling uses a bigger box. */
 public class WhaleRenderer extends MobRenderer<WhaleEntity, WhaleRenderState, WhaleModel> {
-    private static final Identifier TEXTURE = Raft.id("textures/entity/whale.png");
+    private static final ResourceLocation TEXTURE = Raft.id("textures/entity/whale.png");
 
     public WhaleRenderer(EntityRendererProvider.Context context) {
         super(context, new WhaleModel(context.bakeLayer(WhaleModel.LAYER)), 3.0F);
     }
 
     @Override
-    public Identifier getTextureLocation(WhaleRenderState state) {
+    public ResourceLocation getTextureLocation(WhaleRenderState state) {
         return TEXTURE;
     }
 

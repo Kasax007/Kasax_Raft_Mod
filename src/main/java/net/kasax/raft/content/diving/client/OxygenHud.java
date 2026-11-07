@@ -5,10 +5,10 @@ import net.kasax.raft.content.diving.DivingGear;
 import net.kasax.raft.content.diving.item.OxygenTankItem;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.kasax.raft.compat.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.resources.Identifier;
+import net.kasax.raft.compat.gui.RenderPipelines;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -22,13 +22,13 @@ public final class OxygenHud {
     private OxygenHud() {
     }
 
-    public static final Identifier ID = Raft.id("oxygen_tank");
-    private static final Identifier FULL = Raft.id("hud/diving/oxygen_full");
-    private static final Identifier HALF = Raft.id("hud/diving/oxygen_half");
-    private static final Identifier EMPTY = Raft.id("hud/diving/oxygen_empty");
-    private static final Identifier LOW = Raft.id("hud/diving/oxygen_low");
-    private static final Identifier LOW_HALF = Raft.id("hud/diving/oxygen_low_half");
-    private static final Identifier ICON = Raft.id("hud/diving/oxygen_icon");
+    public static final ResourceLocation ID = Raft.id("oxygen_tank");
+    private static final ResourceLocation FULL = Raft.id("hud/diving/oxygen_full");
+    private static final ResourceLocation HALF = Raft.id("hud/diving/oxygen_half");
+    private static final ResourceLocation EMPTY = Raft.id("hud/diving/oxygen_empty");
+    private static final ResourceLocation LOW = Raft.id("hud/diving/oxygen_low");
+    private static final ResourceLocation LOW_HALF = Raft.id("hud/diving/oxygen_low_half");
+    private static final ResourceLocation ICON = Raft.id("hud/diving/oxygen_icon");
 
     public static void extract(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
         Minecraft mc = Minecraft.getInstance();
@@ -46,7 +46,7 @@ public final class OxygenHud {
         int capacity = Math.max(1, OxygenTankItem.capacity(tank));
         int air = OxygenTankItem.getAir(tank);
         boolean usable = DivingGear.wearsHelmet(player);
-        int ticks = mc.gui.hud.getGuiTicks();
+        int ticks = mc.gui.getGuiTicks();
         boolean low = air <= 300;
         boolean amber = air * 4 <= capacity;
         // ten capsules, each worth a tenth of the tank (halves for finer reading)
@@ -60,7 +60,7 @@ public final class OxygenHud {
         for (int i = 0; i < 10; i++) {
             int x = xRight - i * 8 - 9;
             int filled = halves - (9 - i) * 2;
-            Identifier sprite;
+            ResourceLocation sprite;
             if (filled >= 2) {
                 sprite = amber ? LOW : FULL;
             } else if (filled == 1) {

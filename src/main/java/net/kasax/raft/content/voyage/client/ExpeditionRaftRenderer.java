@@ -6,14 +6,14 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.kasax.raft.content.voyage.ExpeditionRaft;
 import net.kasax.raft.content.voyage.RaftUpgrade;
-import net.minecraft.client.model.Model;
-import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.kasax.raft.compat.render.Model;
+import net.kasax.raft.compat.render.SubmitNodeCollector;
+import net.kasax.raft.compat.render.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.kasax.raft.compat.render.RenderTypes;
+import net.kasax.raft.compat.render.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Unit;
 import net.minecraft.world.phys.AABB;
@@ -21,8 +21,8 @@ import net.minecraft.world.phys.AABB;
 /** Renders the Expedition Raft: the model, the glowing lantern flames and the water mask over the deck. */
 @Environment(EnvType.CLIENT)
 public class ExpeditionRaftRenderer extends EntityRenderer<ExpeditionRaft, ExpeditionRaftRenderState> {
-    private static final Identifier TEXTURE = net.kasax.raft.Raft.id("textures/entity/expedition_raft.png");
-    private static final Identifier GLOW = net.kasax.raft.Raft.id("textures/entity/expedition_raft_glow.png");
+    private static final ResourceLocation TEXTURE = net.kasax.raft.Raft.id("textures/entity/expedition_raft.png");
+    private static final ResourceLocation GLOW = net.kasax.raft.Raft.id("textures/entity/expedition_raft_glow.png");
     private static final int FULL_BRIGHT = 0xF000F0;
 
     private final ExpeditionRaftModel model;
@@ -39,10 +39,10 @@ public class ExpeditionRaftRenderer extends EntityRenderer<ExpeditionRaft, Exped
     public void submit(ExpeditionRaftRenderState state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
         poseStack.pushPose();
         poseStack.translate(0.0F, 0.6F, 0.0F);
-        poseStack.rotateDegrees(Axis.YP, 180.0F - state.yRot);
+        poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - state.yRot));
         float hurt = state.hurtTime;
         if (hurt > 0.0F) {
-            poseStack.rotateDegrees(Axis.XP, Mth.sin(hurt) * hurt * state.damageTime / 20.0F * state.hurtDir);
+            poseStack.mulPose(Axis.XP.rotationDegrees(Mth.sin(hurt) * hurt * state.damageTime / 20.0F * state.hurtDir));
         }
         poseStack.scale(-1.0F, -1.0F, 1.0F);
         collector.submitModel(this.model, state, poseStack, TEXTURE, state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor);
@@ -66,7 +66,7 @@ public class ExpeditionRaftRenderer extends EntityRenderer<ExpeditionRaft, Exped
     @Override
     public void extractRenderState(ExpeditionRaft entity, ExpeditionRaftRenderState state, float partialTicks) {
         super.extractRenderState(entity, state, partialTicks);
-        state.yRot = entity.getYRot(partialTicks);
+        state.yRot = entity.getViewYRot(partialTicks);
         state.hurtTime = entity.getHurtTime() - partialTicks;
         state.hurtDir = entity.getHurtDir();
         state.damageTime = Math.max(entity.getDamage() - partialTicks, 0.0F);

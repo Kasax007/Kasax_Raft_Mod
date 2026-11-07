@@ -1,7 +1,7 @@
 package net.kasax.raft.content.shore.client.render;
 
-import net.minecraft.client.renderer.entity.state.HoldingEntityRenderState;
-import net.minecraft.world.entity.AnimationState;
+import net.kasax.raft.compat.render.HoldingEntityRenderState;
+import net.kasax.raft.compat.render.AnimState;
 
 /** Render state of the seagull: flight blend, flap cycle, banking and the food in its beak. */
 public class SeagullRenderState extends HoldingEntityRenderState {
@@ -13,6 +13,6 @@ public class SeagullRenderState extends HoldingEntityRenderState {
     public boolean floating;
     public boolean holdsItem;
     public float seed;
-    public final AnimationState peck = new AnimationState();
-    public final AnimationState call = new AnimationState();
+    public final AnimState peck = new AnimState();
+    public final AnimState call = new AnimState();
 }

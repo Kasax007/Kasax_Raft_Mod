@@ -18,9 +18,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
-import net.minecraft.util.ProblemReporter;
-import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.EntitySpawnRequest;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.level.Level;
@@ -30,13 +28,11 @@ import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.TagValueInput;
-import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -55,8 +51,10 @@ import java.util.UUID;
  */
 public final class VesselAssembler {
     /** Removal: clients only, no shape updates, no drops, no block entity side effects (contents are saved). */
+    // 1.21.1 has no flags to skip block entity side effects and onPlace: block entities are emptied first (lift()),
+    // and the move-by-piston flag keeps the removal quiet
     private static final int FLAGS_LIFT = Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_SUPPRESS_DROPS
-            | Block.UPDATE_SKIP_BLOCK_ENTITY_SIDEEFFECTS | Block.UPDATE_SKIP_ON_PLACE;
+            | Block.UPDATE_MOVE_BY_PISTON;
     /** Placement: clients only and no shape updates until every block is in place. */
     private static final int FLAGS_PLACE = Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE;
 
@@ -105,13 +103,13 @@ public final class VesselAssembler {
         }
         VesselShipyard.hold(level, plot);
         LAUNCHES.add(new Launch(level, helmPos.immutable(), player.getUUID(), plot, new int[1]));
-        player.sendOverlayMessage(Component.translatable("message.raft.vessel.setting_sail"));
+        player.displayClientMessage(Component.translatable("message.raft.vessel.setting_sail"), true);
         level.playSound(null, helmPos, SoundEvents.WOODEN_TRAPDOOR_OPEN, SoundSource.BLOCKS, 1.0F, 0.6F);
     }
 
     private static void refuse(ServerLevel level, BlockPos helmPos, ServerPlayer player, Component error) {
         Raft.LOGGER.info("Raft at {} cannot set sail: {}", helmPos.toShortString(), error.getString());
-        player.sendOverlayMessage(error);
+        player.displayClientMessage(error, true);
         level.playSound(null, helmPos, SoundEvents.WOOD_HIT, SoundSource.BLOCKS, 0.6F, 0.7F);
     }
 
@@ -316,10 +314,17 @@ public final class VesselAssembler {
         return Rotation.NONE;
     }
 
+    /** Removes a block quietly: its block entity is emptied first, so nothing spills (its data is saved before). */
+    private static void lift(ServerLevel level, BlockPos pos) {
+        BlockEntity be = level.getBlockEntity(pos);
+        if (be != null) {
+            net.minecraft.world.Clearable.tryClear(be);
+        }
+        level.setBlock(pos, Blocks.AIR.defaultBlockState(), FLAGS_LIFT);
+    }
+
     private static CompoundTag saveBlockEntity(BlockEntity be, ServerLevel level) {
-        TagValueOutput out = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, level.registryAccess());
-        be.saveWithId(out);
-        return out.buildResult();
+        return be.saveWithId(level.registryAccess());
     }
 
     private static VesselEntity build(ServerLevel level, BlockPos helmPos, Direction facing, Scan scan, int plot) {
@@ -392,7 +397,7 @@ public final class VesselAssembler {
             BlockPos pos = positions.get(i);
             BlockEntity be = level.getBlockEntity(pos);
             if (be != null) {
-                be.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, level.registryAccess(), tag));
+                be.loadWithComponents(tag, level.registryAccess());
                 be.setChanged();
                 BlockState state = level.getBlockState(pos);
                 level.sendBlockUpdated(pos, state, state, Block.UPDATE_ALL);
@@ -418,7 +423,7 @@ public final class VesselAssembler {
                 for (int y = 0; y < VesselShipyard.SIZE_Y; y++) {
                     cursor.set(origin.getX() + x, origin.getY() + y, origin.getZ() + z);
                     if (!level.getBlockState(cursor).isAir()) {
-                        level.setBlock(cursor, Blocks.AIR.defaultBlockState(), FLAGS_LIFT);
+                        lift(level, cursor);
                     }
                 }
             }
@@ -442,12 +447,12 @@ public final class VesselAssembler {
             if (!blocks.contains(support.asLong()) && !blocks.contains(hanging.getPos().asLong())) {
                 continue;
             }
-            TagValueOutput out = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, level.registryAccess());
+            CompoundTag out = new CompoundTag();
             if (!hanging.saveAsPassenger(out)) {
                 continue;
             }
             Vec3 at = Vec3.atCenterOf(hanging.getPos());
-            stowed.add(new VesselEntity.Stowed(pose.toLocal(at), out.buildResult(), bow));
+            stowed.add(new VesselEntity.Stowed(pose.toLocal(at), out, bow));
             hanging.discard();
         }
         return stowed;
@@ -474,7 +479,7 @@ public final class VesselAssembler {
             BlockPos p = BlockPos.of(key);
             positions.add(p);
             old.add(level.getBlockState(p));
-            level.setBlock(p, Blocks.AIR.defaultBlockState(), FLAGS_LIFT);
+            lift(level, p);
         }
         BlockState water = Blocks.WATER.defaultBlockState();
         for (BlockPos p : positions) {
@@ -667,13 +672,15 @@ public final class VesselAssembler {
             posTag.add(DoubleTag.valueOf(at.z));
             tag.put("Pos", posTag);
             tag.remove("UUID");
-            if (tag.contains("block_pos")) {
-                tag.store("block_pos", BlockPos.CODEC, BlockPos.containing(at));
+            if (tag.contains("TileX")) {
+                BlockPos tile = BlockPos.containing(at);
+                tag.putInt("TileX", tile.getX());
+                tag.putInt("TileY", tile.getY());
+                tag.putInt("TileZ", tile.getZ());
             }
-            EntityType.create(TagValueInput.create(ProblemReporter.DISCARDING, level.registryAccess(), tag), level,
-                    new EntitySpawnRequest(EntitySpawnReason.LOAD, true)).ifPresent(entity -> {
+            EntityType.create(tag, level).ifPresent(entity -> {
                 float yRot = entity.rotate(rotation);
-                entity.snapTo(at.x, at.y, at.z, yRot, entity.getXRot());
+                entity.moveTo(at.x, at.y, at.z, yRot, entity.getXRot());
                 level.addFreshEntity(entity);
             });
         }
@@ -704,11 +711,10 @@ public final class VesselAssembler {
         clearPlot(level, vessel.plot());
         Vec3 at = vessel.position().add(0.0, 1.0, 0.0);
         for (VesselEntity.Stowed s : vessel.stowed()) {
-            EntityType.create(TagValueInput.create(ProblemReporter.DISCARDING, level.registryAccess(), s.tag()), level,
-                    new EntitySpawnRequest(EntitySpawnReason.LOAD, true)).ifPresent(entity -> {
-                entity.snapTo(at.x, at.y, at.z, entity.getYRot(), entity.getXRot());
+            EntityType.create(s.tag(), level).ifPresent(entity -> {
+                entity.moveTo(at.x, at.y, at.z, entity.getYRot(), entity.getXRot());
                 if (entity instanceof HangingEntity hanging) {
-                    hanging.dropItem(level, null);
+                    hanging.dropItem(null);
                 }
             });
         }

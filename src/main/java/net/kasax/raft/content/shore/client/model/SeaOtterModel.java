@@ -2,7 +2,7 @@ package net.kasax.raft.content.shore.client.model;
 
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.shore.client.render.SeaOtterRenderState;
-import net.minecraft.client.model.EntityModel;
+import net.kasax.raft.compat.render.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -11,7 +11,7 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.AnimationState;
+import net.kasax.raft.compat.render.AnimState;
 
 /**
  * Sea otter: long body, round head with snout and ears, small front paws, webbed hind feet and a thick tail. Floating
@@ -82,7 +82,7 @@ public class SeaOtterModel extends EntityModel<SeaOtterRenderState> {
         return LayerDefinition.create(mesh, 64, 64);
     }
 
-    private static float seconds(AnimationState anim, float ageInTicks) {
+    private static float seconds(AnimState anim, float ageInTicks) {
         return anim.isStarted() ? anim.getTimeInMillis(ageInTicks) / 1000.0F : -1.0F;
     }
 

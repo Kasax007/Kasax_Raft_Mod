@@ -6,7 +6,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LeavesBlock;
-import net.minecraft.world.level.block.sounds.AmbientLeavesBlockSoundPlayer;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 
@@ -15,7 +14,7 @@ import static net.kasax.raft.block.custom.PalmCoconutLeaves.HAS_COCONUT;
 public class PalmLeaves extends LeavesBlock {
 
     public PalmLeaves(Properties properties) {
-        super(AmbientLeavesBlockSoundPlayer.noAmbientSound(), properties);
+        super(properties);
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(DISTANCE, 7).setValue(PERSISTENT, false).setValue(WATERLOGGED, false)
                 .setValue(HAS_COCONUT, false));

@@ -30,7 +30,7 @@ import net.minecraft.world.level.levelgen.structure.StructureStart;
  * of the structures referenced by the chunks around the position (structure references are known from the
  * structure_references status on, so this works from the features step on).
  */
-public final class ClearOfStructuresFilter implements PlacementFilter {
+public final class ClearOfStructuresFilter extends PlacementFilter {
     public static final MapCodec<ClearOfStructuresFilter> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             Codec.intRange(0, 32).fieldOf("distance").forGetter(f -> f.distance),
             Codec.BOOL.optionalFieldOf("whole_column", false).forGetter(f -> f.wholeColumn)
@@ -99,8 +99,10 @@ public final class ClearOfStructuresFilter implements PlacementFilter {
         return true;
     }
 
+    public static final net.minecraft.world.level.levelgen.placement.PlacementModifierType<ClearOfStructuresFilter> TYPE = () -> CODEC;
+
     @Override
-    public MapCodec<ClearOfStructuresFilter> codec() {
-        return CODEC;
+    public net.minecraft.world.level.levelgen.placement.PlacementModifierType<?> type() {
+        return TYPE;
     }
 }

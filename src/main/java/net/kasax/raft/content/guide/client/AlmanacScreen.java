@@ -1,7 +1,6 @@
 package net.kasax.raft.content.guide.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.kasax.raft.Raft;
@@ -10,26 +9,26 @@ import net.kasax.raft.content.guide.client.AlmanacBook.Section;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.kasax.raft.compat.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.input.KeyEvent;
-import net.minecraft.client.input.MouseButtonEvent;
+import net.kasax.raft.compat.gui.KeyEvent;
+import net.kasax.raft.compat.gui.MouseButtonEvent;
 import net.minecraft.client.multiplayer.ClientAdvancements;
 import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.state.EntityRenderState;
-import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.kasax.raft.compat.gui.RenderPipelines;
+import net.kasax.raft.compat.render.EntityRenderer;
+import net.kasax.raft.compat.render.EntityRenderState;
+import net.kasax.raft.compat.render.LivingEntityRenderState;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -54,8 +53,8 @@ import java.util.Optional;
  * of a chapter) opens that page instead.
  */
 @Environment(EnvType.CLIENT)
-public class AlmanacScreen extends Screen {
-    private static final Identifier TEXTURE = Raft.id("textures/gui/almanac.png");
+public class AlmanacScreen extends net.kasax.raft.compat.gui.BaseScreen {
+    private static final ResourceLocation TEXTURE = Raft.id("textures/gui/almanac.png");
     private static final int TEX_W = 512, TEX_H = 256;
     private static final int W = 320, H = 200, RIBBON_H = 26;
     private static final int[] TEXT_X = {22, 170};
@@ -92,7 +91,7 @@ public class AlmanacScreen extends Screen {
     public AlmanacScreen(ItemStack book) {
         super(Component.translatable("item.raft.seafarers_almanac"));
         CustomData data = book.get(DataComponents.CUSTOM_DATA);
-        this.bookmark = data == null ? "" : data.copyTag().getStringOr("almanac", "");
+        this.bookmark = data == null ? "" : net.kasax.raft.compat.Nbt.getStringOr(data.copyTag(), "almanac", "");
         this.chapters = AlmanacBook.chapters(leviathanDefeated());
     }
 
@@ -104,7 +103,7 @@ public class AlmanacScreen extends Screen {
         }
         ClientAdvancements advancements = connection.getAdvancements();
         AdvancementHolder holder = advancements.get(Raft.id("story/leviathan"));
-        AdvancementProgress progress = holder == null ? null : advancements.progress().get(holder);
+        AdvancementProgress progress = holder == null ? null : ((net.kasax.raft.compat.mixin.ClientAdvancementsAccess) advancements).raft$progress().get(holder);
         return progress != null && progress.isDone();
     }
 
@@ -391,7 +390,6 @@ public class AlmanacScreen extends Screen {
         drawArrow(g, mouseX, mouseY, false);
         drawArrow(g, mouseX, mouseY, true);
         if (overRibbon(mouseX, mouseY)) {
-            g.requestCursor(CursorTypes.POINTING_HAND);
             g.setTooltipForNextFrame(this.font, Component.translatable("gui.raft.almanac.contents"), mouseX, mouseY);
         }
     }
@@ -405,7 +403,6 @@ public class AlmanacScreen extends Screen {
         g.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, x, this.top + PAGE_NO_Y - 1, hover ? 338 : 320, next ? 0 : 10,
                 18, 10, TEX_W, TEX_H);
         if (hover) {
-            g.requestCursor(CursorTypes.POINTING_HAND);
         }
     }
 
@@ -426,7 +423,6 @@ public class AlmanacScreen extends Screen {
             int[] r = contentsRect(i);
             if (i == hover) {
                 g.fill(r[0], r[1], r[0] + r[2], r[1] + r[3], HOVER);
-                g.requestCursor(CursorTypes.POINTING_HAND);
             }
             ItemStack icon = stack(c.icon());
             if (!icon.isEmpty()) {
@@ -533,8 +529,8 @@ public class AlmanacScreen extends Screen {
 
     private ItemStack stack(String id) {
         return this.stacks.computeIfAbsent(id, k -> {
-            Identifier ident = Identifier.tryParse(k);
-            Item item = ident == null ? Items.AIR : BuiltInRegistries.ITEM.getValue(ident);
+            ResourceLocation ident = ResourceLocation.tryParse(k);
+            Item item = ident == null ? Items.AIR : BuiltInRegistries.ITEM.get(ident);
             return item == Items.AIR ? ItemStack.EMPTY : new ItemStack(item);
         });
     }
@@ -547,11 +543,11 @@ public class AlmanacScreen extends Screen {
             return this.creatures.get(id);
         }
         LivingEntity living = null;
-        Identifier ident = Identifier.tryParse(id);
+        ResourceLocation ident = ResourceLocation.tryParse(id);
         Optional<EntityType<?>> type = ident == null ? Optional.empty() : BuiltInRegistries.ENTITY_TYPE.getOptional(ident);
         if (type.isPresent()) {
             try {
-                Entity e = type.get().create(this.minecraft.level, EntitySpawnReason.LOAD);
+                Entity e = type.get().create(this.minecraft.level);
                 if (e instanceof LivingEntity l) {
                     l.setId(-3000 - this.creatures.size());   // never added to the level, but rendering wants an id
                     living = l;
@@ -599,22 +595,22 @@ public class AlmanacScreen extends Screen {
         float time = (System.currentTimeMillis() - this.openedAt) / 1000.0F;
         float yaw = tweak[1] + Mth.sin(time * 0.6F) * 15.0F;
         try {
-            EntityRenderer<? super LivingEntity, ?> renderer = this.minecraft.getEntityRenderDispatcher().getRenderer(entity);
-            EntityRenderState state = renderer.createRenderState(entity, partial);
-            state.shadowPieces.clear();
-            state.outlineColor = 0;
-            if (state instanceof LivingEntityRenderState living) {
-                living.bodyRot = yaw;
-                living.yRot = 0.0F;
-                living.xRot = 0.0F;
-                living.boundingBoxWidth = living.boundingBoxWidth / living.scale;
-                living.boundingBoxHeight = living.boundingBoxHeight / living.scale;
-                living.scale = 1.0F;
-            }
+            // 1.21.1: posed on the entity itself and drawn like the inventory's player
+            entity.yBodyRot = yaw;
+            entity.yBodyRotO = yaw;
+            entity.setYRot(yaw);
+            entity.yRotO = yaw;
+            entity.yHeadRot = yaw;
+            entity.yHeadRotO = yaw;
+            entity.setXRot(0.0F);
+            entity.xRotO = 0.0F;
             Quaternionf tilt = new Quaternionf().rotateX(tweak[2] * Mth.DEG_TO_RAD);
             Quaternionf rotation = new Quaternionf().rotateZ((float) Math.PI).mul(tilt);
-            Vector3f translation = new Vector3f(0.0F, state.boundingBoxHeight / 2.0F + 0.0625F, 0.0F);
-            g.entity(state, size, translation, rotation, tilt, x0, y0, x1, y1);
+            Vector3f translation = new Vector3f(0.0F, entity.getBbHeight() / 2.0F + 0.0625F, 0.0F);
+            g.vanilla().enableScissor(x0, y0, x1, y1);
+            net.minecraft.client.gui.screens.inventory.InventoryScreen.renderEntityInInventory(g.vanilla(), (x0 + x1) / 2.0F,
+                    (y0 + y1) / 2.0F, size, translation, rotation, tilt, entity);
+            g.vanilla().disableScissor();
         } catch (RuntimeException ex) {
             Raft.LOGGER.warn("Almanac: cannot draw {}: {}", id, ex.toString());
             this.creatures.put(id, null);

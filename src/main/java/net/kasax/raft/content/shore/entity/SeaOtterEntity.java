@@ -21,8 +21,8 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.AnimationState;
-import net.minecraft.world.entity.EntityReference;
-import net.minecraft.world.entity.EntitySpawnReason;
+import net.kasax.raft.compat.EntityReference;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -47,10 +47,10 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.pathfinder.PathType;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.kasax.raft.compat.ValueInput;
+import net.kasax.raft.compat.ValueOutput;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 
@@ -84,11 +84,11 @@ public class SeaOtterEntity extends Animal {
     public SeaOtterEntity(EntityType<? extends SeaOtterEntity> type, Level level) {
         super(type, level);
         this.setPathfindingMalus(PathType.WATER, 0.0F);
-        this.moveControl = new SmoothSwimmingMoveControl<>(this, 85, 12, 0.7F, 1.0F, false);
+        this.moveControl = new SmoothSwimmingMoveControl(this, 85, 12, 0.7F, 1.0F, false);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Animal.createAnimalAttributes()
+        return net.minecraft.world.entity.Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 10.0)
                 .add(Attributes.MOVEMENT_SPEED, 0.22)
                 .add(Attributes.FOLLOW_RANGE, 24.0)
@@ -170,8 +170,9 @@ public class SeaOtterEntity extends Animal {
     }
 
     @Override
-    protected void customServerAiStep(ServerLevel level) {
-        super.customServerAiStep(level);
+    protected void customServerAiStep() {
+        ServerLevel level = (ServerLevel) this.level();
+        super.customServerAiStep();
         if (this.trustTicks > 0) {
             this.trustTicks--;
         }
@@ -187,7 +188,7 @@ public class SeaOtterEntity extends Animal {
     }
 
     /** Buoyant: floats at the surface unless it is diving. */
-    @Override
+    
     protected void travelInWater(Vec3 input, double baseGravity, boolean isFalling, double oldY) {
         this.moveRelative(this.getSpeed(), input);
         this.move(MoverType.SELF, this.getDeltaMovement());
@@ -199,6 +200,18 @@ public class SeaOtterEntity extends Animal {
                 double dy = want - this.getY();
                 this.setDeltaMovement(this.getDeltaMovement().add(0.0, Mth.clamp(dy * 0.08, -0.03, 0.04), 0.0));
             }
+        }
+    }
+
+    /** 1.21.1 port: the newer game moves an entity in water through {@code travelInWater}; 1.21.1 only has travel. */
+    @Override
+    public void travel(Vec3 input) {
+        if (this.isControlledByLocalInstance() && this.isInWater() && this.isAffectedByFluids()
+                && !this.canStandOnFluid(this.level().getFluidState(this.blockPosition()))) {
+            this.travelInWater(input, this.getGravity(), this.getDeltaMovement().y <= 0.0, this.getY());
+            this.calculateEntityAnimation(false);
+        } else {
+            super.travel(input);
         }
     }
 
@@ -231,7 +244,7 @@ public class SeaOtterEntity extends Animal {
                 }
                 this.setPersistenceRequired();
                 level.broadcastEntityEvent(this, EVENT_HAPPY);
-                this.playSound(net.minecraft.sounds.SoundEvents.GENERIC_EAT.value(), 0.8F, 1.2F);
+                this.playSound(net.minecraft.sounds.SoundEvents.GENERIC_EAT, 0.8F, 1.2F);
                 this.playSound(ShoreSounds.SEA_OTTER_AMBIENT, 1.0F, 1.3F);
             }
             return InteractionResult.SUCCESS;
@@ -254,8 +267,9 @@ public class SeaOtterEntity extends Animal {
     }
 
     @Override
-    public boolean hurtServer(ServerLevel level, DamageSource source, float damage) {
-        boolean hurt = super.hurtServer(level, source, damage);
+    public boolean hurt(DamageSource source, float damage) {
+        if (!(this.level() instanceof ServerLevel level)) return false;
+        boolean hurt = super.hurt(source, damage);
         if (hurt) {
             this.crackTicks = 0;
             if (source.getEntity() instanceof Player player && this.trusted != null && this.trusted.matches(player)) {
@@ -267,9 +281,9 @@ public class SeaOtterEntity extends Animal {
 
     private ItemStack rollFind() {
         boolean pearl = this.random.nextInt(10) < 3;
-        Item item = BuiltInRegistries.ITEM.getValue(Raft.id(pearl ? "pearl" : "seashell"));
+        Item item = BuiltInRegistries.ITEM.get(Raft.id(pearl ? "pearl" : "seashell"));
         if (item == Items.AIR) {
-            item = BuiltInRegistries.ITEM.getValue(Raft.id("seashell"));
+            item = BuiltInRegistries.ITEM.get(Raft.id("seashell"));
         }
         return item == Items.AIR ? ItemStack.EMPTY : new ItemStack(item);
     }
@@ -306,8 +320,7 @@ public class SeaOtterEntity extends Animal {
         return false;
     }
 
-    @Override
-    protected boolean canBeABaby() {
+        protected boolean canBeABaby() {
         return false;
     }
 
@@ -345,23 +358,25 @@ public class SeaOtterEntity extends Animal {
 
     // ------------------------------------------------------------------------------------------ save
     @Override
-    protected void addAdditionalSaveData(ValueOutput output) {
-        super.addAdditionalSaveData(output);
+    public void addAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueOutput output = ValueOutput.of(tag121, this.registryAccess());
+        super.addAdditionalSaveData(output.tag());
         EntityReference.store(this.trusted, output, "Trusted");
         output.putInt("TrustTicks", this.trustTicks);
         output.putInt("GiftTimer", this.giftTimer);
     }
 
     @Override
-    protected void readAdditionalSaveData(ValueInput input) {
-        super.readAdditionalSaveData(input);
+    public void readAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueInput input = ValueInput.of(tag121, this.registryAccess());
+        super.readAdditionalSaveData(input.tag());
         this.trusted = EntityReference.read(input, "Trusted");
         this.trustTicks = input.getIntOr("TrustTicks", 0);
         this.giftTimer = input.getIntOr("GiftTimer", 2400);
     }
 
     /** In the upper water layer of the kelp forest, close to the surface. */
-    public static boolean checkSeaOtterSpawnRules(EntityType<SeaOtterEntity> type, ServerLevelAccessor level, EntitySpawnReason reason,
+    public static boolean checkSeaOtterSpawnRules(EntityType<SeaOtterEntity> type, ServerLevelAccessor level, MobSpawnType reason,
                                                   BlockPos pos, RandomSource random) {
         int seaLevel = level.getSeaLevel();
         return pos.getY() >= seaLevel - 4 && pos.getY() <= seaLevel
@@ -425,7 +440,7 @@ public class SeaOtterEntity extends Animal {
             if (otter.crackTicks % 12 == 6) {
                 otter.playSound(ShoreSounds.SEA_OTTER_CRACK, 0.8F, 0.9F + otter.random.nextFloat() * 0.3F);
                 if (otter.level() instanceof ServerLevel level) {
-                    level.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, Items.BONE_MEAL), otter.getX(), otter.getY() + 0.45,
+                    level.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, new net.minecraft.world.item.ItemStack(Items.BONE_MEAL)), otter.getX(), otter.getY() + 0.45,
                             otter.getZ(), 3, 0.08, 0.05, 0.08, 0.04);
                 }
             }

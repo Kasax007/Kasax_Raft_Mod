@@ -47,13 +47,8 @@ public class FurnaceEntity extends AbstractFurnaceBlockEntity {
     }
 
     @Override
-    protected int getBurnDuration(ServerLevel level, ItemStack fuelItem) {
-        return (int) (super.getBurnDuration(level, fuelItem) / getFuelModifier());
-    }
-
-    @Override
-    protected float getSpeedMultiplier(ServerLevel level, ItemStack fuelItem) {
-        return super.getSpeedMultiplier(level, fuelItem) * (float) getSpeedModifier();
+    protected int getBurnDuration(ItemStack fuelItem) {
+        return (int) (super.getBurnDuration(fuelItem) / getFuelModifier());
     }
 
     @Override

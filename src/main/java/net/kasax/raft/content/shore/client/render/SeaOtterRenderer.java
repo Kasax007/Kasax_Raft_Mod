@@ -4,14 +4,14 @@ import net.kasax.raft.Raft;
 import net.kasax.raft.content.shore.client.model.SeaOtterModel;
 import net.kasax.raft.content.shore.entity.SeaOtterEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.resources.Identifier;
+import net.kasax.raft.compat.render.MobRenderer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
 /** Sea otter. */
 public class SeaOtterRenderer extends MobRenderer<SeaOtterEntity, SeaOtterRenderState, SeaOtterModel> {
-    private static final Identifier TEXTURE = Raft.id("textures/entity/sea_otter.png");
+    private static final ResourceLocation TEXTURE = Raft.id("textures/entity/sea_otter.png");
 
     public SeaOtterRenderer(EntityRendererProvider.Context context) {
         super(context, new SeaOtterModel(context.bakeLayer(SeaOtterModel.LAYER)), 0.4F);
@@ -37,7 +37,7 @@ public class SeaOtterRenderer extends MobRenderer<SeaOtterEntity, SeaOtterRender
     }
 
     @Override
-    public Identifier getTextureLocation(SeaOtterRenderState state) {
+    public ResourceLocation getTextureLocation(SeaOtterRenderState state) {
         return TEXTURE;
     }
 }

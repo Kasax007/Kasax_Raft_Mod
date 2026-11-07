@@ -2,7 +2,7 @@ package net.kasax.raft.content.voyage.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.kasax.raft.compat.render.EntityRenderState;
 
 /** Everything the Expedition Raft model needs for one frame. */
 @Environment(EnvType.CLIENT)

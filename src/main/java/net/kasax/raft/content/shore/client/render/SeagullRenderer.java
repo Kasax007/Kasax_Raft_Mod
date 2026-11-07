@@ -5,19 +5,19 @@ import com.mojang.math.Axis;
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.shore.client.model.SeagullModel;
 import net.kasax.raft.content.shore.entity.SeagullEntity;
-import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.kasax.raft.compat.render.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.client.renderer.entity.state.HoldingEntityRenderState;
+import net.kasax.raft.compat.render.MobRenderer;
+import net.kasax.raft.compat.render.RenderLayer;
+import net.kasax.raft.compat.render.HoldingEntityRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
 /** Seagull with the food it snatched held in its beak. */
 public class SeagullRenderer extends MobRenderer<SeagullEntity, SeagullRenderState, SeagullModel> {
-    private static final Identifier TEXTURE = Raft.id("textures/entity/seagull.png");
+    private static final ResourceLocation TEXTURE = Raft.id("textures/entity/seagull.png");
 
     public SeagullRenderer(EntityRendererProvider.Context context) {
         super(context, new SeagullModel(context.bakeLayer(SeagullModel.LAYER)), 0.3F);
@@ -48,7 +48,7 @@ public class SeagullRenderer extends MobRenderer<SeagullEntity, SeagullRenderSta
     }
 
     @Override
-    public Identifier getTextureLocation(SeagullRenderState state) {
+    public ResourceLocation getTextureLocation(SeagullRenderState state) {
         return TEXTURE;
     }
 
@@ -66,7 +66,7 @@ public class SeagullRenderer extends MobRenderer<SeagullEntity, SeagullRenderSta
             }
             poseStack.pushPose();
             this.getParentModel().translateToBeak(poseStack);
-            poseStack.rotateDegrees(Axis.XP, 90.0F);
+            poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
             poseStack.scale(0.5F, 0.5F, 0.5F);
             state.heldItem.submit(poseStack, collector, lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor);
             poseStack.popPose();
