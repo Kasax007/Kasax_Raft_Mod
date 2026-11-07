@@ -494,6 +494,47 @@ public class BcScript implements FabricClientGameTest {
                 });
                 LOG.info("[bctest] MUSIC {}", res);
             }
+            case "dumpmodels" -> {
+                // dumpmodels <file>: every polygon of every raft: entity model layer in its default pose (model units,
+                // after the part transforms) as JSON lines, for the z-fighting check (tools/bctest/zfight_entities.py)
+                String name = arg.isEmpty() ? "models.jsonl" : arg;
+                String res = ctx.computeOnClient(mc -> {
+                    StringBuilder sb = new StringBuilder();
+                    int layers = 0;
+                    try {
+                        var f = net.minecraft.client.model.geom.EntityModelSet.class.getDeclaredField("roots");
+                        f.setAccessible(true);
+                        @SuppressWarnings("unchecked")
+                        var roots = (Map<net.minecraft.client.model.geom.ModelLayerLocation, ?>) f.get(mc.getEntityModels());
+                        for (var id : roots.keySet()) {
+                            if (!id.model().getNamespace().equals("raft")) continue;
+                            layers++;
+                            var part = mc.getEntityModels().bakeLayer(id);
+                            var ps = new com.mojang.blaze3d.vertex.PoseStack();
+                            String layer = id.toString();
+                            part.visit(ps, (pose, path, ci, cube) -> {
+                                for (var poly : cube.polygons) {
+                                    sb.append("{\"layer\":\"").append(layer).append("\",\"part\":\"").append(path)
+                                      .append("\",\"cube\":").append(ci).append(",\"v\":[");
+                                    boolean first = true;
+                                    for (var v : poly.vertices()) {
+                                        var wp = pose.pose().transformPosition(v.worldX(), v.worldY(), v.worldZ(), new org.joml.Vector3f()).mul(16f);
+                                        if (!first) sb.append(',');
+                                        first = false;
+                                        sb.append(String.format(Locale.ROOT, "[%.4f,%.4f,%.4f,%.5f,%.5f]", wp.x, wp.y, wp.z, v.u(), v.v()));
+                                    }
+                                    sb.append("]}\n");
+                                }
+                            });
+                        }
+                        Files.writeString(out.resolve(name), sb.toString());
+                    } catch (Exception e) {
+                        return "error " + e;
+                    }
+                    return layers + " layers";
+                });
+                LOG.info("[bctest] DUMPMODELS {}", res);
+            }
             case "count" -> {
                 // count <dimension>: entities per type loaded in that dimension (written to the log)
                 String dim = arg.isEmpty() ? "raft:raftdim" : arg;

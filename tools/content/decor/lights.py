@@ -108,7 +108,7 @@ def string_lights():
                     'down': ('bulb', [u0, 0, u0 + 2, 1]), 'up': ('bulb', [u0, 14, u0 + 2, 16])}
             m.box((bx - 0.75, wy - 2.5, 14.6), (bx + 0.75, wy - 0.5, 15.9), 'bulb', faces=bulb, light=15, collide=False)
             sock = {f: ('bulb', [u0, 14, u0 + 2, 16]) for f in ('north', 'south', 'west', 'east', 'up')}
-            m.box((bx - 0.5, wy - 0.5, 14.85), (bx + 0.5, wy + 0.5, 15.65), 'bulb', faces=sock, skip=('down',), collide=False)
+            m.box((bx - 0.5, wy - 0.5, 14.85), (bx + 0.5, wy + 0.5, 15.85), 'bulb', faces=sock, skip=('down',), collide=False)
         m.write(name)
         shape(name, [(0, 7, 14, 16, 16, 16)])
         A.blockstate(M, name, facing_variants(f'block/{name}'))

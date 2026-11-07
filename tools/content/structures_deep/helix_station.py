@@ -345,7 +345,8 @@ def hub(s, rnd):
         s.set(0, y, 0, 'raft:steel_beam[axis=y]')
     for (dx, dz) in ((1, 0), (-1, 0), (0, 1), (0, -1)):
         s.set(dx, 6, dz, BULB)
-    s.set(0, 1, 0, 'raft:chart_table[facing=south]')
+    # the chart table stands next to the column (under it, the things on the table stuck into the beam)
+    s.set(0, 1, -1, 'raft:chart_table[facing=north]')
     # dive lockers on the west wall
     for z in (-3, -2, -1, 1, 2, 3):
         x = -int(math.sqrt(max(0.0, 6.2 ** 2 - z * z)))
@@ -613,7 +614,7 @@ def exterior(s, rnd):
     for y in range(7, 13):
         s.set(4, y, -16, 'raft:steel_beam[axis=y]')
     s.set(4, 13, -16, 'minecraft:lightning_rod[facing=up,powered=false]')
-    for (dx, y) in ((-1, 11), (1, 10)):
+    for (dx, y) in ((-1, 11), (1, 11)):          # (not right above the buoy lamp, which reaches into that block)
         s.set(4 + dx, y, -16, 'minecraft:lightning_rod[facing=up,powered=false]')
     s.set(5, 9, -16, 'raft:buoy_red')
     # vent stacks and a roof hatch on the generator

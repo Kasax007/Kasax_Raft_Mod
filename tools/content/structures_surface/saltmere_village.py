@@ -608,7 +608,8 @@ def junction_l():
     s.set(5, DY + 1, 4, FENCE); s.set(5, DY + 2, 4, FENCE)
     s.set(5, DY + 2, 3, ROPE)
     s.set(5, DY + 1, 3, 'minecraft:dried_kelp_block')
-    s.set(5, DY + 1, 5, 'raft:deck_chair[facing=south]')
+    # the chair's tilted back reaches into the next block: lean it over the open deck, not into the railing
+    s.set(5, DY + 1, 5, 'raft:deck_chair[facing=west]')
     entry(s, 3)
     exit_(s, 0, 3, 'west', 'huts')
     exit_(s, 3, 6, 'south', 'huts')

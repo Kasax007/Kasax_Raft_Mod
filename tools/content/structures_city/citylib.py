@@ -467,3 +467,18 @@ def contact_sheet(paths, out, width=1800):
         y += hs[r]
     sheet.save(out)
     return out
+
+
+# blocks that the rods sticking out of rebar_concrete's top would poke through (they show inside these)
+THIN_ABOVE = ('pane', 'shelf', 'lantern', 'chain', 'bars', 'rail', 'carpet', 'torch', 'button', 'pressure_plate')
+
+
+def no_rebar_into(s):
+    """Rebar concrete whose block above is a thin block (glass pane, shelf, lantern, ...) becomes cracked concrete:
+    the rods on its top reach 4 px into the block above and would stick through such blocks."""
+    for (x, y, z), (name, props, nbt) in list(s.blocks.items()):
+        if name != 'raft:rebar_concrete':
+            continue
+        above = s.name_at(x, y + 1, z)
+        if above and any(t in above for t in THIN_ABOVE):
+            s.blocks[(x, y, z)] = ('raft:cracked_concrete', {}, None)

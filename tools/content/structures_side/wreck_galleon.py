@@ -406,6 +406,10 @@ def build(v):
         if name == 'raft:barnacles' and rnd.random() < 0.10:
             q = dict(props)
             s.blocks[pos] = ('minecraft:glow_lichen', q, nbt)
+    # the roll can leave a copy of the cabin's bottles hovering on the chair's back: drop it
+    for (x, y, z), (name, props, nbt) in list(s.blocks.items()):
+        if name == 'raft:rum_bottles' and s.name_at(x, y - 1, z) == 'raft:driftwood_chair':
+            s.set(x, y, z, 'minecraft:water')
     return s
 
 

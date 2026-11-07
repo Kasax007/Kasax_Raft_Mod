@@ -341,7 +341,7 @@ def jolly_roger():
     A.blockstate(M, 'jolly_roger', facing_variants('block/jolly_roger'))
     it = im.crop((0, 0, 16, 16)).copy()
     sp = art.img()
-    sp.alpha_composite(it.resize((14, 13)), (1, 2))
+    sp.alpha_composite(it.crop((1, 2, 15, 15)), (1, 2))      # the flag part (as on the block), not resampled
     for x in range(1, 15):
         P(sp, x, 1, art.TEAK[4])
     art.save(art.sprite_finish(sp), 'item/jolly_roger')
@@ -718,7 +718,7 @@ def chart_table():
         m.box((x, 0, z), (x + 2.5, 13, z + 2.5), 'legs')
     m.box((3.5, 3, 1.75), (12.5, 4, 2.75), 'wood', collide=False)
     m.box((3.5, 3, 13.25), (12.5, 4, 14.25), 'wood', collide=False)
-    m.box((1.5, 16, 2), (14.5, 16.05, 14), 'chart', faces={'up': ('chart', [0, 0, 16, 16], 90)}, only=('up',), collide=False)
+    m.box((1.5, 16, 2), (14.5, 16.1, 14), 'chart', faces={'up': ('chart', [0, 0, 16, 16], 90)}, only=('up',), collide=False)
     m.box((11.5, 16, 2.5), (13.5, 17.75, 4.5), 'iron', collide=False)          # ink bottle
     m.box((12, 17.75, 3), (13, 18.25, 4), 'brass', collide=False)
     m.box((4, 16, 9), (5.5, 16.6, 13.5), 'brass', rot=('y', 22.5, (4.75, 16, 11)), collide=False)  # dividers
