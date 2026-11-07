@@ -143,7 +143,7 @@ public final class StructAudit {
                 level.getChunk(cx, cz);                         // full status: every feature that can reach it ran
             }
         }
-        var templates = server.getStructureTemplateManager();
+        var templates = server.getStructureManager();
         List<String> lines = new ArrayList<>();
         lines.add("structure " + id + " bbox " + box(bb));
 
@@ -162,7 +162,7 @@ public final class StructAudit {
             }
             ResourceLocation tid;
             try {
-                tid = el.getTemplateLocation();
+                tid = ((net.kasax.raft.gametest.mixin.SinglePoolElementAccess) el).bc$template().left().orElseThrow(() -> new IllegalStateException("inline"));
             } catch (RuntimeException e) {
                 pieceNames.add("inline");
                 continue;
@@ -193,7 +193,7 @@ public final class StructAudit {
                 exp.put(wp.asLong(), new Exp(info.state().rotate(pe.getRotation()), index, tid.getPath(), info.pos()));
             }
             for (StructureTemplate.StructureEntityInfo e : ((StructureTemplateAccess) t).bc$entities()) {
-                String eid = e.nbt.getString("id").orElse("");
+                String eid = e.nbt.getString("id");
                 EntityType<?> type = eid.isEmpty() ? null : BuiltInRegistries.ENTITY_TYPE.getOptional(ResourceLocation.parse(eid)).orElse(null);
                 if (type == null || !eid.startsWith("raft:")) continue;
                 Vec3 at = StructureTemplate.transform(e.pos, Mirror.NONE, pe.getRotation(), BlockPos.ZERO)
@@ -210,7 +210,7 @@ public final class StructAudit {
         net.minecraft.world.level.ChunkPos sc = st.getChunkPos();
         for (StructurePiece pc : st.getPieces()) {
             BoundingBox b = pc.getBoundingBox();
-            if ((b.minX() >> 4) < sc.x() - 8 || (b.maxX() >> 4) > sc.x() + 8 || (b.minZ() >> 4) < sc.z() - 8 || (b.maxZ() >> 4) > sc.z() + 8) {
+            if ((b.minX() >> 4) < sc.x - 8 || (b.maxX() >> 4) > sc.x + 8 || (b.minZ() >> 4) < sc.z - 8 || (b.maxZ() >> 4) > sc.z + 8) {
                 beyond++;
                 lines.add("piece beyond 8 chunks of the start " + sc + ": " + box(b));
             }

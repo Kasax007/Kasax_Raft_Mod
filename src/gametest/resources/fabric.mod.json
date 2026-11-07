@@ -5,9 +5,14 @@
   "name": "Beach Craft test harness",
   "environment": "client",
   "entrypoints": {
-    "fabric-client-gametest": ["net.kasax.raft.gametest.BcScript"],
-    "client": ["net.kasax.raft.gametest.KeyFix"]
+    "client": [
+      "net.kasax.raft.gametest.Harness"
+    ]
   },
-  "depends": {"fabric-client-gametest-api-v1": "*", "raft": "*"},
-  "mixins": ["raft-gametest.mixins.json"]
+  "depends": {
+    "raft": "*"
+  },
+  "mixins": [
+    "raft-gametest.mixins.json"
+  ]
 }

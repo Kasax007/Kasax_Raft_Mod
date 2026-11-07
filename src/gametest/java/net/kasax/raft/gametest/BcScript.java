@@ -201,7 +201,7 @@ public class BcScript implements FabricClientGameTest {
             mc.options.chatVisibility().set(ChatVisiblity.HIDDEN);
             mc.options.tutorialStep = TutorialSteps.NONE;
             mc.options.fovEffectScale().set(0.0);
-            mc.resizeGui();
+            mc.resizeDisplay();
         });
         try {
             for (int n = 0; n < lines.size(); n++) {
@@ -360,13 +360,13 @@ public class BcScript implements FabricClientGameTest {
                 ctx.getInput().resizeWindow(Integer.parseInt(wh[0]), Integer.parseInt(wh[1]));
             }
             case "hud" -> ctx.runOnClient(mc -> {
-                if (mc.gui.hud.isHidden() != arg.equals("off")) mc.gui.hud.toggle();
+                mc.options.hideGui = arg.equals("off");
             });
             case "third" -> ctx.runOnClient(mc -> mc.options.setCameraType(arg.equals("on") ? CameraType.THIRD_PERSON_BACK
                     : arg.equals("front") ? CameraType.THIRD_PERSON_FRONT : CameraType.FIRST_PERSON));
             case "gui" -> ctx.runOnClient(mc -> {
                 mc.options.guiScale().set(Integer.parseInt(arg));
-                mc.resizeGui();
+                mc.resizeDisplay();
             });
             case "rd" -> ctx.runOnClient(mc -> mc.options.renderDistance().set(Integer.parseInt(arg)));
             case "clouds" -> ctx.runOnClient(mc -> mc.options.cloudStatus().set(arg.equals("off") ? net.minecraft.client.CloudStatus.OFF : net.minecraft.client.CloudStatus.FANCY));
@@ -439,15 +439,15 @@ public class BcScript implements FabricClientGameTest {
             case "tab" -> ctx.runOnClient(mc -> {
                 // tab <id> [rows]: open the creative inventory on that tab (scrolled down by rows) and log its items
                 String[] ta = arg.split("\\s+");
-                var tab = BuiltInRegistries.CREATIVE_MODE_TAB.getValue(ResourceLocation.parse(ta[0]));
+                var tab = BuiltInRegistries.CREATIVE_MODE_TAB.get(ResourceLocation.parse(ta[0]));
                 var screen = new net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen(
                         mc.player, mc.player.connection.enabledFeatures(), false);
-                mc.gui.setScreen(screen);
+                mc.setScreen(screen);
                 if (tab == null) {
                     LOG.warn("[bctest] no creative tab {}", arg);
                     return;
                 }
-                ((net.fabricmc.fabric.api.client.creativetab.v1.FabricCreativeModeInventoryScreen) (Object) screen).setSelectedTab(tab);
+                ((net.kasax.raft.gametest.mixin.CreativeScreenInvoker) screen).bc$selectTab(tab);
                 if (ta.length > 1) screen.mouseScrolled(0, 0, 0, -Double.parseDouble(ta[1]));
                 StringBuilder ids = new StringBuilder();
                 for (var stack : tab.getDisplayItems()) {
@@ -478,19 +478,19 @@ public class BcScript implements FabricClientGameTest {
                 // "constant" plays music without pauses between pieces (to see it quickly in the sound log)
                 if (arg.equals("constant")) {
                     ctx.runOnClient(mc -> {
-                        mc.options.musicFrequency().set(net.minecraft.client.sounds.MusicManager.MusicFrequency.CONSTANT);
-                        mc.getMusicManager().setMinutesBetweenSongs(net.minecraft.client.sounds.MusicManager.MusicFrequency.CONSTANT);
+                        // 1.21.1 has no music frequency option: start the situational music now instead
+                        mc.getMusicManager().startPlaying(mc.getSituationalMusic());
                     });
                 }
                 String res = ctx.computeOnClient(mc -> {
                     var music = mc.getSituationalMusic();
                     return String.format(Locale.ROOT, "situational=%s place=%s fight=%s openSea=%.2f night=%s playing=%s",
-                            music == null ? "none" : music.sound().unwrapKey().map(k -> k.location().toString()).orElse("?"),
+                            music == null ? "none" : music.getEvent().unwrapKey().map(k -> k.location().toString()).orElse("?"),
                             net.kasax.raft.content.audio.client.MusicDirector.place(),
                             net.kasax.raft.content.audio.client.MusicDirector.inFight(),
                             net.kasax.raft.content.audio.client.AudioClient.openSea(),
                             mc.level != null && net.kasax.raft.content.audio.client.MusicDirector.isNight(mc.level),
-                            mc.getMusicManager().getCurrentMusicTranslationKey());
+                            mc.getMusicManager().isPlayingMusic(mc.getSituationalMusic()));
                 });
                 LOG.info("[bctest] MUSIC {}", res);
             }
@@ -500,7 +500,7 @@ public class BcScript implements FabricClientGameTest {
                 int[] c = new int[6];
                 for (int i = 0; i < 6; i++) c[i] = (int) Math.floor(Double.parseDouble(a[i + 1]));
                 String res = need().getServer().computeOnServer(server -> {
-                    var level = server.getLevel(ResourceKey.create(Registries.DIMENSION, Identifier.parse(a[0])));
+                    var level = server.getLevel(ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(a[0])));
                     if (level == null) return "no level";
                     StringBuilder sb = new StringBuilder();
                     for (BlockPos bp : BlockPos.betweenClosed(Math.min(c[0], c[3]), Math.min(c[1], c[4]), Math.min(c[2], c[5]),
@@ -527,21 +527,21 @@ public class BcScript implements FabricClientGameTest {
                         @SuppressWarnings("unchecked")
                         var roots = (Map<net.minecraft.client.model.geom.ModelLayerLocation, ?>) f.get(mc.getEntityModels());
                         for (var id : roots.keySet()) {
-                            if (!id.model().getNamespace().equals("raft")) continue;
+                            if (!id.getModel().getNamespace().equals("raft")) continue;
                             layers++;
                             var part = mc.getEntityModels().bakeLayer(id);
                             var ps = new com.mojang.blaze3d.vertex.PoseStack();
                             String layer = id.toString();
                             part.visit(ps, (pose, path, ci, cube) -> {
-                                for (var poly : cube.polygons) {
+                                for (var poly : ((net.kasax.raft.compat.mixin.CubeAccess) cube).raft$polygons()) {
                                     sb.append("{\"layer\":\"").append(layer).append("\",\"part\":\"").append(path)
                                       .append("\",\"cube\":").append(ci).append(",\"v\":[");
                                     boolean first = true;
-                                    for (var v : poly.vertices()) {
-                                        var wp = pose.pose().transformPosition(v.worldX(), v.worldY(), v.worldZ(), new org.joml.Vector3f()).mul(16f);
+                                    for (var v : poly.vertices) {
+                                        var wp = pose.pose().transformPosition(v.pos.x() / 16f, v.pos.y() / 16f, v.pos.z() / 16f, new org.joml.Vector3f()).mul(16f);
                                         if (!first) sb.append(',');
                                         first = false;
-                                        sb.append(String.format(Locale.ROOT, "[%.4f,%.4f,%.4f,%.5f,%.5f]", wp.x, wp.y, wp.z, v.u(), v.v()));
+                                        sb.append(String.format(Locale.ROOT, "[%.4f,%.4f,%.4f,%.5f,%.5f]", wp.x, wp.y, wp.z, v.u, v.v));
                                     }
                                     sb.append("]}\n");
                                 }
@@ -924,9 +924,9 @@ public class BcScript implements FabricClientGameTest {
                     if (mc.level == null || mc.player == null) return true;
                     // after a dimension change the player only moves (and sends moves) once the client has loaded
                     // the level: it needs drawn frames for that, else it gives up after 30 s
-                    if (mc.getConnection() != null && !mc.getConnection().hasClientLoaded()) return false;
+                    if (mc.getConnection() == null || mc.player == null) return false;
                     int need = Math.max(2, mc.options.getEffectiveRenderDistance() - 1);
-                    int cx = mc.player.chunkPosition().x(), cz = mc.player.chunkPosition().z();
+                    int cx = mc.player.chunkPosition().x, cz = mc.player.chunkPosition().z;
                     for (int dx = -need; dx <= need; dx++) {
                         for (int dz = -need; dz <= need; dz++) {
                             if (dx * dx + dz * dz > need * need) continue;
@@ -951,7 +951,7 @@ public class BcScript implements FabricClientGameTest {
             var pl = server.getPlayerList().getPlayers().getFirst();
             var level = (ServerLevel) pl.level();
             int need = Math.max(2, rd - 1);
-            int cx = pl.chunkPosition().x(), cz = pl.chunkPosition().z();
+            int cx = pl.chunkPosition().x, cz = pl.chunkPosition().z;
             for (int dx = -need; dx <= need; dx++) {
                 for (int dz = -need; dz <= need; dz++) {
                     if (dx * dx + dz * dz > need * need) continue;
@@ -1337,7 +1337,7 @@ public class BcScript implements FabricClientGameTest {
     private static List<BlockPos> scan(net.minecraft.server.MinecraftServer server, String id, int r) {
         var pl = server.getPlayerList().getPlayers().getFirst();
         ServerLevel level = (ServerLevel) pl.level();
-        Block b = BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(id));
+        Block b = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(id));
         BlockPos c = pl.blockPosition();
         List<BlockPos> hits = new ArrayList<>();
         int rc = (r >> 4) + 1;

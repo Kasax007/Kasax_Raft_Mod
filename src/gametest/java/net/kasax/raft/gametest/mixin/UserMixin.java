@@ -22,7 +22,7 @@ public class UserMixin {
     @Unique
     private static final UUID BCTEST_ID = UUID.fromString("6513270e-269e-3d37-b2a7-4de452e6b438");
     @Unique
-    private static final User BCTEST_USER = new User("Castaway", BCTEST_ID, "", Optional.empty(), Optional.empty());
+    private static final User BCTEST_USER = new User("Castaway", BCTEST_ID, "", Optional.empty(), Optional.empty(), User.Type.LEGACY);
 
     @Inject(method = "getUser", at = @At("HEAD"), cancellable = true)
     private void bctest$user(CallbackInfoReturnable<User> cir) {

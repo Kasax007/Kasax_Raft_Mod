@@ -55,16 +55,16 @@ public final class FilmSound {
     public static synchronized void log(SoundManager manager, SoundInstance s) {
         if (out == null) return;
         try {
-            if (s.getOrResolve(manager) == null) return;
+            if (s.resolve(manager) == null) return;
             Sound sound = s.getSound();
             if (sound == null) return;
             Minecraft mc = Minecraft.getInstance();
             double t = mc.level == null ? 0 : (mc.level.getGameTime() - startTick) / 20.0;
-            Vec3 cam = mc.gameRenderer.mainCamera().position();
+            Vec3 cam = mc.gameRenderer.getMainCamera().getPosition();
             out.write(String.format(Locale.ROOT,
                     "{\"t\": %.3f, \"event\": \"%s\", \"file\": \"%s\", \"volume\": %.3f, \"pitch\": %.3f, \"x\": %.2f, \"y\": %.2f, \"z\": %.2f, "
                             + "\"attenuation\": \"%s\", \"relative\": %s, \"distance\": %d, \"source\": \"%s\", \"cam_x\": %.2f, \"cam_y\": %.2f, \"cam_z\": %.2f}\n",
-                    t, s.getIdentifier(), sound.getPath(), s.getVolume(), s.getPitch(), s.getX(), s.getY(), s.getZ(),
+                    t, s.getLocation(), sound.getPath(), s.getVolume(), s.getPitch(), s.getX(), s.getY(), s.getZ(),
                     s.getAttenuation().name(), s.isRelative(), sound.getAttenuationDistance(), s.getSource().getName(), cam.x, cam.y, cam.z));
             out.flush();
         } catch (Exception e) {

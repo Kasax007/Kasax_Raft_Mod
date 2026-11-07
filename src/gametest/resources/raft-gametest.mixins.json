@@ -8,12 +8,14 @@
     "HoldWorldMixin"
   ],
   "client": [
-    "ScreenshotLeakMixin",
     "SoundLogMixin",
     "NoRenderMixin",
     "UserMixin",
     "FreeCamMixin",
-    "HoldPlayerMixin"
+    "HoldPlayerMixin",
+    "MouseHandlerInvoker",
+    "CreateWorldScreenInvoker",
+    "CreativeScreenInvoker"
   ],
   "injectors": {
     "defaultRequire": 1
