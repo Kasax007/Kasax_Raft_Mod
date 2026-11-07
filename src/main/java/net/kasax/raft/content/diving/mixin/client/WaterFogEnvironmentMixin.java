@@ -16,7 +16,18 @@ public abstract class WaterFogEnvironmentMixin {
     @Inject(method = "setupFog", at = @At("TAIL"))
     private static void raft$helmetVision(Camera camera, FogRenderer.FogMode mode, float renderDistance, boolean thickFog,
                                           float partialTick, CallbackInfo ci) {
-        if (camera.getFluidInCamera() != FogType.WATER || !DivingClient.cameraWearsHelmet(camera)) {
+        if (camera.getFluidInCamera() != FogType.WATER) {
+            return;
+        }
+        // 1.21.1 port: the water fog distance of Beach Craft's biomes (the newer game keeps it in biome attributes)
+        net.minecraft.client.multiplayer.ClientLevel level = net.minecraft.client.Minecraft.getInstance().level;
+        if (level != null) {
+            float factor = net.kasax.raft.compat.client.ItemModelProperties.waterFogFactor(level.getBiome(camera.getBlockPosition()));
+            if (factor != 1.0F) {
+                RenderSystem.setShaderFogEnd(RenderSystem.getShaderFogEnd() * factor);
+            }
+        }
+        if (!DivingClient.cameraWearsHelmet(camera)) {
             return;
         }
         float baseEnd = RenderSystem.getShaderFogEnd();

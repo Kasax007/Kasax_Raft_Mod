@@ -216,6 +216,14 @@ def finish_items(extras, stats):
         else:
             # select/condition/range models: overrides on the item model (1.21.1), predicates registered in Java
             base_model, overrides = models.item_overrides(m)
+            for o in overrides:
+                if o['model'] == own and own in existing:
+                    # the case shows the item's own model file, which now becomes the overrides file: keep it as _gui
+                    gui = own + '_gui'
+                    gui_path = os.path.join(os.path.dirname(existing[own]), os.path.basename(existing[own])[:-5] + '_gui.json')
+                    if not os.path.exists(gui_path):
+                        shutil.copyfile(existing[own], gui_path)
+                    o['model'] = gui
             data = {'parent': base_model, 'overrides': overrides}
             if own in existing and existing[own] != target:
                 os.remove(existing[own])

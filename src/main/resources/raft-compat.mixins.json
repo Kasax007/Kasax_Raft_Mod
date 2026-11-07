@@ -11,7 +11,8 @@
     "SinglePoolElementTemplateAccess"
   ],
   "client": [
-    "ClientAdvancementsAccess"
+    "ClientAdvancementsAccess",
+    "ItemRendererGuiModelMixin"
   ],
   "injectors": {
     "defaultRequire": 1
