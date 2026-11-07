@@ -19,7 +19,8 @@ public final class ModContent {
             new net.kasax.raft.content.boss.BossModule(),
             new net.kasax.raft.content.guide.GuideModule(),
             new net.kasax.raft.content.audio.AudioModule(),
-            new net.kasax.raft.content.npc.NpcModule());
+            new net.kasax.raft.content.npc.NpcModule(),
+            new net.kasax.raft.content.encounters.EncountersModule());
 
     private ModContent() {
     }

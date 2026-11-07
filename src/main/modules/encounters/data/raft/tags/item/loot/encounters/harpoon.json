@@ -1,0 +1,8 @@
+{
+  "values": [
+    {
+      "id": "raft:harpoon",
+      "required": false
+    }
+  ]
+}

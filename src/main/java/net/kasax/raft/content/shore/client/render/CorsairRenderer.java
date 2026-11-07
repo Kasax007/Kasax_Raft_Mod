@@ -26,15 +26,24 @@ public class CorsairRenderer extends AbstractZombieRenderer<DrownedCorsairEntity
     private static final Identifier COAT = Raft.id("textures/entity/drowned_corsair/drowned_corsair_coat.png");
     private static final Identifier HAT = Raft.id("textures/entity/drowned_corsair/drowned_corsair_hat.png");
 
+    private final Identifier texture;
+
     public CorsairRenderer(EntityRendererProvider.Context context) {
-        this(context, new CorsairModel(context.bakeLayer(ModelLayers.DROWNED)),
-                ArmorModelSet.bake(ModelLayers.DROWNED_ARMOR, context.getModelSet(), CorsairModel::new));
+        this(context, TEXTURE, COAT, HAT);
     }
 
-    private CorsairRenderer(EntityRendererProvider.Context context, CorsairModel model, ArmorModelSet<CorsairModel> armor) {
+    /** A corsair with other clothes (the captain of the encounters module). */
+    protected CorsairRenderer(EntityRendererProvider.Context context, Identifier texture, Identifier coat, Identifier hat) {
+        this(context, new CorsairModel(context.bakeLayer(ModelLayers.DROWNED)),
+                ArmorModelSet.bake(ModelLayers.DROWNED_ARMOR, context.getModelSet(), CorsairModel::new), texture, coat, hat);
+    }
+
+    private CorsairRenderer(EntityRendererProvider.Context context, CorsairModel model, ArmorModelSet<CorsairModel> armor,
+                            Identifier texture, Identifier coat, Identifier hat) {
         super(context, model, model, armor, armor);
-        this.addLayer(new CoatLayer(this, context.getModelSet()));
-        this.addLayer(new HatLayer(this, context.getModelSet()));
+        this.texture = texture;
+        this.addLayer(new CoatLayer(this, context.getModelSet(), coat));
+        this.addLayer(new HatLayer(this, context.getModelSet(), hat));
     }
 
     @Override
@@ -44,7 +53,7 @@ public class CorsairRenderer extends AbstractZombieRenderer<DrownedCorsairEntity
 
     @Override
     public Identifier getTextureLocation(ZombieRenderState state) {
-        return TEXTURE;
+        return this.texture;
     }
 
     @Override
@@ -60,33 +69,37 @@ public class CorsairRenderer extends AbstractZombieRenderer<DrownedCorsairEntity
     /** Ragged coat, sash and boots on a slightly bigger copy of the body. */
     private static class CoatLayer extends RenderLayer<ZombieRenderState, CorsairModel> {
         private final CorsairModel model;
+        private final Identifier coat;
 
-        CoatLayer(RenderLayerParent<ZombieRenderState, CorsairModel> parent, EntityModelSet models) {
+        CoatLayer(RenderLayerParent<ZombieRenderState, CorsairModel> parent, EntityModelSet models, Identifier coat) {
             super(parent);
             this.model = new CorsairModel(models.bakeLayer(ModelLayers.DROWNED_OUTER_LAYER));
+            this.coat = coat;
         }
 
         @Override
         public void submit(PoseStack poseStack, SubmitNodeCollector collector, int lightCoords, ZombieRenderState state,
                            float yRot, float xRot) {
-            coloredCutoutModelCopyLayerRender(this.model, COAT, poseStack, collector, lightCoords, state, -1, 1);
+            coloredCutoutModelCopyLayerRender(this.model, this.coat, poseStack, collector, lightCoords, state, -1, 1);
         }
     }
 
     /** The tricorn. */
     private static class HatLayer extends RenderLayer<ZombieRenderState, CorsairModel> {
         private final CorsairModel model;
+        private final Identifier hat;
 
-        HatLayer(RenderLayerParent<ZombieRenderState, CorsairModel> parent, EntityModelSet models) {
+        HatLayer(RenderLayerParent<ZombieRenderState, CorsairModel> parent, EntityModelSet models, Identifier hat) {
             super(parent);
             this.model = new CorsairModel(models.bakeLayer(CorsairModel.HAT_LAYER));
+            this.hat = hat;
         }
 
         @Override
         public void submit(PoseStack poseStack, SubmitNodeCollector collector, int lightCoords, ZombieRenderState state,
                            float yRot, float xRot) {
             if (state.headEquipment.isEmpty() && state.headItem.isEmpty() && state.wornHeadType == null) {
-                coloredCutoutModelCopyLayerRender(this.model, HAT, poseStack, collector, lightCoords, state, -1, 2);
+                coloredCutoutModelCopyLayerRender(this.model, this.hat, poseStack, collector, lightCoords, state, -1, 2);
             }
         }
     }

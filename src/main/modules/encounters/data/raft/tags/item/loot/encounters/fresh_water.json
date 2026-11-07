@@ -1,0 +1,8 @@
+{
+  "values": [
+    {
+      "id": "raft:fresh_water",
+      "required": false
+    }
+  ]
+}

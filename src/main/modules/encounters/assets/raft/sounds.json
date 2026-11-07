@@ -1,0 +1,247 @@
+{
+  "entity.scavenger.ambient": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/pillager/idle1",
+        "volume": 0.9,
+        "pitch": 1.08
+      },
+      {
+        "name": "minecraft:mob/pillager/idle2",
+        "volume": 0.9,
+        "pitch": 1.08
+      },
+      {
+        "name": "minecraft:mob/pillager/idle3",
+        "volume": 0.9,
+        "pitch": 1.08
+      },
+      {
+        "name": "minecraft:mob/pillager/idle4",
+        "volume": 0.9,
+        "pitch": 1.08
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.scavenger.ambient"
+  },
+  "entity.scavenger.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/pillager/hurt1",
+        "volume": 1.0,
+        "pitch": 1.08
+      },
+      {
+        "name": "minecraft:mob/pillager/hurt2",
+        "volume": 1.0,
+        "pitch": 1.08
+      },
+      {
+        "name": "minecraft:mob/pillager/hurt3",
+        "volume": 1.0,
+        "pitch": 1.08
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.scavenger.hurt"
+  },
+  "entity.scavenger.death": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/pillager/death1",
+        "volume": 1.0,
+        "pitch": 1.05
+      },
+      {
+        "name": "minecraft:mob/pillager/death2",
+        "volume": 1.0,
+        "pitch": 1.05
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.scavenger.death"
+  },
+  "entity.reef_guardian.ambient": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/guardian/guardian_idle1",
+        "volume": 0.9,
+        "pitch": 1.25
+      },
+      {
+        "name": "minecraft:mob/guardian/guardian_idle2",
+        "volume": 0.9,
+        "pitch": 1.25
+      },
+      {
+        "name": "minecraft:mob/guardian/guardian_idle3",
+        "volume": 0.9,
+        "pitch": 1.25
+      },
+      {
+        "name": "minecraft:mob/guardian/guardian_idle4",
+        "volume": 0.9,
+        "pitch": 1.25
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.reef_guardian.ambient"
+  },
+  "entity.reef_guardian.hurt": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/guardian/guardian_hit1",
+        "volume": 1.0,
+        "pitch": 1.2
+      },
+      {
+        "name": "minecraft:mob/guardian/guardian_hit2",
+        "volume": 1.0,
+        "pitch": 1.2
+      },
+      {
+        "name": "minecraft:mob/guardian/guardian_hit3",
+        "volume": 1.0,
+        "pitch": 1.2
+      },
+      {
+        "name": "minecraft:mob/guardian/guardian_hit4",
+        "volume": 1.0,
+        "pitch": 1.2
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.reef_guardian.hurt"
+  },
+  "entity.reef_guardian.death": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/guardian/guardian_death",
+        "volume": 1.0,
+        "pitch": 1.2
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.reef_guardian.death"
+  },
+  "entity.corsair_captain.rally": {
+    "sounds": [
+      {
+        "name": "minecraft:event/raid/raidhorn_01",
+        "volume": 0.9,
+        "pitch": 0.85
+      },
+      {
+        "name": "minecraft:event/raid/raidhorn_02",
+        "volume": 0.9,
+        "pitch": 0.85
+      }
+    ],
+    "subtitle": "subtitles.raft.entity.corsair_captain.rally"
+  },
+  "encounter.scavengers": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/pillager/celebrate1",
+        "volume": 1.0,
+        "pitch": 1.1
+      },
+      {
+        "name": "minecraft:mob/pillager/celebrate2",
+        "volume": 1.0,
+        "pitch": 1.1
+      },
+      {
+        "name": "minecraft:mob/pillager/celebrate3",
+        "volume": 1.0,
+        "pitch": 1.1
+      },
+      {
+        "name": "minecraft:mob/pillager/celebrate4",
+        "volume": 1.0,
+        "pitch": 1.1
+      }
+    ],
+    "subtitle": "subtitles.raft.encounter.scavengers"
+  },
+  "encounter.deep": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/drowned/idle1",
+        "volume": 1.0,
+        "pitch": 0.6
+      },
+      {
+        "name": "minecraft:mob/drowned/idle2",
+        "volume": 1.0,
+        "pitch": 0.6
+      },
+      {
+        "name": "minecraft:mob/drowned/idle3",
+        "volume": 1.0,
+        "pitch": 0.6
+      }
+    ],
+    "subtitle": "subtitles.raft.encounter.deep"
+  },
+  "encounter.corsairs": {
+    "sounds": [
+      {
+        "name": "minecraft:event/raid/raidhorn_03",
+        "volume": 0.8,
+        "pitch": 1.0
+      },
+      {
+        "name": "minecraft:event/raid/raidhorn_04",
+        "volume": 0.8,
+        "pitch": 1.0
+      }
+    ],
+    "subtitle": "subtitles.raft.encounter.corsairs"
+  },
+  "encounter.reef": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/guardian/elder_idle1",
+        "volume": 0.9,
+        "pitch": 1.3
+      },
+      {
+        "name": "minecraft:mob/guardian/elder_idle2",
+        "volume": 0.9,
+        "pitch": 1.3
+      },
+      {
+        "name": "minecraft:mob/guardian/elder_idle3",
+        "volume": 0.9,
+        "pitch": 1.3
+      },
+      {
+        "name": "minecraft:mob/guardian/elder_idle4",
+        "volume": 0.9,
+        "pitch": 1.3
+      }
+    ],
+    "subtitle": "subtitles.raft.encounter.reef"
+  },
+  "encounter.forge": {
+    "sounds": [
+      {
+        "name": "minecraft:mob/blaze/breathe1",
+        "volume": 1.0,
+        "pitch": 0.75
+      },
+      {
+        "name": "minecraft:mob/blaze/breathe2",
+        "volume": 1.0,
+        "pitch": 0.75
+      },
+      {
+        "name": "minecraft:mob/blaze/breathe3",
+        "volume": 1.0,
+        "pitch": 0.75
+      },
+      {
+        "name": "minecraft:mob/blaze/breathe4",
+        "volume": 1.0,
+        "pitch": 0.75
+      }
+    ],
+    "subtitle": "subtitles.raft.encounter.forge"
+  }
+}
