@@ -1,0 +1,24 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:registry_contains",
+      "registry": "minecraft:item",
+      "values": [
+        "raft:driftwood_planks"
+      ]
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "P": "raft:driftwood_planks"
+  },
+  "pattern": [
+    "PP",
+    " P"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:boomerang"
+  }
+}

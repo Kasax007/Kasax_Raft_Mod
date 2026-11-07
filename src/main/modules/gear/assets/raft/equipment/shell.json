@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "raft:shell"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "raft:shell"
+      }
+    ]
+  }
+}

@@ -138,6 +138,7 @@ public class BcScript implements FabricClientGameTest {
     /** Detached camera (x, eye y, z, yaw, pitch) while not null: see FreeCamMixin. The player stays where it is. */
     public static volatile double[] freeCam;
     /** Script variables ({name} or {name+5} in a line): set by scout, find, height, where and set. */
+    private int checksPassed, checksFailed;
     private final Map<String, Double> vars = new HashMap<>();
 
     private String subst(String line) {
@@ -463,6 +464,25 @@ public class BcScript implements FabricClientGameTest {
                 String[] a = arg.split("\\s+");
                 ctx.getInput().holdKeyFor(key(a[0]), Integer.parseInt(a[1]));
             }
+            case "check" -> {
+                // check <label> | <command>: run a server command as the player; logs CHECK PASS when it succeeds
+                // (result > 0), CHECK FAIL otherwise. "checks" logs the totals.
+                String[] a = arg.split("\\s*\\|\\s*", 2);
+                String command = a.length > 1 ? a[1] : a[0];
+                int result = need().getServer().computeOnServer(server -> {
+                    try {
+                        var pl = server.getPlayerList().getPlayers().getFirst();
+                        return server.getCommands().getDispatcher().execute(command,
+                                pl.createCommandSourceStack().withSuppressedOutput().withPermission(net.minecraft.server.permissions.LevelBasedPermissionSet.OWNER));
+                    } catch (Exception e) {
+                        LOG.info("[bctest] CHECK error {}: {}", command, e.getMessage());
+                        return 0;
+                    }
+                });
+                if (result > 0) checksPassed++; else checksFailed++;
+                LOG.info("[bctest] CHECK {} {} ({})", result > 0 ? "PASS" : "FAIL", a[0], result);
+            }
+            case "checks" -> LOG.info("[bctest] CHECKS passed {} failed {}", checksPassed, checksFailed);
             case "log" -> LOG.info("[bctest] LOG {}", arg);
             case "sounds" -> {
                 // sounds <name> | off: log every sound the client starts to OUT/<name>/sounds.jsonl (no frames)

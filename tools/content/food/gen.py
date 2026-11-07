@@ -17,6 +17,7 @@ from content.cozy import cm  # noqa: E402
 from content.cozy.cm import Model, rid, facing_variants  # noqa: E402
 from content.cozy.recipes import Book  # noqa: E402
 from content.food import art  # noqa: E402
+from content.cozy.almanac import PAGES  # noqa: E402
 
 M = 'food'
 BLOCKS = {}      # id -> name
@@ -330,6 +331,7 @@ def main():
     fish_trap_loot()
     world_features()
     tags()
+    LANG.update(PAGES['food'])
     A.lang(M, LANG)
     A.flush(M)
     cm.write_java_shapes(M, 'net.kasax.raft.content.food.block', 'FoodShapeData',

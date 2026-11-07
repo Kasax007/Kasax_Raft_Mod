@@ -331,11 +331,19 @@ public class AlmanacScreen extends Screen {
         return mx >= x && mx < x + 12 && my >= y && my < y + RIBBON_H;
     }
 
-    /** Contents entries: 6 on the left page (under the heading), 8 on the right page, two ruled rows each. */
+    /**
+     * Contents entries: 6 on the left page (under the heading), 8 on the right page, two ruled rows each. With more
+     * than 14 chapters the entries move closer together (16 px apart: 7 left, 10 right).
+     */
     private int[] contentsRect(int i) {
-        int page = i < 6 ? 0 : 1;
-        int row = page == 0 ? 4 + 2 * i : 2 * (i - 6);
-        return new int[]{this.left + TEXT_X[page] - 2, this.top + ROW0 + ROW_H * row - 5, TEXT_W + 4, 19};
+        if (this.chapters.size() <= 14) {
+            int page = i < 6 ? 0 : 1;
+            int row = page == 0 ? 4 + 2 * i : 2 * (i - 6);
+            return new int[]{this.left + TEXT_X[page] - 2, this.top + ROW0 + ROW_H * row - 5, TEXT_W + 4, 19};
+        }
+        int page = i < 7 ? 0 : 1;
+        int y = page == 0 ? ROW0 + ROW_H * 4 - 5 + 16 * i : ROW0 - 5 + 16 * (i - 7);
+        return new int[]{this.left + TEXT_X[page] - 2, this.top + y, TEXT_W + 4, 16};
     }
 
     private int contentsEntryAt(double mx, double my) {
@@ -429,10 +437,11 @@ public class AlmanacScreen extends Screen {
                 g.requestCursor(CursorTypes.POINTING_HAND);
             }
             ItemStack icon = stack(c.icon());
+            boolean compact = r[3] < 19;
             if (!icon.isEmpty()) {
-                g.item(icon, r[0] + 2, r[1] + 1);
+                g.item(icon, r[0] + 2, r[1] + (compact ? 0 : 1));
             }
-            int ty = r[1] + 5;
+            int ty = r[1] + (compact ? 4 : 5);
             String pageNo = String.valueOf((this.chapterSpread.get(i) - 1) * 2 + 1);
             int numX = r[0] + r[2] - 3 - this.font.width(pageNo);
             Component name = Component.translatable(c.titleKey());

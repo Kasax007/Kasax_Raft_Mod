@@ -1,0 +1,389 @@
+# Beach Craft 3.3 cozy test: place every cozy block (all facings), screenshots from several angles, real use
+# clicks for seats, lights, blinds, drum, conch, plate, shelf, basket GUI, comfort/rested, Almanac pages.
+deadline 30
+world cozytest
+rd 4
+gui 2
+chat off
+sounds cozy
+cmd gamerule spawn_monsters false
+cmd gamerule random_tick_speed 0
+cmd tp @p 6.5 201 -8.5 0 20
+cmd fill -12 200 -14 30 200 30 minecraft:spruce_planks
+cmd fill -12 201 -14 30 216 30 air
+settle 60
+cmd setblock 0 201 0 raft:palm_bench[facing=north]
+cmd setblock 1 201 0 raft:palm_bench[facing=north]
+cmd setblock 2 201 0 raft:palm_bench[facing=north]
+cmd setblock 4 201 0 raft:teak_bench[facing=north]
+cmd setblock 6 201 0 raft:bar_stool
+cmd setblock 8 201 0 raft:sun_lounger[facing=north]
+cmd setblock 10 201 0 raft:rattan_armchair[facing=north]
+cmd setblock 12 201 0 raft:teak_table
+cmd setblock 12 202 0 raft:serving_plate
+cmd setblock 14 201 0 raft:bamboo_table
+cmd setblock 16 201 0 raft:palm_shelf[facing=north]
+cmd setblock 17 201 0 raft:teak_shelf[facing=north]
+cmd setblock 18 201 0 raft:weathered_shelf[facing=north]
+cmd setblock 20 201 0 raft:wicker_basket[facing=north]
+cmd setblock 21 201 0 raft:wicker_basket[facing=north,open=true]
+cmd setblock 0 201 3 raft:beach_towel_red
+cmd setblock 1 201 3 raft:beach_towel_blue
+cmd setblock 2 201 3 raft:beach_towel_yellow
+cmd setblock 4 201 3 raft:rope_rug
+cmd setblock 6 201 3 raft:hurricane_lantern
+cmd setblock 7 203 3 minecraft:spruce_planks
+cmd setblock 7 202 3 raft:hurricane_lantern[hanging=true]
+cmd setblock 9 201 3 raft:shell_candle
+cmd setblock 11 201 3 raft:sea_glass_lamp
+cmd setblock 13 201 4 minecraft:spruce_planks
+cmd setblock 13 202 4 minecraft:spruce_planks
+cmd setblock 13 202 3 raft:driftwood_sconce[facing=north]
+cmd setblock 15 201 3 raft:potted_monstera
+cmd setblock 17 201 3 raft:coconut_planter
+cmd setblock 19 201 3 raft:flower_box[facing=north]
+cmd setblock 21 201 3 raft:coral_vase
+cmd setblock 0 201 6 raft:conch_shell[facing=north]
+cmd setblock 2 201 6 raft:steel_drum
+cmd setblock 4 201 6 raft:dock_bollard
+cmd fill 6 201 8 24 203 8 minecraft:spruce_planks
+cmd setblock 6 202 7 raft:shell_garland[facing=north]
+cmd setblock 8 202 7 raft:fishing_net[facing=north]
+cmd setblock 10 202 7 raft:fish_trophy[facing=north]
+cmd setblock 12 201 7 raft:surfboard_red[facing=north,half=lower]
+cmd setblock 12 202 7 raft:surfboard_red[facing=north,half=upper]
+cmd setblock 13 201 7 raft:surfboard_blue[facing=north,half=lower]
+cmd setblock 13 202 7 raft:surfboard_blue[facing=north,half=upper]
+cmd setblock 14 201 7 raft:surfboard_yellow[facing=north,half=lower]
+cmd setblock 14 202 7 raft:surfboard_yellow[facing=north,half=upper]
+cmd setblock 16 201 7 raft:bamboo_blinds[facing=north]
+cmd setblock 17 201 7 raft:bamboo_blinds[facing=north,open=true]
+cmd setblock 20 201 5 raft:thatch_parasol[half=lower]
+cmd setblock 20 202 5 raft:thatch_parasol[half=upper]
+cmd setblock 0 201 11 raft:shell_tiles
+cmd setblock 1 201 11 raft:shell_tile_stairs[facing=west]
+cmd setblock 2 201 11 raft:shell_tile_slab
+cmd setblock 3 201 11 raft:shell_tile_wall
+cmd setblock 5 201 11 raft:pumice_bricks
+cmd setblock 6 201 11 raft:pumice_brick_stairs[facing=west]
+cmd setblock 7 201 11 raft:pumice_brick_slab
+cmd setblock 8 201 11 raft:pumice_brick_wall
+cmd setblock 10 201 11 raft:driftwood_lattice[east=true,west=false]
+cmd setblock 11 201 11 raft:driftwood_lattice[east=true,west=true]
+cmd setblock 12 201 11 raft:driftwood_lattice[east=false,west=true]
+cmd setblock -2 201 14 raft:rattan_armchair[facing=north]
+cmd setblock -1 201 14 raft:rattan_armchair[facing=east]
+cmd setblock 0 201 14 raft:rattan_armchair[facing=south]
+cmd setblock 1 201 14 raft:rattan_armchair[facing=west]
+cmd setblock 2 201 14 raft:sun_lounger[facing=north]
+cmd setblock 3 201 14 raft:sun_lounger[facing=east]
+cmd setblock 4 201 14 raft:sun_lounger[facing=south]
+cmd setblock 5 201 14 raft:sun_lounger[facing=west]
+cmd setblock 6 201 14 raft:teak_bench[facing=north]
+cmd setblock 7 201 14 raft:teak_bench[facing=east]
+cmd setblock 8 201 14 raft:teak_bench[facing=south]
+cmd setblock 9 201 14 raft:teak_bench[facing=west]
+cmd setblock 10 201 14 raft:wicker_basket[facing=north]
+cmd setblock 11 201 14 raft:wicker_basket[facing=east]
+cmd setblock 12 201 14 raft:wicker_basket[facing=south]
+cmd setblock 13 201 14 raft:wicker_basket[facing=west]
+cmd setblock 14 201 14 raft:flower_box[facing=north]
+cmd setblock 15 201 14 raft:flower_box[facing=east]
+cmd setblock 16 201 14 raft:flower_box[facing=south]
+cmd setblock 17 201 14 raft:flower_box[facing=west]
+cmd setblock 18 201 14 raft:conch_shell[facing=north]
+cmd setblock 19 201 14 raft:conch_shell[facing=east]
+cmd setblock 20 201 14 raft:conch_shell[facing=south]
+cmd setblock 21 201 14 raft:conch_shell[facing=west]
+cmd setblock 22 201 14 raft:fish_trap[facing=north]
+cmd setblock 23 201 14 raft:fish_trap[facing=east]
+cmd setblock 24 201 14 raft:fish_trap[facing=south]
+cmd setblock 25 201 14 raft:fish_trap[facing=west]
+swait 20
+hud off
+pose 9 207 -10 0 30
+wait 6 render
+shot 10_overview
+pose 8 202.6 -3.5 0 25
+wait 6 render
+shot 11_rowA_front
+pose -3 203 -3 -45 25
+wait 6 render
+shot 12_rowA_left
+pose 23 203 -3 45 25
+wait 6 render
+shot 13_rowA_right
+pose 11 202.6 0.5 0 28
+wait 6 render
+shot 14_rowB_front
+pose 11 203 2.5 0 15
+wait 6 render
+shot 15_rowC_front
+pose 4 203.5 2 -35 18
+wait 6 render
+shot 16_rowC_left
+pose 11 204 20 180 20
+wait 6 render
+shot 17_back
+pose 6 202.5 8.5 0 25
+wait 6 render
+shot 18_rowD_front
+pose 11 204 9.5 0 40
+wait 6 render
+shot 19_facings
+pose 11 204 19 180 40
+wait 6 render
+shot 20_facings_back
+pose 11 214 4 0 89
+wait 6 render
+shot 21_top
+hud on
+check bench_left | execute if block 0 201 0 raft:palm_bench[part=left]
+check bench_center | execute if block 1 201 0 raft:palm_bench[part=center]
+check bench_right | execute if block 2 201 0 raft:palm_bench[part=right]
+check bench_single | execute if block 4 201 0 raft:teak_bench[part=single]
+pose 1.5 201 -1.6 0 30
+face 1.5 201.5 0.5
+swait 3
+use
+swait 10
+check sit_bench | execute as @p on vehicle if entity @s[type=raft:seat]
+swait 70
+check rested | execute as @p if predicate {condition:'minecraft:entity_properties',entity:'this',predicate:{effects:{'raft:rested':{}}}}
+check rested_comfort_5plus | execute as @p if predicate {condition:'minecraft:entity_properties',entity:'this',predicate:{effects:{'raft:rested':{duration:{min:8000}}}}}
+hud on
+wait 4 render
+shot 30_sitting_rested
+third on
+wait 4 render
+shot 31_sitting_third
+third off
+sneak
+swait 10
+check stood_up | execute as @p unless predicate {condition:'minecraft:entity_properties',entity:'this',predicate:{vehicle:{}}}
+pose 6.5 201 -1.6 0 30
+face 6.5 201.8 0.5
+swait 3
+use
+swait 8
+check sit_stool | execute as @p on vehicle if entity @s[type=raft:seat]
+sneak
+swait 8
+pose 8.5 201 -1.6 0 30
+face 8.5 201.3 0.5
+swait 3
+use
+swait 8
+check sit_lounger | execute as @p on vehicle if entity @s[type=raft:seat]
+sneak
+swait 8
+pose 10.5 201 -1.6 0 30
+face 10.5 201.4 0.5
+swait 3
+use
+swait 8
+check sit_armchair | execute as @p on vehicle if entity @s[type=raft:seat]
+sneak
+swait 8
+pose 6.5 201 1.4 0 30
+face 6.5 201.4 3.5
+swait 3
+use
+swait 6
+check lantern_off | execute if block 6 201 3 raft:hurricane_lantern[lit=false]
+wait 3 render
+shot 32_lantern_off
+use
+swait 6
+check lantern_on | execute if block 6 201 3 raft:hurricane_lantern[lit=true]
+pose 9.5 201 1.4 0 30
+face 9.5 201.25 3.5
+swait 3
+use
+swait 6
+check candle_off | execute if block 9 201 3 raft:shell_candle[lit=false]
+pose 11.5 201 1.4 0 30
+face 11.5 201.6 3.5
+swait 3
+use
+swait 6
+check lamp_off | execute if block 11 201 3 raft:sea_glass_lamp[lit=false]
+pose 13.5 201 1.0 0 30
+face 13.5 202.45 3.6
+swait 3
+use
+swait 6
+check sconce_off | execute if block 13 202 3 raft:driftwood_sconce[lit=false]
+use
+swait 6
+check sconce_on | execute if block 13 202 3 raft:driftwood_sconce[lit=true]
+pose 16.5 201 5.0 0 30
+face 16.5 201.5 7.9
+swait 3
+use
+swait 6
+check blinds_open | execute if block 16 201 7 raft:bamboo_blinds[open=true]
+pose 2.5 201 4.4 0 30
+face 2.5 201.75 6.5
+swait 3
+use
+swait 6
+use
+swait 4
+use
+swait 4
+check drum_note3 | execute if block 2 201 6 raft:steel_drum[note=3]
+pose 0.5 201 4.4 0 30
+face 0.5 201.2 6.4
+swait 3
+use
+swait 6
+check conch_cooldown | execute if block 0 201 6 raft:conch_shell
+cmd item replace entity @p weapon.mainhand with raft:banana 4
+pose 12.5 201 -1.4 0 30
+face 12.5 202.05 0.5
+swait 3
+sneakuse
+swait 6
+check plate_4 | execute if data block 12 202 0 {food:{count:4}}
+wait 3 render
+shot 33_plate_bananas
+cmd gamemode survival @p
+cmd effect give @p minecraft:hunger 3 255
+swait 70
+cmd item replace entity @p weapon.mainhand with minecraft:air
+face 12.5 202.05 0.5
+use
+swait 6
+check plate_ate_one | execute if data block 12 202 0 {food:{count:3}}
+cmd gamemode creative @p
+cmd item replace entity @p weapon.mainhand with raft:conch_shell
+pose 16.5 201 -1.4 0 20
+face 16.5 201.6 0.6
+swait 3
+use
+swait 6
+check shelf_holds | execute if data block 16 201 0 Items[0]
+wait 3 render
+shot 34_shelf
+cmd item replace entity @p hotbar.0 with minecraft:air
+cmd item replace entity @p hotbar.1 with raft:banana 16
+cmd item replace entity @p hotbar.2 with raft:seashell 8
+slot 1
+pose 20.5 201 -1.4 0 30
+face 20.5 201.5 0.5
+swait 3
+use
+swait 10
+wait 3 render
+shot 35_basket_gui
+press sneak
+click 532 494
+wait 3
+click 568 494
+wait 3
+release sneak
+wait 3 render
+shot 36_basket_filled
+esc
+swait 6
+check basket_items | execute if data block 20 201 0 Items[1]
+cmd gamemode survival @p
+pose 20.5 201 -1.2 0 30
+face 20.5 201.5 0.5
+hold attack 60
+swait 20
+check basket_keeps_items | execute if items entity @p container.* raft:wicker_basket[minecraft:container]
+cmd gamemode creative @p
+cmd item replace entity @p weapon.mainhand with raft:surfboard_red
+pose 23.5 201 5.2 0 20
+face 23.5 201.5 7.99
+swait 3
+use
+swait 6
+check surfboard_placed | execute if block 23 202 7 raft:surfboard_red[half=upper,facing=north]
+cmd item replace entity @p weapon.mainhand with raft:thatch_parasol
+pose 25.5 201 -0.5 0 60
+face 25.5 201.0 1.5
+swait 3
+use
+swait 6
+check parasol_placed | execute if block 25 202 1 raft:thatch_parasol[half=upper]
+cmd item replace entity @p weapon.mainhand with raft:palm_bench
+pose 2.5 201 -3.5 0 50
+face 3.5 201.0 -1.5
+swait 3
+use
+swait 6
+check bench_placed_joins | execute if block 2 201 0 raft:palm_bench[part=right]
+tab raft:bc_cozy
+wait 4 render
+shot 40_tab_cozy
+esc
+tab raft:bc_kitchen
+wait 4 render
+shot 40_tab_kitchen
+esc
+tab raft:bc_gear
+wait 4 render
+shot 40_tab_gear
+esc
+cmd item replace entity @p weapon.mainhand with raft:seafarers_almanac
+pose 6.5 201 -8.5 0 0
+swait 3
+use
+wait 10 render
+shot 50_almanac_contents
+click 788 370
+wait 6 render
+shot 51_almanac_cozy_1
+arrow right
+wait 4 render
+shot 51_almanac_cozy_2
+arrow right
+wait 4 render
+shot 51_almanac_cozy_3
+arrow right
+wait 4 render
+shot 51_almanac_cozy_4
+arrow right
+wait 4 render
+shot 51_almanac_cozy_5
+click 640 558
+wait 6 render
+click 788 402
+wait 6 render
+shot 52_almanac_kitchen_1
+arrow right
+wait 4 render
+shot 52_almanac_kitchen_2
+arrow right
+wait 4 render
+shot 52_almanac_kitchen_3
+arrow right
+wait 4 render
+shot 52_almanac_kitchen_4
+arrow right
+wait 4 render
+shot 52_almanac_kitchen_5
+click 640 558
+wait 6 render
+click 788 434
+wait 6 render
+shot 53_almanac_gear_1
+arrow right
+wait 4 render
+shot 53_almanac_gear_2
+arrow right
+wait 4 render
+shot 53_almanac_gear_3
+arrow right
+wait 4 render
+shot 53_almanac_gear_4
+arrow right
+wait 4 render
+shot 53_almanac_gear_5
+click 640 558
+wait 6 render
+esc
+checks

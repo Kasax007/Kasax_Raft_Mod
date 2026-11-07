@@ -21,6 +21,7 @@ from content.cozy import cm, paint as P  # noqa: E402
 from content.cozy.cm import Model, rid, facing_variants  # noqa: E402
 from content.cozy import recipes as R  # noqa: E402
 from content.cozy import sound  # noqa: E402
+from content.cozy.almanac import PAGES  # noqa: E402
 from content.decor import art  # noqa: E402
 
 M = 'cozy'
@@ -619,6 +620,24 @@ def building():
     A.pane(M, 'driftwood_lattice', lt, le)
 
 
+# ================================================================================================= effect icon
+def rested_icon():
+    """18x18 icon of the Rested effect: a warm crescent moon with a small star."""
+    from PIL import Image
+    im = Image.new('RGBA', (18, 18), (0, 0, 0, 0))
+    moon = tex.ramp('#f2c46d', 5, 0.5)
+    for y in range(18):
+        for x in range(18):
+            d1 = ((x - 8.5) ** 2 + (y - 9.0) ** 2) ** 0.5
+            d2 = ((x - 11.5) ** 2 + (y - 6.5) ** 2) ** 0.5
+            if d1 <= 6.6 and d2 > 5.2:
+                k = 4 if x + y < 14 else 3 if d1 < 5.5 else 2
+                im.putpixel((x, y), moon[k])
+    for x, y in ((14, 11), (13, 12), (15, 12), (14, 13), (14, 12)):
+        im.putpixel((x, y), tex.rgb('#fff3bd'))
+    P.save(tex.outline(im), 'mob_effect/rested')
+
+
 # ================================================================================================= data
 def loot(bid, kind):
     surv = {'condition': 'minecraft:survives_explosion'}
@@ -727,6 +746,8 @@ def main():
         loot(b, kind)
         LANG[f'block.raft.{b}'] = label
     tags()
+    rested_icon()
+    LANG.update(PAGES['cozy'])
     A.sounds(M, sound.build(M))
     LANG.update({'subtitles.raft.block.steel_drum.note': 'Steel drum plays', 'subtitles.raft.block.conch_shell.blow': 'Conch horn blows', 'subtitles.raft.cozy.rested': 'You feel rested'})
     R.cozy_recipes(M, BLOCKS)
