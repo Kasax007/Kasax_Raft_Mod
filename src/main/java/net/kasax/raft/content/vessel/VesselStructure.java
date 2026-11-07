@@ -65,6 +65,8 @@ public final class VesselStructure {
     private final long[] motors;
     private final int sails;
     private final int oars;
+    /** An anchor winch on board has its anchor down: the raft holds its position. */
+    private final boolean anchorDown;
     private final double radius;
     /** Columns (x, z) inside the hull's outline (hull columns and the holes they enclose), computed when first needed. */
     private @Nullable boolean[] outline;
@@ -78,6 +80,7 @@ public final class VesselStructure {
         LongArrayList motorList = new LongArrayList();
         int sailCount = 0;
         int oarCount = 0;
+        boolean anchorDown = false;
         int x0 = Integer.MAX_VALUE;
         int y0 = Integer.MAX_VALUE;
         int z0 = Integer.MAX_VALUE;
@@ -110,7 +113,12 @@ public final class VesselStructure {
                 ext.add(key);
             }
             if (state.getBlock() instanceof SailBlock) {
-                sailCount++;
+                if (!state.getValue(SailBlock.FURLED)) {
+                    sailCount++;          // a furled sail catches no wind
+                }
+            } else if (state.getBlock() instanceof net.kasax.raft.content.vessel.block.AnchorWinchBlock
+                    && state.getValue(net.kasax.raft.content.vessel.block.AnchorWinchBlock.DROPPED)) {
+                anchorDown = true;
             } else if (state.getBlock() instanceof OarBlock) {
                 oarCount++;
             } else if (state.getBlock() instanceof RaftMotorBlock) {
@@ -145,6 +153,7 @@ public final class VesselStructure {
         this.motors = motorList.toLongArray();
         this.sails = sailCount;
         this.oars = oarCount;
+        this.anchorDown = anchorDown;
         double r2 = 0.0;
         for (int cx : new int[]{x0, x1}) {
             for (int cz : new int[]{z0, z1}) {
@@ -246,6 +255,10 @@ public final class VesselStructure {
 
     public int oars() {
         return this.oars;
+    }
+
+    public boolean anchorDown() {
+        return this.anchorDown;
     }
 
     public long[] motors() {

@@ -15,19 +15,29 @@ it while it sails. The fixed Expedition Raft (module `voyage`) stays as it is. E
    in a column above a foundation (holes inside the hull count as hull). Nothing below the lowest foundation layer,
    nothing outside the hull outline (keep roofs inside the edge).
 3. **Helm** (`raft:helm`): a ship's wheel with a small seat, placed on the raft facing the bow.
-   * Use it on an anchored raft: **set sail** (the raft becomes a vessel, the player sits at the helm).
-   * At the helm: `W`/`S` sail forward/back, `A`/`D` turn, `Shift` leaves the helm, **using the wheel drops anchor**.
-   * Not at the helm: using the helm takes it; **sneak + use drops anchor**.
-   * Dropping anchor: the raft slows down, turns to the nearest compass direction, slides onto the block grid and
-     becomes blocks again (chests keep their contents, furnaces their smelting, crops their growth, ...).
-   * Nobody at the helm: the raft slows down and stays where it is. It never drops anchor by itself (not when the
+   * Use it on a moored raft (blocks): **set sail** (the raft becomes a vessel, the player sits at the helm).
+   * At the helm: `W`/`S` sail forward/back, `A`/`D` turn (the wheel turns with the steering), `Shift` leaves the
+     helm, **using the wheel moors the raft** (blocks again).
+   * Not at the helm: using the helm takes it; **sneak + use moors**.
+   * Mooring: the raft slows down, turns to the nearest compass direction, slides onto the block grid and becomes
+     blocks again (chests keep their contents, furnaces their smelting, crops their growth, ...).
+   * Nobody at the helm: the raft slows down and stays where it is. It never moors by itself (not when the
      helmsman leaves, logs out, or the world is reloaded).
 4. **At sea everything works.** Open chests, barrels, furnaces, crafting tables, anvils; move items; farm (crops
    grow, bone meal, hoe, harvest, replant); flip levers and buttons (redstone runs); place and break blocks on the
    raft (survival mining speed as on land, drops land on the deck). Furnaces smelt and crops grow while sailing.
-5. **Propulsion** (blocks on board): `raft:oar` (+1 power, set on the deck edge), `raft:sail` (+3, stackable:
-   each sail block counts, stacked sails share one mast), `raft:raft_motor` (+6 while it has fuel; use furnace
-   fuel on it, also while sailing). Without any of these the helmsman can only paddle slowly (power 0.5).
+5. **Propulsion** (blocks on board): `raft:oar` (+1 power, set on the deck edge), `raft:sail` (+3 for every set
+   sail block), `raft:raft_motor` (+6 while it has fuel). Without any of these the helmsman can only paddle slowly
+   (power 0.5).
+   * Sails are canvas panels (facing = bow); side by side and on top of each other they join into one sheet (no
+     seams; the yard on the top edge, rope hems on the free edges). Next to a `raft:mast` (a pole, stackable, cap
+     on top) the canvas reaches over to the pole. Using a sail (not with a block in hand) furls or sets the whole
+     sheet; a furled sail is rolled up under the yard and gives no power.
+   * The motor has a fuel bay: click it to open a screen with one fuel slot (put furnace fuel in or take it out),
+     the flame and the running time. It burns one item at a time while the raft sails forward; slot and running
+     time are kept at sea and when the raft becomes blocks again.
+   * `raft:anchor_winch`: an anchor winch for the deck edge (facing = outboard). Using it drops or raises the
+     anchor; while it is down, a sailing raft stops and holds its position (the helmsman's input is ignored).
    Top speed = 0.45 · P / (P + blocks/8) blocks per tick (≈ 2–6 blocks/s), heavier rafts accelerate and turn slower.
 6. **Limits:** to set sail at most 1024 blocks, 32 × 32 blocks of hull, 24 blocks high; at sea a raft may grow to
    2048 blocks within its plot (8 blocks around the hull, 32 high). The raft must float (at least half of its hull
@@ -38,7 +48,8 @@ it while it sails. The fixed Expedition Raft (module `voyage`) stays as it is. E
 
 * **Shipyard** (`VesselShipyard`). Each sailing raft owns a plot: a box of 48 × 32 × 48 blocks in the same
   dimension, far out (x, z from 28 000 000 on, one plot every 64 blocks, high above the terrain: top 8 blocks below
-  the build limit). Taken plots are saved per dimension (`SavedData raft:vessel_shipyard`). A raft's blocks are real
+  the build limit). Chunks there are generated empty (mixins on the chunk generator: no terrain, sea, features,
+  structures or mobs), so a new plot is ready at once. Taken plots are saved per dimension (`SavedData raft:vessel_shipyard`). A raft's blocks are real
   blocks in its plot, so vanilla does all the work: block entity ticks, random ticks (crops), scheduled ticks and
   redstone. A custom chunk ticket (`raft:vessel_plot`, level 31 = entity ticking, not persistent) keeps the plot's
   chunks loaded and ticking exactly while the raft entity is loaded (as for any farm, nothing ticks far from players).
@@ -82,7 +93,7 @@ it while it sails. The fixed Expedition Raft (module `voyage`) stays as it is. E
   so (`VesselUseResultPayload`) and the client uses the item in the air (eat, drink, throw, scoop water). Breaking:
   the client counts the mining progress like vanilla (tool, enchantments, effects, on ground) and sends
   `VesselBreakPayload` start/finish; the server checks the time it took and runs `destroyBlock` in the plot.
-* **Drop anchor.** Only on request (helm, or NBT `DropAnchor:1b`): brake, pick the nearest grid pose (yaw multiple
+* **Mooring (blocks again).** Only on request (helm, or NBT `DropAnchor:1b`): brake, pick the nearest grid pose (yaw multiple
   of 90°, block-aligned; nearby alternatives if blocked), glide into it, move the blocks from the plot into the world
   (no shape updates while placing, then neighbour updates), load block entity data, empty the plot and free it. The
   entity is still drawn for a few ticks so clients never see a gap. If no pose is free (e.g. jammed against a pier)

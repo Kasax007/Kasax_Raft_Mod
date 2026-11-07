@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "raft:block/sail_cloth",
+    "mast": "raft:block/palm_log",
+    "canvas": "raft:block/sail_cloth",
+    "rope": "raft:block/rope_coil"
+  },
+  "elements": [
+    {
+      "from": [
+        16,
+        0,
+        7.75
+      ],
+      "to": [
+        23,
+        16,
+        8.25
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            7,
+            0,
+            0,
+            16
+          ],
+          "texture": "#canvas"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            7,
+            16
+          ],
+          "texture": "#canvas"
+        }
+      }
+    }
+  ]
+}

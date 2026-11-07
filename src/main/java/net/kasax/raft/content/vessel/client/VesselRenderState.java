@@ -11,5 +11,7 @@ import org.jspecify.annotations.Nullable;
 public class VesselRenderState extends EntityRenderState {
     @Nullable VesselClientModel model;
     float yaw;
+    /** How far the helm's wheel is turned, -1..1. */
+    float wheel;
     @Nullable BlockPos target;
 }

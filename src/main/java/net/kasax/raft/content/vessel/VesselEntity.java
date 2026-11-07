@@ -80,6 +80,8 @@ public class VesselEntity extends Entity {
     private static final EntityDataAccessor<Byte> DATA_STATE = SynchedEntityData.defineId(VesselEntity.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Float> DATA_SPEED = SynchedEntityData.defineId(VesselEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Boolean> DATA_MOTOR = SynchedEntityData.defineId(VesselEntity.class, EntityDataSerializers.BOOLEAN);
+    /** Steering of the helmsman, -1 (left) .. 1 (right), eased: how far the wheel is turned. */
+    private static final EntityDataAccessor<Float> DATA_WHEEL = SynchedEntityData.defineId(VesselEntity.class, EntityDataSerializers.FLOAT);
 
     /** Rowing power of the helmsman alone; oars add 1, sails 3, running motors 6. */
     private static final float BASE_POWER = 0.5F;
@@ -143,6 +145,7 @@ public class VesselEntity extends Entity {
         builder.define(DATA_STATE, SAILING);
         builder.define(DATA_SPEED, 0.0F);
         builder.define(DATA_MOTOR, false);
+        builder.define(DATA_WHEEL, 0.0F);
     }
 
     @Override
@@ -192,6 +195,11 @@ public class VesselEntity extends Entity {
 
     public boolean isMotorRunning() {
         return this.entityData.get(DATA_MOTOR);
+    }
+
+    /** How far the helm's wheel is turned, -1 (to the left) .. 1 (to the right). */
+    public float getWheel() {
+        return this.entityData.get(DATA_WHEEL);
     }
 
     /** The pose now (structure must be known). */
@@ -399,6 +407,19 @@ public class VesselEntity extends Entity {
             // nobody at the helm: the raft slows down and stays where it is (it only anchors when told to)
             steered = false;
         }
+        // the wheel follows the helmsman's hands (all clients see it turn, VesselRenderer)
+        this.entityData.set(DATA_WHEEL, Mth.approach(this.entityData.get(DATA_WHEEL), (float) turn, 0.12F));
+        if (this.structure.anchorDown()) {
+            // an anchor winch on board has its anchor down: the raft stops and holds its position
+            if ((forward != 0 || turn != 0) && this.tickCount % 40 == 0 && this.getControllingPassenger() instanceof Player pilot) {
+                pilot.sendOverlayMessage(Component.translatable("message.raft.anchor.holding"));
+            }
+            forward = 0;
+            turn = 0;
+            steered = false;
+            this.speed = Mth.approach(this.speed * 0.8F, 0.0F, 0.02F);
+            this.yawRate *= 0.6F;
+        }
         boolean motor = forward != 0 && this.burnFuel();
         if (motor != this.isMotorRunning()) {
             this.entityData.set(DATA_MOTOR, motor);
@@ -435,8 +456,7 @@ public class VesselEntity extends Entity {
         boolean any = false;
         for (long key : this.structure.motors()) {
             RaftMotorBlockEntity motor = this.motor(key);
-            if (motor != null && motor.getFuel() > 0) {
-                motor.setFuel(motor.getFuel() - 1);
+            if (motor != null && this.level() instanceof ServerLevel server && motor.burnTick(server)) {
                 any = true;
             }
         }
@@ -447,7 +467,7 @@ public class VesselEntity extends Entity {
         int n = 0;
         for (long key : this.structure.motors()) {
             RaftMotorBlockEntity motor = this.motor(key);
-            if (motor != null && motor.getFuel() > 0) {
+            if (motor != null && motor.hasFuel()) {
                 n++;
             }
         }

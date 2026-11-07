@@ -1,0 +1,259 @@
+# Run: tools/bctest/run.sh tools/content/vessel/tests/raft_5.txt <outdir>
+# Beach Craft 3.2 raft features, with real input: a raft with helm, mast and a 4x2 sail sheet, anchor winch and motor.
+# On land: the player sets the sails (they join into one sheet), furls and sets them, opens the motor's fuel screen.
+# Set sail (latest.log: "Set sail timing"), steer (the wheel turns: freecam shots), leave the helm; at sea: speed on
+# the sails alone (autopilot), with the sail furled, anchor down (no movement), motor fuel through its screen at sea,
+# speed with the motor; take the helm, sneak + use the wheel while seated (moors: blocks again, fuel kept); set sail
+# again and moor by NBT. Positions on the raft: offsets from the helm centre (raft pivot + ^0 ^1.5 ^-3).
+world raftfeatures
+rd 5
+gui 2
+cmd gamerule raft:shark_bites false
+cmd gamerule spawn_monsters false
+cmd execute in raft:raftdim run tp @p 0.5 112 0.5 0 40
+wait 20
+settle 200
+swait 40
+cmd execute in raft:raftdim run fill -24 100 -24 24 107 64 air
+cmd execute in raft:raftdim run fill -24 92 -24 24 99 64 water
+cmd execute in raft:raftdim run kill @e[type=!minecraft:player,distance=..90]
+swait 20
+log BUILD
+cmd execute in raft:raftdim run fill -3 99 -4 3 99 4 raft:raft_foundation
+cmd execute in raft:raftdim run setblock 0 100 -3 raft:helm[facing=south]
+cmd execute in raft:raftdim run fill 0 100 1 0 103 1 raft:mast
+cmd execute in raft:raftdim run setblock 3 100 -1 raft:anchor_winch[facing=east]
+cmd execute in raft:raftdim run setblock 2 100 -4 raft:raft_motor[facing=north]
+cmd item replace entity @p hotbar.0 with raft:sail 8
+cmd item replace entity @p hotbar.1 with minecraft:coal 16
+cmd item replace entity @p hotbar.2 with minecraft:stick 1
+cmd execute in raft:raftdim run fill 1 100 1 2 100 1 minecraft:oak_planks
+cmd execute in raft:raftdim run fill -2 100 1 -1 100 1 minecraft:oak_planks
+slot 1
+cmd execute in raft:raftdim run tp @p 0.5 100 -1.5 0 40
+swait 5
+face 1.5 101 1.5
+swait 3
+use
+swait 5
+face 2.5 101 1.5
+swait 3
+use
+swait 5
+face -0.5 101 1.5
+swait 3
+use
+swait 5
+face -1.5 101 1.5
+swait 3
+use
+swait 5
+cmd execute in raft:raftdim run fill -2 102 1 -1 102 1 raft:sail[facing=south]
+cmd execute in raft:raftdim run fill 1 102 1 2 102 1 raft:sail[facing=south]
+cmd execute in raft:raftdim run fill -2 100 1 2 100 1 air replace minecraft:oak_planks
+swait 10
+cmd execute in raft:raftdim if block 1 102 1 raft:sail[facing=south,up=false,down=true,left=sail,right=mast,furled=false]
+cmd execute in raft:raftdim if block -2 101 1 raft:sail[facing=south,up=true,down=false,left=sail,right=none]
+cmd execute in raft:raftdim if block 2 101 1 raft:sail[facing=south,up=true,down=false,left=none,right=sail]
+cmd execute in raft:raftdim if block 0 103 1 raft:mast[up=false]
+states raft:raftdim -3 100 -4 3 103 4
+hud off
+third on
+freecam 7.5 104.5 -6 35 22
+wait 10 render
+shot 50_built
+freecam 0.5 102.5 8.5 180 8
+wait 10 render
+shot 51_sail_sheet
+freecam off
+third off
+hud on
+slot 3
+cmd execute in raft:raftdim run tp @p 1.5 100 -1.5 0 40
+swait 5
+face 1.5 101.5 1.5
+swait 3
+use
+swait 10
+cmd execute in raft:raftdim if block -2 102 1 raft:sail[furled=true]
+cmd execute in raft:raftdim if block 2 101 1 raft:sail[furled=true]
+states raft:raftdim -2 101 1 2 102 1
+hud off
+third on
+freecam 0.5 102.5 8.5 180 8
+wait 10 render
+shot 52_sail_furled
+freecam off
+third off
+hud on
+face 1.5 101.5 1.5
+swait 3
+use
+swait 10
+cmd execute in raft:raftdim if block -2 102 1 raft:sail[furled=false]
+log MOTOR_LAND
+nearblock raft:raft_motor 32 -1.2 0 1.2
+swait 5
+use
+swait 10
+wait 5 render
+shot 53_motor_screen_land
+esc
+swait 5
+log SET_SAIL
+nearblock raft:helm 48 1.3 0.5 0
+swait 10
+use
+swaitfor 1500 execute in raft:raftdim if entity @e[type=raft:vessel]
+swait 20
+log AFTER_SET_SAIL
+face 0.5 100.75 -1.8
+swait 3
+log STEER
+hud off
+press right
+swait 12
+freecam 0.5 101.4 -0.4 180 8
+wait 2 render
+shot 55_wheel_right
+release right
+press left
+swait 24
+wait 2 render
+shot 56_wheel_left
+release left
+swait 30
+wait 2 render
+shot 57_wheel_back
+freecam off
+hud on
+hold sneak 8
+swait 10
+log SAIL_POWER
+cmd data get entity @e[type=raft:vessel,limit=1] Pos
+cmd data merge entity @e[type=raft:vessel,limit=1] {Autopilot:{Forward:1b,Turn:0b,Ticks:100}}
+swait 110
+cmd data get entity @e[type=raft:vessel,limit=1] Pos
+log FURLED_POWER
+cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-3 positioned ^1 ^1 ^4 run tp @p ~ ~ ~
+swait 3
+where
+cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-3 positioned ^1 ^-0.5 ^2 run tp @p ~ ~ ~
+swait 5
+face {px} {py} {pz}
+swait 3
+use
+swait 10
+cmd data get entity @e[type=raft:vessel,limit=1] Pos
+cmd data merge entity @e[type=raft:vessel,limit=1] {Autopilot:{Forward:1b,Turn:0b,Ticks:100}}
+swait 110
+cmd data get entity @e[type=raft:vessel,limit=1] Pos
+cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-3 positioned ^1 ^1 ^4 run tp @p ~ ~ ~
+swait 3
+where
+cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-3 positioned ^1 ^-0.5 ^2 run tp @p ~ ~ ~
+swait 5
+face {px} {py} {pz}
+swait 3
+use
+swait 10
+log ANCHOR
+cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-3 positioned ^3 ^0 ^2 run tp @p ~ ~ ~
+swait 3
+where
+cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-3 positioned ^1.7 ^-0.5 ^2 run tp @p ~ ~ ~
+swait 5
+face {px} {py} {pz}
+swait 3
+use
+swait 10
+hud off
+third on
+freecam {px+5} {py+4} {pz+5} 135 30
+wait 5 render
+shot 58_anchor_down
+freecam off
+third off
+hud on
+cmd data get entity @e[type=raft:vessel,limit=1] Pos
+cmd data merge entity @e[type=raft:vessel,limit=1] {Autopilot:{Forward:1b,Turn:0b,Ticks:100}}
+swait 110
+cmd data get entity @e[type=raft:vessel,limit=1] Pos
+cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-3 positioned ^3 ^0 ^2 run tp @p ~ ~ ~
+swait 3
+where
+cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-3 positioned ^1.7 ^-0.5 ^2 run tp @p ~ ~ ~
+swait 5
+face {px} {py} {pz}
+swait 3
+use
+swait 10
+log ANCHOR_UP
+log MOTOR_SEA
+cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-3 positioned ^2 ^0 ^-1 run tp @p ~ ~ ~
+swait 3
+where
+cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-3 positioned ^2 ^-0.5 ^0.4 run tp @p ~ ~ ~
+swait 5
+face {px} {py} {pz}
+swait 3
+use
+swait 10
+wait 5 render
+shot 59_motor_screen_sea
+click 532 494
+wait 3
+click 592 316
+wait 3
+cursor 900 500
+wait 5 render
+shot 60_motor_screen_sea_coal
+esc
+swait 5
+log MOTOR_POWER
+cmd data get entity @e[type=raft:vessel,limit=1] Pos
+cmd data merge entity @e[type=raft:vessel,limit=1] {Autopilot:{Forward:1b,Turn:0b,Ticks:100}}
+swait 110
+cmd data get entity @e[type=raft:vessel,limit=1] Pos
+log TAKE_HELM
+swait 20
+cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-3 positioned ^ ^ ^ run tp @p ~ ~ ~
+swait 3
+where
+cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-3 positioned ^1.2 ^-0.4 ^1.0 run tp @p ~ ~ ~
+swait 5
+face {px} {py-0.4} {pz}
+swait 3
+use
+swait 20
+cmd data get entity @e[type=raft:vessel,limit=1] Passengers
+log SNEAK_USE_SEATED
+sneakuse
+swait 60
+count raft:raftdim
+swaitfor 600 execute in raft:raftdim unless entity @e[type=raft:vessel]
+swait 20
+count raft:raftdim
+find raft:helm 64
+find raft:raft_motor 64
+cmd execute in raft:raftdim positioned {fx} {fy} {fz} run data get block ~ ~ ~
+find raft:anchor_winch 64
+hud off
+third on
+freecam {fx+5} {fy+5} {fz+5} 135 35
+wait 10 render
+shot 61_moored
+freecam off
+third off
+hud on
+log SET_SAIL_AGAIN
+nearblock raft:helm 64 1.3 0.5 0
+swait 10
+use
+swaitfor 1500 execute in raft:raftdim if entity @e[type=raft:vessel]
+swait 20
+count raft:raftdim
+cmd data merge entity @e[type=raft:vessel,limit=1] {DropAnchor:1b}
+swaitfor 600 execute in raft:raftdim unless entity @e[type=raft:vessel]
+count raft:raftdim
+log DONE

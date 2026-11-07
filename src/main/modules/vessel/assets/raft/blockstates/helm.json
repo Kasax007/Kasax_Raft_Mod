@@ -1,18 +1,48 @@
 {
   "variants": {
-    "facing=north": {
+    "facing=north,part=full": {
       "model": "raft:block/helm"
     },
-    "facing=east": {
+    "facing=east,part=full": {
       "model": "raft:block/helm",
       "y": 90
     },
-    "facing=south": {
+    "facing=south,part=full": {
       "model": "raft:block/helm",
       "y": 180
     },
-    "facing=west": {
+    "facing=west,part=full": {
       "model": "raft:block/helm",
+      "y": 270
+    },
+    "facing=north,part=base": {
+      "model": "raft:block/helm_base"
+    },
+    "facing=east,part=base": {
+      "model": "raft:block/helm_base",
+      "y": 90
+    },
+    "facing=south,part=base": {
+      "model": "raft:block/helm_base",
+      "y": 180
+    },
+    "facing=west,part=base": {
+      "model": "raft:block/helm_base",
+      "y": 270
+    },
+    "facing=north,part=wheel": {
+      "model": "raft:block/helm_wheel"
+    },
+    "facing=east,part=wheel": {
+      "model": "raft:block/helm_wheel",
+      "y": 90
+    },
+    "facing=south,part=wheel": {
+      "model": "raft:block/helm_wheel",
+      "y": 180
+    },
+    "facing=west,part=wheel": {
+      "model": "raft:block/helm_wheel",
       "y": 270
     }
   }
