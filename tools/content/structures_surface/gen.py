@@ -35,7 +35,7 @@ def lighthouse(preview):
     wg.pool('old_lighthouse/jetty', [('raft:old_lighthouse/jetty', 1, 'raft:old_lighthouse_jetty', 'terrain_matching')])
     wg.structure('old_lighthouse', 'raft:old_lighthouse/start', 'surface_structures', 'beard_thin', 0,
                  'WORLD_SURFACE_WG', size=1, max_dist=80)
-    wg.structure_set('old_lighthouse', 22, 8, SALTS['old_lighthouse'])
+    wg.structure_set('old_lighthouse', 32, 14, SALTS['old_lighthouse'])
     wg.biome_tag('old_lighthouse', ['palm_isle', 'jungle_isle'])
     return res
 

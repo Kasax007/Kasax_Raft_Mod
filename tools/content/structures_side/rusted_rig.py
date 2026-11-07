@@ -393,7 +393,7 @@ def main(preview=False):
     write_structure('rusted_rig', [(path, 1)],
                     [wear([('raft:riveted_hull', 'raft:rusty_hull', 0.12), ('raft:rusted_plate', 'raft:rusty_hull', 0.04)])],
                     step='surface_structures', terrain='none', start_height=W0, heightmap=None,
-                    biomes=['raft_ocean_biome', 'frost_floes'], spacing=30, separation=10, salt=31415905,
+                    biomes=['raft_ocean_biome', 'frost_floes'], spacing=56, separation=36, salt=31415905,
                     max_distance=64,
                     spawn_overrides={'monster': spawns([('minecraft:drowned', 2, 1, 2), ('raft:drowned_corsair', 1, 1, 1)])})
     return [(path, s)]

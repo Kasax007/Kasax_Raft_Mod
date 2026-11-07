@@ -702,10 +702,10 @@ def write_json_files():
                        'water_ambient': spawns([('raft:moray_eel', 2, 1, 1), ('minecraft:cod', 6, 2, 4),
                                                 ('minecraft:tropical_fish', 4, 2, 4)]),
                    })
-    structure_set(SID, 28, 10, 31415960)
+    structure_set(SID, 56, 24, 31415960)
     template_pool(f'raft:{SID}/start', [(f'raft:{SID}/station_0', 1, f'raft:{SID}')])
     processor_list(f'raft:{SID}', [NO_SPILL])
-    biome_tag(SID, ['coral_shallows', 'glowing_lagoon', 'kelp_forest'])
+    biome_tag(SID, ['kelp_forest', 'raft_ocean_biome'])   # 3.2: in deep water only (StructureSiteMixin checks the floor)
 
 
 def main():

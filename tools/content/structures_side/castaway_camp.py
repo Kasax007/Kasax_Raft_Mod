@@ -210,5 +210,5 @@ def main(preview=False):
             print('  preview', contact(s, f'castaway_camp_{fn.__name__}', scale=8))
     write_structure('castaway_camp', [(p, 1) for p, _ in out], None,
                     step='surface_structures', terrain='beard_thin', start_height=-1, heightmap='WORLD_SURFACE_WG',
-                    biomes=['palm_isle'], spacing=16, separation=6, salt=31415908, max_distance=32)
+                    biomes=['palm_isle'], spacing=22, separation=9, salt=31415908, max_distance=32)
     return out

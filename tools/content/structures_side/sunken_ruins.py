@@ -289,6 +289,6 @@ def main(preview=False):
                                             ('raft:tidestone_bricks', 'raft:mossy_tidestone_bricks', 0.08)])],
                     step='surface_structures', terrain='beard_thin', start_height=-2, heightmap='OCEAN_FLOOR_WG',
                     biomes=['coral_shallows', 'kelp_forest', 'raft_ocean_biome', 'glowing_lagoon'],
-                    spacing=10, separation=3, salt=31415907, max_distance=40,
+                    spacing=18, separation=7, salt=31415907, max_distance=40,
                     spawn_overrides=None)
     return out

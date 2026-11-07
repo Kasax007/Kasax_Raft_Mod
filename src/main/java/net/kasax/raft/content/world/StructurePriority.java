@@ -55,24 +55,33 @@ public final class StructurePriority {
         Registry<Structure> structures = context.registryAccess().lookupOrThrow(Registries.STRUCTURE);
         Holder<Structure> holder = structures.wrapAsHolder(self);
         int rank = rank(holder);
-        if (rank == 0) {
-            return Optional.of(stub);
-        }
         StructurePiecesBuilder pieces = stub.getPiecesBuilder();
         Structure.GenerationStub built = new Structure.GenerationStub(stub.position(), Either.right(pieces));
-        if (pieces.isEmpty()) {
+        if (pieces.isEmpty() || RAW.get()) {
             return Optional.of(built);
+        }
+        // the set this structure belongs to: structures of the same rank but another set give way by a fixed draw
+        String mySet = null;
+        for (Holder.Reference<StructureSet> set : context.registryAccess().lookupOrThrow(Registries.STRUCTURE_SET).listElements().toList()) {
+            for (StructureSet.StructureSelectionEntry entry : set.value().structures()) {
+                if (entry.structure().value() == self) {
+                    mySet = set.key().identifier().toString();
+                }
+            }
         }
         BoundingBox box = pieces.getBoundingBox().inflatedBy(GAP);
         ChunkPos here = context.chunkPos();
         long seed = context.seed();
-        for (Holder<StructureSet> set : context.registryAccess().lookupOrThrow(Registries.STRUCTURE_SET).listElements().toList()) {
+        for (Holder.Reference<StructureSet> set : context.registryAccess().lookupOrThrow(Registries.STRUCTURE_SET).listElements().toList()) {
             if (!(set.value().placement() instanceof RandomSpreadStructurePlacement placement)) {
                 continue;
             }
+            String setId = set.key().identifier().toString();
             for (StructureSet.StructureSelectionEntry entry : set.value().structures()) {
                 Holder<Structure> other = entry.structure();
-                if (rank(other) >= rank) {
+                int otherRank = rank(other);
+                boolean sameRank = otherRank == rank && !setId.equals(mySet) && other.is(net.kasax.raft.content.world.StructurePriority.OWN);
+                if (otherRank > rank || (otherRank == rank && !sameRank)) {
                     continue;
                 }
                 int spacing = placement.spacing();
@@ -83,7 +92,10 @@ public final class StructurePriority {
                                 || !placement.applyAdditionalChunkRestrictions(at.x(), at.z(), seed)) {
                             continue;
                         }
-                        BoundingBox theirs = boxOf(other, context, at);
+                        if (sameRank && Long.compare(draw(setId, at), draw(mySet, here)) <= 0) {
+                            continue;       // of two structures of the same rank, the one with the higher draw stays
+                        }
+                        BoundingBox theirs = sameRank ? rawBoxOf(other, context, at) : boxOf(other, context, at);
                         if (theirs != null && theirs.intersects(box)) {
                             return Optional.empty();
                         }
@@ -92,6 +104,45 @@ public final class StructurePriority {
             }
         }
         return Optional.of(built);
+    }
+
+    /** All of Beach Craft's structures (the ones that give way to each other). */
+    public static final TagKey<Structure> OWN = TagKey.create(Registries.STRUCTURE, Raft.id("priority/own"));
+    /** While set, the priority check is skipped (boxes of same-rank structures, without their own checks: no loops). */
+    private static final ThreadLocal<Boolean> RAW = ThreadLocal.withInitial(() -> false);
+
+    /** A fixed number for a structure set and start chunk: decides which of two same-rank structures stays. */
+    private static long draw(String set, ChunkPos at) {
+        long h = (set == null ? 0 : set.hashCode()) * 0x9E3779B97F4A7C15L ^ ChunkPos.pack(at.x(), at.z()) * 0xC2B2AE3D27D4EB4FL;
+        return h ^ (h >>> 31);
+    }
+
+    private static BoundingBox rawBoxOf(Holder<Structure> structure, Structure.GenerationContext context, ChunkPos at) {
+        boolean was = RAW.get();
+        RAW.set(true);
+        try {
+            Key key = new Key(structure.value(), context.seed() ^ 0x5DEECE66DL, ChunkPos.pack(at.x(), at.z()));
+            BoundingBox cached = BOXES.get(key);
+            if (cached == null) {
+                cached = compute(structure, context, at);
+                BOXES.put(key, cached);
+            }
+            return cached == NONE ? null : cached;
+        } finally {
+            RAW.set(was);
+        }
+    }
+
+    private static BoundingBox compute(Holder<Structure> structure, Structure.GenerationContext context, ChunkPos at) {
+        Structure.GenerationContext there = new Structure.GenerationContext(context.registryAccess(),
+                context.chunkGenerator(), context.biomeSource(), context.climateSampler(), context.randomState(),
+                context.structureTemplateManager(), context.seed(), at, context.heightAccessor(),
+                structure.value().biomes()::contains);
+        return structure.value().findValidGenerationPoint(there)
+                .map(Structure.GenerationStub::getPiecesBuilder)
+                .filter(b -> !b.isEmpty())
+                .map(StructurePiecesBuilder::getBoundingBox)
+                .orElse(NONE);
     }
 
     /** The box of that structure if it starts in that chunk (as the game would generate it), else null. */

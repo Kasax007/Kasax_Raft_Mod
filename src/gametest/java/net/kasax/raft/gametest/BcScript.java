@@ -494,6 +494,26 @@ public class BcScript implements FabricClientGameTest {
                 });
                 LOG.info("[bctest] MUSIC {}", res);
             }
+            case "states" -> {
+                // states <dim> x0 y0 z0 x1 y1 z1: log every non-air block state in the box (STATES lines)
+                String[] a = arg.split("\\s+");
+                int[] c = new int[6];
+                for (int i = 0; i < 6; i++) c[i] = (int) Math.floor(Double.parseDouble(a[i + 1]));
+                String res = need().getServer().computeOnServer(server -> {
+                    var level = server.getLevel(ResourceKey.create(Registries.DIMENSION, Identifier.parse(a[0])));
+                    if (level == null) return "no level";
+                    StringBuilder sb = new StringBuilder();
+                    for (BlockPos bp : BlockPos.betweenClosed(Math.min(c[0], c[3]), Math.min(c[1], c[4]), Math.min(c[2], c[5]),
+                            Math.max(c[0], c[3]), Math.max(c[1], c[4]), Math.max(c[2], c[5]))) {
+                        var st = level.getBlockState(bp);
+                        if (!st.isAir() && !st.is(net.minecraft.world.level.block.Blocks.WATER)) {
+                            sb.append("\n  ").append(bp.toShortString()).append(' ').append(st);
+                        }
+                    }
+                    return sb.toString();
+                });
+                LOG.info("[bctest] STATES {}{}", arg, res);
+            }
             case "dumpmodels" -> {
                 // dumpmodels <file>: every polygon of every raft: entity model layer in its default pose (model units,
                 // after the part transforms) as JSON lines, for the z-fighting check (tools/bctest/zfight_entities.py)

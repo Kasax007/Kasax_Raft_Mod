@@ -1286,7 +1286,7 @@ def build_all(preview=True):
                           el('hut_house_b', 2), el('hut_house_c', 2), el('hut_market', 1)], fallback=f'raft:{P}/ends')
     wg.pool(f'{P}/ends', [el('end_cap')])
     wg.structure('saltmere_village', f'raft:{P}/plaza', 'surface_structures', 'none', 73, None, size=6, max_dist=80)
-    wg.structure_set('saltmere_village', 28, 10, 31415922)
+    wg.structure_set('saltmere_village', 36, 16, 31415922)
     wg.biome_tag('saltmere_village', ['coral_shallows', 'glowing_lagoon'])
     return out
 

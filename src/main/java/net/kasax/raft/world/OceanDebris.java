@@ -27,31 +27,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Floating ocean debris of the raft dimension. Every ten seconds each player in the dimension gets one or
- * two debris items that appear 20 to 40 blocks upstream and drift past them with the current. Debris is
- * limited per player and despawns when it is old or far away from every player. The item catcher
- * collects debris that floats into it.
+ * Floating ocean debris of the raft dimension. Every 30 seconds each player in the dimension may get a single
+ * piece (one item) that appears 20 to 40 blocks upstream and drifts past them with the current. Debris is limited
+ * per player (a few pieces around them) and despawns when it is old or far away from every player. 3.2: about a
+ * tenth of 3.1's amount, one item per piece, rarer barrel loot: a nice find, not a stream of items. An item catcher
+ * on a sailing raft collects debris it sails through.
  */
 public class OceanDebris {
     /** Scoreboard tag of debris item entities. */
     public static final String TAG = "raft_debris";
     public static final ResourceKey<LootTable> BARREL_LOOT = ResourceKey.create(Registries.LOOT_TABLE, Raft.id("gameplay/ocean_barrel"));
 
-    public static final int SPAWN_INTERVAL_TICKS = 200;
+    public static final int SPAWN_INTERVAL_TICKS = 600;
+    /** Chance that a spawn attempt brings a piece at all. */
+    public static final float SPAWN_CHANCE = 0.6f;
     public static final int MIN_DISTANCE = 20;
     public static final int MAX_DISTANCE = 40;
     /** The debris limit per player, counted within {@link #COUNT_RADIUS} blocks. */
-    public static final int MAX_PER_PLAYER = 16;
+    public static final int MAX_PER_PLAYER = 5;
     public static final double COUNT_RADIUS = 96.0;
     /** The current flows towards positive x (east). */
     public static final double CURRENT_SPEED = 0.07;
-    public static final int MAX_AGE_TICKS = 3000;
+    public static final int MAX_AGE_TICKS = 2400;
     public static final double DESPAWN_DISTANCE = 128.0;
     /** Chance for a barrel loot item instead of a plain material. */
-    public static final float BARREL_CHANCE = 0.06f;
+    public static final float BARREL_CHANCE = 0.03f;
     /** Rare story debris: a message in a bottle (a lore letter) and a floating supply barrel. */
     public static final float BOTTLE_CHANCE = 0.015f;
-    public static final float SUPPLY_BARREL_CHANCE = 0.02f;
+    public static final float SUPPLY_BARREL_CHANCE = 0.01f;
 
     public static void register() {
         ServerTickEvents.END_LEVEL_TICK.register(OceanDebris::tick);
@@ -118,7 +121,7 @@ public class OceanDebris {
             return;
         }
         RandomSource random = level.getRandom();
-        int count = 1 + random.nextInt(2);
+        int count = random.nextFloat() < SPAWN_CHANCE ? 1 : 0;
         for (int i = 0; i < count; i++) {
             double distance = MIN_DISTANCE + random.nextDouble() * (MAX_DISTANCE - MIN_DISTANCE);
             double x = player.getX() - distance;
@@ -162,15 +165,16 @@ public class OceanDebris {
                 return loot.getFirst();
             }
         }
+        // one item per piece: driftwood and leaves are common, plastic less, scrap metal rare
         int roll = random.nextInt(100);
-        if (roll < 32) {
-            return new ItemStack(ModBlocks.DRIFTWOOD_PLANKS, 1 + random.nextInt(2));
-        } else if (roll < 56) {
-            return new ItemStack(ModBlocks.PALM_LEAVES, 1 + random.nextInt(2));
-        } else if (roll < 78) {
-            return new ItemStack(ModItems.PLASTIC, 1 + random.nextInt(2));
+        if (roll < 38) {
+            return new ItemStack(ModBlocks.DRIFTWOOD_PLANKS);
+        } else if (roll < 66) {
+            return new ItemStack(ModBlocks.PALM_LEAVES);
+        } else if (roll < 88) {
+            return new ItemStack(ModItems.PLASTIC);
         } else {
-            return new ItemStack(ModItems.SCRAP_METAL, 1 + random.nextInt(2));
+            return new ItemStack(ModItems.SCRAP_METAL);
         }
     }
 }

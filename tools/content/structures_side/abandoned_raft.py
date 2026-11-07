@@ -194,5 +194,5 @@ def main(preview=False):
     write_structure('abandoned_raft', [(p, 1) for p, _ in out], [NO_SPILL_PLANTS],
                     step='surface_structures', terrain='none', start_height=98, heightmap=None,
                     biomes=['raft_ocean_biome', 'kelp_forest', 'coral_shallows'],
-                    spacing=12, separation=4, salt=31415909, max_distance=32)
+                    spacing=20, separation=8, salt=31415909, max_distance=32)
     return out

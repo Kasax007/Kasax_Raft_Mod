@@ -334,10 +334,43 @@ public class ExpeditionRaft extends AbstractBoat implements ContainerEntity, Has
         boat.raft$setOutOfControlTicks(0.0F);
         if (this.level() instanceof ServerLevel serverLevel) {
             this.tickEngine(serverLevel);
+            this.catchFlotsam(serverLevel);
         } else {
             this.tickClientEffects();
         }
         this.carryStandingEntities();
+    }
+
+    /**
+     * 3.2: while the raft sails (not anchored, at least 2 blocks/s) it fishes floating flotsam it passes out of the
+     * water into its storage, like an item catcher on a raft you built. Standing still it catches nothing.
+     */
+    private void catchFlotsam(ServerLevel level) {
+        if (this.tickCount % 5 != 0 || this.isAnchored() || this.getDeltaMovement().horizontalDistance() < 0.1) {
+            return;
+        }
+        int slots = this.hasUpgrade(RaftUpgrade.CRATE) ? 54 : 27;
+        for (net.minecraft.world.entity.item.ItemEntity item : level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class,
+                this.getBoundingBox().inflate(1.5, 1.0, 1.5), net.kasax.raft.world.OceanDebris::isDebris)) {
+            ItemStack stack = item.getItem();
+            for (int i = 0; i < slots && !stack.isEmpty(); i++) {
+                ItemStack in = this.items.get(i);
+                if (in.isEmpty()) {
+                    this.items.set(i, stack.copy());
+                    stack.setCount(0);
+                } else if (ItemStack.isSameItemSameComponents(in, stack) && in.getCount() < in.getMaxStackSize()) {
+                    int moved = Math.min(in.getMaxStackSize() - in.getCount(), stack.getCount());
+                    in.grow(moved);
+                    stack.shrink(moved);
+                }
+            }
+            if (stack.isEmpty()) {
+                item.discard();
+                level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ITEM_PICKUP, SoundSource.NEUTRAL, 0.3F, 1.2F);
+            } else {
+                item.setItem(stack);
+            }
+        }
     }
 
     /**

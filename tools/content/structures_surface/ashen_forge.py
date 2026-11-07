@@ -645,7 +645,7 @@ def build_all(preview=True):
                      'monster': {'bounding_box': 'piece', 'spawns': [
                          {'type': 'raft:ember_crab', 'count': {'type': 'minecraft:uniform', 'min_inclusive': 1,
                                                                'max_inclusive': 3}, 'weight': 1}]}})
-    wg.structure_set('ashen_forge', 30, 12, 31415923)
+    wg.structure_set('ashen_forge', 40, 18, 31415923)
     wg.biome_tag('ashen_forge', ['volcanic_isle'])
     return out
 

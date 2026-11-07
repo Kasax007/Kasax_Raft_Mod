@@ -247,6 +247,6 @@ def main(preview=False):
             print('  preview', contact(s, path.replace('/', '_'), cuts=(6,), scale=6))
     write_structure('sunken_plane', [(p, 1) for p, _ in out], [NO_SPILL_PLANTS],
                     step='surface_structures', terrain='beard_thin', start_height=-3, heightmap='OCEAN_FLOOR_WG',
-                    biomes=['kelp_forest', 'raft_ocean_biome', 'coral_shallows'], spacing=28, separation=10,
+                    biomes=['kelp_forest', 'raft_ocean_biome', 'coral_shallows'], spacing=36, separation=14,
                     salt=31415906, max_distance=64)
     return out
