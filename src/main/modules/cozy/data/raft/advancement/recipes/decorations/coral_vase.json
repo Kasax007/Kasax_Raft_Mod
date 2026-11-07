@@ -15,18 +15,13 @@
         "items": [
           {
             "items": [
+              "minecraft:brain_coral",
+              "minecraft:bubble_coral",
+              "minecraft:fire_coral",
+              "minecraft:horn_coral",
+              "minecraft:tube_coral",
               "raft:sea_glass_shard"
             ]
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
-    },
-    "has_tag_0": {
-      "conditions": {
-        "items": [
-          {
-            "items": "#minecraft:corals"
           }
         ]
       },
@@ -42,7 +37,6 @@
   "requirements": [
     [
       "has_ingredient",
-      "has_tag_0",
       "has_the_recipe"
     ]
   ],

@@ -38,6 +38,6 @@
       "id": "raft:shark_jaw_trophy",
       "required": false
     },
-    "minecraft:painting"
+    "minecraft:decorated_pot"
   ]
 }

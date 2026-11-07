@@ -11,7 +11,13 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "C": "#minecraft:corals",
+    "C": [
+      "minecraft:tube_coral",
+      "minecraft:brain_coral",
+      "minecraft:bubble_coral",
+      "minecraft:fire_coral",
+      "minecraft:horn_coral"
+    ],
     "G": "raft:sea_glass_shard"
   },
   "pattern": [

@@ -143,7 +143,7 @@ def cozy_recipes(M, BLOCKS):
     b.shapeless('coconut_planter', ['raft:coconut', 'minecraft:dirt', '#minecraft:small_flowers'], 'coconut_planter')
     b.shaped('flower_box', ['FDF', 'PPP'], {'F': '#minecraft:small_flowers', 'D': 'minecraft:dirt', 'P': DP},
              'flower_box', 2)
-    b.shaped('coral_vase', ['C', 'G'], {'C': '#minecraft:corals', 'G': 'raft:sea_glass_shard'}, 'coral_vase')
+    b.shaped('coral_vase', ['C', 'G'], {'C': ['minecraft:tube_coral', 'minecraft:brain_coral', 'minecraft:bubble_coral', 'minecraft:fire_coral', 'minecraft:horn_coral'], 'G': 'raft:sea_glass_shard'}, 'coral_vase')
     b.shapeless('conch_shell', ['raft:seashell', 'raft:seashell', 'raft:seashell', 'minecraft:pink_dye'], 'conch_shell')
     b.shaped('steel_drum', ['III', 'IBI', 'S S'], {'I': 'minecraft:iron_ingot', 'B': 'minecraft:blue_dye',
                                                    'S': 'raft:scrap_metal'}, 'steel_drum')

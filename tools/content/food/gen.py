@@ -213,15 +213,15 @@ def recipes():
     b.cooking('cooked_rice', 'rice', 'cooked_rice', 0.2)
     b.shapeless('chili_seeds', ['chili_pepper'], 'chili_seeds', 2)
     b.shapeless('sushi_roll', ['cooked_rice', ['minecraft:cod', 'minecraft:salmon', 'minecraft:tropical_fish'],
-                               'minecraft:dried_kelp'], 'sushi_roll', 3, 'food')
-    b.shapeless('chili_crab', ['raft:cooked_crab_claw', 'chili_pepper', 'minecraft:bowl'], 'chili_crab', 1, 'food')
-    b.shapeless('fruit_salad', ['banana', 'raft:pineapple', 'minecraft:melon_slice', 'minecraft:bowl'], 'fruit_salad', 1, 'food')
+                               'minecraft:dried_kelp'], 'sushi_roll', 3, 'misc')
+    b.shapeless('chili_crab', ['raft:cooked_crab_claw', 'chili_pepper', 'minecraft:bowl'], 'chili_crab', 1, 'misc')
+    b.shapeless('fruit_salad', ['banana', 'raft:pineapple', 'minecraft:melon_slice', 'minecraft:bowl'], 'fruit_salad', 1, 'misc')
     b.shapeless('tropical_smoothie', ['banana', 'raft:pineapple', 'minecraft:sugar', 'raft:fresh_water'],
-                'tropical_smoothie', 1, 'food')
+                'tropical_smoothie', 1, 'misc')
     b.shapeless('banana_bread', ['banana', 'banana', 'minecraft:wheat', 'minecraft:wheat', 'minecraft:wheat',
-                                 'minecraft:sugar'], 'banana_bread', 1, 'food')
+                                 'minecraft:sugar'], 'banana_bread', 1, 'misc')
     b.shapeless('coconut_ice_cream', ['raft:coconut', 'minecraft:snowball', 'minecraft:sugar', 'minecraft:bowl'],
-                'coconut_ice_cream', 1, 'food')
+                'coconut_ice_cream', 1, 'misc')
     b.shaped('cooking_pot', [' S ', 'I I', 'III'], {'S': 'minecraft:stick', 'I': 'minecraft:iron_ingot'}, 'cooking_pot',
              1, 'misc')
     b.shaped('fish_trap', ['SBS', 'B B', 'SBS'], {'S': 'minecraft:string', 'B': 'minecraft:bamboo'}, 'fish_trap', 1, 'misc')
@@ -257,8 +257,7 @@ def world_features():
     rarity = {'wild_sweet_potato': 9, 'wild_chili': 12, 'wild_banana': 8, 'wild_rice': 8}
     for wid, blocks in ground.items():
         A.write_json(M, f'data/raft/worldgen/feature/{wid}.json', {
-            'type': 'minecraft:simple_block', 'to_place': {'type': 'minecraft:simple_state_provider',
-                                                           'state': {'id': rid(wid)}}})
+            'type': 'minecraft:simple_block', 'to_place': {'id': rid(wid)}})
         A.write_json(M, f'data/raft/worldgen/placed_feature/patch_{wid}.json', {'feature': rid(wid), 'placement': [
             {'type': 'minecraft:rarity_filter', 'chance': rarity[wid]}, {'type': 'minecraft:in_square'},
             {'type': 'minecraft:heightmap', 'heightmap': 'WORLD_SURFACE_WG'}, {'type': 'minecraft:biome'},

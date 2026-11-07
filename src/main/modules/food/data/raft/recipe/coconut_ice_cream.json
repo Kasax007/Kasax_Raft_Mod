@@ -9,7 +9,7 @@
     }
   ],
   "type": "minecraft:crafting_shapeless",
-  "category": "food",
+  "category": "misc",
   "ingredients": [
     "raft:coconut",
     "minecraft:snowball",

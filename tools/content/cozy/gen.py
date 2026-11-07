@@ -680,7 +680,7 @@ COMFORT = {
     'wall_decor': ['raft:shell_garland', 'raft:fishing_net', 'raft:fish_trophy', 'raft:surfboard_red',
                    'raft:surfboard_blue', 'raft:surfboard_yellow', 'raft:life_ring', 'raft:figurehead',
                    'raft:jolly_roger', 'raft:bunting_red_white', 'raft:bunting_rainbow', 'raft:string_lights_warm',
-                   'raft:string_lights_colorful', 'raft:shark_jaw_trophy', 'minecraft:painting'],
+                   'raft:string_lights_colorful', 'raft:shark_jaw_trophy', 'minecraft:decorated_pot'],
     'water_view': ['raft:aquarium', 'raft:bamboo_blinds', 'raft:driftwood_lattice', '#raft:sea_glass_panes'],
 }
 
