@@ -21,7 +21,8 @@ import java.util.Map;
 /**
  * 1.21.1 port: what the newer game's item model definitions decide is done with item properties here (the resource
  * converter turned the definitions into overrides): raft:lamp (diving helmet with its lamp), raft:cooldown (harpoon
- * gun reloading) and raft:gui (energy staff: flat in GUIs, 3D in the hand; set by ItemRendererMixin). Also the water
+ * gun reloading), raft:gui (energy staff, captain's spyglass, shark tooth spear: flat in GUIs, on the ground, in frames
+ * and on shelves, another model in the hand; set by ItemRendererGuiModelMixin) and raft:angle (wreck compass needle). Also the water
  * fog distance per biome that the newer game keeps in biome attributes (assets/raft/port1211/water_fog.json).
  */
 @Environment(EnvType.CLIENT)
@@ -38,8 +39,21 @@ public final class ItemModelProperties {
                 (stack, level, entity, seed) -> stack.has(DivingContent.DIVING_LAMP) ? 1.0F : 0.0F);
         ItemProperties.register(DivingContent.HARPOON_GUN, Raft.id("cooldown"),
                 (stack, level, entity, seed) -> entity instanceof Player p ? p.getCooldowns().getCooldownPercent(stack.getItem(), 0.0F) : 0.0F);
-        ItemProperties.register(ModItems.ENERGY_STAFF, Raft.id("gui"), (stack, level, entity, seed) -> GUI.get() ? 1.0F : 0.0F);
+        for (net.minecraft.world.item.Item item : GUI_MODEL_ITEMS.get()) {
+            ItemProperties.register(item, Raft.id("gui"), (stack, level, entity, seed) -> GUI.get() ? 1.0F : 0.0F);
+        }
+        // wreck compass: the needle turns to the found wreck (lodestone tracker), else to the world spawn like a compass
+        ItemProperties.register(net.kasax.raft.content.gear.GearContent.WRECK_COMPASS, Raft.id("angle"),
+                new net.minecraft.client.renderer.item.CompassItemPropertyFunction((level, stack, entity) -> {
+                    net.minecraft.world.item.component.LodestoneTracker tracker = stack.get(net.minecraft.core.component.DataComponents.LODESTONE_TRACKER);
+                    return tracker != null ? tracker.target().orElse(null) : net.minecraft.world.item.CompassItem.getSpawnPosition(level);
+                }));
     }
+
+    /** Items with a flat GUI model and a different model in the hand (the newer game's display context select). */
+    public static final java.util.function.Supplier<java.util.Set<net.minecraft.world.item.Item>> GUI_MODEL_ITEMS =
+            com.google.common.base.Suppliers.memoize(() -> java.util.Set.of(ModItems.ENERGY_STAFF,
+                    net.kasax.raft.content.gear.GearContent.CAPTAINS_SPYGLASS, net.kasax.raft.content.gear.GearContent.SHARK_TOOTH_SPEAR));
 
     /** Water fog distance factor of a biome (1 = vanilla). */
     public static float waterFogFactor(Holder<Biome> biome) {

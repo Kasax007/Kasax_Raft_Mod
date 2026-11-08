@@ -2,7 +2,7 @@ package net.kasax.raft.content.gear;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.kasax.raft.Raft;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -18,7 +18,7 @@ import net.minecraft.world.item.Item;
  * set +10 % walking speed and Luck I (better fishing and chest loot).
  */
 public final class GearEvents {
-    public static final Identifier EXPLORER_SPEED = Raft.id("explorer_speed");
+    public static final ResourceLocation EXPLORER_SPEED = Raft.id("explorer_speed");
 
     private GearEvents() {
     }
@@ -37,7 +37,7 @@ public final class GearEvents {
         for (ServerPlayer p : server.getPlayerList().getPlayers()) {
             if (wears(p, GearContent.SHELL_HELMET, GearContent.SHELL_CHESTPLATE, GearContent.SHELL_LEGGINGS, GearContent.SHELL_BOOTS)
                     && p.isInWater()) {
-                p.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 50, 0, true, false, true));
+                p.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 50, 0, true, false, true));
             }
             boolean explorer = wears(p, GearContent.EXPLORER_HELMET, GearContent.EXPLORER_CHESTPLATE,
                     GearContent.EXPLORER_LEGGINGS, GearContent.EXPLORER_BOOTS);

@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /** A wicker fish trap: put it in water (with open water around it) and it slowly fills its 9 slots with catch. */
 public class FishTrapBlock extends CozyBlock implements EntityBlock {
@@ -29,7 +29,7 @@ public class FishTrapBlock extends CozyBlock implements EntityBlock {
     @Override
     @SuppressWarnings("unchecked")
     public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide() || type != FoodContent.FISH_TRAP_ENTITY ? null
+        return level.isClientSide || type != FoodContent.FISH_TRAP_ENTITY ? null
                 : (l, p, s, be) -> FishTrapBlockEntity.serverTick(l, p, s, (FishTrapBlockEntity) be);
     }
 
@@ -47,7 +47,7 @@ public class FishTrapBlock extends CozyBlock implements EntityBlock {
     }
 
     @Override
-    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, net.minecraft.core.Direction direction) {
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
         return net.minecraft.world.inventory.AbstractContainerMenu.getRedstoneSignalFromBlockEntity(level.getBlockEntity(pos));
     }
 }

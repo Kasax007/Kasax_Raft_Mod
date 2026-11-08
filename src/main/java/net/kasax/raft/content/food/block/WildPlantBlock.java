@@ -5,14 +5,19 @@ import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.VegetationBlock;
+import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 /** A wild island crop (sweet potato, chili, banana, rice): grows on grass, dirt, sand and ash; breaking it drops food and seeds. */
-public class WildPlantBlock extends VegetationBlock {
-    private static final VoxelShape SHAPE = Block.column(12.0, 0.0, 13.0);
+public class WildPlantBlock extends BushBlock {
+    @Override
+    protected com.mojang.serialization.MapCodec<? extends BushBlock> codec() {
+        return null;
+    }
+
+    private static final VoxelShape SHAPE = net.kasax.raft.compat.VShapes.column(12.0, 0.0, 13.0);
 
     public WildPlantBlock(Properties properties) {
         super(properties);

@@ -17,8 +17,23 @@ public class BoomerangItem extends TooltipItem {
         super(properties, "tooltip.raft.boomerang", "tooltip.raft.boomerang.1");
     }
 
+    /** 1.21.1: repaired with driftwood planks and enchanted like the newer game's repairable / enchantable components. */
     @Override
-    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+    public boolean isValidRepairItem(ItemStack stack, ItemStack repair) {
+        return repair.is(net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.ITEM, net.kasax.raft.Raft.id("repairs_boomerang")));
+    }
+
+    @Override
+    public int getEnchantmentValue() {
+        return 10;
+    }
+
+    @Override
+    public net.minecraft.world.InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        return net.kasax.raft.compat.Results.holder(this.use26(level, player, hand), player.getItemInHand(hand));
+    }
+
+    private InteractionResult use26(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (level instanceof ServerLevel server) {
             ItemStack thrown = stack.copyWithCount(1);
@@ -38,7 +53,7 @@ public class BoomerangItem extends TooltipItem {
                     SoundSource.PLAYERS, 0.8F, 1.0F);
             if (!creative) stack.shrink(1);
         }
-        player.getCooldowns().addCooldown(stack, 10);
+        player.getCooldowns().addCooldown(this, 10);
         return InteractionResult.SUCCESS;
     }
 }

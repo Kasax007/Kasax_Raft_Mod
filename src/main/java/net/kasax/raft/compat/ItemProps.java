@@ -23,8 +23,9 @@ public final class ItemProps {
     public static final int COOKING_TIME_DRY_PLANTS = 100;
     public static final int COOKING_TIME_BOATS = 1200;
     public static final float COMPOSTABLE_LOW = 0.3F;
-    public static final float COMPOSTABLE_MEDIUM = 0.5F;
-    public static final float COMPOSTABLE_HIGH = 0.65F;
+    public static final float COMPOSTABLE_LOW_MEDIUM = 0.5F;
+    public static final float COMPOSTABLE_MEDIUM = 0.65F;
+    public static final float COMPOSTABLE_MEDIUM_HIGH = 0.85F;
 
     private static final Map<Item.Properties, Integer> FUEL = new IdentityHashMap<>();
     private static final Map<Item.Properties, net.minecraft.tags.TagKey<net.minecraft.world.damagesource.DamageType>> RESIST_PENDING = new IdentityHashMap<>();

@@ -77,15 +77,15 @@ public final class CozyComfort {
     }
 
     private static void rest(ServerPlayer player) {
-        ServerLevel level = player.level();
+        ServerLevel level = player.serverLevel();
         int comfort = comfort(level, player.blockPosition());
         int minutes = 2 + comfort;
         boolean fresh = !player.hasEffect(CozyContent.RESTED);
         player.addEffect(new MobEffectInstance(CozyContent.RESTED, minutes * 1200, 0, true, true, true));
         if (comfort <= 2) {
-            player.sendOverlayMessage(Component.translatable("message.raft.comfort.low", comfort));
+            player.displayClientMessage(Component.translatable("message.raft.comfort.low", comfort), true);
         } else {
-            player.sendOverlayMessage(Component.translatable("message.raft.comfort", comfort, minutes));
+            player.displayClientMessage(Component.translatable("message.raft.comfort", comfort, minutes), true);
         }
         if (fresh) {
             level.playSound(null, player.blockPosition(), CozyContent.RESTED_CHIME, SoundSource.PLAYERS, 0.5F, 1.0F);

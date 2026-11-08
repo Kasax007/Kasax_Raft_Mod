@@ -34,19 +34,23 @@ public class WreckCompassItem extends TooltipItem {
     }
 
     @Override
-    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+    public net.minecraft.world.InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        return net.kasax.raft.compat.Results.holder(this.use26(level, player, hand), player.getItemInHand(hand));
+    }
+
+    private InteractionResult use26(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (!(level instanceof ServerLevel server)) return InteractionResult.SUCCESS;
-        player.getCooldowns().addCooldown(stack, 100);
+        player.getCooldowns().addCooldown(this, 100);
         BlockPos found = server.findNearestMapStructure(WRECKS, player.blockPosition(), 64, false);
         if (found == null) {
-            player.sendOverlayMessage(Component.translatable("message.raft.wreck_compass.none"));
+            player.displayClientMessage(Component.translatable("message.raft.wreck_compass.none"), true);
             stack.remove(DataComponents.LODESTONE_TRACKER);
             return InteractionResult.SUCCESS;
         }
         stack.set(DataComponents.LODESTONE_TRACKER, new LodestoneTracker(Optional.of(GlobalPos.of(level.dimension(), found)), false));
         int distance = (int) Math.sqrt(found.distSqr(new BlockPos(player.getBlockX(), found.getY(), player.getBlockZ())));
-        player.sendOverlayMessage(Component.translatable("message.raft.wreck_compass.found", distance));
+        player.displayClientMessage(Component.translatable("message.raft.wreck_compass.found", distance), true);
         server.playSound(null, player.blockPosition(), SoundEvents.LODESTONE_COMPASS_LOCK, SoundSource.PLAYERS, 1.0F, 1.0F);
         return InteractionResult.SUCCESS;
     }

@@ -11,12 +11,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile;
+import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.kasax.raft.compat.ValueInput;
+import net.kasax.raft.compat.ValueOutput;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -47,7 +47,8 @@ public class BoomerangEntity extends ThrowableItemProjectile {
     }
 
     public BoomerangEntity(Level level, LivingEntity owner, ItemStack stack, boolean creative) {
-        super(GearContent.BOOMERANG_ENTITY, owner, level, stack);
+        super(GearContent.BOOMERANG_ENTITY, owner, level);
+        setItem(stack);
         this.creative = creative;
     }
 
@@ -119,9 +120,9 @@ public class BoomerangEntity extends ThrowableItemProjectile {
     private void strike(ServerLevel server, Entity target) {
         hit.add(target.getUUID());
         var source = damageSources().thrown(this, getOwner());
-        if (target.hurtServer(server, source, DAMAGE) && target instanceof LivingEntity living) {
+        if (target.hurt(source, DAMAGE) && target instanceof LivingEntity living) {
             Vec3 push = getDeltaMovement().normalize();
-            living.knockback(0.4, -push.x, -push.z, source, DAMAGE);
+            living.knockback(0.4, -push.x, -push.z);
         }
         server.playSound(null, getX(), getY(), getZ(), SoundEvents.WOOD_HIT, SoundSource.PLAYERS, 1.0F, 1.0F);
     }
@@ -138,8 +139,8 @@ public class BoomerangEntity extends ThrowableItemProjectile {
 
     private void caught(ServerLevel server, Entity owner) {
         if (owner instanceof Player player) {
-            if (!creative) player.getInventory().placeItemBackInInventory(getItem().copy(), net.minecraft.util.Prediction.SERVER_ONLY);
-            for (ItemStack s : carried) player.getInventory().placeItemBackInInventory(s, net.minecraft.util.Prediction.SERVER_ONLY);
+            if (!creative) player.getInventory().placeItemBackInInventory(getItem().copy());
+            for (ItemStack s : carried) player.getInventory().placeItemBackInInventory(s);
             server.playSound(null, owner.getX(), owner.getY(), owner.getZ(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.4F, 1.2F);
         } else {
             dropAll(server);
@@ -150,8 +151,8 @@ public class BoomerangEntity extends ThrowableItemProjectile {
     }
 
     private void dropAll(ServerLevel server) {
-        if (!creative) spawnAtLocation(server, getItem().copy());
-        for (ItemStack s : carried) spawnAtLocation(server, s);
+        if (!creative) spawnAtLocation(getItem().copy());
+        for (ItemStack s : carried) spawnAtLocation(s);
         carried.clear();
         discard();
     }
@@ -161,8 +162,9 @@ public class BoomerangEntity extends ThrowableItemProjectile {
     }
 
     @Override
-    protected void addAdditionalSaveData(ValueOutput output) {
-        super.addAdditionalSaveData(output);
+    public void addAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueOutput output = ValueOutput.of(tag121, this.registryAccess());
+        super.addAdditionalSaveData(tag121);
         output.putBoolean("returning", returning);
         output.putBoolean("creative", creative);
         output.putInt("flight", flight);
@@ -171,8 +173,9 @@ public class BoomerangEntity extends ThrowableItemProjectile {
     }
 
     @Override
-    protected void readAdditionalSaveData(ValueInput input) {
-        super.readAdditionalSaveData(input);
+    public void readAdditionalSaveData(net.minecraft.nbt.CompoundTag tag121) {
+        ValueInput input = ValueInput.of(tag121, this.registryAccess());
+        super.readAdditionalSaveData(tag121);
         returning = input.getBooleanOr("returning", true);
         creative = input.getBooleanOr("creative", false);
         flight = input.getIntOr("flight", 0);

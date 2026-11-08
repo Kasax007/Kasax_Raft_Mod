@@ -33,7 +33,7 @@ public final class PotRecipes {
     }
 
     private static Need raft(String id) {
-        return new Need(id, s -> s.is(BuiltInRegistries.ITEM.getValue(Raft.id(id))));
+        return new Need(id, s -> s.is(BuiltInRegistries.ITEM.get(Raft.id(id))));
     }
 
     static {

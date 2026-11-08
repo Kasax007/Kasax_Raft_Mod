@@ -21,7 +21,8 @@ public class RestedEffect extends MobEffect {
     }
 
     @Override
-    public boolean applyEffectTick(ServerLevel level, LivingEntity mob, int amplification) {
+    public boolean applyEffectTick(LivingEntity mob, int amplification) {
+        if (mob.level().isClientSide) return true;
         if (mob.getHealth() < mob.getMaxHealth()) mob.heal(1.0F);
         return true;
     }

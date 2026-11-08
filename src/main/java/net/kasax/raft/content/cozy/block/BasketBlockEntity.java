@@ -7,7 +7,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.entity.ContainerUser;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -18,13 +17,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.ContainerOpenersCounter;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
-
-import java.util.List;
+import net.kasax.raft.compat.RemovalSideEffects;
 
 /** The 9 slots of a wicker basket. Opening sets the {@code open} state (lid up). */
-public class BasketBlockEntity extends RandomizableContainerBlockEntity {
+public class BasketBlockEntity extends RandomizableContainerBlockEntity implements RemovalSideEffects {
     private NonNullList<ItemStack> items = NonNullList.withSize(9, ItemStack.EMPTY);
 
     private final ContainerOpenersCounter openers = new ContainerOpenersCounter() {
@@ -56,16 +52,16 @@ public class BasketBlockEntity extends RandomizableContainerBlockEntity {
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
-        if (!trySaveLootTable(output)) ContainerHelper.saveAllItems(output, items, false);
+    protected void saveAdditional(net.minecraft.nbt.CompoundTag tag121, net.minecraft.core.HolderLookup.Provider reg121) {
+        super.saveAdditional(tag121, reg121);
+        if (!trySaveLootTable(tag121)) ContainerHelper.saveAllItems(tag121, items, false, reg121);
     }
 
     @Override
-    protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);
+    protected void loadAdditional(net.minecraft.nbt.CompoundTag tag121, net.minecraft.core.HolderLookup.Provider reg121) {
+        super.loadAdditional(tag121, reg121);
         items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
-        if (!tryLoadLootTable(input)) ContainerHelper.loadAllItems(input, items);
+        if (!tryLoadLootTable(tag121)) ContainerHelper.loadAllItems(tag121, items, reg121);
     }
 
     @Override
@@ -94,22 +90,22 @@ public class BasketBlockEntity extends RandomizableContainerBlockEntity {
     }
 
     @Override
-    public void startOpen(ContainerUser user) {
-        if (!remove && !user.getLivingEntity().isSpectator()) {
-            openers.incrementOpeners(user.getLivingEntity(), getLevel(), getBlockPos(), getBlockState(), user.getContainerInteractionRange());
+    public void startOpen(Player user) {
+        if (!remove && !user.isSpectator()) {
+            openers.incrementOpeners(user, getLevel(), getBlockPos(), getBlockState());
         }
     }
 
     @Override
-    public void stopOpen(ContainerUser user) {
-        if (!remove && !user.getLivingEntity().isSpectator()) {
-            openers.decrementOpeners(user.getLivingEntity(), getLevel(), getBlockPos(), getBlockState());
+    public void stopOpen(Player user) {
+        if (!remove && !user.isSpectator()) {
+            openers.decrementOpeners(user, getLevel(), getBlockPos(), getBlockState());
         }
     }
 
-    @Override
-    public List<ContainerUser> getEntitiesWithContainerOpen() {
-        return openers.getEntitiesWithContainerOpen(getLevel(), getBlockPos());
+    /** 1.21.1: the block's scheduled tick checks who still looks inside (the newer game counts it itself). */
+    void recheckOpen() {
+        if (!remove) openers.recheckOpeners(getLevel(), getBlockPos(), getBlockState());
     }
 
     /** Contents stay in the basket item, so nothing spills when it is broken. */

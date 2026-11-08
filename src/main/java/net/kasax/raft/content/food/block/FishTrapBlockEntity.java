@@ -19,8 +19,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -103,18 +101,18 @@ public class FishTrapBlockEntity extends RandomizableContainerBlockEntity {
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
-        if (!trySaveLootTable(output)) ContainerHelper.saveAllItems(output, items);
-        output.putInt("timer", timer);
+    protected void saveAdditional(net.minecraft.nbt.CompoundTag tag121, net.minecraft.core.HolderLookup.Provider reg121) {
+        super.saveAdditional(tag121, reg121);
+        if (!trySaveLootTable(tag121)) ContainerHelper.saveAllItems(tag121, items, reg121);
+        tag121.putInt("timer", timer);
     }
 
     @Override
-    protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);
+    protected void loadAdditional(net.minecraft.nbt.CompoundTag tag121, net.minecraft.core.HolderLookup.Provider reg121) {
+        super.loadAdditional(tag121, reg121);
         items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
-        if (!tryLoadLootTable(input)) ContainerHelper.loadAllItems(input, items);
-        timer = input.getIntOr("timer", -1);
+        if (!tryLoadLootTable(tag121)) ContainerHelper.loadAllItems(tag121, items, reg121);
+        timer = tag121.contains("timer") ? tag121.getInt("timer") : -1;
     }
 
     @Override

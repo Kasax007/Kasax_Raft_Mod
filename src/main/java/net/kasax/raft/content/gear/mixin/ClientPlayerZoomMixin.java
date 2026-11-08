@@ -11,8 +11,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(AbstractClientPlayer.class)
 public abstract class ClientPlayerZoomMixin {
     @Inject(method = "getFieldOfViewModifier", at = @At("RETURN"), cancellable = true)
-    private void raft$captainsZoom(boolean firstPerson, float effectScale, CallbackInfoReturnable<Float> cir) {
+    private void raft$captainsZoom(CallbackInfoReturnable<Float> cir) {
         AbstractClientPlayer self = (AbstractClientPlayer) (Object) this;
+        boolean firstPerson = net.minecraft.client.Minecraft.getInstance().options.getCameraType().isFirstPerson();
         if (firstPerson && self.isScoping() && self.getUseItem().is(GearContent.CAPTAINS_SPYGLASS)) {
             cir.setReturnValue(0.05F);
         }

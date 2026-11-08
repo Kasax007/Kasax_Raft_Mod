@@ -29,7 +29,7 @@ public class IslandCropBlock extends CropBlock {
     public IslandCropBlock(Properties properties, Supplier<ItemLike> seed, double height) {
         super(properties);
         this.seed = seed;
-        for (int i = 0; i < 4; i++) shapes[i] = Block.column(14.0, 0.0, Math.max(3, height * (i + 1) / 4.0));
+        for (int i = 0; i < 4; i++) shapes[i] = net.kasax.raft.compat.VShapes.column(14.0, 0.0, Math.max(3, height * (i + 1) / 4.0));
     }
 
     @Override

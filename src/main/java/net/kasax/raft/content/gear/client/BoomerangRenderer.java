@@ -3,44 +3,39 @@ package net.kasax.raft.content.gear.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.kasax.raft.content.gear.entity.BoomerangEntity;
-import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.state.ThrownItemRenderState;
-import net.minecraft.client.renderer.item.ItemModelResolver;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemDisplayContext;
 
 /** Draws the boomerang lying flat and spinning fast around its middle. */
-public class BoomerangRenderer extends EntityRenderer<BoomerangEntity, ThrownItemRenderState> {
-    private final ItemModelResolver items;
+public class BoomerangRenderer extends EntityRenderer<BoomerangEntity> {
+    private final ItemRenderer items;
 
     public BoomerangRenderer(EntityRendererProvider.Context context) {
         super(context);
-        this.items = context.getItemModelResolver();
+        this.items = context.getItemRenderer();
     }
 
     @Override
-    public ThrownItemRenderState createRenderState() {
-        return new ThrownItemRenderState();
-    }
-
-    @Override
-    public void extractRenderState(BoomerangEntity entity, ThrownItemRenderState state, float partialTicks) {
-        super.extractRenderState(entity, state, partialTicks);
-        items.updateForNonLiving(state.item, entity.getItem(), ItemDisplayContext.GROUND, entity);
-    }
-
-    @Override
-    public void submit(ThrownItemRenderState state, PoseStack pose, SubmitNodeCollector collector, CameraRenderState camera) {
+    public void render(BoomerangEntity entity, float yaw, float partialTick, PoseStack pose, MultiBufferSource buffers, int light) {
         pose.pushPose();
         pose.translate(0.0F, 0.1F, 0.0F);
-        pose.rotateDegrees(Axis.YP, state.ageInTicks * 45.0F);
-        pose.rotateDegrees(Axis.XP, 90.0F);
+        pose.mulPose(Axis.YP.rotationDegrees((entity.tickCount + partialTick) * 45.0F));
+        pose.mulPose(Axis.XP.rotationDegrees(90.0F));
         pose.scale(1.6F, 1.6F, 1.6F);
-        state.item.submit(pose, collector, state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor);
+        items.renderStatic(entity.getItem(), ItemDisplayContext.GROUND, light, OverlayTexture.NO_OVERLAY, pose, buffers,
+                entity.level(), entity.getId());
         pose.popPose();
-        super.submit(state, pose, collector, camera);
+        super.render(entity, yaw, partialTick, pose, buffers, light);
+    }
+
+    @Override
+    public ResourceLocation getTextureLocation(BoomerangEntity entity) {
+        return InventoryMenu.BLOCK_ATLAS;
     }
 }

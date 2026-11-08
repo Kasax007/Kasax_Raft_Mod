@@ -16,7 +16,8 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.ItemInteractionResult;
 
 /**
  * Serving plate: holds up to four of one food, shown lying on the plate. Right-click with food to serve a portion,
@@ -35,50 +36,49 @@ public class PlateBlock extends CozyBlock implements EntityBlock {
     }
 
     @Override
-    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
-                                          InteractionHand hand, BlockHitResult hit) {
-        if (!(level.getBlockEntity(pos) instanceof PlateBlockEntity plate)) return InteractionResult.PASS;
-        if (stack.isEmpty()) return InteractionResult.TRY_WITH_EMPTY_HAND;
+    protected net.minecraft.world.ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (!(level.getBlockEntity(pos) instanceof PlateBlockEntity plate)) return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+        if (stack.isEmpty()) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         if (!stack.has(DataComponents.FOOD)) {
-            if (!level.isClientSide()) player.sendOverlayMessage(Component.translatable("message.raft.plate.not_food"));
-            return InteractionResult.TRY_WITH_EMPTY_HAND;
+            if (!level.isClientSide) player.displayClientMessage(Component.translatable("message.raft.plate.not_food"), true);
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
         ItemStack held = plate.food();
         if (!held.isEmpty() && (!ItemStack.isSameItemSameComponents(held, stack) || held.getCount() >= MAX)) {
-            if (!level.isClientSide()) player.sendOverlayMessage(Component.translatable("message.raft.plate.full"));
-            return InteractionResult.SUCCESS;
+            if (!level.isClientSide) player.displayClientMessage(Component.translatable("message.raft.plate.full"), true);
+            return ItemInteractionResult.SUCCESS;
         }
-        if (!level.isClientSide()) {
+        if (!level.isClientSide) {
             int n = 1;
             ItemStack put = stack.copyWithCount(held.getCount() + n);
             stack.consume(n, player);
             plate.setFood(put);
             level.playSound(null, pos, SoundEvents.DECORATED_POT_INSERT, SoundSource.BLOCKS, 0.7F, 1.4F);
         }
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (!(level.getBlockEntity(pos) instanceof PlateBlockEntity plate) || plate.food().isEmpty()) return InteractionResult.PASS;
-        if (level.isClientSide()) return InteractionResult.SUCCESS;
+        if (level.isClientSide) return InteractionResult.SUCCESS;
         ItemStack held = plate.food();
         if (player.isShiftKeyDown()) {
-            player.getInventory().placeItemBackInInventory(held.copy(), net.minecraft.util.Prediction.SERVER_ONLY);
+            player.getInventory().placeItemBackInInventory(held.copy());
             plate.setFood(ItemStack.EMPTY);
             level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.5F, 1.2F);
             return InteractionResult.SUCCESS;
         }
         FoodProperties food = held.get(DataComponents.FOOD);
         if (food == null || !player.canEat(food.canAlwaysEat())) {
-            player.sendOverlayMessage(Component.translatable("message.raft.plate.not_hungry"));
+            player.displayClientMessage(Component.translatable("message.raft.plate.not_hungry"), true);
             return InteractionResult.SUCCESS;
         }
         ItemStack portion = held.split(1);
         plate.setFood(held);
         ItemStack rest = portion.finishUsingItem(level, player);
-        if (!rest.isEmpty()) player.getInventory().placeItemBackInInventory(rest, net.minecraft.util.Prediction.SERVER_ONLY);
-        level.playSound(null, pos, SoundEvents.GENERIC_EAT.value(), SoundSource.PLAYERS, 0.8F, 1.0F);
+        if (!rest.isEmpty()) player.getInventory().placeItemBackInInventory(rest);
+        level.playSound(null, pos, SoundEvents.GENERIC_EAT, SoundSource.PLAYERS, 0.8F, 1.0F);
         return InteractionResult.SUCCESS;
     }
 

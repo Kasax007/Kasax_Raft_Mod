@@ -17,7 +17,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
-import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
 import java.util.Map;
 import java.util.Set;
@@ -61,7 +61,7 @@ public class FoodModule implements ContentModule {
     private static LootPool.Builder pool(float chance, Map<Item, Integer> items, int min, int max) {
         LootPool.Builder b = LootPool.lootPool().when(LootItemRandomChanceCondition.randomChance(chance));
         items.forEach((item, weight) -> b.add(LootItem.lootTableItem(item).setWeight(weight)
-                .apply(SetItemCountFunction.setCount(ContextIntProviders.between(min, max)))));
+                .apply(SetItemCountFunction.setCount(UniformGenerator.between(min, max)))));
         return b;
     }
 

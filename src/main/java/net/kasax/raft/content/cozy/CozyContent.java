@@ -9,6 +9,8 @@ import net.kasax.raft.content.cozy.block.BasketBlockEntity;
 import net.kasax.raft.content.cozy.block.BenchBlock;
 import net.kasax.raft.content.cozy.block.ConchShellBlock;
 import net.kasax.raft.content.cozy.block.CozyBlock;
+import net.kasax.raft.content.cozy.block.CozyShelfBlock;
+import net.kasax.raft.content.cozy.block.CozyShelfBlockEntity;
 import net.kasax.raft.content.cozy.block.CozyBlock.Config;
 import net.kasax.raft.content.cozy.block.PlateBlock;
 import net.kasax.raft.content.cozy.block.PlateBlockEntity;
@@ -26,7 +28,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CarpetBlock;
 import net.minecraft.world.level.block.IronBarsBlock;
-import net.minecraft.world.level.block.ShelfBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.StairBlock;
@@ -111,7 +112,7 @@ public final class CozyContent {
             props(MapColor.COLOR_YELLOW, SoundType.BAMBOO_WOOD, 2.0F).ignitedByLava()));
     public static final Block SERVING_PLATE = add("serving_plate",
             CozyBlock.create(Config.of("serving_plate").water(), PlateBlock::new),
-            props(MapColor.SNOW, SoundType.DECORATED_POT, 0.3F).pushReaction(PushReaction.POPPED),
+            props(MapColor.SNOW, SoundType.DECORATED_POT, 0.3F).pushReaction(PushReaction.DESTROY),
             "tooltip.raft.plate", "tooltip.raft.plate.1");
 
     // ------------------------------------------------------------------------------------------------ storage
@@ -131,18 +132,18 @@ public final class CozyContent {
     // ------------------------------------------------------------------------------------------------ lights
     public static final Block HURRICANE_LANTERN = cozy("hurricane_lantern",
             Config.of("hurricane_lantern").hangable().water().light(14),
-            props(MapColor.GOLD, SoundType.LANTERN, 2.0F).lightLevel(CozyBlock.lightFn(14)).pushReaction(PushReaction.POPPED),
+            props(MapColor.GOLD, SoundType.LANTERN, 2.0F).lightLevel(CozyBlock.lightFn(14)).pushReaction(PushReaction.DESTROY),
             TOGGLE);
     public static final Block SHELL_CANDLE = cozy("shell_candle",
             Config.of("shell_candle").light(10).flame(8, 10.5, 8),
             props(MapColor.TERRACOTTA_WHITE, SoundType.CANDLE, 0.3F).lightLevel(CozyBlock.lightFn(10))
-                    .pushReaction(PushReaction.POPPED), TOGGLE);
+                    .pushReaction(PushReaction.DESTROY), TOGGLE);
     public static final Block SEA_GLASS_LAMP = cozy("sea_glass_lamp", Config.of("sea_glass_lamp").water().light(14),
             props(MapColor.COLOR_CYAN, SoundType.GLASS, 1.0F).lightLevel(CozyBlock.lightFn(14)), TOGGLE);
     public static final Block DRIFTWOOD_SCONCE = flammable(cozy("driftwood_sconce",
             Config.of("driftwood_sconce").wall().light(12).flame(8, 12.5, 10),
             props(MapColor.COLOR_LIGHT_GRAY, SoundType.WOOD, 1.0F).lightLevel(CozyBlock.lightFn(12)).ignitedByLava()
-                    .noCollision().pushReaction(PushReaction.POPPED), TOGGLE));
+                    .noCollission().pushReaction(PushReaction.DESTROY), TOGGLE));
 
     // ------------------------------------------------------------------------------------------------ plants
     public static final Block POTTED_MONSTERA = cozy("potted_monstera", Config.of("potted_monstera"),
@@ -162,25 +163,25 @@ public final class CozyContent {
             CozyBlock.create(Config.of("steel_drum").water(), SteelDrumBlock::new),
             props(MapColor.COLOR_BLUE, SoundType.METAL, 2.0F), "tooltip.raft.steel_drum");
     public static final Block SHELL_GARLAND = cozy("shell_garland", Config.of("shell_garland").wall().water().noCollision(),
-            props(MapColor.TERRACOTTA_WHITE, SoundType.BONE_BLOCK, 0.2F).noCollision().pushReaction(PushReaction.POPPED), COMFORT);
+            props(MapColor.TERRACOTTA_WHITE, SoundType.BONE_BLOCK, 0.2F).noCollission().pushReaction(PushReaction.DESTROY), COMFORT);
     public static final Block FISHING_NET = flammable(cozy("fishing_net", Config.of("fishing_net").wall().water().noCollision(),
-            props(MapColor.SAND, SoundType.WOOL, 0.2F).noCollision().ignitedByLava().pushReaction(PushReaction.POPPED), COMFORT));
+            props(MapColor.SAND, SoundType.WOOL, 0.2F).noCollission().ignitedByLava().pushReaction(PushReaction.DESTROY), COMFORT));
     public static final Block DOCK_BOLLARD = cozy("dock_bollard", Config.of("dock_bollard").water(),
             props(MapColor.COLOR_BLACK, SoundType.METAL, 3.0F));
 
     // ------------------------------------------------------------------------------------------------ wall decor
     public static final Block SURFBOARD_RED = tall("surfboard_red", Config.of("surfboard").wall().tall().noCollision(),
-            props(MapColor.COLOR_RED, SoundType.WOOD, 0.8F).noCollision(), COMFORT);
+            props(MapColor.COLOR_RED, SoundType.WOOD, 0.8F).noCollission(), COMFORT);
     public static final Block SURFBOARD_BLUE = tall("surfboard_blue", Config.of("surfboard").wall().tall().noCollision(),
-            props(MapColor.COLOR_BLUE, SoundType.WOOD, 0.8F).noCollision(), COMFORT);
+            props(MapColor.COLOR_BLUE, SoundType.WOOD, 0.8F).noCollission(), COMFORT);
     public static final Block SURFBOARD_YELLOW = tall("surfboard_yellow", Config.of("surfboard").wall().tall().noCollision(),
-            props(MapColor.COLOR_YELLOW, SoundType.WOOD, 0.8F).noCollision(), COMFORT);
+            props(MapColor.COLOR_YELLOW, SoundType.WOOD, 0.8F).noCollission(), COMFORT);
     public static final Block FISH_TROPHY = flammable(cozy("fish_trophy", Config.of("fish_trophy").wall(),
             wood(MapColor.COLOR_BROWN, 1.0F), COMFORT));
     public static final Block BAMBOO_BLINDS = flammable(cozy("bamboo_blinds", Config.of("bamboo_blinds").facing().openable(),
             props(MapColor.COLOR_YELLOW, SoundType.BAMBOO_WOOD, 0.8F).ignitedByLava(), "tooltip.raft.bamboo_blinds"));
     public static final Block THATCH_PARASOL = flammable(tall("thatch_parasol", Config.of("thatch_parasol").tall(),
-            props(MapColor.COLOR_YELLOW, SoundType.GRASS, 1.0F).ignitedByLava().pushReaction(PushReaction.POPPED),
+            props(MapColor.COLOR_YELLOW, SoundType.GRASS, 1.0F).ignitedByLava().pushReaction(PushReaction.DESTROY),
             "tooltip.raft.parasol"));
 
     // ------------------------------------------------------------------------------------------------ building
@@ -204,14 +205,15 @@ public final class CozyContent {
     // ------------------------------------------------------------------------------------------------ block entities
     public static final BlockEntityType<PlateBlockEntity> PLATE_ENTITY = BcReg.blockEntity("serving_plate",
             PlateBlockEntity::new, SERVING_PLATE);
+    public static final BlockEntityType<CozyShelfBlockEntity> SHELF_ENTITY = BcReg.blockEntity("shelf",
+            CozyShelfBlockEntity::new, PALM_SHELF, TEAK_SHELF, WEATHERED_SHELF);
     public static final BlockEntityType<BasketBlockEntity> BASKET_ENTITY = BcReg.blockEntity("wicker_basket",
             BasketBlockEntity::new, WICKER_BASKET);
 
     private static Block shelf(String name, MapColor color) {
-        Block block = flammable(add(name, ShelfBlock::new, Properties.ofFullCopy(Blocks.OAK_SHELF).mapColor(color),
-                "tooltip.raft.shelf"));
-        net.minecraft.world.level.block.entity.BlockEntityTypes.SHELF.addValidBlock(block);
-        return block;
+        // 1.21.1 port: Beach Craft's own shelf (the newer game's shelf block does not exist), same properties
+        return flammable(add(name, CozyShelfBlock::new, Properties.of().mapColor(color).instrument(NoteBlockInstrument.BASS)
+                .sound(SoundType.CHISELED_BOOKSHELF).ignitedByLava().strength(2.0F, 3.0F), "tooltip.raft.shelf"));
     }
 
     private static Block rug(String name, MapColor color) {

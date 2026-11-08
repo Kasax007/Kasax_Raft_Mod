@@ -11,12 +11,15 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-/** The energy staff is drawn flat in GUIs, on the ground and in item frames, as a 3D staff in the hand (like the trident). */
+/**
+ * The energy staff, the captain's spyglass and the shark tooth spear are drawn flat in GUIs, on the ground and in item
+ * frames, with their own model in the hand (like the trident and spyglass).
+ */
 @Mixin(ItemRenderer.class)
 public class ItemRendererGuiModelMixin {
     @ModifyVariable(method = "render", at = @At("HEAD"), argsOnly = true)
     private BakedModel raft$flatInGui(BakedModel model, ItemStack stack, ItemDisplayContext context) {
-        if (!stack.is(ModItems.ENERGY_STAFF)
+        if (!ItemModelProperties.GUI_MODEL_ITEMS.get().contains(stack.getItem())
                 || !(context == ItemDisplayContext.GUI || context == ItemDisplayContext.GROUND || context == ItemDisplayContext.FIXED)) {
             return model;
         }

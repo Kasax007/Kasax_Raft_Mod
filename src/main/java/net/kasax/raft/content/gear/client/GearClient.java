@@ -38,10 +38,10 @@ public final class GearClient {
                 e -> !e.isSpectator() && e.isPickable() && e != player, blockDist * blockDist);
         if (entity != null) {
             Entity e = entity.getEntity();
-            player.sendOverlayMessage(Component.translatable("message.raft.spyglass.entity", e.getDisplayName(),
-                    (int) Math.round(e.position().distanceTo(eye))));
+            player.displayClientMessage(Component.translatable("message.raft.spyglass.entity", e.getDisplayName(),
+                    (int) Math.round(e.position().distanceTo(eye))), true);
         } else if (block.getType() != HitResult.Type.MISS) {
-            player.sendOverlayMessage(Component.translatable("message.raft.spyglass.distance", (int) Math.round(blockDist)));
+            player.displayClientMessage(Component.translatable("message.raft.spyglass.distance", (int) Math.round(blockDist)), true);
         }
     }
 }

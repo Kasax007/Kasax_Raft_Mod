@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Wicker picnic basket: 9 slots; like a shulker box it keeps its contents when picked up (the loot table copies the
@@ -38,7 +38,7 @@ public class BasketBlock extends CozyBlock implements EntityBlock {
     @Override
     public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
         // creative players do not get drops: still give them the filled basket, like a shulker box
-        if (level instanceof ServerLevel server && player.preventsBlockDrops()
+        if (level instanceof ServerLevel server && player.isCreative()
                 && level.getBlockEntity(pos) instanceof BasketBlockEntity basket && !basket.isEmpty()) {
             ItemStack stack = new ItemStack(this);
             stack.applyComponents(basket.collectComponents());
@@ -50,12 +50,17 @@ public class BasketBlock extends CozyBlock implements EntityBlock {
     }
 
     @Override
+    protected void tick(BlockState state, ServerLevel level, BlockPos pos, net.minecraft.util.RandomSource random) {
+        if (level.getBlockEntity(pos) instanceof BasketBlockEntity basket) basket.recheckOpen();
+    }
+
+    @Override
     protected boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 
     @Override
-    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, net.minecraft.core.Direction direction) {
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
         return net.minecraft.world.inventory.AbstractContainerMenu.getRedstoneSignalFromBlockEntity(level.getBlockEntity(pos));
     }
 }

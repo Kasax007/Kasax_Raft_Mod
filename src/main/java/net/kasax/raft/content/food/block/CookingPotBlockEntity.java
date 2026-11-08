@@ -22,15 +22,15 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.kasax.raft.compat.ValueInput;
+import net.kasax.raft.compat.ValueOutput;
 
 /**
  * Contents of a cooking pot: up to four ingredients (one item each), cooking progress and the finished dish with its
  * servings. Cooking needs heat below the pot (block tag {@code raft:pot_heat_sources}; campfires and braziers only
  * while lit) and takes 10 seconds.
  */
-public class CookingPotBlockEntity extends BlockEntity {
+public class CookingPotBlockEntity extends BlockEntity implements net.kasax.raft.compat.RemovalSideEffects {
     public static final int COOK_TIME = 200;
     public static final TagKey<net.minecraft.world.level.block.Block> HEAT =
             TagKey.create(Registries.BLOCK, Raft.id("pot_heat_sources"));
@@ -83,12 +83,12 @@ public class CookingPotBlockEntity extends BlockEntity {
         if (level == null) return false;
         if (servings > 0) {
             if (!stack.is(Items.BOWL)) {
-                player.sendOverlayMessage(Component.translatable("message.raft.pot.ready", dish.getHoverName(), servings));
+                player.displayClientMessage(Component.translatable("message.raft.pot.ready", dish.getHoverName(), servings), true);
                 return true;
             }
             stack.consume(1, player);
             ItemStack serving = dish.copy();
-            player.getInventory().placeItemBackInInventory(serving, net.minecraft.util.Prediction.SERVER_ONLY);
+            player.getInventory().placeItemBackInInventory(serving);
             level.playSound(null, getBlockPos(), SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 0.7F, 0.8F);
             if (--servings <= 0) {
                 dish = ItemStack.EMPTY;
@@ -98,11 +98,11 @@ public class CookingPotBlockEntity extends BlockEntity {
             return true;
         }
         if (!PotRecipes.isIngredient(stack)) {
-            player.sendOverlayMessage(Component.translatable("message.raft.pot.not_ingredient"));
+            player.displayClientMessage(Component.translatable("message.raft.pot.not_ingredient"), true);
             return false;
         }
         if (count() >= 4) {
-            player.sendOverlayMessage(Component.translatable("message.raft.pot.full"));
+            player.displayClientMessage(Component.translatable("message.raft.pot.full"), true);
             return true;
         }
         for (int i = 0; i < 4; i++) {
@@ -121,13 +121,13 @@ public class CookingPotBlockEntity extends BlockEntity {
 
     public void useEmptyHand(Player player) {
         if (servings > 0) {
-            player.sendOverlayMessage(Component.translatable("message.raft.pot.ready", dish.getHoverName(), servings));
+            player.displayClientMessage(Component.translatable("message.raft.pot.ready", dish.getHoverName(), servings), true);
             return;
         }
         if (player.isShiftKeyDown()) {
             for (int i = 0; i < 4; i++) {
                 if (!ingredients.get(i).isEmpty()) {
-                    player.getInventory().placeItemBackInInventory(ingredients.get(i), net.minecraft.util.Prediction.SERVER_ONLY);
+                    player.getInventory().placeItemBackInInventory(ingredients.get(i));
                     ingredients.set(i, ItemStack.EMPTY);
                 }
             }
@@ -140,7 +140,7 @@ public class CookingPotBlockEntity extends BlockEntity {
 
     private void status(Player player) {
         if (count() == 0) {
-            player.sendOverlayMessage(Component.translatable("block.raft.cooking_pot"));
+            player.displayClientMessage(Component.translatable("block.raft.cooking_pot"), true);
             return;
         }
         MutableComponent list = Component.empty();
@@ -153,12 +153,12 @@ public class CookingPotBlockEntity extends BlockEntity {
         }
         PotRecipes.Recipe recipe = PotRecipes.match(ingredients);
         if (recipe != null && getLevel() != null && !heated(getLevel(), getBlockPos())) {
-            player.sendOverlayMessage(Component.translatable("message.raft.pot.no_heat"));
+            player.displayClientMessage(Component.translatable("message.raft.pot.no_heat"), true);
         } else if (recipe != null) {
-            player.sendOverlayMessage(Component.translatable("message.raft.pot.recipe",
-                    new ItemStack(recipe.result().get()).getHoverName()));
+            player.displayClientMessage(Component.translatable("message.raft.pot.recipe",
+                    new ItemStack(recipe.result().get()).getHoverName()), true);
         } else {
-            player.sendOverlayMessage(Component.translatable("message.raft.pot.added", list));
+            player.displayClientMessage(Component.translatable("message.raft.pot.added", list), true);
         }
     }
 
@@ -183,19 +183,21 @@ public class CookingPotBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
-        ContainerHelper.saveAllItems(output, ingredients, false);
+    protected void saveAdditional(net.minecraft.nbt.CompoundTag tag121, net.minecraft.core.HolderLookup.Provider reg121) {
+        ValueOutput output = ValueOutput.of(tag121, reg121);
+        super.saveAdditional(tag121, reg121);
+        ContainerHelper.saveAllItems(tag121, ingredients, false, reg121);
         if (!dish.isEmpty()) output.store("dish", ItemStack.CODEC, dish);
         output.putInt("servings", servings);
         output.putInt("progress", progress);
     }
 
     @Override
-    protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);
+    protected void loadAdditional(net.minecraft.nbt.CompoundTag tag121, net.minecraft.core.HolderLookup.Provider reg121) {
+        ValueInput input = ValueInput.of(tag121, reg121);
+        super.loadAdditional(tag121, reg121);
         ingredients.replaceAll(s -> ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(input, ingredients);
+        ContainerHelper.loadAllItems(tag121, ingredients, reg121);
         dish = input.read("dish", ItemStack.CODEC).orElse(ItemStack.EMPTY);
         servings = input.getIntOr("servings", 0);
         progress = input.getIntOr("progress", 0);

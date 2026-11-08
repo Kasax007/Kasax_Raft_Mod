@@ -11,12 +11,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
-import org.jspecify.annotations.Nullable;
+import net.kasax.raft.compat.ValueInput;
+import net.kasax.raft.compat.ValueOutput;
+import org.jetbrains.annotations.Nullable;
 
 /** The food on a serving plate (synced to clients for the renderer). */
-public class PlateBlockEntity extends BlockEntity {
+public class PlateBlockEntity extends BlockEntity implements net.kasax.raft.compat.RemovalSideEffects {
     private ItemStack food = ItemStack.EMPTY;
 
     public PlateBlockEntity(BlockPos pos, BlockState state) {
@@ -34,14 +34,16 @@ public class PlateBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
+    protected void saveAdditional(net.minecraft.nbt.CompoundTag tag121, net.minecraft.core.HolderLookup.Provider reg121) {
+        ValueOutput output = ValueOutput.of(tag121, reg121);
+        super.saveAdditional(tag121, reg121);
         if (!food.isEmpty()) output.store("food", ItemStack.CODEC, food);
     }
 
     @Override
-    protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);
+    protected void loadAdditional(net.minecraft.nbt.CompoundTag tag121, net.minecraft.core.HolderLookup.Provider reg121) {
+        ValueInput input = ValueInput.of(tag121, reg121);
+        super.loadAdditional(tag121, reg121);
         food = input.read("food", ItemStack.CODEC).orElse(ItemStack.EMPTY);
     }
 

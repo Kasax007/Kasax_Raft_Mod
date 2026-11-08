@@ -18,9 +18,9 @@ public class ConchShellBlock extends CozyBlock {
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
-        if (!level.isClientSide()) {
-            if (player.getCooldowns().isOnCooldown(asItem().getDefaultInstance())) return InteractionResult.PASS;
-            player.getCooldowns().addCooldown(asItem().getDefaultInstance(), 40);
+        if (!level.isClientSide) {
+            if (player.getCooldowns().isOnCooldown(asItem())) return InteractionResult.PASS;
+            player.getCooldowns().addCooldown(asItem(), 40);
             level.playSound(null, pos, CozyContent.CONCH_HORN, SoundSource.RECORDS, 4.0F,
                     0.9F + level.getRandom().nextFloat() * 0.2F);
             level.gameEvent(player, GameEvent.INSTRUMENT_PLAY, pos);

@@ -28,7 +28,8 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.ItemInteractionResult;
 
 /** The cooking pot: put ingredients in, set it on a fire, ladle the dish out with bowls (see CookingPotBlockEntity). */
 public class CookingPotBlock extends BaseEntityBlock {
@@ -47,9 +48,14 @@ public class CookingPotBlock extends BaseEntityBlock {
         }
     }
 
-    public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final net.minecraft.world.level.block.state.properties.DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final EnumProperty<Contents> CONTENTS = EnumProperty.create("contents", Contents.class);
     private static final VoxelShape SHAPE = Block.box(2, 0, 2, 14, 9, 14);
+
+    @Override
+    protected com.mojang.serialization.MapCodec<? extends BaseEntityBlock> codec() {
+        return simpleCodec(CookingPotBlock::new);
+    }
 
     public CookingPotBlock(Properties properties) {
         super(properties);
@@ -83,21 +89,20 @@ public class CookingPotBlock extends BaseEntityBlock {
 
     @Override
     public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide() ? null : createTickerHelper(type, FoodContent.COOKING_POT_ENTITY, CookingPotBlockEntity::serverTick);
+        return level.isClientSide ? null : createTickerHelper(type, FoodContent.COOKING_POT_ENTITY, CookingPotBlockEntity::serverTick);
     }
 
     @Override
-    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
-                                          InteractionHand hand, BlockHitResult hit) {
-        if (stack.isEmpty() || !(level.getBlockEntity(pos) instanceof CookingPotBlockEntity pot)) return InteractionResult.TRY_WITH_EMPTY_HAND;
-        if (level.isClientSide()) return InteractionResult.SUCCESS;
-        return pot.useItem(stack, player) ? InteractionResult.SUCCESS : InteractionResult.TRY_WITH_EMPTY_HAND;
+    protected net.minecraft.world.ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (stack.isEmpty() || !(level.getBlockEntity(pos) instanceof CookingPotBlockEntity pot)) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        if (level.isClientSide) return ItemInteractionResult.SUCCESS;
+        return pot.useItem(stack, player) ? ItemInteractionResult.SUCCESS : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (!(level.getBlockEntity(pos) instanceof CookingPotBlockEntity pot)) return InteractionResult.PASS;
-        if (!level.isClientSide()) pot.useEmptyHand(player);
+        if (!level.isClientSide) pot.useEmptyHand(player);
         return InteractionResult.SUCCESS;
     }
 

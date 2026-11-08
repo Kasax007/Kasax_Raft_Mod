@@ -16,12 +16,11 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlockContainer;
-import net.minecraft.world.level.block.VegetationBlock;
+import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -32,18 +31,23 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Sea grapes: an underwater crop. Planted from sea grapes on sand, gravel or dirt under water; grows four stages by
  * itself; when ripe a right-click picks 2-3 bunches and it grows back from stage 1.
  */
-public class SeaGrapesBlock extends VegetationBlock implements BonemealableBlock, LiquidBlockContainer {
+public class SeaGrapesBlock extends BushBlock implements BonemealableBlock, LiquidBlockContainer {
+    @Override
+    protected com.mojang.serialization.MapCodec<? extends BushBlock> codec() {
+        return null;
+    }
+
     public static final IntegerProperty AGE = BlockStateProperties.AGE_3;
     private static final VoxelShape[] SHAPES = new VoxelShape[4];
 
     static {
-        for (int i = 0; i < 4; i++) SHAPES[i] = Block.column(12.0, 0.0, 5 + i * 3);
+        for (int i = 0; i < 4; i++) SHAPES[i] = net.kasax.raft.compat.VShapes.column(12.0, 0.0, 5 + i * 3);
     }
 
     public SeaGrapesBlock(Properties properties) {
@@ -79,10 +83,9 @@ public class SeaGrapesBlock extends VegetationBlock implements BonemealableBlock
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos,
-                                     Direction direction, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
-        BlockState s = super.updateShape(state, level, ticks, pos, direction, neighbourPos, neighbourState, random);
-        if (!s.isAir()) ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, net.minecraft.world.level.LevelAccessor level, BlockPos pos, BlockPos neighbourPos) {
+        BlockState s = super.updateShape(state, direction, neighbourState, level, pos, neighbourPos);
+        if (!s.isAir()) level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         return s.isAir() ? Blocks.WATER.defaultBlockState() : s;
     }
 
@@ -92,7 +95,7 @@ public class SeaGrapesBlock extends VegetationBlock implements BonemealableBlock
     }
 
     @Override
-    public boolean canPlaceLiquid(@Nullable LivingEntity user, BlockGetter level, BlockPos pos, BlockState state, Fluid fluid) {
+    public boolean canPlaceLiquid(@org.jetbrains.annotations.Nullable net.minecraft.world.entity.player.Player user, BlockGetter level, BlockPos pos, BlockState state, Fluid fluid) {
         return false;
     }
 
@@ -116,7 +119,7 @@ public class SeaGrapesBlock extends VegetationBlock implements BonemealableBlock
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (state.getValue(AGE) < 3) return InteractionResult.PASS;
-        if (!level.isClientSide()) {
+        if (!level.isClientSide) {
             popResource(level, pos, new ItemStack(FoodContent.SEA_GRAPES, 2 + level.getRandom().nextInt(2)));
             level.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundSource.BLOCKS, 1.0F,
                     0.8F + level.getRandom().nextFloat() * 0.4F);
@@ -126,22 +129,22 @@ public class SeaGrapesBlock extends VegetationBlock implements BonemealableBlock
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state, net.minecraft.world.level.block.BonemealSource source) {
+    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state) {
         return state.getValue(AGE) < 3;
     }
 
     @Override
-    public boolean isBonemealSuccess(Level level, RandomSource random, BlockPos pos, BlockState state, net.minecraft.world.level.block.BonemealSource source) {
+    public boolean isBonemealSuccess(Level level, RandomSource random, BlockPos pos, BlockState state) {
         return true;
     }
 
     @Override
-    public void performBonemeal(ServerLevel level, RandomSource random, BlockPos pos, BlockState state, net.minecraft.world.level.block.BonemealSource source) {
+    public void performBonemeal(ServerLevel level, RandomSource random, BlockPos pos, BlockState state) {
         level.setBlock(pos, state.setValue(AGE, Math.min(3, state.getValue(AGE) + 1)), Block.UPDATE_CLIENTS);
     }
 
     @Override
-    protected ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData) {
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
         return new ItemStack(FoodContent.SEA_GRAPES);
     }
 }
