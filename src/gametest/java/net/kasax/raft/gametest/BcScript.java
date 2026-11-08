@@ -577,6 +577,25 @@ public class BcScript implements FabricClientGameTest {
                 });
                 LOG.info("[bctest] COUNT {} {}", dim, res);
             }
+            case "aim" -> {
+                // aim: what the crosshair targets now (AIM line): hit type, entity, block or raft block, distance
+                String res = ctx.computeOnClient(mc -> {
+                    var hr = mc.hitResult;
+                    if (hr == null) return "none";
+                    String s = hr.getType() + " at " + String.format(Locale.ROOT, "%.2f,%.2f,%.2f", hr.getLocation().x, hr.getLocation().y, hr.getLocation().z);
+                    if (hr instanceof net.minecraft.world.phys.EntityHitResult eh) {
+                        s += " entity " + BuiltInRegistries.ENTITY_TYPE.getKey(eh.getEntity().getType());
+                        if (eh.getEntity() instanceof net.kasax.raft.content.vessel.VesselEntity v) {
+                            s += " raftBlock " + net.kasax.raft.content.vessel.client.VesselPicker.targetOf(v);
+                        }
+                    } else if (hr instanceof net.minecraft.world.phys.BlockHitResult bh) {
+                        s += " block " + bh.getBlockPos().toShortString() + " " + mc.level.getBlockState(bh.getBlockPos()).getBlock();
+                    }
+                    return s + " riding=" + (mc.player.getVehicle() != null) + " eye=" + String.format(Locale.ROOT, "%.2f,%.2f,%.2f",
+                            mc.player.getEyePosition().x, mc.player.getEyePosition().y, mc.player.getEyePosition().z);
+                });
+                LOG.info("[bctest] AIM {}", res);
+            }
             case "near" -> {
                 // near [radius]: living entities per type around the player (health of each in brackets for monsters)
                 // and the items lying there (NEAR line): guards of a structure, animals of an island, loot drops

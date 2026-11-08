@@ -127,6 +127,25 @@ wait 2 render
 shot 57_wheel_back
 freecam off
 hud on
+# seated at the helm (it took the player when it set sail): sneak + use on the wheel moors the raft
+log SNEAK_USE_SEATED_HELM
+# seated: sneaking gets the helmsman up onto the stool, the wheel right in front; sneak + use on it moors
+sneakuse
+swait 5
+face 0.5 100.7 -2.5
+swait 3
+aim
+sneakuse
+swait 2
+aim
+swaitfor 600 execute in raft:raftdim unless entity @e[type=raft:vessel]
+find raft:helm 64
+log SET_SAIL_2
+nearblock raft:helm 48 1.3 0.5 0
+swait 10
+use
+swaitfor 1500 execute in raft:raftdim if entity @e[type=raft:vessel]
+swait 20
 hold sneak 8
 swait 10
 log SAIL_POWER
@@ -217,21 +236,27 @@ swait 110
 cmd data get entity @e[type=raft:vessel,limit=1] Pos
 log TAKE_HELM
 swait 20
-# the helm's centre (2 blocks astern of the raft's centre, one up): its x z, then stand beside it and look at the wheel
-cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-2 run tp @p ~ ~ ~
+# the helm's centre (3 blocks astern of the raft's centre, one up): its x z, then stand beside it and look at the wheel
+cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-3 run tp @p ~ ~ ~
 swait 2
 where
-cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-2 positioned ^1.3 ^-0.4 ^ run tp @p ~ ~ ~
+cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.5 ^-3 positioned ^1.3 ^-0.4 ^ run tp @p ~ ~ ~
 swait 5
 face {px} 100.7 {pz}
 swait 3
+aim
 use
 swait 20
-cmd data get entity @e[type=raft:vessel,limit=1] Passengers
+aim
 log SNEAK_USE_SEATED
-face {px} 100.75 {pz+0.15}
-swait 3
 sneakuse
+swait 5
+face {px} 100.7 {pz}
+swait 3
+aim
+sneakuse
+swait 2
+aim
 swait 60
 count raft:raftdim
 swaitfor 600 execute in raft:raftdim unless entity @e[type=raft:vessel]

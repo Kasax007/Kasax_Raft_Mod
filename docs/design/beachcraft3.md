@@ -416,7 +416,7 @@ Unguarded: Saltmere, castaway camp, buoy field, sanctum. Table and numbers: `Str
 
 | Id | Size | HP | Behaviour | Drops |
 | --- | --- | --- | --- | --- |
-| `scavenger` | humanoid | 20 (armour 2) | living looter (skeleton AI without sun fear): fists 2, wooden blade 5, stone 6, iron sword 7 or a bow; alerts its gang when hit. Chief: x1.15, 50 hp, iron armour, boss bar | scrap, plastic, rope, coins; chief: coins, scrap, 35 % harpoon gun |
+| `scavenger` | humanoid | 20 (armour 2) | living looter (skeleton AI without sun fear): fists 2, wooden blade 5, stone blade 6 or a bow; alerts its gang when hit. Chief: x1.15, 50 hp, iron armour and sword (7), boss bar | scrap, plastic, rope, coins; chief: coins, scrap, 35 % harpoon gun |
 | `reef_guardian` | 0.85 | 30 (armour 4) | guardian with a 5 damage beam. Reef Warden: x1.7, 80 hp, armour 8, beam 7, boss bar | prismarine, sea glass, pearl; warden: pearls, sea glass, crystals, 30 % ancient energy |
 | `corsair_captain` | humanoid x1.2 | 80 (armour 6) | corsair officer with cutlass (9), boss bar; at half health a horn and, 2 s later, two corsairs | cutlass, 5-9 coins, bones, 30 % harpoon |
 

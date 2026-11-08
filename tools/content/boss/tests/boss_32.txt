@@ -228,9 +228,12 @@ log KILL
 cmd effect give @p minecraft:instant_health 1 10
 cmd execute in raft:raftdim run tp @a 29.5 100 5.5 -90 10
 swait 5
+cmd execute in raft:raftdim run clear @p
 cmd execute in raft:raftdim run damage @e[type=raft:leviathan,limit=1] 5000 minecraft:generic_kill by @p
 swait 140
 near 40
+# the rewards land at the killer's feet: in the inventory or on the floor next to the player
+cmd data get entity @p Inventory
 cmd execute in raft:raftdim as @e[type=minecraft:item,x=40,y=100,z=0,distance=..48] run data get entity @s Pos
 cmd execute in raft:raftdim as @e[type=minecraft:item,x=40,y=100,z=0,distance=..48] run data get entity @s Item
 hud off
