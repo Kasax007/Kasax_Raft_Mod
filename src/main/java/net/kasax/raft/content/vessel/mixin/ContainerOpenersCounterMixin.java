@@ -24,18 +24,16 @@ import java.util.List;
 @Mixin(ContainerOpenersCounter.class)
 public abstract class ContainerOpenersCounterMixin {
     @Shadow
-    private boolean hasContainerOpen(Entity entity, BlockPos blockPos) {
-        throw new AssertionError();
-    }
+    protected abstract boolean isOwnContainer(Player player);
 
-    @Inject(method = "getEntitiesWithContainerOpen", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "getPlayersWithContainerOpen", at = @At("RETURN"), cancellable = true)
     private void raft$openersOnRaft(Level level, BlockPos pos, CallbackInfoReturnable<List<net.minecraft.world.entity.player.Player>> cir) {
         if (!VesselShipyard.maybePlot(pos.getX(), pos.getZ()) || level.isClientSide()) {
             return;
         }
         List<net.minecraft.world.entity.player.Player> users = new ArrayList<>();
         for (Player player : level.players()) {
-            if (this.hasContainerOpen(player, pos)) {
+            if (this.isOwnContainer(player)) {
                 users.add(player);
             }
         }

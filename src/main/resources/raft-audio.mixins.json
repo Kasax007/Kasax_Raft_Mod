@@ -5,7 +5,8 @@
   "mixins": [],
   "client": [
     "BossHealthOverlayAccessor",
-    "MinecraftMusicMixin"
+    "MinecraftMusicMixin",
+    "MusicManagerFadeMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /** A scarecrow keeps farmland from being trampled by entities within its protected radius. */
 @Mixin(FarmBlock.class)
 public abstract class FarmlandBlockMixin {
-    @Inject(method = "turnToBaseBlock", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "turnToDirt", at = @At("HEAD"), cancellable = true)
     private static void raft$scarecrowProtectsFarmland(Entity sourceEntity, BlockState state, Level level, BlockPos pos, CallbackInfo ci) {
         if (sourceEntity != null && level instanceof ServerLevel serverLevel
                 && ScarecrowBlock.isNear(serverLevel, pos, ScarecrowBlock.TRAMPLE_RADIUS)) {

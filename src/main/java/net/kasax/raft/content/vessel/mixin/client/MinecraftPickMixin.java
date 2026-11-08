@@ -8,10 +8,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /** The crosshair also finds the blocks of sailing rafts (exact block shapes, in the raft's own frame). */
-@Mixin(Minecraft.class)
+@Mixin(net.minecraft.client.renderer.GameRenderer.class)
 public abstract class MinecraftPickMixin {
-    @Inject(method = "pick", at = @At("TAIL"))
+    /** 1.21.1: the crosshair target is picked in GameRenderer.pick(float). */
+    @Inject(method = "pick(F)V", at = @At("TAIL"))
     private void raft$pickRafts(float partialTicks, CallbackInfo ci) {
-        VesselPicker.pick((Minecraft) (Object) this, partialTicks);
+        VesselPicker.pick(Minecraft.getInstance(), partialTicks);
     }
 }

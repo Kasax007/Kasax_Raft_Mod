@@ -27,13 +27,4 @@ public abstract class MinecraftMusicMixin {
             cir.setReturnValue(swapped);
         }
     }
-
-    @Inject(method = "getMusicVolume", at = @At("RETURN"), cancellable = true)
-    private void raft$audio$fade(CallbackInfoReturnable<Float> cir) {
-        float volume = cir.getReturnValueF();
-        float faded = MusicDirector.musicVolume((Minecraft) (Object) this, volume);
-        if (faded != volume) {
-            cir.setReturnValue(faded);
-        }
-    }
 }

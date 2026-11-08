@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  */
 @Mixin(Player.class)
 public abstract class PlayerReachMixin {
-    @Inject(method = "isWithinBlockInteractionRange", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "canInteractWithBlock", at = @At("HEAD"), cancellable = true)
     private void raft$reachOnRaft(BlockPos pos, double buffer, CallbackInfoReturnable<Boolean> cir) {
         if (!VesselShipyard.maybePlot(pos.getX(), pos.getZ())) {
             return;

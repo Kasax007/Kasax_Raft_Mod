@@ -20,8 +20,9 @@ public abstract class FreeCamMixin {
     @Shadow
     protected abstract void setRotation(float yRot, float xRot);
 
-    @Inject(method = "alignWithEntity", at = @At("TAIL"))
-    private void bctest$freeCam(float partialTicks, CallbackInfo ci) {
+    @Inject(method = "setup", at = @At("TAIL"))
+    private void bctest$freeCam(net.minecraft.world.level.BlockGetter level, net.minecraft.world.entity.Entity entity, boolean detached,
+                                boolean mirror, float partialTicks, CallbackInfo ci) {
         double[] f = BcScript.freeCam;
         if (f != null) {
             this.setRotation((float) f[3], (float) f[4]);
