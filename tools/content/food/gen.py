@@ -289,6 +289,8 @@ def tags():
     for c in list(CROPS) + ['sea_grapes_crop']:
         A.tag(M, 'block', 'minecraft:crops', [c] if c != 'sea_grapes_crop' else [])
     A.tag(M, 'block', 'minecraft:bee_attractive', ['chili_crop', 'banana_crop'])
+    # crops keep their farmland from drying out into dirt (vanilla lists its crops here)
+    A.tag(M, 'block', 'minecraft:maintains_farmland', list(CROPS))
     for w in WILD:
         A.tag(M, 'block', 'minecraft:replaceable_by_trees', [w])
         A.tag(M, 'block', 'minecraft:sword_efficient', [w])
