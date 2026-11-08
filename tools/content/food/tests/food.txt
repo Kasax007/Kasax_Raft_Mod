@@ -223,6 +223,12 @@ swait 3
 wait 2 render
 use
 swait 3
+wait 2 render
+use
+swait 3
+wait 2 render
+use
+swait 3
 wait 3 render
 shot 16_sea_grapes_bonemeal
 check bonemeal_sea_grapes | execute if block 22 199 1 raft:sea_grapes_crop[age=3]
@@ -315,20 +321,20 @@ use
 swait 10
 check pick_sea_grapes | execute if block 22 199 1 raft:sea_grapes_crop[age=1]
 check got_sea_grapes | execute if entity @e[type=item,nbt={Item:{id:'raft:sea_grapes'}}]
-cmd fill 27 199 0 27 199 0 minecraft:water
+cmd fill 27 199 1 27 199 1 minecraft:water
 cmd item replace entity @p weapon.mainhand with raft:sea_grapes 4
 cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
-cmd tp @p 27.5 201 -1.2 0 60
+cmd tp @p 27.5 201 -0.5 0 60
 swait 3
-pose 27.5 201 -1.2 0 60
-face 27.5 199.0 0.6
+pose 27.5 201 -0.5 0 60
+face 27.5 199.0 1.5
 swait 2
 wait 2 render
 use
 swait 4
 wait 3 render
 shot 17_sea_grapes_planted
-check plant_sea_grapes | execute if block 27 199 0 raft:sea_grapes_crop
+check plant_sea_grapes | execute if block 27 199 1 raft:sea_grapes_crop
 cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
 cmd tp @p 0.5 201 4.4 0 50
 swait 3
