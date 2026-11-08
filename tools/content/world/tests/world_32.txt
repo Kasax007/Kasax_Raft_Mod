@@ -1,0 +1,107 @@
+# Run: tools/bctest/run.sh tools/content/world/tests/world_32.txt <outdir>   (BC_NO_SKY_GULLS=1: without sky gulls)
+# Beach Craft 3.2 world checks: seagulls and flotsam around a player at sea (counts every minute for 3 minutes),
+# the item catcher on a built raft (catches nothing standing still, catches flotsam while sailing), the old
+# lighthouse, Saltmere with Old Tamo fishing at the water, and a rusted rig with no other rig around.
+world 32
+rd 6
+gui 2
+cmd gamerule raft:shark_bites false
+cmd gamerule spawn_monsters false
+cmd execute in raft:raftdim run tp @p 0.5 112 0.5 0 10
+wait 20
+settle 300
+fly on
+log SEA_WAIT
+cmd execute in raft:raftdim run kill @e[type=minecraft:item,distance=..200]
+count raft:raftdim
+swait 1200
+count raft:raftdim
+swait 1200
+count raft:raftdim
+swait 1200
+count raft:raftdim
+cmd execute in raft:raftdim run execute as @p at @e[type=raft:seagull,limit=1,sort=nearest] run tp @p ~-8 ~-4 ~-8 facing entity @e[type=raft:seagull,limit=1,sort=nearest]
+swait 10
+hud off
+wait 5 render
+shot 70_gulls
+hud on
+# ---- item catcher on a built raft: nothing standing still, flotsam while sailing
+log CATCHER
+cmd execute in raft:raftdim run tp @p 0.5 112 0.5 0 40
+swait 10
+cmd execute in raft:raftdim run fill -24 100 -24 24 107 56 air
+cmd execute in raft:raftdim run fill -24 92 -24 24 99 56 water
+cmd execute in raft:raftdim run kill @e[type=!minecraft:player,distance=..90]
+cmd execute in raft:raftdim run fill -2 99 -2 2 99 2 raft:raft_foundation
+cmd execute in raft:raftdim run setblock 0 100 -2 raft:helm[facing=south]
+cmd execute in raft:raftdim run setblock 0 100 2 raft:item_catcher{Items:[{Slot:0b,id:"raft:net",count:1}]}
+cmd execute in raft:raftdim run fill -2 100 1 -2 101 1 raft:sail[facing=south]
+cmd execute in raft:raftdim run fill 2 100 1 2 101 1 raft:sail[facing=south]
+cmd execute in raft:raftdim run summon item 0.5 99.6 3.5 {Item:{id:"minecraft:oak_planks",count:1},Tags:["raft_debris"],PickupDelay:32767}
+swait 200
+cmd execute in raft:raftdim run data get block 0 100 2 Items
+log CATCHER_SAIL
+# (just above the water, held in place: the sea current would carry them off the raft's path before it comes)
+cmd execute in raft:raftdim run summon item 0.5 100.3 8.5 {Item:{id:"minecraft:stick",count:1},Tags:["raft_debris"],PickupDelay:32767,NoGravity:1b}
+cmd execute in raft:raftdim run summon item 0.5 100.3 14.5 {Item:{id:"minecraft:stick",count:1},Tags:["raft_debris"],PickupDelay:32767,NoGravity:1b}
+cmd execute in raft:raftdim run summon item 0.5 100.3 20.5 {Item:{id:"minecraft:stick",count:1},Tags:["raft_debris"],PickupDelay:32767,NoGravity:1b}
+fly off
+cmd execute in raft:raftdim run tp @p 1.8 100 -1.5 90 40
+swait 10
+face 0.5 100.7 -1.5
+swait 3
+use
+swaitfor 300 execute in raft:raftdim if entity @e[type=raft:vessel]
+swaitfor 1500 execute in raft:raftdim if entity @e[type=raft:vessel]
+swait 10
+hold sneak 8
+cmd data merge entity @e[type=raft:vessel,limit=1] {Autopilot:{Forward:1b,Turn:0b,Ticks:300}}
+swait 320
+cmd data merge entity @e[type=raft:vessel,limit=1] {DropAnchor:1b}
+swaitfor 600 execute in raft:raftdim unless entity @e[type=raft:vessel]
+find raft:item_catcher 96
+cmd execute in raft:raftdim positioned {fx} {fy} {fz} run data get block ~ ~ ~ Items
+# ---- structures
+log LIGHTHOUSE
+scout raft:old_lighthouse 0 0
+cmd execute in raft:raftdim run tp @p {cx} {cy+40} {cz}
+settle 300
+hud off
+freecam {cx+36} {cy+34} {cz+36} 135 32
+wait 10 render
+shot 71_lighthouse
+freecam {cx-36} {cy+28} {cz-36} -45 28
+wait 10 render
+shot 72_lighthouse_b
+freecam off
+hud on
+log SALTMERE
+scout raft:saltmere_village 0 0
+cmd execute in raft:raftdim run tp @p {cx} {cy+40} {cz}
+settle 300
+hud off
+freecam {cx+50} {cy+40} {cz+50} 135 32
+wait 10 render
+shot 73_saltmere
+freecam off
+hud on
+log TAMO
+swait 1600
+cmd execute in raft:raftdim run execute as @e[type=raft:old_tamo,limit=1,sort=nearest] at @s run tp @p ^1.5 ^0.5 ^-3 facing entity @s eyes
+swait 20
+cmd execute in raft:raftdim run execute as @e[type=raft:old_tamo,limit=1,sort=nearest] run data get entity @s Pos
+hud off
+wait 5 render
+shot 74_tamo
+hud on
+log RIG
+scout raft:rusted_rig 0 0
+cmd execute in raft:raftdim run tp @p {cx} {cy+60} {cz}
+settle 300
+hud off
+freecam {cx} {cy+110} {cz+90} 180 45
+wait 10 render
+shot 75_rig
+freecam off
+log DONE

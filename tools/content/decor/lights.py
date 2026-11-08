@@ -108,7 +108,7 @@ def string_lights():
                     'down': ('bulb', [u0, 0, u0 + 2, 1]), 'up': ('bulb', [u0, 14, u0 + 2, 16])}
             m.box((bx - 0.75, wy - 2.5, 14.6), (bx + 0.75, wy - 0.5, 15.9), 'bulb', faces=bulb, light=15, collide=False)
             sock = {f: ('bulb', [u0, 14, u0 + 2, 16]) for f in ('north', 'south', 'west', 'east', 'up')}
-            m.box((bx - 0.5, wy - 0.5, 14.85), (bx + 0.5, wy + 0.5, 15.65), 'bulb', faces=sock, skip=('down',), collide=False)
+            m.box((bx - 0.5, wy - 0.5, 14.85), (bx + 0.5, wy + 0.5, 15.85), 'bulb', faces=sock, skip=('down',), collide=False)
         m.write(name)
         shape(name, [(0, 7, 14, 16, 16, 16)])
         A.blockstate(M, name, facing_variants(f'block/{name}'))
@@ -547,8 +547,10 @@ def neon_tubes():
         art.save(halo, f'block/{name}_halo')
         m = Model({'tube': f'block/{name}', 'halo': f'block/{name}_halo', 'iron': 'block/decor_iron'},
                   particle=f'block/{name}')
-        m.box((7, 0, 7), (9, 16, 9), 'tube', light=15, uv={f: [0, 0, 2, 16] for f in ('north', 'south', 'west', 'east')} | {'up': [1, 0, 3, 2], 'down': [1, 0, 3, 2]}, cull=True)
-        m.box((6.5, 0.5, 6.5), (9.5, 15.5, 9.5), 'halo', light=15, skip=('up', 'down'), collide=False)
+        # tube and halo end inside the iron caps, so no face of them lies in the plane of a cap face (z-fighting)
+        m.box((7, 1.5, 7), (9, 14.5, 9), 'tube', light=15, uv={f: [0, 1.5, 2, 14.5] for f in ('north', 'south', 'west', 'east')},
+              skip=('up', 'down'))
+        m.box((6.5, 1.5, 6.5), (9.5, 14.5, 9.5), 'halo', light=15, skip=('up', 'down'), collide=False)
         m.box((6.5, 0, 6.5), (9.5, 1.5, 9.5), 'iron', collide=False)
         m.box((6.5, 14.5, 6.5), (9.5, 16, 9.5), 'iron', collide=False)
         m.write(name)

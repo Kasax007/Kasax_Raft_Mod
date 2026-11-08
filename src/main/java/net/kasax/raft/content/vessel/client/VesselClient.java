@@ -60,6 +60,7 @@ public final class VesselClient {
 
     public static void init() {
         EntityRendererRegistry.register(VesselContent.VESSEL, VesselRenderer::new);
+        net.minecraft.client.gui.screens.MenuScreens.register(VesselContent.RAFT_MOTOR_MENU, RaftMotorScreen::new);
         ClientPlayNetworking.registerGlobalReceiver(VesselDataPayload.TYPE, (payload, context) -> {
             Minecraft mc = context.client();
             mc.execute(() -> {

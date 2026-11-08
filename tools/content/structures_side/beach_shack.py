@@ -231,5 +231,5 @@ def main(preview=False):
             print('  preview', contact(s, f'beach_shack_{fn.__name__}', scale=7))
     write_structure('beach_shack', [(p, 1) for p, _ in out], None,
                     step='surface_structures', terrain='beard_thin', start_height=-1, heightmap='WORLD_SURFACE_WG',
-                    biomes=['palm_isle', 'jungle_isle'], spacing=18, separation=6, salt=31415911, max_distance=32)
+                    biomes=['palm_isle', 'jungle_isle'], spacing=24, separation=10, salt=31415911, max_distance=32)
     return out

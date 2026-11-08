@@ -35,7 +35,7 @@ def _pool(entries, condition=None, rolls=1):
 def loot():
     assets.loot_table(M, 'entities/leviathan', OrderedDict(type='minecraft:entity', pools=[
         _pool([_item('heart_of_the_tide')]),
-        _pool([_item('leviathan_scale', [{'type': 'minecraft:set_count', 'count': _uniform(8, 12)}, _looting(2.0)])]),
+        _pool([_item('leviathan_scale', [{'type': 'minecraft:set_count', 'count': _uniform(12, 18)}, _looting(2.0)])]),
         _pool([_item('leviathan_trophy')]),
     ], random_sequence='raft:entities/leviathan'))
     smelt = {'type': 'minecraft:furnace_smelt', 'condition': {'type': 'minecraft:entity_properties', 'entity': 'this',

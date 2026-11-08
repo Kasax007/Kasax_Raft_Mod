@@ -406,6 +406,20 @@ Items: `jelly_blob`, `glow_jelly`, `angler_lure`, `eel_fillet`, `cooked_eel_fill
 
 ---------------------------------------------------------------------------------------------------------------------
 
+### 7.3 Module `encounters` (3.2: guarded structures)
+
+When a survival player first comes within 8 blocks of a guarded Beach Craft structure, a warning sounds with an
+action bar line, and 2 s later its guards spawn around the (up to three) unopened loot containers nearest the
+structure's centre, never within 6 blocks of the player; once per structure start (saved data
+`raft:structure_encounters`), persistent, tag `raft_guard`. Easy -1, Hard +1 per non-elite group, none in Peaceful.
+Unguarded: Saltmere, castaway camp, buoy field, sanctum. Table and numbers: `StructureEncounters` (javadoc).
+
+| Id | Size | HP | Behaviour | Drops |
+| --- | --- | --- | --- | --- |
+| `scavenger` | humanoid | 20 (armour 2) | living looter (skeleton AI without sun fear): fists 2, wooden blade 5, stone blade 6 or a bow; alerts its gang when hit. Chief: x1.15, 50 hp, iron armour and sword (7), boss bar | scrap, plastic, rope, coins; chief: coins, scrap, 35 % harpoon gun |
+| `reef_guardian` | 0.85 | 30 (armour 4) | guardian with a 5 damage beam. Reef Warden: x1.7, 80 hp, armour 8, beam 7, boss bar | prismarine, sea glass, pearl; warden: pearls, sea glass, crystals, 30 % ancient energy |
+| `corsair_captain` | humanoid x1.2 | 80 (armour 6) | corsair officer with cutlass (9), boss bar; at half health a horn and, 2 s later, two corsairs | cutlass, 5-9 coins, bones, 30 % harpoon |
+
 ## 8. Voyage (module `voyage`: 8.1) and diving (module `diving`: 8.2)
 
 ### 8.1 Boats

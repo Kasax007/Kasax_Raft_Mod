@@ -20,6 +20,7 @@ public final class ModContent {
             new net.kasax.raft.content.guide.GuideModule(),
             new net.kasax.raft.content.audio.AudioModule(),
             new net.kasax.raft.content.npc.NpcModule(),
+            new net.kasax.raft.content.encounters.EncountersModule(),
             // Beach Craft 3.3
             new net.kasax.raft.content.cozy.CozyModule(),
             new net.kasax.raft.content.food.FoodModule(),

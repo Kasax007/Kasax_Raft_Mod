@@ -4,6 +4,8 @@ import net.kasax.raft.Raft;
 import net.kasax.raft.content.BcReg;
 import net.kasax.raft.content.BcTabs;
 import net.kasax.raft.content.vessel.block.HelmBlock;
+import net.kasax.raft.content.vessel.block.MastBlock;
+import net.kasax.raft.content.vessel.block.AnchorWinchBlock;
 import net.kasax.raft.content.vessel.block.OarBlock;
 import net.kasax.raft.content.vessel.block.RaftMotorBlock;
 import net.kasax.raft.content.vessel.block.RaftMotorBlockEntity;
@@ -36,6 +38,13 @@ public final class VesselContent {
             BlockBehaviour.Properties.of().mapColor(MapColor.WOOL).strength(0.8F).sound(SoundType.WOOL).noOcclusion()
                     .ignitedByLava(),
             BcTabs.Tab.VOYAGE, "tooltip.raft.sail");
+    public static final Block MAST = BcReg.blockWithItem("mast", MastBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(1.5F).sound(SoundType.WOOD).noOcclusion()
+                    .ignitedByLava(),
+            BcTabs.Tab.VOYAGE, "tooltip.raft.mast");
+    public static final Block ANCHOR_WINCH = BcReg.blockWithItem("anchor_winch", AnchorWinchBlock::new,
+            BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(2.0F, 6.0F).sound(SoundType.METAL).noOcclusion(),
+            BcTabs.Tab.VOYAGE, "tooltip.raft.anchor_winch", "tooltip.raft.anchor_winch.1");
     public static final Block OAR = BcReg.blockWithItem("oar", OarBlock::new,
             BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(1.0F).sound(SoundType.WOOD).noOcclusion()
                     .ignitedByLava(),
@@ -46,6 +55,11 @@ public final class VesselContent {
 
     public static final BlockEntityType<RaftMotorBlockEntity> RAFT_MOTOR_BE = BcReg.blockEntity("raft_motor",
             RaftMotorBlockEntity::new, RAFT_MOTOR);
+
+    /** The raft motor's fuel bay (fuel slot, flame, running time). */
+    public static final net.minecraft.world.inventory.MenuType<RaftMotorMenu> RAFT_MOTOR_MENU = net.minecraft.core.Registry.register(
+            net.minecraft.core.registries.BuiltInRegistries.MENU, Raft.id("raft_motor"),
+            new net.minecraft.world.inventory.MenuType<>(RaftMotorMenu::new, net.minecraft.world.flag.FeatureFlags.VANILLA_SET));
 
     /** The sailing raft. Created only by a helm (no summon); its size comes from its blocks, not from the type. */
     public static final EntityType<VesselEntity> VESSEL = BcReg.entity("vessel",

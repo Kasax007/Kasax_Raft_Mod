@@ -51,8 +51,9 @@ public class TidelingEntity extends Monster {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
-                .add(Attributes.MAX_HEALTH, 10.0)
-                .add(Attributes.ATTACK_DAMAGE, 3.0)
+                // 3.2: was 10 health and 3 damage (a scratch through titanium armour)
+                .add(Attributes.MAX_HEALTH, 14.0)
+                .add(Attributes.ATTACK_DAMAGE, 6.0)
                 .add(Attributes.MOVEMENT_SPEED, 0.3)
                 .add(Attributes.FOLLOW_RANGE, 32.0);
     }

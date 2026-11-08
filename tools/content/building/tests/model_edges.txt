@@ -1,0 +1,96 @@
+# Run: tools/bctest/run.sh tools/content/building/tests/model_edges.txt <outdir>
+# Beach Craft 3.1.1 model check: the blocks whose edges, outlines or coplanar faces were fixed, on a stone
+# platform in the sky, from the front, from the side, from behind and close up (satellite dish, control panel).
+world modeledges
+rd 4
+gui 2
+cmd execute in minecraft:overworld run tp @p 8 154 -6 0 30
+wait 20
+settle 200
+fly on
+cmd fill -2 149 -3 20 149 8 minecraft:smooth_stone
+cmd fill -2 150 -3 20 160 8 minecraft:air
+cmd setblock 0 150 0 raft:satellite_dish[facing=north]
+cmd setblock 2 150 0 raft:control_panel[facing=north]
+cmd setblock 4 150 0 raft:ship_wheel[facing=north]
+cmd setblock 6 150 0 raft:helm[facing=north]
+cmd setblock 8 150 0 raft:shark_jaw_trophy[facing=north]
+cmd setblock 10 150 0 raft:rusty_pipe_valve[axis=y]
+cmd setblock 12 150 0 raft:seashells[shells=4]
+cmd setblock 14 150 0 raft:wanted_poster[facing=north]
+cmd setblock 16 150 0 raft:neon_tube_cyan[axis=y]
+cmd setblock 18 150 0 raft:figurehead[facing=north]
+cmd setblock 0 150 4 raft:air_compressor[facing=north]
+cmd setblock 2 150 4 raft:deck_chair[facing=north]
+cmd setblock 4 150 4 raft:cushion_red
+cmd setblock 6 150 4 raft:ship_cannon[facing=north]
+cmd setblock 8 150 4 raft:oar[facing=north]
+cmd setblock 10 150 4 raft:raft_motor[facing=north]
+cmd setblock 12 150 4 raft:leviathan_trophy[facing=north]
+cmd setblock 14 150 4 raft:beach_umbrella_red[half=lower]
+cmd setblock 14 151 4 raft:beach_umbrella_red[half=upper]
+wait 40
+dumpmodels models.jsonl
+hud off
+pose 9.5 152.5 -5 0 0
+face 9.5 150.3 2
+wait 40
+shot front
+# a slightly moved camera: z-fighting faces change between the two pictures
+pose 9.53 152.52 -5.03 0 0
+face 9.5 150.3 2.02
+wait 20
+shot front_b
+pose -5 152 2 0 0
+face 8 150.3 2
+wait 20
+shot west
+pose -5.03 152.02 2.03 0 0
+face 8 150.3 2.02
+wait 20
+shot west_b
+pose 9.5 153 11 0 0
+face 9.5 150.3 2
+wait 20
+shot back
+pose 0.5 151.6 -1.6 0 0
+face 0.5 150.6 0.5
+wait 20
+shot dish_front
+pose -1.6 151.4 0.5 0 0
+face 0.5 150.6 0.5
+wait 20
+shot dish_side
+pose 2.5 151.6 -1.6 0 0
+face 2.5 150.5 0.5
+wait 20
+shot panel_front
+pose -2 151.5 -0.5 0 0
+face 2.5 150.5 0.5
+wait 20
+shot panel_side
+pose 4.5 151 -1.6 0 0
+face 4.5 150.5 0.9
+wait 20
+shot wheel
+pose 6.5 152 -2 0 0
+face 6.5 150.8 0.5
+wait 20
+shot helm
+# creatures and the Expedition Raft (entity models: z-fighting faces are lifted when the models are baked)
+cmd fill -2 149 10 20 149 18 minecraft:smooth_stone
+cmd summon raft:crab 1 150 12 {NoAI:1b,Rotation:[180f,0f]}
+cmd summon raft:sea_otter 4 150 12 {NoAI:1b,Rotation:[180f,0f]}
+cmd summon raft:shark 8 150 13 {NoAI:1b,Rotation:[90f,0f]}
+cmd summon raft:manta_ray 13 150.5 13 {NoAI:1b,Rotation:[180f,0f]}
+cmd summon raft:anglerfish 17 150.5 12 {NoAI:1b,Rotation:[180f,0f]}
+cmd summon raft:expedition_raft 9 150 16.5 {Rotation:[90f,0f]}
+wait 20
+pose 9.5 153 8.5 0 0
+face 9.5 150.3 14
+wait 30
+shot creatures
+pose 9.53 153.02 8.53 0 0
+face 9.5 150.3 14.02
+wait 20
+shot creatures_b

@@ -17,6 +17,7 @@ public class WorldModule implements ContentModule {
     public void init() {
         WorldBlocks.init();
         WorldFeatures.init();
+        StructureLoot.register();
         WorldSpawns.init();
     }
 

@@ -34,11 +34,24 @@ public abstract class StructureSiteMixin {
      * a step into the hill (Teo's sand plaza). They only start where the ground under them is almost flat:
      * radius and the largest height difference of nine points (center, edges, corners). */
     @Unique
-    private static final Map<String, int[]> RAFT$FLAT = Map.of("beach_shack", new int[] {10, 3}, "castaway_camp", new int[] {7, 3});
+    private static final Map<String, int[]> RAFT$FLAT = Map.of("beach_shack", new int[] {10, 3}, "castaway_camp", new int[] {7, 3},
+            "old_lighthouse", new int[] {12, 4});
+    /** Coastal places (3.2): the ground at the center at most this high above the sea, and open water (floor below the
+     * sea) somewhere at this distance: radius, max height above sea. The lighthouse stands on a low coast by the sea,
+     * not cut into a hill. */
+    @Unique
+    private static final Map<String, int[]> RAFT$COAST = Map.of("old_lighthouse", new int[] {28, 9});
+    /** Stilt villages over open water (3.2): no ground at or above the sea within these radii (Saltmere grew into
+     * island hills, its decks cut flat into the slope). */
+    @Unique
+    private static final Map<String, int[]> RAFT$OPEN_WATER = Map.of("saltmere_village", new int[] {16, 32, 48});
     /** Sunken Plane: 15 blocks high, sits 3 blocks into the floor; the floor must be this deep, else its top (and the
      * kelp and seagrass on it) stood out of the sea. */
     @Unique
     private static final int RAFT$PLANE_RADIUS = 14, RAFT$PLANE_CLEARANCE = 14;
+    /** Helix Station (the lab): footprint radius, lowest floor, floor at least this far below the sea. */
+    @Unique
+    private static final int RAFT$LAB_RADIUS = 22, RAFT$LAB_MIN_FLOOR = 45, RAFT$LAB_CLEARANCE = 24;
 
     @Inject(method = "findValidGenerationPoint", at = @At("RETURN"), cancellable = true)
     private void raft$checkSite(Structure.GenerationContext context,
@@ -61,6 +74,27 @@ public abstract class StructureSiteMixin {
             }
             int[] flat = RAFT$FLAT.get(id.getPath());
             if (flat != null && cir.getReturnValue().isPresent() && raft$spread(context, pos, flat[0]) > flat[1]) {
+                cir.setReturnValue(Optional.empty());
+            }
+            int[] coast = RAFT$COAST.get(id.getPath());
+            if (coast != null && cir.getReturnValue().isPresent()) {
+                int[] near = raft$minMax(context, pos, 0);
+                if (near[0] > sea + coast[1] || raft$lowest8(context, pos, coast[0]) >= sea - 1) {
+                    cir.setReturnValue(Optional.empty());
+                }
+            }
+        } else if (RAFT$OPEN_WATER.containsKey(id.getPath())) {
+            for (int r : RAFT$OPEN_WATER.get(id.getPath())) {
+                if (raft$highest8(context, pos, r) >= sea - 1) {
+                    cir.setReturnValue(Optional.empty());
+                    break;
+                }
+            }
+        } else if ("helix_station".equals(id.getPath())) {
+            // 3.2: the lab sits on the sea floor with water above it: floor 45..sea-24 under its whole footprint,
+            // so its top (17 blocks high, 3 in the floor) stays at least 10 blocks under the surface
+            int[] mm = raft$minMax(context, pos, RAFT$LAB_RADIUS);
+            if (mm[0] < RAFT$LAB_MIN_FLOOR || mm[1] > sea - RAFT$LAB_CLEARANCE) {
                 cir.setReturnValue(Optional.empty());
             }
         } else if ("sunken_plane".equals(id.getPath())) {
@@ -93,6 +127,34 @@ public abstract class StructureSiteMixin {
             }
         }
         return max - min;
+    }
+
+    /** top solid block (fluids ignored) at the eight points around pos at distance r: the lowest of them. */
+    @Unique
+    private static int raft$lowest8(Structure.GenerationContext context, BlockPos pos, int r) {
+        int min = Integer.MAX_VALUE;
+        for (int dx = -r; dx <= r; dx += r) {
+            for (int dz = -r; dz <= r; dz += r) {
+                if (dx != 0 || dz != 0) {
+                    min = Math.min(min, context.chunkGenerator().getFirstOccupiedHeight(pos.getX() + dx, pos.getZ() + dz,
+                            Heightmap.Types.OCEAN_FLOOR_WG, context.heightAccessor(), context.randomState()));
+                }
+            }
+        }
+        return min;
+    }
+
+    /** the highest top solid block at the center and the eight points around it at distance r. */
+    @Unique
+    private static int raft$highest8(Structure.GenerationContext context, BlockPos pos, int r) {
+        int max = Integer.MIN_VALUE;
+        for (int dx = -r; dx <= r; dx += r) {
+            for (int dz = -r; dz <= r; dz += r) {
+                max = Math.max(max, context.chunkGenerator().getFirstOccupiedHeight(pos.getX() + dx, pos.getZ() + dz,
+                        Heightmap.Types.OCEAN_FLOOR_WG, context.heightAccessor(), context.randomState()));
+            }
+        }
+        return max;
     }
 
     /** lowest and highest top solid block (fluids ignored) at the center and four points at distance r. */

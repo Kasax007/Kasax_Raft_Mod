@@ -260,5 +260,5 @@ def main(preview=False):
                     step='surface_structures', terrain='beard_thin', start_height=-3, heightmap='OCEAN_FLOOR_WG',
                     biomes=['raft_ocean_biome', 'kelp_forest', 'wreck_graveyard', 'abyssal_trench', 'drowned_shelf',
                             'frost_floes', 'coral_shallows', 'glowing_lagoon'],
-                    spacing=12, separation=4, salt=31415903, max_distance=48)
+                    spacing=20, separation=8, salt=31415903, max_distance=48)
     return out

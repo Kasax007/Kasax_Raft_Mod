@@ -1,0 +1,153 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    {
+      "entries": [
+        {
+          "type": "minecraft:tag",
+          "expand": false,
+          "items": "#raft:loot/encounters/scrap_metal",
+          "modifier": [
+            {
+              "type": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 2.0,
+                "min": 0.0
+              }
+            },
+            {
+              "type": "minecraft:enchanted_count_increase",
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 1.0,
+                "min": 0.0
+              },
+              "enchantment": "minecraft:looting"
+            }
+          ]
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "entries": [
+        {
+          "type": "minecraft:tag",
+          "expand": false,
+          "items": "#raft:loot/encounters/plastic",
+          "modifier": [
+            {
+              "type": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 2.0,
+                "min": 0.0
+              }
+            },
+            {
+              "type": "minecraft:enchanted_count_increase",
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 1.0,
+                "min": 0.0
+              },
+              "enchantment": "minecraft:looting"
+            }
+          ]
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "entries": [
+        {
+          "type": "minecraft:tag",
+          "expand": false,
+          "items": "#raft:loot/encounters/rope",
+          "modifier": [
+            {
+              "type": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 1.0,
+                "min": 0.0
+              }
+            },
+            {
+              "type": "minecraft:enchanted_count_increase",
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 1.0,
+                "min": 0.0
+              },
+              "enchantment": "minecraft:looting"
+            }
+          ]
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "condition": {
+        "type": "minecraft:killed_by_player"
+      },
+      "entries": [
+        {
+          "type": "minecraft:tag",
+          "expand": false,
+          "items": "#raft:loot/encounters/gold_coin",
+          "modifier": [
+            {
+              "type": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 2.0,
+                "min": 0.0
+              }
+            },
+            {
+              "type": "minecraft:enchanted_count_increase",
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 1.0,
+                "min": 0.0
+              },
+              "enchantment": "minecraft:looting"
+            }
+          ]
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.15
+      },
+      "entries": [
+        {
+          "type": "minecraft:tag",
+          "expand": false,
+          "items": "#raft:loot/encounters/coconut"
+        }
+      ],
+      "rolls": 1
+    },
+    {
+      "condition": {
+        "type": "minecraft:random_chance",
+        "chance": 0.1
+      },
+      "entries": [
+        {
+          "type": "minecraft:tag",
+          "expand": false,
+          "items": "#raft:loot/encounters/fresh_water"
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "raft:entities/scavenger"
+}

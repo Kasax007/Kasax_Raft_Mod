@@ -211,7 +211,7 @@ def trees():
     f = feature('palm_tree', palm)
     on_ground = predicate(all_of(AIR, blocks(*ISLAND_GROUND, offset=(0, -1, 0))))
     placed('palm_trees', f, [count(OrderedDict(type='minecraft:weighted_list', distribution=[
-        OrderedDict(data=1, weight=3), OrderedDict(data=2, weight=4), OrderedDict(data=3, weight=2)])),
+        OrderedDict(data=2, weight=3), OrderedDict(data=3, weight=4), OrderedDict(data=4, weight=2)])),   # 3.2: more palms
         IN_SQUARE, water_depth(0), heightmap('OCEAN_FLOOR'), BIOME, on_ground, clear(4)])
     placed('palm_trees_sparse', f, [rarity(3), IN_SQUARE, water_depth(0), heightmap('OCEAN_FLOOR'), BIOME, on_ground,
                                     clear(4)])

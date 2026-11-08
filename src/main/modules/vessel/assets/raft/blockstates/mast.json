@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "up=false": {
+      "model": "raft:block/mast_top"
+    },
+    "up=true": {
+      "model": "raft:block/mast"
+    }
+  }
+}

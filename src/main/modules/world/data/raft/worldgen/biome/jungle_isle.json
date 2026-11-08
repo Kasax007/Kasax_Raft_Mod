@@ -12,6 +12,7 @@
         "sound": "minecraft:music.under_water"
       }
     },
+    "minecraft:gameplay/creature_world_gen_spawn_probability": 0.4,
     "minecraft:gameplay/natural_mob_spawns": {
       "argument": {
         "spawn_costs": {},
@@ -34,6 +35,33 @@
                 "min_inclusive": 1
               },
               "weight": 2
+            },
+            {
+              "type": "minecraft:chicken",
+              "count": {
+                "type": "minecraft:uniform",
+                "max_inclusive": 4,
+                "min_inclusive": 2
+              },
+              "weight": 8
+            },
+            {
+              "type": "minecraft:pig",
+              "count": {
+                "type": "minecraft:uniform",
+                "max_inclusive": 3,
+                "min_inclusive": 2
+              },
+              "weight": 4
+            },
+            {
+              "type": "minecraft:turtle",
+              "count": {
+                "type": "minecraft:uniform",
+                "max_inclusive": 3,
+                "min_inclusive": 2
+              },
+              "weight": 3
             }
           ]
         }

@@ -5,7 +5,8 @@ Previews go to $BC_PREVIEW (default: the module's work folder in the scratchpad)
 
 Blocks (models face north = the block's `facing`; blockstates turn them):
   helm        ship's wheel on a pedestal, stool aft of it (the helmsman sits there facing the bow)
-  sail        mast + canvas; multipart adds the yard (top=true) and the boom (bottom=true)
+  sail        canvas panel; multipart adds hems, the yard, the reach to a mast, the furled roll
+  mast        pole for the sails (cap and lashing on top)
   oar         rowlock at the outboard edge, the loom slanting down over the side into the water
   raft_motor  outboard motor: clamp on the deck edge, cowling, tiller; shaft and propeller hang over the side
 """
@@ -17,7 +18,7 @@ if __package__ in (None, ''):
     sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
     __package__ = 'content.vessel'
 
-from bclib import assets as A, tex  # noqa: E402
+from bclib import assets as A, extrude, tex  # noqa: E402
 from bclib.paths import NS  # noqa: E402
 
 M = 'vessel'
@@ -53,9 +54,8 @@ def motor_texture():
                 if x in (0, 15) and y not in (4, 5):
                     c = tex.darker(c, 0.85)
             elif y < 12:
+                # plain bands (no seams): the shaft and clamp squeeze this strip onto narrow faces
                 c = steel[3] if y == 8 else steel[2] if y < 11 else steel[1]
-                if x % 4 == 3:
-                    c = steel[1] if y < 11 else steel[0]
             else:
                 c = dark[2] if y == 12 else dark[1] if y < 15 else dark[0]
                 if 12 <= x <= 15 and y in (13, 14):
@@ -80,21 +80,21 @@ ITEM_PAL = {
 
 ITEM_ART = {
     'sail': [
-        '.......54.......',
-        '..3444444443....',
-        '...wwwww4vvu....',
-        '...wwwww4vvu....',
-        '...wwwww4vvu....',
-        '...wwwww4vvu....',
-        '...vwwww4vvu....',
-        '...vwwww4vuu....',
-        '...vvwww4vuu....',
-        '...uvvvv4uuu....',
-        '..2333333332....',
-        '.......42.......',
-        '.......42.......',
-        '.......42.......',
-        '......4422......',
+        '................',
+        '.24444444444443.',
+        '.13333333333332.',
+        '..wwwvwwwvwwvu..',
+        '..wwwvwwwvwwvu..',
+        '..wwwvwwwvwwvu..',
+        '..wwwvwwwvwvuu..',
+        '..vwwvwwwvwvuu..',
+        '..vwwvwwvvwvuu..',
+        '..vvwvwwvvvvuu..',
+        '..vvvvvvvuvuuu..',
+        '..uvvvvvuuuuuu..',
+        '..yyyyyyyyyyYY..',
+        '................',
+        '................',
         '................',
     ],
     'oar': [
@@ -229,13 +229,14 @@ def model(name, textures, elements, parent='minecraft:block/block', extra=None):
 
 # ------------------------------------------------------------------------------------------------- models
 def helm_elements():
-    wheel_uv = {'north': [16, 0, 0, 16], 'south': [0, 0, 16, 16], 'east': [7, 0, 8, 16], 'west': [8, 0, 9, 16],
-                'up': [0, 7, 16, 8], 'down': [0, 8, 16, 9]}
+    # the wheel is the ship_wheel sprite extruded pixel row by pixel row (its sides follow the ring and spokes),
+    # 16 px across from y 4 to 20, seen unmirrored by the helmsman on the stool (south)
+    wheel = extrude.vertical('raft:block/ship_wheel', '#wheel', at=(0, 20), z=(7.5, 8.5), front='south')
     return [
         el((5, 0, 3), (11, 2, 8), 'wood'),
         el((6.5, 2, 4), (9.5, 12, 7), 'post'),
         el((7, 11, 6), (9, 13, 7.5), 'post'),
-        el((0, 4, 7.5), (16, 20, 8.5), 'wheel', uv=wheel_uv),
+        *wheel,
         el((4, 6, 10), (12, 7.5, 15.5), 'wood'),
         el((4.5, 0, 10.5), (6, 6, 12), 'post'),
         el((10, 0, 10.5), (11.5, 6, 12), 'post'),
@@ -244,28 +245,107 @@ def helm_elements():
     ]
 
 
-def sail_base():
-    canvas_uv = {'north': [15.5, 0, 0.5, 16], 'south': [0.5, 0, 15.5, 16], 'east': [0, 0, 0.5, 16],
-                 'west': [15.5, 0, 16, 16], 'up': [0.5, 0, 15.5, 0.5], 'down': [0.5, 15.5, 15.5, 16]}
-    return [
-        el((7, 0, 7), (9, 16, 9), 'mast'),
-        el((0.5, 0, 9.25), (15.5, 16, 9.75), 'canvas', uv=canvas_uv),
+# Sails are panels of canvas in the middle of their block, facing = the bow; side by side and on top of each other they
+# make one sheet (no seams: the canvas texture tiles). The edges of the sheet get a hem: the yard along the top, a
+# rope along the bottom and the free sides, and next to a mast the canvas reaches over to the mast pole.
+# Furled (raised), a sail's canvas is rolled up under the yard; the rows below only keep their brail lines.
+CANVAS_Z = (7.75, 8.25)
+
+
+def sail_cloth_texture():
+    """Canvas that tiles without seams at the block edges: cloth panels 8 px wide with a sewn seam, a faint weave."""
+    c = tex.ramp('#e6dcc2', 4, spread=0.22)
+    img = tex.new()
+    for y in range(16):
+        for x in range(16):
+            k = 2
+            if x % 8 == 0:
+                k = 1                     # the seam between two cloths
+            elif x % 8 == 1:
+                k = 3                     # its lit edge
+            elif (x + y) % 4 == 0 and y % 2 == 0:
+                k = 1 if x % 8 > 4 else 2   # a few weave dots, regular so they tile
+            tex.px(img, x, y, c[k])
+    return img
+
+
+def sail_canvas():
+    z0, z1 = CANVAS_Z
+    return [el((0, 0, z0), (16, 16, z1), 'canvas', uv={'north': [16, 0, 0, 16], 'south': [0, 0, 16, 16]},
+               faces=('north', 'south'))]
+
+
+def sail_hem(side):
+    """Hem of a free edge: 'up' = the yard (a spar), 'down' and the sides = a rope sewn into the edge."""
+    if side == 'up':
+        return [el((0, 15, 7), (16, 16.5, 9), 'mast', uv={'north': [0, 6, 16, 7.5], 'south': [0, 8, 16, 9.5],
+                                                          'up': [0, 2, 16, 4], 'down': [0, 11, 16, 13],
+                                                          'east': [6, 0, 8, 1.5], 'west': [8, 0, 10, 1.5]})]
+    if side == 'down':
+        return [el((0, 0, 7.5), (16, 1, 8.5), 'rope', uv={'*': [0, 7, 16, 8]})]
+    x0 = 0 if side == 'left' else 15          # left = west for facing north (seen from the stern, looking to the bow)
+    return [el((x0, 0, 7.5), (x0 + 1, 16, 8.5), 'rope', uv={'*': [7, 0, 8, 16]})]
+
+
+def sail_to_mast(side):
+    """Canvas reaching over into the next block up to the mast pole there (pole at 7..9 of that block)."""
+    z0, z1 = CANVAS_Z
+    if side == 'left':
+        return [el((-7, 0, z0), (0, 16, z1), 'canvas', uv={'north': [16, 0, 9, 16], 'south': [9, 0, 16, 16]},
+                   faces=('north', 'south'))]
+    return [el((16, 0, z0), (23, 16, z1), 'canvas', uv={'north': [7, 0, 0, 16], 'south': [0, 0, 7, 16]},
+               faces=('north', 'south'))]
+
+
+def sail_furled():
+    """The canvas rolled up under the yard (top row of a furled sail)."""
+    return [el((0, 12.5, 7.25), (16, 15, 8.75), 'canvas', uv={'north': [0, 3, 16, 5.5], 'south': [0, 6, 16, 8.5],
+                                                              'up': [0, 9, 16, 10.5], 'down': [0, 11, 16, 12.5],
+                                                              'east': [3, 0, 4.5, 2.5], 'west': [11, 0, 12.5, 2.5]})]
+
+
+def sail_brails():
+    """Rows below the top of a furled sail: only the brail lines that hold the rolled canvas."""
+    return [el((3.75, 0, 7.75), (4.25, 16, 8.25), 'rope', uv={'*': [7, 0, 8, 16]}),
+            el((11.75, 0, 7.75), (12.25, 16, 8.25), 'rope', uv={'*': [7, 0, 8, 16]})]
+
+
+def mast(top):
+    """A mast: a pole in the middle of the block; the top of a mast gets a cap and a lashing."""
+    pole_uv = {'north': [7, 0, 9, 16], 'south': [7, 0, 9, 16], 'east': [7, 0, 9, 16], 'west': [7, 0, 9, 16],
+               'up': [7, 7, 9, 9], 'down': [7, 7, 9, 9]}
+    if not top:
+        return [el((7, 0, 7), (9, 16, 9), 'mast', uv=pole_uv, faces=('north', 'east', 'south', 'west'))]
+    return [el((7, 0, 7), (9, 14, 9), 'mast', uv=pole_uv, faces=('north', 'east', 'south', 'west', 'down')),
+            el((6.5, 14, 6.5), (9.5, 16, 9.5), 'end', uv={'up': [6.5, 6.5, 9.5, 9.5], '*': [6.5, 0, 9.5, 2]}),
+            el((6.75, 11, 6.75), (9.25, 12, 9.25), 'rope', uv={'*': [6, 6, 8.5, 7]}, faces=('north', 'east', 'south', 'west'))]
+
+
+def anchor_winch(dropped):
+    """Anchor winch (facing = outboard, north): a frame with a rope drum on the deck; raised, the anchor hangs at the
+    side over the edge; dropped, only its rope runs down over the edge into the water."""
+    els = [
+        el((3, 0, 4), (13, 2, 12), 'wood'),
+        el((3, 2, 6.5), (4.5, 10, 9.5), 'wood'),
+        el((11.5, 2, 6.5), (13, 10, 9.5), 'wood'),
+        el((4.5, 4.5, 6), (11.5, 9.5, 10), 'rope', uv={'*': [4.5, 4.5, 11.5, 9.5]}),
+        el((2, 6.5, 7.5), (3, 7.5, 8.5), 'iron', uv={'*': [7, 7, 8, 8]}),
+        el((0, 6, 7.5), (2, 10, 8.5), 'iron', uv={'*': [6, 6, 8, 10]}),
     ]
-
-
-def spar(y0, y1):
-    uv = {'north': [0, 6, 16, 7.5], 'south': [0, 8, 16, 9.5], 'east': [6, 0, 7.5, 1.5], 'west': [8, 0, 9.5, 1.5],
-          'up': [0, 2, 16, 3.5], 'down': [0, 11, 16, 12.5]}
-    return el((-3, y0, 8.25), (19, y1, 9.75), 'mast', uv=uv)
-
-
-def sail_yard():
-    return [spar(14.5, 16), el((7, 16, 7), (9, 19, 9), 'mast', uv={'*': [7, 0, 9, 3]}),
-            el((7.5, 19, 7.5), (8.5, 20, 8.5), 'rope', uv={'*': [6, 6, 7, 7]})]
-
-
-def sail_boom():
-    return [spar(0.5, 2)]
+    if dropped:
+        # the rope leaves the drum and runs over the edge down into the water
+        els += [el((7.5, 4, 0), (8.5, 5, 6), 'rope', uv={'*': [0, 7, 6, 8]}),
+                el((7.5, -16, -1), (8.5, 5, 0), 'rope', uv={'*': [7, 0, 8, 16]})]
+    else:
+        # the anchor hangs at the outboard side: ring, shank, stock and the two arms with their flukes
+        els += [el((7.5, 4, 0), (8.5, 5, 6), 'rope', uv={'*': [0, 7, 6, 8]}),
+                el((7.25, 1, -2), (8.75, 4, -0.5), 'iron', uv={'*': [7, 1, 8.5, 4]}),
+                el((7.25, -9, -2), (8.75, 1, -0.5), 'iron', uv={'*': [7, 3, 8.5, 13]}),
+                el((4.5, -1, -2), (11.5, 0, -0.5), 'iron', uv={'*': [4.5, 7, 11.5, 8]}),
+                el((4, -10, -2), (12, -8.5, -0.5), 'iron', uv={'*': [4, 9, 12, 10.5]}),
+                el((3, -9, -2), (4.5, -6, -0.5), 'iron', uv={'*': [3, 6, 4.5, 9]}),
+                el((11.5, -9, -2), (13, -6, -0.5), 'iron', uv={'*': [11.5, 6, 13, 9]})]
+    return els
 
 
 def oar_elements():
@@ -278,7 +358,7 @@ def oar_elements():
     return [
         el((5.5, 0, 0.5), (10.5, 2, 5.5), 'lock'),
         el((7, 2, 2), (9, 7, 4), 'lock'),
-        el((7.5, 7, -14), (8.5, 8, 16), 'loom', uv=loom_uv, rot=rot),
+        el((7.5, 7, -14), (8.5, 8, 12.5), 'loom', uv=loom_uv, rot=rot),        # ends inside the grip
         el((6, 6.75, -16), (10, 8.25, -9), 'blade', uv=blade_uv, rot=rot),
         el((7.25, 6.75, 12.5), (8.75, 8.25, 16), 'grip', uv=grip_uv, rot=rot),
     ]
@@ -309,31 +389,63 @@ def motor_elements():
 def models():
     model('helm', {'particle': 'block/palm_planks', 'wheel': 'block/ship_wheel', 'wood': 'block/palm_planks',
                    'post': 'block/stripped_palm_log'}, helm_elements())
-    sail_tex = {'particle': 'block/sail_canvas', 'mast': 'block/palm_log', 'canvas': 'block/sail_canvas',
+    sail_tex = {'particle': 'block/sail_cloth', 'mast': 'block/palm_log', 'canvas': 'block/sail_cloth',
                 'rope': 'block/rope_coil'}
-    model('sail', sail_tex, sail_base())
-    model('sail_yard', sail_tex, sail_yard())
-    model('sail_boom', sail_tex, sail_boom())
+    model('sail', sail_tex, sail_canvas())
+    for side in ('up', 'down', 'left', 'right'):
+        model('sail_hem_' + side, sail_tex, sail_hem(side))
+    for side in ('left', 'right'):
+        model('sail_mast_' + side, sail_tex, sail_to_mast(side))
+    model('sail_furled', sail_tex, sail_furled())
+    model('sail_brails', sail_tex, sail_brails())
+    mast_tex = {'particle': 'block/palm_log', 'mast': 'block/palm_log', 'end': 'block/palm_log_top', 'rope': 'block/rope_coil'}
+    model('mast', mast_tex, mast(False))
+    model('mast_top', mast_tex, mast(True))
+    # the helm in two parts for a sailing raft: the wheel turns while the helmsman steers (VesselRenderer)
+    helm_tex = {'particle': 'block/palm_planks', 'wheel': 'block/ship_wheel', 'wood': 'block/palm_planks',
+                'post': 'block/stripped_palm_log'}
+    full = helm_elements()
+    model('helm_base', helm_tex, [e for e in full if '#wheel' not in str(e)])
+    model('helm_wheel', helm_tex, [e for e in full if '#wheel' in str(e)])
+    anchor_tex = {'particle': 'block/decor_iron', 'wood': 'block/palm_planks', 'rope': 'block/rope_coil',
+                  'iron': 'block/decor_iron'}
+    model('anchor_winch', anchor_tex, anchor_winch(False))
+    model('anchor_winch_dropped', anchor_tex, anchor_winch(True))
     model('oar', {'particle': 'block/palm_planks', 'lock': 'block/driftwood_log', 'loom': 'block/stripped_palm_log',
                   'blade': 'block/palm_planks', 'grip': 'block/rope_coil'}, oar_elements())
     model('raft_motor', {'particle': 'block/raft_motor', 'motor': 'block/raft_motor'}, motor_elements())
 
 
 def blockstates():
-    A.blockstate(M, 'helm', A.horizontal_variants('block/helm'))
+    helm = OrderedDict()
+    for part, mdl in (('full', 'helm'), ('base', 'helm_base'), ('wheel', 'helm_wheel')):
+        for facing, rot in (('north', 0), ('east', 90), ('south', 180), ('west', 270)):
+            v = OrderedDict(model=rid('block/' + mdl))
+            if rot:
+                v['y'] = rot
+            helm[f'facing={facing},part={part}'] = v
+    A.blockstate(M, 'helm', helm)
     A.blockstate(M, 'oar', A.horizontal_variants('block/oar'))
     A.blockstate(M, 'raft_motor', A.horizontal_variants('block/raft_motor'))
+    anchor = A.horizontal_variants('block/anchor_winch', extra='dropped=false')
+    anchor.update(A.horizontal_variants('block/anchor_winch_dropped', extra='dropped=true'))
+    A.blockstate(M, 'anchor_winch', anchor)
     parts = []
-    for part, cond in (('sail', None), ('sail_yard', ('top', 'true')), ('sail_boom', ('bottom', 'true'))):
+    conds = [('sail', {'furled': 'false'}), ('sail_hem_up', {'up': 'false'}),
+             ('sail_hem_down', {'down': 'false', 'furled': 'false'}),
+             ('sail_hem_left', {'left': 'none', 'furled': 'false'}), ('sail_hem_right', {'right': 'none', 'furled': 'false'}),
+             ('sail_mast_left', {'left': 'mast', 'furled': 'false'}), ('sail_mast_right', {'right': 'mast', 'furled': 'false'}),
+             ('sail_furled', {'up': 'false', 'furled': 'true'}), ('sail_brails', {'up': 'true', 'furled': 'true'})]
+    for part, cond in conds:
         for facing, rot in (('north', 0), ('east', 90), ('south', 180), ('west', 270)):
             apply = OrderedDict(model=rid('block/' + part))
             if rot:
                 apply['y'] = rot
             when = OrderedDict(facing=facing)
-            if cond:
-                when[cond[0]] = cond[1]
+            when.update(cond)
             parts.append(OrderedDict(when=when, apply=apply))
     A.blockstate(M, 'sail', multipart=parts)
+    A.blockstate(M, 'mast', {'up=false': {'model': rid('block/mast_top')}, 'up=true': {'model': rid('block/mast')}})
 
 
 def items():
@@ -343,6 +455,8 @@ def items():
         tex.save(img, M, 'item/' + name)
         A.flat_item(M, name)
         sprites[name] = img
+    A.block_item(M, 'mast', 'block/mast_top')
+    A.block_item(M, 'anchor_winch')
     return sprites
 
 
@@ -367,10 +481,10 @@ def recipe_unlock(name, items_needed):
 
 
 def data():
-    for b in ('helm', 'sail', 'oar', 'raft_motor'):
+    for b in ('helm', 'sail', 'mast', 'oar', 'raft_motor', 'anchor_winch'):
         loot_self(b)
-    A.tag(M, 'block', 'minecraft:mineable/axe', ['helm', 'sail', 'oar'])
-    A.tag(M, 'block', 'minecraft:mineable/pickaxe', ['raft_motor'])
+    A.tag(M, 'block', 'minecraft:mineable/axe', ['helm', 'sail', 'mast', 'oar'])
+    A.tag(M, 'block', 'minecraft:mineable/pickaxe', ['raft_motor', 'anchor_winch'])
     A.tag(M, 'block', 'raft:vessel_hulls', ['raft:raft_foundation', 'raft:reinforced_foundation'])
     A.tag(M, 'block', 'raft:not_seaworthy', [
         'minecraft:bedrock', 'minecraft:barrier', 'minecraft:command_block', 'minecraft:chain_command_block',
@@ -383,6 +497,11 @@ def data():
                     {'W': 'raft:ship_wheel', 'S': 'minecraft:stick', 'P': '#minecraft:planks'}, 'helm', category='misc')
     A.recipe_shaped(M, 'sail', [' R ', 'CSC', ' S '],
                     {'R': 'raft:rope', 'C': 'raft:sail_canvas', 'S': 'minecraft:stick'}, 'sail', category='misc')
+    A.recipe_shaped(M, 'anchor_winch', [' R ', 'PIP', ' I '],
+                    {'R': 'raft:rope', 'P': '#minecraft:planks', 'I': 'minecraft:iron_ingot'}, 'anchor_winch', category='misc')
+    recipe_unlock('anchor_winch', ['raft:rope', 'minecraft:iron_ingot'])
+    A.recipe_shaped(M, 'mast', ['L', 'L', 'L'], {'L': '#minecraft:logs'}, 'mast', count=4, category='misc')
+    recipe_unlock('mast', ['raft:sail_canvas'])
     A.recipe_shapeless(M, 'oar', ['raft:paddle', 'raft:rope', 'minecraft:stick'], 'oar', category='misc')
     A.recipe_shaped(M, 'raft_motor', ['SCS', 'SFS', ' T '],
                     {'S': 'raft:scrap_metal', 'C': 'raft:circuit_board', 'F': 'minecraft:furnace',
@@ -415,55 +534,71 @@ Look at open water and place a Raft Foundation: it settles into the sea, its top
 # Build on it
 Floors, walls, a roof, chests, furnaces, crops, redstone: everything that stands on the foundations sails along, and it all keeps working at sea. Keep it inside the edge of the foundations.
 # The Helm
-Set a Helm on the raft so that it faces the bow, and use it to set sail. W and S sail, A and D steer.
+Set a Helm on the raft so that it faces the bow, and use it to set sail. W and S sail, A and D steer: the wheel turns in your hands.
 Sneak to leave the helm: the raft slows down and waits where it is. Use the helm again to steer on.
-To drop anchor, use the wheel while you steer, or sneak and use the helm. The raft turns to the nearest compass direction and becomes blocks again.
+To moor, use the wheel while you steer, or sneak and use the helm. The raft turns to the nearest compass direction and becomes blocks again.
 # At sea
-Open chests and furnaces, craft, farm, flip levers, build and break: the raft's blocks work while it sails. Set Raft Foundations against its side to grow it at sea. Beds and signs wait until you drop anchor.
+Open chests and furnaces, craft, farm, flip levers, build and break: the raft's blocks work while it sails. Set Raft Foundations against its side to grow it at sea. Beds and signs wait until you moor.
 # Power
 * Oar: rowing power. Set it on the deck edge, pointing out.
-* Sail: wind power. Stack sails for a taller mast; each sail counts.
-* Raft Motor: the most power. Set it on the stern edge and use furnace fuel on it, even while you sail.
+* Sail: wind power. Set Masts and Sails next to them; sails side by side and on top of each other make one big sheet, and every block of sail counts. Use a sail to furl it (no power) or set it again.
+* Raft Motor: the most power. Set it on the stern edge and click it to put furnace fuel in (or take it out), even while you sail.
 Heavy rafts need more power: they are slower and turn more slowly.
+# Anchor
+Set a Anchor Winch on the deck edge, anchor over the side. Use it to drop the anchor: the raft stops and holds its position, even in a current. Use it again to raise it and sail on.
 # Good to know
 * Up to 1024 blocks and 32 blocks across to set sail; at sea it can grow a little.
 * A raft needs water under it. Land, ice and piers stop it.
 * Friends, animals and items on deck sail along.
-* No room to drop anchor? Sail a little away from the shore."""
+* No room to moor? Sail a little away from the shore."""
 
 LANG = {
     'block.raft.helm': 'Helm',
     'block.raft.sail': 'Sail',
+    'block.raft.mast': 'Mast',
+    'block.raft.anchor_winch': 'Anchor Winch',
     'block.raft.oar': 'Oar',
     'block.raft.raft_motor': 'Raft Motor',
     'entity.raft.vessel': 'Raft',
     'tooltip.raft.helm': 'Set it on your raft facing the bow and use it to set sail.',
     'tooltip.raft.helm.1': 'Everything on the raft foundations sails along and keeps working.',
-    'tooltip.raft.sail': 'Wind power for a raft you built. Stack sails for a taller mast.',
+    'tooltip.raft.sail': 'Wind power for a raft you built. Sails side by side and on top of each other make one sheet; use it to furl or set it.',
+    'tooltip.raft.mast': 'Set sails next to it: their canvas reaches over to the mast.',
+    'tooltip.raft.anchor_winch': 'Set it on the deck edge of a raft you built, anchor over the side.',
+    'tooltip.raft.anchor_winch.1': 'Use it to drop or raise the anchor: with the anchor down the raft holds its position.',
     'tooltip.raft.oar': 'Rowing power for a raft you built. Set it on the deck edge.',
     'tooltip.raft.raft_motor': 'Strong power for a raft you built. Set it on the stern edge.',
-    'tooltip.raft.raft_motor.1': 'Runs on furnace fuel: use fuel on it.',
+    'tooltip.raft.raft_motor.1': 'Runs on furnace fuel: click it to put fuel in or take it out.',
     'message.raft.vessel.no_hull': 'The helm must stand on a raft of Raft Foundations.',
     'message.raft.vessel.too_big': 'This raft is too big to sail (more than %s blocks).',
     'message.raft.vessel.too_wide': 'This raft is too wide to sail (more than %s blocks across).',
     'message.raft.vessel.not_seaworthy': "%s can't go to sea.",
     'message.raft.vessel.not_floating': 'The raft must float on water to set sail.',
     'message.raft.vessel.not_loaded': 'Part of this raft is too far away to set sail.',
-    'message.raft.vessel.controls': 'W/S: sail · A/D: steer · Use the wheel: drop anchor · Sneak: leave the helm',
+    'message.raft.vessel.controls': 'W/S: sail · A/D: steer · Use the wheel: moor (blocks again) · Sneak: leave the helm',
     'message.raft.vessel.setting_sail': 'Setting sail...',
     'message.raft.vessel.shipyard_full': 'Too many rafts are at sea in this world.',
-    'message.raft.vessel.left_helm': 'You left the helm: the raft waits here. Sneak and use the helm to drop anchor.',
-    'message.raft.vessel.anchoring': 'Dropping anchor...',
-    'message.raft.vessel.anchored': 'Anchor dropped. The raft is blocks again.',
-    'message.raft.vessel.no_room': 'No room to drop anchor here. Sail a little away from the shore.',
+    'message.raft.vessel.left_helm': 'You left the helm: the raft waits here. Sneak and use the helm to moor it.',
+    'message.raft.vessel.anchoring': 'Mooring...',
+    'message.raft.vessel.anchored': 'Moored. The raft is blocks again.',
+    'message.raft.vessel.no_room': 'No room to moor here. Sail a little away from the shore.',
     'message.raft.vessel.helm_taken': 'Someone is already at the helm.',
-    'message.raft.vessel.anchor_first': 'Drop anchor to use this.',
+    'message.raft.vessel.anchor_first': 'Moor the raft to use this.',
     'message.raft.vessel.no_sleep': "You can't sleep on a sailing raft.",
     'message.raft.vessel.too_far_out': 'Build over the raft: add Raft Foundations to grow it (up to 8 blocks out at sea).',
     'message.raft.vessel.no_open_water': 'Open water would run off a sailing raft.',
     'message.raft.vessel.motor_fuel': 'Motor fuel: %s',
     'message.raft.vessel.motor_full': "The motor's tank is full.",
-    'message.raft.vessel.motor_empty': 'The motor has no fuel. Use coal, charcoal, logs or planks on it.',
+    'message.raft.vessel.motor_empty': 'The motor has no fuel. Click it and put in coal, charcoal, logs or planks.',
+    'container.raft.raft_motor': 'Raft Motor',
+    'container.raft.raft_motor.fuel': 'Running time',
+    'container.raft.raft_motor.time': '%s',
+    'container.raft.raft_motor.empty': 'No fuel',
+    'message.raft.sail.furled': 'Sail furled',
+    'message.raft.sail.set': 'Sail set',
+    'message.raft.anchor.dropped': 'Anchor down: the raft holds its position',
+    'message.raft.anchor.raised': 'Anchor up',
+    'message.raft.anchor.holding': 'The anchor is down. Raise it at the anchor winch to sail.',
     'advancements.raft.adventure.shipwright.title': 'Shipwright',
     'advancements.raft.adventure.shipwright.description': 'Set sail on a raft you built yourself',
     'almanac.raft.sailing.shipwright.title': 'Your Own Raft',
@@ -473,6 +608,7 @@ LANG = {
 
 def main():
     tex.save(motor_texture(), M, 'block/raft_motor')
+    tex.save(sail_cloth_texture(), M, 'block/sail_cloth')
     models()
     blockstates()
     sprites = items()

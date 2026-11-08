@@ -247,6 +247,7 @@ def build_model(elements, atlas, texture_key, painter, img):
 
 
 # ---------------------------------------------------------------------------------- leviathan trophy
+# (the horns sit 0.5 inside the skull's sides: their sides must not lie in the skull's side planes)
 TROPHY = [
     dict(name='plinth', **{'from': [1, 0, 1], 'to': [15, 3, 15]}, faces=['north', 'south', 'east', 'west', 'up', 'down']),
     dict(name='skull', **{'from': [3, 3, 5], 'to': [13, 11, 15]}, faces=['north', 'south', 'east', 'west', 'up']),
@@ -255,10 +256,10 @@ TROPHY = [
     dict(name='teeth', **{'from': [5, 5, 1.5], 'to': [11, 6, 4.5]}, faces=['north', 'east', 'west']),
     dict(name='brow', **{'from': [2.5, 10, 4.5], 'to': [13.5, 12, 8]}, faces=['north', 'east', 'west', 'up']),
     dict(name='crest', **{'from': [7.5, 11, 7], 'to': [8.5, 15, 15]}, faces=['east', 'west', 'up', 'north', 'south']),
-    dict(name='horn_l', **{'from': [3, 11, 9], 'to': [5, 13, 16]}, faces=['east', 'west', 'up', 'down', 'south'],
-         rotation={'origin': [4, 12, 9], 'axis': 'x', 'angle': 22.5}),
-    dict(name='horn_r', **{'from': [11, 11, 9], 'to': [13, 13, 16]}, faces=['east', 'west', 'up', 'down', 'south'],
-         rotation={'origin': [12, 12, 9], 'axis': 'x', 'angle': 22.5}),
+    dict(name='horn_l', **{'from': [3.5, 11, 9], 'to': [5.5, 13, 16]}, faces=['east', 'west', 'up', 'down', 'south'],
+         rotation={'origin': [4.5, 12, 9], 'axis': 'x', 'angle': 22.5}),
+    dict(name='horn_r', **{'from': [10.5, 11, 9], 'to': [12.5, 13, 16]}, faces=['east', 'west', 'up', 'down', 'south'],
+         rotation={'origin': [11.5, 12, 9], 'axis': 'x', 'angle': 22.5}),
     dict(name='eye_l', **{'from': [2.9, 7, 5.5], 'to': [3, 9, 8.5]}, faces=['west'], emissive=True),
     dict(name='eye_r', **{'from': [13, 7, 5.5], 'to': [13.1, 9, 8.5]}, faces=['east'], emissive=True),
 ]

@@ -52,7 +52,7 @@
   "spawn_target": [
     {
       "raft:raftdim/continents": [
-        0.39,
+        0.53,
         2.0
       ],
       "raft:raftdim/erosion": [

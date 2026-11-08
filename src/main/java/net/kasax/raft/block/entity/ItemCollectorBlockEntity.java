@@ -28,6 +28,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.kasax.raft.world.OceanDebris;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -170,44 +171,97 @@ public class ItemCollectorBlockEntity extends BlockEntity implements MenuProvide
         return new ItemCollectorScreenHandler(syncId, playerInventory, this, this.propertyDelegate);
     }
 
+    /** Below this speed (blocks per tick) the net catches nothing: an item catcher works while its raft sails. */
+    public static final float MIN_SPEED = 0.05F;
+    /** Chance per tick and block-per-tick of speed to net a piece of flotsam out of the sea (about one a minute at 6 blocks/s). */
+    public static final float CATCH_PER_SPEED = 0.0025F;
+    /** Shortest time between two catches. */
+    public static final int CATCH_COOLDOWN = 200;
+    private int cooldown;
+
+    /**
+     * Speed of the raft this catcher sails on (a sailing raft built by the player: the catcher is in its shipyard
+     * plot), 0 when it stands in the world, the raft holds still or its anchor is down.
+     */
+    private static float raftSpeed(Level level, BlockPos pos) {
+        if (!net.kasax.raft.content.vessel.VesselShipyard.maybePlot(pos.getX(), pos.getZ())) {
+            return 0.0F;
+        }
+        var vessel = net.kasax.raft.content.vessel.VesselShipyard.vesselAt(level, pos);
+        if (vessel == null || vessel.isDocked() || vessel.structure() == null || vessel.structure().anchorDown()) {
+            return 0.0F;
+        }
+        return Math.abs(vessel.getSpeed());
+    }
+
+    /**
+     * 3.2: the item catcher only works while its raft is moving (a raft you built and set sail with): the faster it
+     * sails, the more it catches. It picks up flotsam it sails through, now and then nets a piece out of the sea
+     * (cooldown {@link #CATCH_COOLDOWN}), and its net slowly fills with unrefined ocean garbage (the item catching
+     * recipe, faster at speed). Standing still, anchored or on land it catches nothing.
+     */
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (!(level instanceof ServerLevel serverLevel)) {
             return;
         }
-        boolean isWaterlogged = state.getValue(ItemCatcher.WATERLOGGED);
-
-        if (isWaterlogged && level.getGameTime() % 5 == 0) {
-            catchDebris(serverLevel, pos);
-        }
-
-        Holder<Biome> biomeEntry = level.getBiome(pos);
-
-        if (isWaterlogged && biomeEntry.is(ModBiomes.RAFT_OCEAN_BIOME)) {
-            if (isOutputSlotEmptyOrReceivable()) {
-                if (this.hasRecipe(serverLevel)) {
-                    this.increaseCraftProgress();
-                    setChanged(level, pos, state);
-
-                    if (hasCraftingFinished()) {
-                        this.craftItemKeepInput(serverLevel);
-                        this.resetProgress();
-                    }
-                } else {
-                    this.resetProgress();
-                }
-            } else {
+        float speed = raftSpeed(level, pos);
+        if (speed < MIN_SPEED) {
+            if (this.progress != 0) {
                 this.resetProgress();
                 setChanged(level, pos, state);
+            }
+            return;
+        }
+        if (this.cooldown > 0) {
+            this.cooldown--;
+        }
+        if (level.getGameTime() % 5 == 0) {
+            catchDebris(serverLevel, pos);
+        }
+        if (this.cooldown == 0 && this.hasNetInInputSlot() && serverLevel.getRandom().nextFloat() < speed * CATCH_PER_SPEED) {
+            ItemStack caught = OceanDebris.randomDebris(serverLevel, serverLevel.getRandom());
+            if (!caught.isEmpty() && this.insertCatch(caught)) {
+                this.cooldown = CATCH_COOLDOWN;
+                level.playSound(null, pos, SoundEvents.FISHING_BOBBER_SPLASH, SoundSource.BLOCKS, 0.4F, 1.2F);
+                setChanged(level, pos, state);
+            }
+        }
+        if (isOutputSlotEmptyOrReceivable() && this.hasRecipe(serverLevel)) {
+            // the net works faster the faster the raft sails (1x at 1 block/s, up to 4x)
+            this.progress += 1 + Math.min(3, (int) (speed * 4));
+            setChanged(level, pos, state);
+            if (hasCraftingFinished()) {
+                this.craftItemKeepInput(serverLevel);
+                this.resetProgress();
             }
         }
     }
 
+    /** Puts a caught stack into the output slot if it fits there. */
+    private boolean insertCatch(ItemStack stack) {
+        ItemStack out = this.getItem(OUTPUT_SLOT);
+        if (out.isEmpty()) {
+            this.setItem(OUTPUT_SLOT, stack);
+            return true;
+        }
+        if (ItemStack.isSameItemSameComponents(out, stack) && out.getCount() + stack.getCount() <= out.getMaxStackSize()) {
+            out.grow(stack.getCount());
+            return true;
+        }
+        return false;
+    }
+
     /**
-     * Collects floating ocean debris that drifts into the catcher. The items go to the output slot,
-     * as long as the slot holds the same item (or nothing) and has room.
+     * Collects floating ocean debris that the catcher sails through. The items go to the output slot,
+     * as long as the slot holds the same item (or nothing) and has room. On a sailing raft the catcher's block is in
+     * the raft's shipyard plot: the search is around where that block is in the world.
      */
     private void catchDebris(ServerLevel level, BlockPos pos) {
-        AABB area = new AABB(pos).inflate(1.5, 1.0, 1.5);
+        Vec3 world = net.kasax.raft.content.vessel.VesselShipyard.toWorld(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+        if (world == null) {
+            return;
+        }
+        AABB area = new AABB(world, world).inflate(2.0, 2.0, 2.0);
         for (ItemEntity item : level.getEntitiesOfClass(ItemEntity.class, area, OceanDebris::isDebris)) {
             ItemStack stack = item.getItem();
             ItemStack out = this.getItem(OUTPUT_SLOT);

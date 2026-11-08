@@ -9,12 +9,12 @@
         "points": [
           {
             "derivative": 0.0,
-            "location": 0.31,
+            "location": 0.45,
             "value": 0.0
           },
           {
             "derivative": 0.0,
-            "location": 0.34,
+            "location": 0.48,
             "value": 1.0
           }
         ]
@@ -27,7 +27,7 @@
         "points": [
           {
             "derivative": 0.0,
-            "location": -0.08,
+            "location": -0.04,
             "value": {
               "coordinate": "raft:raftdim/erosion",
               "points": [
@@ -73,7 +73,7 @@
           },
           {
             "derivative": 0.0,
-            "location": 0.015,
+            "location": 0.055,
             "value": {
               "coordinate": "raft:raftdim/erosion",
               "points": [
@@ -92,32 +92,32 @@
           },
           {
             "derivative": 0.0,
-            "location": 0.05,
+            "location": 0.09,
             "value": 57.0
           },
           {
-            "derivative": 147.4978,
-            "location": 0.175,
+            "derivative": 121.3873,
+            "location": 0.25,
             "value": 69.0
           },
           {
             "derivative": 430.7692,
-            "location": 0.197,
+            "location": 0.272,
             "value": 76.0
           },
           {
-            "derivative": 187.234,
-            "location": 0.209,
+            "derivative": 120.5479,
+            "location": 0.284,
             "value": 84.0
           },
           {
-            "derivative": 135.7094,
-            "location": 0.31,
+            "derivative": 96.8689,
+            "location": 0.45,
             "value": 95.0
           },
           {
             "derivative": 0.0,
-            "location": 0.34,
+            "location": 0.48,
             "value": 100.4
           }
         ]
@@ -172,12 +172,12 @@
               "points": [
                 {
                   "derivative": 0.0,
-                  "location": 0.09,
+                  "location": 0.36,
                   "value": 0.0
                 },
                 {
                   "derivative": 0.0,
-                  "location": 0.21,
+                  "location": 0.48,
                   "value": 1.0
                 }
               ]
@@ -190,47 +190,47 @@
               "points": [
                 {
                   "derivative": 0.0,
-                  "location": 0.31,
+                  "location": 0.45,
                   "value": 95.0
                 },
                 {
                   "derivative": 97.2973,
-                  "location": 0.34,
+                  "location": 0.48,
                   "value": 100.4
                 },
                 {
                   "derivative": 51.5337,
-                  "location": 0.37,
+                  "location": 0.51,
                   "value": 102.4
                 },
                 {
                   "derivative": 45.6522,
-                  "location": 0.42,
+                  "location": 0.56,
                   "value": 104.5
                 },
                 {
                   "derivative": 55.5556,
-                  "location": 0.49,
+                  "location": 0.63,
                   "value": 108.0
                 },
                 {
                   "derivative": 59.7015,
-                  "location": 0.57,
+                  "location": 0.71,
                   "value": 113.0
                 },
                 {
                   "derivative": 53.3333,
-                  "location": 0.64,
+                  "location": 0.78,
                   "value": 117.0
                 },
                 {
                   "derivative": 40.0,
-                  "location": 0.72,
+                  "location": 0.86,
                   "value": 121.0
                 },
                 {
                   "derivative": 0.0,
-                  "location": 0.84,
+                  "location": 0.98,
                   "value": 125.0
                 }
               ]
@@ -243,47 +243,47 @@
               "points": [
                 {
                   "derivative": 0.0,
-                  "location": 0.31,
+                  "location": 0.45,
                   "value": 95.0
                 },
                 {
                   "derivative": 90.0,
-                  "location": 0.34,
+                  "location": 0.48,
                   "value": 100.4
                 },
                 {
                   "derivative": 62.8571,
-                  "location": 0.37,
+                  "location": 0.51,
                   "value": 102.2
                 },
                 {
                   "derivative": 77.1583,
-                  "location": 0.42,
+                  "location": 0.56,
                   "value": 105.5
                 },
                 {
                   "derivative": 101.7391,
-                  "location": 0.49,
+                  "location": 0.63,
                   "value": 112.0
                 },
                 {
                   "derivative": 105.8824,
-                  "location": 0.57,
+                  "location": 0.71,
                   "value": 121.0
                 },
                 {
                   "derivative": 85.7143,
-                  "location": 0.64,
+                  "location": 0.78,
                   "value": 128.0
                 },
                 {
                   "derivative": 60.0,
-                  "location": 0.72,
+                  "location": 0.86,
                   "value": 134.0
                 },
                 {
                   "derivative": 0.0,
-                  "location": 0.84,
+                  "location": 0.98,
                   "value": 140.0
                 }
               ]
@@ -297,42 +297,42 @@
             "points": [
               {
                 "derivative": 0.0,
-                "location": 0.31,
+                "location": 0.45,
                 "value": 95.0
               },
               {
                 "derivative": 43.9024,
-                "location": 0.34,
+                "location": 0.48,
                 "value": 100.4
               },
               {
                 "derivative": 10.5263,
-                "location": 0.36,
+                "location": 0.5,
                 "value": 100.9
               },
               {
                 "derivative": 6.1538,
-                "location": 0.42,
+                "location": 0.56,
                 "value": 101.3
               },
               {
                 "derivative": 5.3333,
-                "location": 0.49,
+                "location": 0.63,
                 "value": 101.7
               },
               {
                 "derivative": 5.3333,
-                "location": 0.57,
+                "location": 0.71,
                 "value": 102.1
               },
               {
                 "derivative": 5.3333,
-                "location": 0.64,
+                "location": 0.78,
                 "value": 102.5
               },
               {
                 "derivative": 0.0,
-                "location": 0.84,
+                "location": 0.98,
                 "value": 103.5
               }
             ]
@@ -346,52 +346,52 @@
           "points": [
             {
               "derivative": 0.0,
-              "location": 0.31,
+              "location": 0.45,
               "value": 95.0
             },
             {
               "derivative": 104.2105,
-              "location": 0.34,
+              "location": 0.48,
               "value": 100.4
             },
             {
               "derivative": 67.6923,
-              "location": 0.37,
+              "location": 0.51,
               "value": 102.6
             },
             {
               "derivative": 74.0187,
-              "location": 0.44,
+              "location": 0.58,
               "value": 107.0
             },
             {
               "derivative": 121.6216,
-              "location": 0.54,
+              "location": 0.68,
               "value": 116.0
             },
             {
               "derivative": 258.6207,
-              "location": 0.62,
+              "location": 0.76,
               "value": 131.0
             },
             {
               "derivative": 476.1905,
-              "location": 0.68,
+              "location": 0.82,
               "value": 156.0
             },
             {
               "derivative": 0.0,
-              "location": 0.725,
+              "location": 0.865,
               "value": 181.0
             },
             {
               "derivative": -338.8235,
-              "location": 0.75,
+              "location": 0.89,
               "value": 173.0
             },
             {
               "derivative": 0.0,
-              "location": 0.775,
+              "location": 0.915,
               "value": 164.0
             }
           ]

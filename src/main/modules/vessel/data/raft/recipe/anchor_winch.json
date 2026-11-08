@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "R": "raft:rope",
+    "P": "#minecraft:planks",
+    "I": "minecraft:iron_ingot"
+  },
+  "pattern": [
+    " R ",
+    "PIP",
+    " I "
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:anchor_winch"
+  }
+}

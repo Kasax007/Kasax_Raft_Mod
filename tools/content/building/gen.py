@@ -11,7 +11,7 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
 from bclib import assets as A  # noqa: E402
-from bclib import tex  # noqa: E402
+from bclib import extrude, tex  # noqa: E402
 from bclib.paths import module_dir  # noqa: E402
 
 from content.building import tex_metal as TM  # noqa: E402
@@ -690,7 +690,6 @@ def ship_steel():
     shaped('rusty_pipe', ['S', 'S', 'S'], {'S': SC}, 'rusty_pipe', 6)
 
     valve_tex = dict(pipe_tex, wheel='block/rusty_pipe_valve_wheel', stem='block/steel_beam_end')
-    wheel_edge = {d: [7, 5, 8, 6] for d in ('west', 'east', 'up', 'down')}
     valve = pipe_elements + [
         el([3.5, 5, 3.5], [12.5, 11, 12.5], box_faces({'north': 'pipe', 'south': 'pipe', 'west': 'pipe',
                                                         'east': 'pipe', 'up': 'end', 'down': 'end'},
@@ -698,10 +697,10 @@ def ship_steel():
                                                        uvs={d: [3.5, 5, 12.5, 11] for d in
                                                             ('north', 'south', 'west', 'east')})),
         el([7, 7, 12.5], [9, 9, 14.5], box_faces('stem', [7, 7, 12.5], [9, 9, 14.5], skip=('north',))),
-        el([4, 4, 14.5], [12, 12, 15.5], {
-            'south': face('wheel', [4, 4, 12, 12]), 'north': face('wheel', [12, 4, 4, 12]),
-            **{d: face('wheel', wheel_edge[d]) for d in wheel_edge}}),
     ]
+    # the hand wheel: its sprite extruded row by row, so the rim follows the round wheel (no square frame)
+    valve += extrude.vertical('raft:block/rusty_pipe_valve_wheel', '#wheel', region=(4, 4, 12, 12), at=(4, 12),
+                              z=(14.5, 15.5), front='south')
     model('rusty_pipe_valve', valve_tex, valve)
     axis_states('rusty_pipe_valve')
     A.block_item(M, 'rusty_pipe_valve')
@@ -729,16 +728,24 @@ def tech():
     SC, I, C, R = 'raft:scrap_metal', 'minecraft:iron_ingot', 'raft:circuit_board', 'minecraft:redstone'
     # control panel: cabinet, sloped desk (+ emissive lamps), screen housing (+ emissive screens)
     slope_rot = {'origin': [8, 8, 2], 'axis': 'x', 'angle': -22.5}
-    slope_from, slope_to = [0, 8, 2], [16, 9.5, 12]
+    # the desk is 9.7 long so its far end stays in front of the screen housing (z 11), no coplanar side faces
+    slope_from, slope_to = [0, 8, 2], [16, 9.5, 11.7]
     cp = [
         el([0, 0, 2], [16, 8, 16], {
             'north': face('front', [0, 8, 16, 16]), 'south': face('side', [0, 8, 16, 16], 'south'),
             'west': face('side', [2, 8, 16, 16], 'west'), 'east': face('side', [0, 8, 14, 16], 'east'),
             'down': face('side', [0, 2, 16, 16], 'down')}),
         el(slope_from, slope_to, {
-            'up': face('top', [0, 2, 16, 12]), 'north': face('side', [0, 0, 16, 1.5]),
-            'west': face('side', [2, 0, 12, 1.5]), 'east': face('side', [4, 0, 14, 1.5])}, rotation=slope_rot),
-        el(slope_from, slope_to, {'up': face('lights', [0, 2, 16, 12])}, rotation=slope_rot, light=15),
+            'up': face('top', [0, 2, 16, 11.7]), 'north': face('side', [0, 0, 16, 1.5]),
+            'west': face('side', [2, 0, 11.7, 1.5]), 'east': face('side', [4.3, 0, 14, 1.5])}, rotation=slope_rot),
+        el(slope_from, slope_to, {'up': face('lights', [0, 2, 16, 11.7])}, rotation=slope_rot, light=15),
+    ]
+    # fill the wedge under the sloped desk with 1 px steps (side texture continues from the cabinet), so the
+    # sides of the panel are closed; each step ends just below the desk
+    for (y0, z0) in ((8, 4.5), (9, 7), (10, 9.5)):
+        cp.append(el([0, y0, z0], [16, y0 + 1, 11], box_faces('side', [0, y0, z0], [16, y0 + 1, 11],
+                                                              skip=('down', 'south'))))
+    cp += [
         el([0, 8, 11], [16, 15, 16], {
             'north': face('screen', [0, 1, 16, 8]), 'up': face('side', [0, 0, 16, 5]),
             'south': face('side', [0, 1, 16, 8], 'south'), 'west': face('side', [11, 1, 16, 8], 'west'),
@@ -780,12 +787,17 @@ def tech():
     m = 'mount'
     dish = [
         el([3, 0, 3], [13, 2, 13], box_faces(m, [3, 0, 3], [13, 2, 13])),
-        el([6.5, 2, 6.5], [9.5, 7, 9.5], box_faces(m, [6.5, 2, 6.5], [9.5, 7, 9.5], skip=('up', 'down'))),
+        el([6.5, 2, 6.5], [9.5, 6, 9.5], box_faces(m, [6.5, 2, 6.5], [9.5, 6, 9.5], skip=('up', 'down'))),
         el([5, 6, 7], [11, 9, 9.5], box_faces(m, [5, 6, 7], [11, 9, 9.5])),
-        el([1, 3, 8], [15, 17, 9], {
-            'north': face('dish', [0, 0, 16, 16]), 'south': face('back', [0, 0, 16, 16]),
-            'west': face(m, [0, 0, 1, 14]), 'east': face(m, [0, 0, 1, 14]),
-            'up': face(m, [0, 0, 14, 1]), 'down': face(m, [0, 0, 14, 1])}, rotation=dish_rot),
+    ]
+    # the round dish: one band per run of equal pixel rows (TT.DISH_BANDS); texture row r is at y = 17 - r
+    for (r0, r1, c0, c1) in TT.DISH_BANDS:
+        e = TT.DISH_EDGE_UV
+        dish.append(el([c0, 17 - r1, 8], [c1 + 1, 18 - r0, 9], {
+            'north': face('dish', [c0, r0, c1 + 1, r1 + 1]), 'south': face('back', [c0, r0, c1 + 1, r1 + 1]),
+            'west': face('dish', e['side']), 'east': face('dish', e['side']),
+            'up': face('dish', e['up']), 'down': face('dish', e['down'])}, rotation=dish_rot))
+    dish += [
         el([7.5, 9.5, 2.5], [8.5, 10.5, 8], box_faces(m, [7.5, 9.5, 2.5], [8.5, 10.5, 8], cull_outer=False),
            rotation=dish_rot),
         el([7, 9, 1.5], [9, 11, 2.5], box_faces('horn', [7, 9, 1.5], [9, 11, 2.5], cull_outer=False),

@@ -19,6 +19,9 @@ def rid(x):
 
 
 def write_json(module, rel, data):
+    if '/loot_table/' in rel:
+        from bclib.loot26 import _walk
+        data = _walk(data)            # 26.3 ignores the old conditions / functions keys (see loot26.py)
     p = out(module, *rel.split('/'))
     with open(p, 'w', encoding='utf-8') as f:
         json.dump(data, f, indent=2, ensure_ascii=False)

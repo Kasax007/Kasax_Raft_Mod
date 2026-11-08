@@ -149,6 +149,18 @@ public final class VesselShipyard extends SavedData {
         return plot < MAX_PLOTS ? plot : -1;
     }
 
+    /**
+     * Chunks of the shipyard (and a margin around it) are generated empty: no terrain, sea, features, structures or
+     * mobs. Plots hold only the raft's blocks, so the first time a plot is used its chunks are made in no time instead of
+     * running the whole world generation far out at sea (that made setting sail lag for seconds).
+     */
+    public static boolean isShipyardChunk(int chunkX, int chunkZ) {
+        return EMPTY_PLOTS && chunkX >= (BASE >> 4) - 4 && chunkZ >= (BASE >> 4) - 4;
+    }
+
+    /** Off only for timing comparisons in tests (environment BC_SHIPYARD_WORLDGEN=1: plots get normal world generation). */
+    private static final boolean EMPTY_PLOTS = System.getenv("BC_SHIPYARD_WORLDGEN") == null;
+
     /** Quick test without the level (for hot paths): could this be a shipyard position at all? */
     public static boolean maybePlot(double x, double z) {
         return x >= BASE && z >= BASE;

@@ -1,0 +1,245 @@
+# Run: tools/bctest/run.sh tools/content/boss/tests/boss_32.txt <outdir>
+# Beach Craft 3.2 Leviathan: the altar spends the Tidewarden Key on a real right-click (and not while the boss is
+# awake), the boss keeps deep in its pool (TRACK lines: y + 2.5 is the top of its hitbox, the surface is y 100),
+# a fight in full titanium armour (player health every 10 s, then healed, so each line is the damage of 10 s, phases 2 and 3 with their tidelings), the rewards land
+# on dry floor (item positions).
+world 7
+rd 5
+gui 2
+cmd execute in raft:raftdim run tp @p 40 112 0
+settle 120
+log BUILD
+cmd execute in raft:raftdim run fill 22 84 -18 58 108 18 minecraft:air
+cmd execute in raft:raftdim run fill 22 84 -18 58 99 18 minecraft:polished_deepslate
+cmd execute in raft:raftdim run fill 32 86 -8 48 99 8 minecraft:water
+cmd execute in raft:raftdim run setblock 31 100 0 raft:leviathan_altar[facing=east]
+cmd execute in raft:raftdim run kill @e[type=!minecraft:player,x=40,y=100,z=0,distance=..80]
+swait 20
+log KEY_USE
+cmd gamemode survival @p
+cmd effect give @p minecraft:water_breathing infinite 0 true
+cmd item replace entity @p weapon.mainhand with raft:tidewarden_key
+cmd execute in raft:raftdim run tp @p 28.5 100 0.5 -90 20
+swait 10
+nearblock raft:leviathan_altar 8 -2.5 0 0
+swait 5
+use
+swait 10
+cmd clear @p raft:tidewarden_key 0
+count raft:raftdim
+log KEY_USE_AGAIN
+cmd item replace entity @p weapon.mainhand with raft:tidewarden_key
+swait 30
+use
+swait 10
+cmd clear @p raft:tidewarden_key 0
+count raft:raftdim
+cmd clear @p raft:tidewarden_key
+# ---- pool behaviour: the head while it circles (the player stands back so it does not attack)
+log POOL
+cmd execute in raft:raftdim run tp @p 40 112 30
+swait 80
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+hud off
+freecam 46 96 -6 43 12
+wait 10 render
+shot 89_leviathan_deep
+freecam 40 104 -12 0 35
+wait 5 render
+shot 89_leviathan_above
+freecam off
+hud on
+# ---- a fight in titanium armour
+log TITANIUM_FIGHT
+cmd item replace entity @p armor.head with raft:titanium_helmet
+cmd item replace entity @p armor.chest with raft:titanium_chestplate
+cmd item replace entity @p armor.legs with raft:titanium_leggings
+cmd item replace entity @p armor.feet with raft:titanium_boots
+cmd item replace entity @p weapon.mainhand with minecraft:diamond_sword
+cmd execute in raft:raftdim run tp @p 29.5 100 5.5 -90 10
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+cmd data get entity @p Health
+cmd effect give @p minecraft:instant_health 1 10
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+cmd data get entity @p Health
+cmd effect give @p minecraft:instant_health 1 10
+hud on
+wait 5 render
+shot 90_leviathan_fight
+log PHASE2
+cmd data merge entity @e[type=raft:leviathan,limit=1] {Health:440.0f}
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+cmd data get entity @p Health
+cmd effect give @p minecraft:instant_health 1 10
+near 32
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+cmd data get entity @p Health
+cmd effect give @p minecraft:instant_health 1 10
+near 32
+wait 5 render
+shot 91_phase2_tidelings
+log PHASE3
+cmd effect give @p minecraft:instant_health 1 10
+cmd data merge entity @e[type=raft:leviathan,limit=1] {Health:220.0f}
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+cmd data get entity @p Health
+cmd effect give @p minecraft:instant_health 1 10
+near 32
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+swait 20
+track raft:leviathan 64
+cmd data get entity @p Health
+cmd effect give @p minecraft:instant_health 1 10
+near 32
+respawn
+cmd execute in raft:raftdim run tp @a 29.5 100 5.5 -90 10
+# ---- the end: killed by the player, rewards on the floor
+log KILL
+cmd effect give @p minecraft:instant_health 1 10
+cmd execute in raft:raftdim run tp @a 29.5 100 5.5 -90 10
+swait 5
+cmd execute in raft:raftdim run clear @p
+cmd execute in raft:raftdim run damage @e[type=raft:leviathan,limit=1] 5000 minecraft:generic_kill by @p
+swait 140
+near 40
+# the rewards land at the killer's feet: in the inventory or on the floor next to the player
+cmd data get entity @p Inventory
+cmd execute in raft:raftdim as @e[type=minecraft:item,x=40,y=100,z=0,distance=..48] run data get entity @s Pos
+cmd execute in raft:raftdim as @e[type=minecraft:item,x=40,y=100,z=0,distance=..48] run data get entity @s Item
+hud off
+freecam 26 104 10 -120 30
+wait 10 render
+shot 92_rewards
+freecam off
+hud on
+log DONE

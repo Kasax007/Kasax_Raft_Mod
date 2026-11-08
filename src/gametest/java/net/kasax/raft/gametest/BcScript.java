@@ -97,6 +97,7 @@ import java.util.function.Function;
  * chat on|off             show or hide the chat;  arrow left|right|up|down  press an arrow key
  * slot &lt;1-9&gt;              select a hotbar slot
  * count [dimension]       log the loaded entities per type (COUNT line in latest.log)
+ * near [radius]          log living entities per type (health of hostiles) and items around the player (NEAR)
  * track &lt;type&gt; [radius]  log game time and id:x,y,z,yaw,pitch of each such entity near the player (TRACK)
  * hold &lt;use|attack|forward|jump|sneak&gt; &lt;ticks&gt;
  * scout &lt;structure&gt; [x z] log the nearest structure of that id (raft dimension, from the player or x z): start,
@@ -163,6 +164,13 @@ public class BcScript implements FabricClientGameTest {
     private TestSingleplayerContext sp;
     /** The box of the last audited structure (for overview). */
     private BoundingBox lastBox;
+
+    /** near: list the health of hostile mobs only. */
+    private static boolean e0(String type) {
+        return !(type.contains("scavenger") || type.contains("guardian") || type.contains("corsair") || type.contains("drowned")
+                || type.contains("blaze") || type.contains("crab") && type.contains("ember") || type.contains("stray")
+                || type.contains("magma") || type.contains("player"));
+    }
 
     private static double horiz(Vec3 a, Vec3 b) {
         double dx = a.x - b.x, dz = a.z - b.z;
@@ -514,6 +522,67 @@ public class BcScript implements FabricClientGameTest {
                 });
                 LOG.info("[bctest] MUSIC {}", res);
             }
+            case "states" -> {
+                // states <dim> x0 y0 z0 x1 y1 z1: log every non-air block state in the box (STATES lines)
+                String[] a = arg.split("\\s+");
+                int[] c = new int[6];
+                for (int i = 0; i < 6; i++) c[i] = (int) Math.floor(Double.parseDouble(a[i + 1]));
+                String res = need().getServer().computeOnServer(server -> {
+                    var level = server.getLevel(ResourceKey.create(Registries.DIMENSION, Identifier.parse(a[0])));
+                    if (level == null) return "no level";
+                    StringBuilder sb = new StringBuilder();
+                    for (BlockPos bp : BlockPos.betweenClosed(Math.min(c[0], c[3]), Math.min(c[1], c[4]), Math.min(c[2], c[5]),
+                            Math.max(c[0], c[3]), Math.max(c[1], c[4]), Math.max(c[2], c[5]))) {
+                        var st = level.getBlockState(bp);
+                        if (!st.isAir() && !st.is(net.minecraft.world.level.block.Blocks.WATER)) {
+                            sb.append("\n  ").append(bp.toShortString()).append(' ').append(st);
+                        }
+                    }
+                    return sb.toString();
+                });
+                LOG.info("[bctest] STATES {}{}", arg, res);
+            }
+            case "dumpmodels" -> {
+                // dumpmodels <file>: every polygon of every raft: entity model layer in its default pose (model units,
+                // after the part transforms) as JSON lines, for the z-fighting check (tools/bctest/zfight_entities.py)
+                String name = arg.isEmpty() ? "models.jsonl" : arg;
+                String res = ctx.computeOnClient(mc -> {
+                    StringBuilder sb = new StringBuilder();
+                    int layers = 0;
+                    try {
+                        var f = net.minecraft.client.model.geom.EntityModelSet.class.getDeclaredField("roots");
+                        f.setAccessible(true);
+                        @SuppressWarnings("unchecked")
+                        var roots = (Map<net.minecraft.client.model.geom.ModelLayerLocation, ?>) f.get(mc.getEntityModels());
+                        for (var id : roots.keySet()) {
+                            if (!id.model().getNamespace().equals("raft")) continue;
+                            layers++;
+                            var part = mc.getEntityModels().bakeLayer(id);
+                            var ps = new com.mojang.blaze3d.vertex.PoseStack();
+                            String layer = id.toString();
+                            part.visit(ps, (pose, path, ci, cube) -> {
+                                for (var poly : cube.polygons) {
+                                    sb.append("{\"layer\":\"").append(layer).append("\",\"part\":\"").append(path)
+                                      .append("\",\"cube\":").append(ci).append(",\"v\":[");
+                                    boolean first = true;
+                                    for (var v : poly.vertices()) {
+                                        var wp = pose.pose().transformPosition(v.worldX(), v.worldY(), v.worldZ(), new org.joml.Vector3f()).mul(16f);
+                                        if (!first) sb.append(',');
+                                        first = false;
+                                        sb.append(String.format(Locale.ROOT, "[%.4f,%.4f,%.4f,%.5f,%.5f]", wp.x, wp.y, wp.z, v.u(), v.v()));
+                                    }
+                                    sb.append("]}\n");
+                                }
+                            });
+                        }
+                        Files.writeString(out.resolve(name), sb.toString());
+                    } catch (Exception e) {
+                        return "error " + e;
+                    }
+                    return layers + " layers";
+                });
+                LOG.info("[bctest] DUMPMODELS {}", res);
+            }
             case "count" -> {
                 // count <dimension>: entities per type loaded in that dimension (written to the log)
                 String dim = arg.isEmpty() ? "raft:raftdim" : arg;
@@ -527,6 +596,51 @@ public class BcScript implements FabricClientGameTest {
                     return counts.toString();
                 });
                 LOG.info("[bctest] COUNT {} {}", dim, res);
+            }
+            case "aim" -> {
+                // aim: what the crosshair targets now (AIM line): hit type, entity, block or raft block, distance
+                String res = ctx.computeOnClient(mc -> {
+                    var hr = mc.hitResult;
+                    if (hr == null) return "none";
+                    String s = hr.getType() + " at " + String.format(Locale.ROOT, "%.2f,%.2f,%.2f", hr.getLocation().x, hr.getLocation().y, hr.getLocation().z);
+                    if (hr instanceof net.minecraft.world.phys.EntityHitResult eh) {
+                        s += " entity " + BuiltInRegistries.ENTITY_TYPE.getKey(eh.getEntity().getType());
+                        if (eh.getEntity() instanceof net.kasax.raft.content.vessel.VesselEntity v) {
+                            s += " raftBlock " + net.kasax.raft.content.vessel.client.VesselPicker.targetOf(v);
+                        }
+                    } else if (hr instanceof net.minecraft.world.phys.BlockHitResult bh) {
+                        s += " block " + bh.getBlockPos().toShortString() + " " + mc.level.getBlockState(bh.getBlockPos()).getBlock();
+                    }
+                    return s + " riding=" + (mc.player.getVehicle() != null) + " eye=" + String.format(Locale.ROOT, "%.2f,%.2f,%.2f",
+                            mc.player.getEyePosition().x, mc.player.getEyePosition().y, mc.player.getEyePosition().z);
+                });
+                LOG.info("[bctest] AIM {}", res);
+            }
+            case "near" -> {
+                // near [radius]: living entities per type around the player (health of each in brackets for monsters)
+                // and the items lying there (NEAR line): guards of a structure, animals of an island, loot drops
+                double r = arg.isEmpty() ? 48.0 : Double.parseDouble(arg.split(" ")[0]);
+                String res = need().getServer().computeOnServer(server -> {
+                    var pl = server.getPlayerList().getPlayers().getFirst();
+                    var level = (ServerLevel) pl.level();
+                    Map<String, List<String>> by = new TreeMap<>();
+                    Map<String, Integer> items = new TreeMap<>();
+                    for (var e : level.getEntities((Entity) null, pl.getBoundingBox().inflate(r), x -> x != pl)) {
+                        if (e instanceof net.minecraft.world.entity.item.ItemEntity it) {
+                            items.merge(BuiltInRegistries.ITEM.getKey(it.getItem().getItem()).toString(), it.getItem().getCount(), Integer::sum);
+                        } else if (e instanceof net.minecraft.world.entity.LivingEntity le) {
+                            String name = BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()).toString()
+                                    + (e.hasCustomName() ? "(" + e.getCustomName().getString() + ")" : "");
+                            by.computeIfAbsent(name, k -> new ArrayList<>()).add(String.format(Locale.ROOT, "%.0f/%.0f",
+                                    le.getHealth(), le.getMaxHealth()));
+                        }
+                    }
+                    StringBuilder sb = new StringBuilder();
+                    by.forEach((k, v) -> sb.append(k).append('=').append(v.size())
+                            .append(e0(k) ? "" : v.toString()).append(' '));
+                    return sb + "items=" + items;
+                });
+                LOG.info("[bctest] NEAR {} {}", (int) r, res);
             }
             case "track" -> {
                 // track <entity type> [radius]: game time, then id:x,y,z,yaw,pitch of each such entity near the player

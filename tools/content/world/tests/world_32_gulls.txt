@@ -1,0 +1,29 @@
+# Run: BC_NO_SKY_GULLS=1 tools/bctest/run.sh tools/content/world/tests/world_32_gulls.txt <outdir>  (seagulls and flotsam only; for a before/after count)
+# Beach Craft 3.2 world checks: seagulls and flotsam around a player at sea (counts every minute for 3 minutes),
+# the item catcher on a built raft (catches nothing standing still, catches flotsam while sailing), the old
+# lighthouse, Saltmere with Old Tamo fishing at the water, and a rusted rig with no other rig around.
+world 32
+rd 6
+gui 2
+cmd gamerule raft:shark_bites false
+cmd gamerule spawn_monsters false
+cmd execute in raft:raftdim run tp @p 0.5 112 0.5 0 10
+wait 20
+settle 300
+fly on
+log SEA_WAIT
+cmd execute in raft:raftdim run kill @e[type=minecraft:item,distance=..200]
+count raft:raftdim
+swait 1200
+count raft:raftdim
+swait 1200
+count raft:raftdim
+swait 1200
+count raft:raftdim
+cmd execute in raft:raftdim run execute as @p at @e[type=raft:seagull,limit=1,sort=nearest] run tp @p ~-8 ~-4 ~-8 facing entity @e[type=raft:seagull,limit=1,sort=nearest]
+swait 10
+hud off
+wait 5 render
+shot 70_gulls
+hud on
+log DONE

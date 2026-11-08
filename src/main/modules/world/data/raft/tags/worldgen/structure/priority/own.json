@@ -1,0 +1,80 @@
+{
+  "values": [
+    {
+      "id": "raft:port_solace",
+      "required": false
+    },
+    {
+      "id": "raft:abyssal_sanctum",
+      "required": false
+    },
+    {
+      "id": "raft:coral_temple",
+      "required": false
+    },
+    {
+      "id": "raft:helix_station",
+      "required": false
+    },
+    {
+      "id": "raft:ashen_forge",
+      "required": false
+    },
+    {
+      "id": "raft:old_lighthouse",
+      "required": false
+    },
+    {
+      "id": "raft:saltmere_village",
+      "required": false
+    },
+    {
+      "id": "raft:rusted_rig",
+      "required": false
+    },
+    {
+      "id": "raft:iceberg_outpost",
+      "required": false
+    },
+    {
+      "id": "raft:beach_shack",
+      "required": false
+    },
+    {
+      "id": "raft:castaway_camp",
+      "required": false
+    },
+    {
+      "id": "raft:pirate_cove",
+      "required": false
+    },
+    {
+      "id": "raft:sunken_ruins",
+      "required": false
+    },
+    {
+      "id": "raft:wreck_cargo_ship",
+      "required": false
+    },
+    {
+      "id": "raft:wreck_galleon",
+      "required": false
+    },
+    {
+      "id": "raft:sunken_plane",
+      "required": false
+    },
+    {
+      "id": "raft:abandoned_raft",
+      "required": false
+    },
+    {
+      "id": "raft:buoy_field",
+      "required": false
+    },
+    {
+      "id": "raft:wreck_fishing_boat",
+      "required": false
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "raft:block/palm_log",
+    "mast": "raft:block/palm_log",
+    "end": "raft:block/palm_log_top",
+    "rope": "raft:block/rope_coil"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        7
+      ],
+      "to": [
+        9,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            7,
+            0,
+            9,
+            16
+          ],
+          "texture": "#mast"
+        },
+        "east": {
+          "uv": [
+            7,
+            0,
+            9,
+            16
+          ],
+          "texture": "#mast"
+        },
+        "south": {
+          "uv": [
+            7,
+            0,
+            9,
+            16
+          ],
+          "texture": "#mast"
+        },
+        "west": {
+          "uv": [
+            7,
+            0,
+            9,
+            16
+          ],
+          "texture": "#mast"
+        }
+      }
+    }
+  ]
+}

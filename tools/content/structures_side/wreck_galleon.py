@@ -406,6 +406,10 @@ def build(v):
         if name == 'raft:barnacles' and rnd.random() < 0.10:
             q = dict(props)
             s.blocks[pos] = ('minecraft:glow_lichen', q, nbt)
+    # the roll can leave a copy of the cabin's bottles hovering on the chair's back: drop it
+    for (x, y, z), (name, props, nbt) in list(s.blocks.items()):
+        if name == 'raft:rum_bottles' and s.name_at(x, y - 1, z) == 'raft:driftwood_chair':
+            s.set(x, y, z, 'minecraft:water')
     return s
 
 
@@ -421,7 +425,7 @@ def main(preview=False):
             print('  preview', contact(s, f'wreck_galleon_{v}', cuts=(9, 14), slices_y=[3, 7, 11, 15]))
     write_structure('wreck_galleon', [(p, 1) for p, _ in out], [NO_SPILL_PLANTS],
                     step='surface_structures', terrain='beard_thin', start_height=-3, heightmap='OCEAN_FLOOR_WG',
-                    biomes=['wreck_graveyard', 'raft_ocean_biome'], spacing=26, separation=9, salt=31415901,
+                    biomes=['wreck_graveyard', 'raft_ocean_biome'], spacing=34, separation=14, salt=31415901,
                     spawn_overrides={'monster': spawns([('raft:drowned_corsair', 6, 1, 2), ('minecraft:drowned', 2, 1, 1)])},
                     max_distance=80)
     return out

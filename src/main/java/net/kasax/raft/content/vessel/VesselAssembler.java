@@ -71,7 +71,7 @@ public final class VesselAssembler {
 
     // ------------------------------------------------------------------------------------------- set sail
     /** A raft waiting for its shipyard plot to load before it sets sail. */
-    private record Launch(ServerLevel level, BlockPos helm, UUID player, int plot, int[] age) {
+    private record Launch(ServerLevel level, BlockPos helm, UUID player, int plot, int[] age, long start) {
     }
 
     private static final List<Launch> LAUNCHES = new ArrayList<>();
@@ -104,7 +104,7 @@ public final class VesselAssembler {
             return;
         }
         VesselShipyard.hold(level, plot);
-        LAUNCHES.add(new Launch(level, helmPos.immutable(), player.getUUID(), plot, new int[1]));
+        LAUNCHES.add(new Launch(level, helmPos.immutable(), player.getUUID(), plot, new int[1], System.nanoTime()));
         player.sendOverlayMessage(Component.translatable("message.raft.vessel.setting_sail"));
         level.playSound(null, helmPos, SoundEvents.WOODEN_TRAPDOOR_OPEN, SoundSource.BLOCKS, 1.0F, 0.6F);
     }
@@ -132,7 +132,15 @@ public final class VesselAssembler {
                 if (scan.error() != null) {
                     refuse(level, launch.helm(), player, scan.error());
                 } else {
+                    long waited = System.nanoTime() - launch.start();
+                    long t0 = System.nanoTime();
                     vessel = build(level, launch.helm(), level.getBlockState(launch.helm()).getValue(HelmBlock.FACING), scan, launch.plot());
+                    long slowest = 0;
+                    for (long t : level.getServer().getTickTimesNanos()) {
+                        slowest = Math.max(slowest, t);
+                    }
+                    Raft.LOGGER.info("Set sail timing: plot ready after {} ms ({} ticks), {} blocks moved in {} ms, slowest server tick of the last 100: {} ms",
+                            waited / 1_000_000, launch.age()[0], scan.blocks().size(), (System.nanoTime() - t0) / 1_000_000, slowest / 1_000_000);
                     level.playSound(null, launch.helm(), SoundEvents.GENERIC_SPLASH, SoundSource.BLOCKS, 0.6F, 0.8F);
                     vessel.takeHelm(player);
                     Raft.LOGGER.info("Raft set sail at {} with {} blocks (plot {})", launch.helm().toShortString(), scan.blocks().size(),
@@ -417,6 +425,13 @@ public final class VesselAssembler {
             for (int z = 0; z < VesselShipyard.SIZE_Z; z++) {
                 for (int y = 0; y < VesselShipyard.SIZE_Y; y++) {
                     cursor.set(origin.getX() + x, origin.getY() + y, origin.getZ() + z);
+                    // whole empty sections (most of a plot) are skipped at once
+                    var chunk = level.getChunk(cursor.getX() >> 4, cursor.getZ() >> 4);
+                    var section = chunk.getSection(chunk.getSectionIndex(cursor.getY()));
+                    if (section.hasOnlyAir()) {
+                        y = ((origin.getY() + y) | 15) - origin.getY();
+                        continue;
+                    }
                     if (!level.getBlockState(cursor).isAir()) {
                         level.setBlock(cursor, Blocks.AIR.defaultBlockState(), FLAGS_LIFT);
                     }
