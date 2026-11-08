@@ -75,17 +75,6 @@
               "search_radius": 120,
               "skip_existing_chunks": false,
               "zoom": 2
-            },
-            {
-              "function": "minecraft:filtered",
-              "on_fail": {
-                "function": "minecraft:discard"
-              },
-              "item_filter": {
-                "predicates": {
-                  "minecraft:map_id": {}
-                }
-              }
             }
           ],
           "name": "minecraft:filled_map"

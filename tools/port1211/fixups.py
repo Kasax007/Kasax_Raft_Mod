@@ -90,3 +90,24 @@ def walk(o, kind):
         lo, hi = (c, c) if isinstance(c, int) else (c.get('min_inclusive', 1), c.get('max_inclusive', 1))
         o['minCount'], o['maxCount'] = lo, hi
     return o
+
+
+# ids of the newer game that 1.21.1 does not know (a tag that names one fails to load as a whole)
+MISSING_IDS = {'minecraft:test_block', 'minecraft:test_instance_block'}
+
+
+def loot(o):
+    if isinstance(o, list):
+        return [loot(x) for x in o if not (isinstance(x, dict) and x.get('function') == 'minecraft:filtered'
+                                             and 'modifier' not in x)]
+    if isinstance(o, dict):
+        return {k: loot(v) for k, v in o.items()}
+    return o
+
+
+def tag(o):
+    if isinstance(o, dict) and isinstance(o.get('values'), list):
+        vals = [v for v in o['values'] if (v if isinstance(v, str) else v.get('id')) not in MISSING_IDS]
+        if vals != o['values']:
+            o = dict(o, values=vals)
+    return o

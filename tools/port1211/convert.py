@@ -106,6 +106,17 @@ def convert_data(root, stats, extras):
             extras.setdefault('material_rules', {})[ns + ':' + os.path.relpath(p, os.path.join(wg, 'material_rule'))[:-5]] = (p, load(p))
         for p, rel in files(wg, 'material_condition'):
             extras.setdefault('material_rules', {})[ns + ':' + os.path.relpath(p, os.path.join(wg, 'material_condition'))[:-5]] = (p, load(p))
+        # loot: the newer game's "filtered ... on_fail discard" (drop a map that found nothing) has no 1.21.1 form
+        for p, rel in files(nsdir, 'loot_table'):
+            j = load(p)
+            f = fixups.loot(j)
+            if f != j:
+                save(p, f); stats['fixups'] = stats.get('fixups', 0) + 1
+        for p, rel in files(nsdir, 'tags'):
+            j = load(p)
+            f = fixups.tag(j)
+            if f != j:
+                save(p, f); stats['fixups'] = stats.get('fixups', 0) + 1
         for sub in ('configured_feature', 'placed_feature', 'processor_list', 'structure'):
             for p, rel in files(wg, sub):
                 j = load(p)
