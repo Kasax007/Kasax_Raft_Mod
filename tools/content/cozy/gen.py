@@ -755,6 +755,8 @@ def main():
     cm.write_java_shapes(M, 'net.kasax.raft.content.cozy.block', 'CozyShapeData',
                          os.path.join(ROOT, 'src', 'main', 'java', 'net', 'kasax', 'raft', 'content', 'cozy', 'block',
                                       'CozyShapeData.java'))
+    from content.cozy import loot26
+    loot26.modernize(module_dir(M))
     lint = cm.report_lint(M)
     n = sum(len(fs) for _, _, fs in os.walk(out))
     print(f'cozy: {len(BLOCKS)} blocks, {n} files, {lint} lint warnings')

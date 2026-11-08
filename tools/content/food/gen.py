@@ -338,6 +338,8 @@ def main():
     cm.write_java_shapes(M, 'net.kasax.raft.content.food.block', 'FoodShapeData',
                          os.path.join(ROOT, 'src', 'main', 'java', 'net', 'kasax', 'raft', 'content', 'food', 'block',
                                       'FoodShapeData.java'))
+    from content.cozy import loot26
+    loot26.modernize(module_dir(M))
     lint = cm.report_lint(M)
     n = sum(len(fs) for _, _, fs in os.walk(out))
     print(f'food: {len(BLOCKS)} blocks, {len(ITEMS)} items, {n} files, {lint} lint warnings')

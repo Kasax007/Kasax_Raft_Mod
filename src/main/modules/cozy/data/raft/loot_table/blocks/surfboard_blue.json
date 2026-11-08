@@ -3,27 +3,23 @@
   "pools": [
     {
       "bonus_rolls": 0.0,
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ],
       "entries": [
         {
           "type": "minecraft:item",
           "name": "raft:surfboard_blue",
-          "conditions": [
-            {
-              "condition": "minecraft:block_state_property",
-              "block": "raft:surfboard_blue",
-              "properties": {
-                "half": "lower"
-              }
+          "condition": {
+            "type": "minecraft:match_block",
+            "blocks": "raft:surfboard_blue",
+            "state": {
+              "half": "lower"
             }
-          ]
+          }
         }
       ],
-      "rolls": 1.0
+      "rolls": 1.0,
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      }
     }
   ],
   "random_sequence": "raft:blocks/surfboard_blue"

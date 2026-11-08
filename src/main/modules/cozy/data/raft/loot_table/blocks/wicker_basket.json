@@ -7,16 +7,14 @@
         {
           "type": "minecraft:item",
           "name": "raft:wicker_basket",
-          "functions": [
-            {
-              "function": "minecraft:copy_components",
-              "source": "block_entity",
-              "include": [
-                "minecraft:custom_name",
-                "minecraft:container"
-              ]
-            }
-          ]
+          "modifier": {
+            "source": "block_entity",
+            "include": [
+              "minecraft:custom_name",
+              "minecraft:container"
+            ],
+            "type": "minecraft:copy_components"
+          }
         }
       ],
       "rolls": 1.0
