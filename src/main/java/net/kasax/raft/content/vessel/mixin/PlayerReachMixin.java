@@ -32,4 +32,16 @@ public abstract class PlayerReachMixin {
             cir.setReturnValue(at.distanceToSqr(self.getEyePosition()) < range * range);
         }
     }
+
+    /**
+     * A sailing raft is one entity with a small box at its centre: the client's entity reach check (3 blocks to that
+     * box) refused clicks on blocks at the raft's ends, such as the helm. The raft's own picker decides (only blocks
+     * the player reaches are found), the server checks the block's distance (VesselInteractions).
+     */
+    @Inject(method = "canInteractWithEntity(Lnet/minecraft/world/entity/Entity;D)Z", at = @At("HEAD"), cancellable = true)
+    private void raft$reachRaftBlocks(net.minecraft.world.entity.Entity entity, double buffer, CallbackInfoReturnable<Boolean> cir) {
+        if (entity instanceof net.kasax.raft.content.vessel.VesselEntity && ((Player) (Object) this).level().isClientSide()) {
+            cir.setReturnValue(true);
+        }
+    }
 }
