@@ -16,6 +16,11 @@ repositories {
 		url = "https://maven.blamejared.com/"
 		content { includeGroup "mezz.jei" }
 	}
+	// Lootr (optional, compile only): Beach Craft's crates and treasure chests become per-player loot when it is installed
+	exclusiveContent {
+		forRepository { maven { url "https://api.modrinth.com/maven" } }
+		filter { includeGroup "maven.modrinth" }
+	}
 }
 
 fabricApi {
@@ -60,6 +65,12 @@ dependencies {
 	if (project.hasProperty('jei')) {
 		// the mod jar carries its own config library (jar in jar)
 		localRuntime("mezz.jei:jei-26.3-fabric:${project.jei_version}") { transitive = false }
+	}
+
+	// Lootr (optional): compiled against, not bundled; -PwithLootr puts it into the dev runtime (bctest: BC_LOOTR=1)
+	compileOnly "maven.modrinth:lootr:${project.lootr_version}"
+	if (project.hasProperty('withLootr')) {
+		runtimeOnly "maven.modrinth:lootr:${project.lootr_version}"
 	}
 
 	// Team Reborn Energy (bundled): cables, batteries and solar panels talk to Tech Reborn machines.

@@ -3,7 +3,9 @@
   "package": "net.kasax.raft.content.world.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
-    "StructureSiteMixin"
+    "StructureFootingMixin",
+    "StructureSiteMixin",
+    "StructureTemplateAccessor"
   ],
   "client": [],
   "injectors": {

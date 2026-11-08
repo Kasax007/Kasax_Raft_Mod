@@ -53,6 +53,7 @@
 		"fabric-api": "*"
 	},
 	"suggests": {
-		"jei": "*"
+		"jei": "*",
+		"lootr": "*"
 	}
 }

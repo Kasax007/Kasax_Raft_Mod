@@ -63,6 +63,6 @@ def write_all():
     # whose part was never built (layout.py: 0 of 60 cities beyond 8 chunks with 104, same number of pieces)
     files.append(structure_json(SID, f'{P}/plaza', 'surface_structures', 'beard_thin', -2, heightmap='OCEAN_FLOOR_WG',
                                 size=6, max_distance=104, spawn_overrides=overrides, liquid='apply_waterlogging'))
-    files.append(structure_set(SID, 48, 20, 31415931))
+    files.append(structure_set(SID, 64, 26, 31415931))
     files.append(biome_tag(SID, ['drowned_shelf']))
     return files

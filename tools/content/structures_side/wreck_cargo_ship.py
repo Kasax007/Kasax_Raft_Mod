@@ -348,7 +348,7 @@ def main(preview=False):
         print('  preview', contact(s, 'wreck_cargo_ship', cuts=(10, 16), slices_y=[3, 9, 14, 18]))
     write_structure('wreck_cargo_ship', [(path, 1)], [NO_SPILL_PLANTS],
                     step='surface_structures', terrain='beard_thin', start_height=-3, heightmap='OCEAN_FLOOR_WG',
-                    biomes=['wreck_graveyard', 'raft_ocean_biome', 'kelp_forest'], spacing=32, separation=12,
+                    biomes=['wreck_graveyard', 'raft_ocean_biome', 'kelp_forest'], spacing=52, separation=20,
                     salt=31415902,
                     spawn_overrides={'monster': spawns([('minecraft:drowned', 4, 1, 2), ('raft:drowned_corsair', 1, 1, 1)])},
                     max_distance=80)

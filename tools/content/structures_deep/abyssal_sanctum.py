@@ -669,7 +669,7 @@ def verify(s):
 def write_json_files():
     structure_json(SID, f'raft:{SID}/start', 'surface_structures', 'beard_thin', -1, 'OCEAN_FLOOR_WG', size=1,
                    max_distance=80, spawn_overrides=NO_SPAWNS)
-    structure_set(SID, 40, 16, 31415962)
+    structure_set(SID, 60, 24, 31415962)
     template_pool(f'raft:{SID}/start', [(f'raft:{SID}/sanctum', 1, 'minecraft:empty')])
     biome_tag(SID, ['abyssal_trench', 'raft_ocean_biome'])
 
