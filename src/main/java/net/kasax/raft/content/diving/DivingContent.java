@@ -127,7 +127,7 @@ public final class DivingContent {
         BcTabs.add(BcTabs.Tab.VOYAGE, HARPOON_ITEM);
         BcTabs.add(BcTabs.Tab.VOYAGE, SEA_SCOOTER);
         // the helmet with the lamp fitted shows up right after the plain one
-        CreativeModeTabEvents.modifyOutputEvent(ResourceKey.create(Registries.CREATIVE_MODE_TAB, Raft.id("bc_" + BcTabs.Tab.VOYAGE.id)))
+        CreativeModeTabEvents.modifyOutputEvent(ResourceKey.create(Registries.CREATIVE_MODE_TAB, BcTabs.Tab.VOYAGE.key()))
                 .register(output -> output.insertAfter(DIVING_HELMET, lampHelmet()));
         EnergyStorage.SIDED.registerForBlockEntity(AirCompressorBlockEntity::getEnergyStorage, AIR_COMPRESSOR_BE);
         DispenserBlock.registerBehavior(HARPOON_ITEM, new ProjectileDispenseBehavior(HARPOON_ITEM));
