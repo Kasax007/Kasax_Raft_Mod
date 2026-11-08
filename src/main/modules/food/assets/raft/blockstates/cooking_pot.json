@@ -16,33 +16,33 @@
       "y": 270
     },
     "facing=north,contents=cooking": {
-      "model": "raft:block/cooking_pot_cooking"
+      "model": "raft:block/cooking_pot_empty"
     },
     "facing=east,contents=cooking": {
-      "model": "raft:block/cooking_pot_cooking",
+      "model": "raft:block/cooking_pot_empty",
       "y": 90
     },
     "facing=south,contents=cooking": {
-      "model": "raft:block/cooking_pot_cooking",
+      "model": "raft:block/cooking_pot_empty",
       "y": 180
     },
     "facing=west,contents=cooking": {
-      "model": "raft:block/cooking_pot_cooking",
+      "model": "raft:block/cooking_pot_empty",
       "y": 270
     },
     "facing=north,contents=ready": {
-      "model": "raft:block/cooking_pot_ready"
+      "model": "raft:block/cooking_pot_empty"
     },
     "facing=east,contents=ready": {
-      "model": "raft:block/cooking_pot_ready",
+      "model": "raft:block/cooking_pot_empty",
       "y": 90
     },
     "facing=south,contents=ready": {
-      "model": "raft:block/cooking_pot_ready",
+      "model": "raft:block/cooking_pot_empty",
       "y": 180
     },
     "facing=west,contents=ready": {
-      "model": "raft:block/cooking_pot_ready",
+      "model": "raft:block/cooking_pot_empty",
       "y": 270
     }
   }

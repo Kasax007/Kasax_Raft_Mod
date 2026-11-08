@@ -1,5 +1,6 @@
 """Generator of the "gear" module (Beach Craft 3.3): weapons (shark tooth spear, boomerang, machete), the shell and
-explorer armour sets, the wreck compass, the captain's spyglass and fishing bait.
+explorer armour sets, the wreck compass, the captain's spyglass, fishing bait and (3.4) the Driftwood Fishing Rod with
+its tackle box.
 
 Run:  cd tools && python3 -m content.gear.gen
 Armour layers and some sprites are vanilla shapes re-shaded with Beach Craft palettes (each colour mapped by its
@@ -46,6 +47,32 @@ LANG = {
     'tooltip.raft.fish_bait': 'Keep it with your fishing rod: bites come faster',
     'tooltip.raft.fish_bait.1': 'Also makes fish traps twice as fast',
     'tooltip.raft.golden_lure': 'Keep it with your fishing rod: better catches',
+    'tooltip.raft.fish_bait.rod': 'Or load it into a Driftwood Fishing Rod',
+    'tooltip.raft.driftwood_fishing_rod': 'Sneak-use to load bait and lures, or right-click them onto it',
+    'tooltip.raft.driftwood_fishing_rod.1': 'Each cast uses one of each that is loaded',
+    'tooltip.raft.driftwood_fishing_rod.empty': 'Nothing loaded',
+    'tooltip.raft.driftwood_fishing_rod.bait': 'Fish Bait: %s (faster bites)',
+    'tooltip.raft.driftwood_fishing_rod.lure': 'Golden Lures: %s (better treasure)',
+    'container.raft.tackle_box': 'Tackle Box',
+    'jei.raft.info.fish_bait': 'Fish Bait makes fish bite 5 seconds sooner, like Lure I. With a plain fishing rod keep it in '
+                               'your off hand or bag: each cast uses one. Or load a stack into a Driftwood Fishing Rod. In '
+                               'a Fish Trap it makes the trap twice as fast.',
+    'jei.raft.info.golden_lure': 'The Golden Lure brings better treasure, like Luck of the Sea II, and bites 5 seconds '
+                                 'sooner. With a plain rod it is used from your off hand or bag, one per cast; a Driftwood '
+                                 'Fishing Rod holds a stack of them in its own slot.',
+    'jei.raft.info.driftwood_fishing_rod': 'A fishing rod with its own tackle box: one slot for Fish Bait, one for Golden '
+                                           'Lures. Sneak-use the rod to open it, or right-click bait and lures onto the '
+                                           'rod in your inventory (right-click it with an empty hand to take them out). '
+                                           'Every cast uses one of each that is loaded, on top of the rod\'s own '
+                                           'enchantments; it never takes bait from your bag. 128 uses, repaired with '
+                                           'driftwood planks.',
+    'jei.raft.info.fishing_rod': 'Beach Craft: keep Fish Bait or a Golden Lure in your off hand or bag and every cast uses '
+                                 'one (faster bites; the lure also brings better treasure). The Driftwood Fishing Rod '
+                                 'carries its own bait instead.',
+    'container.raft.tackle_box.bait': 'faster bites',
+    'container.raft.tackle_box.lure': 'better treasure',
+    'container.raft.tackle_box.bait_hint': 'Fish Bait: bites come 5 seconds sooner',
+    'container.raft.tackle_box.lure_hint': 'Golden Lure: treasure like Luck of the Sea II',
     'subtitles.raft.boomerang.throw': 'Boomerang whooshes',
 }
 
@@ -57,6 +84,21 @@ DRIFT = pal('#4f473d', '#665d51', '#7e7466', '#978c7c', '#ada393', '#c4bbab')
 BRASS = pal('#4a3311', '#74521e', '#a0772c', '#c99d43', '#e6c46c', '#f8e3a2')
 TEAL = pal('#123c3c', '#1c5654', '#28716c', '#3a8f86', '#56ab9f')
 STEEL = pal('#2a2d34', '#3b3f48', '#555b66', '#737a86', '#9aa1ab', '#c6ccd4')
+
+
+CLIENT_JAR = os.environ.get('BC_CLIENT_JAR', '/root/.gradle/caches/fabric-loom/26.3/minecraft-client.jar')
+
+
+def vanilla_png(path):
+    """A vanilla texture from the extracted assets, or straight from the 26.3 client jar (GUI textures are not
+    extracted)."""
+    f = os.path.join(VANILLA, 'assets', 'minecraft', 'textures', path + '.png')
+    if os.path.isfile(f):
+        return Image.open(f).convert('RGBA')
+    import io
+    import zipfile
+    with zipfile.ZipFile(CLIENT_JAR) as z:
+        return Image.open(io.BytesIO(z.read(f'assets/minecraft/textures/{path}.png'))).convert('RGBA')
 
 
 def vtex(path):
@@ -339,12 +381,76 @@ def bait_sprites():
     return bait, tex.outline(im)
 
 
+def rod_sprite(name):
+    """The vanilla rod with a pale driftwood pole, a brass reel and a teal grip."""
+    src = vtex(f'item/{name}')
+    out = src.copy()
+    wood = sorted({c for c in src.getdata() if c[3] and colorsys.rgb_to_hls(*[v / 255 for v in c[:3]])[2] > 0.3}, key=lum)
+    for y in range(16):
+        for x in range(16):
+            c = src.getpixel((x, y))
+            if c[3] == 0:
+                continue
+            if c in wood:
+                k = 1 + int(round(wood.index(c) * 3 / max(1, len(wood) - 1)))
+                out.putpixel((x, y), tuple(DRIFT[k][:3]) + (255,))
+            elif 5 <= x <= 8 and 11 <= y <= 13:                       # the reel
+                out.putpixel((x, y), tuple(BRASS[1 + min(4, int(lum(c) / 50))][:3]) + (255,))
+    for x, y, k in ((2, 13, 2), (3, 13, 3), (2, 14, 1), (3, 14, 2)):      # grip
+        if out.getpixel((x, y))[3]:
+            out.putpixel((x, y), tuple(TEAL[k][:3]) + (255,))
+    return out
+
+
+def tackle_box_gui():
+    """176x157 window: the chest window's top and player inventory with a plain middle holding the bait and lure
+    slots (TackleMenu.java: slots at x 12, y 20 and 40; their labels are drawn beside them), each with a faint
+    picture of what goes in."""
+    chest = vanilla_png('gui/container/generic_54')
+    gui = Image.new('RGBA', (256, 256), (0, 0, 0, 0))
+    gui.paste(chest.crop((0, 0, 176, 17)), (0, 0))
+    line = chest.crop((0, 10, 176, 11))
+    for y in range(17, 61):
+        gui.paste(line, (0, y))
+    gui.paste(chest.crop((0, 126, 176, 222)), (0, 61))
+    frame = chest.crop((7, 17, 25, 35))
+    bait, lure = bait_sprites()
+    for y, spr in ((19, bait), (39, lure)):
+        gui.paste(frame, (11, y))
+        ghost = Image.new('RGBA', (16, 16), (0, 0, 0, 0))
+        for yy in range(16):
+            for xx in range(16):
+                c = spr.getpixel((xx, yy))
+                if c[3]:
+                    g = int(lum(c) * 0.35 + 139 * 0.65)
+                    ghost.putpixel((xx, yy), (g, g, g, 150))
+        gui.alpha_composite(ghost, (12, y + 1))
+    tex.save(gui, M, 'gui/container/tackle_box')
+
+
+def fishing_rod():
+    ITEMS['driftwood_fishing_rod'] = 'Driftwood Fishing Rod'
+    save(rod_sprite('fishing_rod'), 'item/driftwood_fishing_rod')
+    save(rod_sprite('fishing_rod_cast'), 'item/driftwood_fishing_rod_cast')
+    for n in ('driftwood_fishing_rod', 'driftwood_fishing_rod_cast'):
+        A.item_model(M, n, parent='minecraft:item/handheld_rod', textures={'layer0': f'raft:item/{n}'})
+    A.write_json(M, 'assets/raft/items/driftwood_fishing_rod.json', {'model': {
+        'type': 'minecraft:condition', 'property': 'minecraft:fishing_rod/cast',
+        'on_false': {'type': 'minecraft:model', 'model': 'raft:item/driftwood_fishing_rod'},
+        'on_true': {'type': 'minecraft:model', 'model': 'raft:item/driftwood_fishing_rod_cast'}}})
+    A.tag(M, 'item', 'minecraft:enchantable/fishing', ['driftwood_fishing_rod'])
+    A.tag(M, 'item', 'minecraft:enchantable/durability', ['driftwood_fishing_rod'])
+    A.tag(M, 'item', 'raft:repairs_driftwood_fishing_rod', ['raft:driftwood_planks'])
+    tackle_box_gui()
+
+
 def tools():
     compass()
     spyglass()
     bait, lure = bait_sprites()
     item('fish_bait', 'Fish Bait', bait)
     item('golden_lure', 'Golden Lure', lure)
+    fishing_rod()
     A.tag(M, 'item', 'raft:bait', ['fish_bait', 'golden_lure'])
     A.tag(M, 'worldgen/structure', 'raft:wrecks', [{'id': f'raft:{s}', 'required': False} for s in (
         'wreck_galleon', 'wreck_cargo_ship', 'wreck_fishing_boat', 'sunken_plane')] + ['minecraft:shipwreck',
@@ -372,6 +478,8 @@ def recipes():
                               'minecraft:kelp'], 'fish_bait', 4)
     b.shapeless('golden_lure', ['fish_bait', 'minecraft:gold_nugget', 'minecraft:gold_nugget', 'minecraft:gold_nugget'],
                 'golden_lure', 1)
+    b.shaped('driftwood_fishing_rod', ['  D', ' DS', 'D S'], {'D': 'raft:driftwood_planks', 'S': 'minecraft:string'},
+             'driftwood_fishing_rod', 1, 'equipment')
     b.finish('tools')
 
 

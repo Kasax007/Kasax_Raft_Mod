@@ -25,15 +25,47 @@ ITEMS = {}       # id -> name
 LANG = {
     'itemgroup.raft.kitchen': 'Beach Craft: Island Kitchen',
     'container.raft.fish_trap': 'Fish Trap',
-    'message.raft.pot.added': 'In the pot: %s',
+    'message.raft.pot.empty': 'Cooking Pot: right-click it with up to 4 ingredients',
     'message.raft.pot.recipe': 'Cooking %s - keep it on the fire',
-    'message.raft.pot.no_heat': 'The pot needs a fire, campfire, brazier, magma or lava below it',
-    'message.raft.pot.unknown': 'No dish with these ingredients (yet)',
+    'message.raft.pot.no_heat': '%s is ready to cook: the pot needs a fire, campfire, brazier, magma or lava below it',
+    'message.raft.pot.needs': 'For %s add %s',
+    'message.raft.pot.could': 'This can become %s - add more',
+    'message.raft.pot.unknown': 'No dish with %s: sneak-use with an empty hand to take them back',
     'message.raft.pot.full': 'The pot is full',
     'message.raft.pot.ready': '%s is ready: use a bowl to serve it (%s left)',
-    'message.raft.pot.not_ingredient': 'That does not go into the pot',
+    'message.raft.pot.not_ingredient': '%s does not go into the pot (the Almanac lists all dishes)',
+    'message.raft.pot.no_fit': '%s does not go with what is in the pot - sneak-use with an empty hand to start over',
+    'message.raft.pot.taken': 'You took the ingredients back',
+    'message.raft.pot.seafood': 'a fish, crab claw or eel fillet',
+    'message.raft.pot.and': ' and ',
+    'subtitles.raft.cooking_pot.done': 'Cooking Pot: dish ready',
     'tooltip.raft.cooking_pot': 'Put up to 4 ingredients in, over a fire',
-    'tooltip.raft.cooking_pot.1': 'Serve with bowls; sneak-click empties it',
+    'tooltip.raft.cooking_pot.1': 'Serve the dish with bowls',
+    'tooltip.raft.cooking_pot.2': 'Sneak-use with an empty hand: ingredients back',
+    # JEI (optional; net.kasax.raft.compat.jei)
+    'jei.raft.cooking_pot': 'Cooking Pot',
+    'jei.raft.cooking_pot.servings': '%s bowls',
+    'jei.raft.cooking_pot.time': '%s s',
+    'jei.raft.cooking_pot.heat': 'below the pot (lit)',
+    'jei.raft.fish_trap': 'Fish Trap',
+    'jei.raft.fish_trap.bait': 'Optional: twice as fast, one per catch',
+    'jei.raft.fish_trap.chance': '%s%% of catches',
+    'jei.raft.fish_trap.count': '%s to %s at a time',
+    'jei.raft.fish_trap.time': 'In open water: a catch every 1 to 2 minutes, twice as fast with bait',
+    'jei.raft.island_crops': 'Island Crops',
+    'jei.raft.crops.soil': 'Plant it here',
+    'jei.raft.crops.farm': 'Farmland or crop plot',
+    'jei.raft.crops.sea_grapes': 'Under water, pick it ripe',
+    'jei.raft.crops.wild': 'Grows wild: break it',
+    'jei.raft.info.cooking_pot': 'Set the pot on a campfire, fire, brazier, simple grill, magma block or lava. Right-click it '
+                                 'with up to 4 ingredients: it only takes what fits a dish, and the action bar tells you '
+                                 'what is still missing. When the ingredients make a dish it cooks in 10 seconds: the '
+                                 'liquid turns the colour of the dish, and a chime rings when it is done. Serve it with '
+                                 'bowls. Changed your mind? Sneak-use the pot with an empty hand to get every ingredient back.',
+    'jei.raft.info.fish_trap': 'Place it in water with open water around it. Every 1 to 2 minutes it catches something. '
+                               'Fish Bait or a Golden Lure inside makes it twice as fast (one per catch). Hoppers can empty it.',
+    'jei.raft.info.crop_plot': 'Farmland that never dries out and cannot be trampled. Crops on it grow about one and a half '
+                               'times as fast; the island crops grow on it too.',
     'tooltip.raft.fish_trap': 'Place it in water: catches fish over time',
     'tooltip.raft.fish_trap.1': 'Bait inside makes it twice as fast',
     'tooltip.raft.sea_grapes': 'Plant on sand or gravel under water',
@@ -145,14 +177,17 @@ def wild():
 
 # ================================================================================================= kitchen
 def cooking_pot():
+    """The pot itself; the liquid, the ingredients and the dish are drawn in the world by CookingPotRenderer.java
+    (cooking_pot_liquid is a grey surface it tints from water to the colour of the dish). Every block state shows the
+    empty pot; the item shows the pot full of stew."""
     BLOCKS['cooking_pot'] = 'Cooking Pot'
     side = 'raft:block/cooking_pot_side'
     art.save(art.pot_side(), 'block/cooking_pot_side')
     art.save(art.pot_inside(), 'block/cooking_pot_inside')
-    art.save(art.surface(art.WATER), 'block/cooking_pot_water')
     art.save(art.surface(art.CURRY, bubbles=False), 'block/cooking_pot_stew')
+    art.save(art.liquid(), 'block/cooking_pot_liquid')
     inside = 'raft:block/cooking_pot_inside'
-    for state, surf in (('empty', None), ('cooking', 'raft:block/cooking_pot_water'), ('ready', 'raft:block/cooking_pot_stew')):
+    for name, surf in (('empty', None), ('item', 'raft:block/cooking_pot_stew')):
         tx = {'s': side, 'i': inside, 'h': 'minecraft:block/iron_block'}
         if surf:
             tx['w'] = surf
@@ -165,17 +200,15 @@ def cooking_pot():
         m.box((13, 1, 3), (14, 9, 13), 's', faces={'west': 'i'})
         m.box((0.5, 6, 7), (2, 7, 9), 's', collide=False)       # handles
         m.box((14, 6, 7), (15.5, 7, 9), 's', collide=False)
-        for x, z in ((3, 3), (12, 3), (3, 12), (12, 12)):
-            pass
         if surf:
             m.box((3, 1, 3), (13, 7, 13), 'w', only=('up',), collide=False, solid=False)
-        m.write(f'cooking_pot_{state}')
+        m.write(f'cooking_pot_{name}')
     cm.shape(M, 'cooking_pot', [(2, 0, 2, 14, 9, 14)])
     v = {}
     for state in ('empty', 'cooking', 'ready'):
-        v.update(facing_variants(f'block/cooking_pot_{state}', f'contents={state}'))
+        v.update(facing_variants('block/cooking_pot_empty', f'contents={state}'))
     A.blockstate(M, 'cooking_pot', v)
-    cm.block_item(M, 'cooking_pot', 'block/cooking_pot_ready', scale=0.7)
+    cm.block_item(M, 'cooking_pot', 'block/cooking_pot_item', scale=0.7)
 
 
 def fish_trap():
@@ -228,6 +261,14 @@ def recipes():
     b.finish('food')
 
 
+FISH_TRAP_CATCHES = [
+    # (item, weight, min, max): the loot table raft:gameplay/fish_trap and FishTrapCatches.java (JEI page)
+    ('minecraft:cod', 45, 1, 2), ('minecraft:salmon', 25, 1, 1), ('minecraft:tropical_fish', 10, 1, 1),
+    ('minecraft:pufferfish', 4, 1, 1), ('raft:crab_claw', 6, 1, 1), ('raft:seashell', 6, 1, 1),
+    ('minecraft:kelp', 4, 1, 3), ('raft:sea_grapes', 4, 1, 2), ('minecraft:nautilus_shell', 1, 1, 1),
+]
+
+
 def fish_trap_loot():
     def e(item, w, lo=1, hi=1):
         d = {'type': 'minecraft:item', 'name': item, 'weight': w}
@@ -235,9 +276,31 @@ def fish_trap_loot():
             d['functions'] = [{'function': 'minecraft:set_count', 'count': {'type': 'minecraft:uniform', 'min': lo, 'max': hi}}]
         return d
     A.loot_table(M, 'gameplay/fish_trap', {'type': 'minecraft:chest', 'pools': [{'rolls': 1, 'entries': [
-        e('minecraft:cod', 45, 1, 2), e('minecraft:salmon', 25), e('minecraft:tropical_fish', 10),
-        e('minecraft:pufferfish', 4), e('raft:crab_claw', 6), e('raft:seashell', 6), e('minecraft:kelp', 4, 1, 3),
-        e('raft:sea_grapes', 4, 1, 2), e('minecraft:nautilus_shell', 1)]}], 'random_sequence': 'raft:gameplay/fish_trap'})
+        e(*c) for c in FISH_TRAP_CATCHES]}], 'random_sequence': 'raft:gameplay/fish_trap'})
+    rows = ',\n'.join(f'            new Catch("{i}", {w}, {lo}, {hi})' for i, w, lo, hi in FISH_TRAP_CATCHES)
+    java = f"""package net.kasax.raft.content.food.block;
+
+import java.util.List;
+
+/**
+ * What a fish trap catches, for the JEI page (generated by tools/content/food/gen.py from the same list as the loot
+ * table raft:gameplay/fish_trap, which decides the real catch).
+ */
+public final class FishTrapCatches {{
+    public record Catch(String id, int weight, int min, int max) {{
+    }}
+
+    public static final List<Catch> CATCHES = List.of(
+{rows});
+    public static final int TOTAL_WEIGHT = {sum(c[1] for c in FISH_TRAP_CATCHES)};
+
+    private FishTrapCatches() {{
+    }}
+}}
+"""
+    with open(os.path.join(ROOT, 'src', 'main', 'java', 'net', 'kasax', 'raft', 'content', 'food', 'block',
+                           'FishTrapCatches.java'), 'w') as f:
+        f.write(java)
 
 
 def world_features():
@@ -332,6 +395,9 @@ def main():
     fish_trap_loot()
     world_features()
     tags()
+    A.sounds(M, {'cooking_pot.done': {'sounds': [{'name': 'minecraft:block.note_block.bell', 'type': 'event',
+                                                    'pitch': 1.26, 'volume': 0.8}],
+                                       'subtitle': 'subtitles.raft.cooking_pot.done'}})
     LANG.update(PAGES['food'])
     A.lang(M, LANG)
     A.flush(M)

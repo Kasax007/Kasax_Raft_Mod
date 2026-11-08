@@ -11,6 +11,11 @@ base {
 }
 
 repositories {
+	// JEI (optional): its API to compile the plugin in net.kasax.raft.compat.jei, the mod itself only in dev runs
+	maven {
+		url = "https://maven.blamejared.com/"
+		content { includeGroup "mezz.jei" }
+	}
 }
 
 fabricApi {
@@ -48,6 +53,14 @@ dependencies {
 	// No mappings line: Minecraft 26.x ships unobfuscated.
 	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+	// JEI is optional: the plugin (entrypoint jei_mod_plugin) is only loaded when JEI is installed. -Pjei puts JEI
+	// into dev runs (tools/bctest/run.sh: BC_JEI=1).
+	compileOnly "mezz.jei:jei-26.3-fabric-api:${project.jei_version}"
+	if (project.hasProperty('jei')) {
+		// the mod jar carries its own config library (jar in jar)
+		localRuntime("mezz.jei:jei-26.3-fabric:${project.jei_version}") { transitive = false }
+	}
 
 	// Team Reborn Energy (bundled): cables, batteries and solar panels talk to Tech Reborn machines.
 	include implementation("teamreborn:energy:${project.energy_version}")

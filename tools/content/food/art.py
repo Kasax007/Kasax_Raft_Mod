@@ -588,6 +588,23 @@ def surface(ramp, bubbles=True):
     return im
 
 
+def liquid():
+    """Grey liquid surface with soft ripples and a few bright specks; tinted in the world (water -> dish)."""
+    g = pal('#a6a6a6', '#bdbdbd', '#d2d2d2', '#e4e4e4', '#f4f4f4', '#ffffff')
+    im = img()
+    for y in range(16):
+        for x in range(16):
+            r = math.hypot(x - 7.5, y - 7.5)
+            k = 3 if int(r * 0.9 + (x + y) * 0.15) % 3 else 2
+            if (x * 7 + y * 3) % 13 == 0:
+                k = 4
+            P(im, x, y, g[k])
+    for x, y in ((4, 5), (10, 3), (7, 10), (12, 11), (3, 12)):
+        P(im, x, y, g[5])
+        P(im, x + 1, y, g[4])
+    return im
+
+
 WATER = pal('#1e4f8a', '#2a64a6', '#3a7cc0', '#5a9ad4', '#8cc0e8')
 
 

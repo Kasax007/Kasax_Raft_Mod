@@ -269,6 +269,38 @@ public class BcScript implements FabricClientGameTest {
         LOG.info("[bctest] script done after {} s", (System.currentTimeMillis() - started) / 1000);
     }
 
+    /** tab <id> [rows]: open the creative inventory on that tab (scrolled down by rows) and log its items. */
+    private void openTab(String arg) {
+        ctx.runOnClient(mc -> {
+            // tab <id> [rows]: open the creative inventory on that tab (scrolled down by rows) and log its items
+            String[] ta = arg.split("\\s+");
+            var tab = BuiltInRegistries.CREATIVE_MODE_TAB.getValue(Identifier.parse(ta[0]));
+            if (tab == null && ta[0].startsWith("raft:")) {
+                // ids from before 3.4 (raft:raft, raft:bc_cozy): the tab whose id ends in that name (raft:bc_3_cozy)
+                String name = ta[0].substring(5).replaceFirst("^bc_", "");
+                for (var key : BuiltInRegistries.CREATIVE_MODE_TAB.keySet()) {
+                    if (key.getNamespace().equals("raft") && key.getPath().matches("bc_\\d_" + name)) {
+                        tab = BuiltInRegistries.CREATIVE_MODE_TAB.getValue(key);
+                    }
+                }
+            }
+            var screen = new net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen(
+                    mc.player, mc.player.connection.enabledFeatures(), false);
+            mc.gui.setScreen(screen);
+            if (tab == null) {
+                LOG.warn("[bctest] no creative tab {}", arg);
+                return;
+            }
+            ((net.fabricmc.fabric.api.client.creativetab.v1.FabricCreativeModeInventoryScreen) (Object) screen).setSelectedTab(tab);
+            if (ta.length > 1) screen.mouseScrolled(0, 0, 0, -Double.parseDouble(ta[1]));
+            StringBuilder ids = new StringBuilder();
+            for (var stack : tab.getDisplayItems()) {
+                ids.append(' ').append(BuiltInRegistries.ITEM.getKey(stack.getItem()));
+            }
+            LOG.info("[bctest] TAB {} {}:{}", arg, tab.getDisplayItems().size(), ids);
+        });
+    }
+
     // ------------------------------------------------------------------ commands
 
     private void exec(String line) {
@@ -432,6 +464,19 @@ public class BcScript implements FabricClientGameTest {
                 ctx.waitTick();
                 ctx.getInput().pressMouse(InputConstants.MOUSE_BUTTON_LEFT);
             }
+            case "rclick" -> {
+                // rclick x y: right mouse button at that window position (e.g. loading bait onto a rod)
+                double[] v = nums(arg);
+                ctx.getInput().setCursorPos(v[0], v[1]);
+                ctx.waitTick();
+                ctx.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
+            }
+            case "keyc" -> {
+                // keyc <letter or GLFW key code>: press a raw key (keys of other mods, e.g. JEI's R and U)
+                int code = arg.length() == 1 ? Character.toUpperCase(arg.charAt(0)) : Integer.parseInt(arg);
+                ctx.getInput().holdKeyFor(code, 2);
+            }
+            case "type" -> ctx.getInput().typeChars(arg);
             case "cursor" -> {
                 double[] v = nums(arg);
                 ctx.getInput().setCursorPos(v[0], v[1]);
@@ -445,25 +490,15 @@ public class BcScript implements FabricClientGameTest {
                 ctx.getInput().releaseKey(o -> o.keyShift);
             }
             case "esc" -> ctx.setScreen(() -> null);
-            case "tab" -> ctx.runOnClient(mc -> {
-                // tab <id> [rows]: open the creative inventory on that tab (scrolled down by rows) and log its items
-                String[] ta = arg.split("\\s+");
-                var tab = BuiltInRegistries.CREATIVE_MODE_TAB.getValue(Identifier.parse(ta[0]));
-                var screen = new net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen(
-                        mc.player, mc.player.connection.enabledFeatures(), false);
-                mc.gui.setScreen(screen);
-                if (tab == null) {
-                    LOG.warn("[bctest] no creative tab {}", arg);
-                    return;
+            case "tab" -> {
+                try {
+                    openTab(arg);
+                } catch (RuntimeException | AssertionError e) {
+                    // the first creative screen of a session is not laid out yet: try again a tick later
+                    ctx.waitTick();
+                    openTab(arg);
                 }
-                ((net.fabricmc.fabric.api.client.creativetab.v1.FabricCreativeModeInventoryScreen) (Object) screen).setSelectedTab(tab);
-                if (ta.length > 1) screen.mouseScrolled(0, 0, 0, -Double.parseDouble(ta[1]));
-                StringBuilder ids = new StringBuilder();
-                for (var stack : tab.getDisplayItems()) {
-                    ids.append(' ').append(BuiltInRegistries.ITEM.getKey(stack.getItem()));
-                }
-                LOG.info("[bctest] TAB {} {}:{}", arg, tab.getDisplayItems().size(), ids);
-            });
+            }
             case "slot" -> {
                 int i = Integer.parseInt(arg) - 1;
                 ctx.getInput().pressKey(o -> o.keyHotbarSlots[i]);
