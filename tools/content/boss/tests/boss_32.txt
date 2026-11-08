@@ -13,7 +13,7 @@ cmd execute in raft:raftdim run fill 22 84 -18 58 108 18 minecraft:air
 cmd execute in raft:raftdim run fill 22 84 -18 58 99 18 minecraft:polished_deepslate
 cmd execute in raft:raftdim run fill 32 86 -8 48 99 8 minecraft:water
 cmd execute in raft:raftdim run setblock 31 100 0 raft:leviathan_altar[facing=east]
-cmd execute in raft:raftdim run kill @e[type=!minecraft:player,distance=..80]
+cmd execute in raft:raftdim run kill @e[type=!minecraft:player,x=40,y=100,z=0,distance=..80]
 swait 20
 log KEY_USE
 cmd gamemode survival @p
@@ -223,8 +223,8 @@ cmd execute in raft:raftdim run tp @p 29.5 100 5.5 -90 10
 cmd execute in raft:raftdim run damage @e[type=raft:leviathan,limit=1] 5000 minecraft:generic_kill by @p
 swait 140
 near 40
-cmd execute in raft:raftdim as @e[type=minecraft:item,distance=..48] run data get entity @s Pos
-cmd execute in raft:raftdim as @e[type=minecraft:item,distance=..48] run data get entity @s Item
+cmd execute in raft:raftdim as @e[type=minecraft:item,x=40,y=100,z=0,distance=..48] run data get entity @s Pos
+cmd execute in raft:raftdim as @e[type=minecraft:item,x=40,y=100,z=0,distance=..48] run data get entity @s Item
 hud off
 freecam 26 104 10 -120 30
 wait 10 render
