@@ -129,6 +129,50 @@ def write(path, root, name='', gz=True):
         out.write(data)
 
 
+def _snbt_text(t):
+    """A text component of the newer game (string or compound) as the JSON string 1.21.1 keeps in sign lines."""
+    import json
+
+    def plain(x):
+        if x.t == 8:
+            return x.v
+        if x.t == 10:
+            return {k: plain(v) for k, v in x.v.items()}
+        if x.t == 9:
+            return [plain(v) for v in x.v[1]]
+        if x.t == 1:
+            return bool(x.v)
+        return x.v
+    if t.t == 8:
+        try:
+            json.loads(t.v)
+            return t.v
+        except ValueError:
+            return json.dumps(t.v, ensure_ascii=False)
+    return json.dumps(plain(t), ensure_ascii=False)
+
+
+def _signs(t):
+    """Sign texts: the newer game stores lines as components, 1.21.1 as JSON strings. Returns True when changed."""
+    changed = False
+    if t.t == 10:
+        for k, v in t.v.items():
+            if k in ('front_text', 'back_text') and v.t == 10:
+                for key in ('messages', 'filtered_messages'):
+                    m = v.v.get(key)
+                    if m is not None and m.t == 9:
+                        lines = [Tag(8, _snbt_text(x)) for x in m.v[1]]
+                        if m.v[0] != 8 or [x.v for x in lines] != [x.v for x in m.v[1]]:
+                            v.v[key] = Tag(9, (8, lines))
+                            changed = True
+            elif isinstance(v, Tag):
+                changed |= _signs(v)
+    elif t.t == 9 and t.v[0] in (9, 10):
+        for x in t.v[1]:
+            changed |= _signs(x)
+    return changed
+
+
 def convert(path, report=None):
     """Converts one template in place; returns True when it changed. report: dict collecting ids to check."""
     root, name, gz = read(path)
@@ -160,6 +204,10 @@ def convert(path, report=None):
                 if 'Name' in st and st['Name'].v in BLOCK_RENAMES:
                     st['Name'] = Tag(8, BLOCK_RENAMES[st['Name'].v])
                     changed = True
+    for b in d.get('blocks', Tag(9, (10, []))).v[1]:
+        n = b.v.get('nbt')
+        if n is not None and _signs(n):
+            changed = True
     dv = d.get('DataVersion')
     if dv is None or dv.v != DATA_VERSION_1211:
         d['DataVersion'] = Tag(3, DATA_VERSION_1211)
