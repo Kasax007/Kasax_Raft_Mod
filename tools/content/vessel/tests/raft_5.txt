@@ -127,6 +127,20 @@ wait 2 render
 shot 57_wheel_back
 freecam off
 hud on
+# seated at the helm (it took the player when it set sail): sneak + use on the wheel moors the raft
+log SNEAK_USE_SEATED_HELM
+cmd data get entity @e[type=raft:vessel,limit=1] Passengers
+face 0.5 100.75 -1.8
+swait 3
+sneakuse
+swaitfor 600 execute in raft:raftdim unless entity @e[type=raft:vessel]
+find raft:helm 64
+log SET_SAIL_2
+nearblock raft:helm 48 1.3 0.5 0
+swait 10
+use
+swaitfor 1500 execute in raft:raftdim if entity @e[type=raft:vessel]
+swait 20
 hold sneak 8
 swait 10
 log SAIL_POWER
