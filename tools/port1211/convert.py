@@ -199,6 +199,12 @@ def convert_assets(root, stats, extras):
             f = fixups.lang(j)
             if f != j:
                 save(p, f); stats['fixups'] = stats.get('fixups', 0) + 1
+        sp = os.path.join(nsdir, 'sounds.json')
+        if os.path.exists(sp):
+            j = load(sp)
+            f = fixups.sounds(j)
+            if f != j:
+                save(sp, f); stats['fixups'] = stats.get('fixups', 0) + 1
         for p, rel in list(files(nsdir, 'items')):
             item = os.path.relpath(p, os.path.join(nsdir, 'items'))[:-5]
             extras.setdefault('items', []).append((root, ns, item, load(p)))

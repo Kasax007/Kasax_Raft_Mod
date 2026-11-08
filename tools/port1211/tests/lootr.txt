@@ -1,0 +1,69 @@
+# Run: BC_LOOTR=1 tools/bctest/run.sh tools/port1211/tests/lootr.txt <outdir>
+# Beach Craft 3.4 on 1.21.1 with Lootr (BC_LOOTR=1): a treasure chest and a wooden crate with a loot table become
+# Lootr containers (every player gets their own roll, the loot table stays on the block); a crate without a loot
+# table stays a plain container; a vanilla barrel with a loot table is Lootr's own business.
+deadline 10
+world lootr
+rd 4
+gui 2
+chat off
+cmd gamerule doMobSpawning false
+cmd tp @p 4.5 201 0.5 0 30
+settle 60
+cmd fill -6 200 -8 14 200 12 minecraft:spruce_planks
+cmd fill -6 201 -8 14 210 12 air
+cmd setblock 2 201 4 raft:treasure_chest{LootTable:"raft:chests/barrel/supplies",LootTableSeed:11L}
+cmd setblock 4 201 4 raft:wooden_crate{LootTable:"raft:chests/barrel/food",LootTableSeed:12L}
+cmd setblock 6 201 4 raft:wooden_crate
+cmd setblock 8 201 4 minecraft:barrel{LootTable:"raft:chests/barrel/scrap",LootTableSeed:13L}
+swait 10
+cmd tp @p 4.5 201 1.5 0 30
+swait 5
+log TREASURE_CHEST
+useblock 2 201 4
+swait 5
+menu
+wait 4 render
+shot l01_chest_open
+esc
+swait 3
+check chest_keeps_loot_table | execute if data block 2 201 4 LootTable
+check chest_has_lootr_id | execute if data block 2 201 4 LootrId
+log CHEST_AGAIN
+useblock 2 201 4
+swait 5
+menu
+esc
+swait 3
+log OTHER_PLAYER
+useas bob 2 201 4
+swait 5
+check chest_still_keeps_loot_table | execute if data block 2 201 4 LootTable
+log CRATE
+useblock 4 201 4
+swait 5
+menu
+wait 4 render
+shot l02_crate_open
+esc
+swait 3
+check crate_keeps_loot_table | execute if data block 4 201 4 LootTable
+check crate_has_lootr_id | execute if data block 4 201 4 LootrId
+log PLAIN_CRATE
+useblock 6 201 4
+swait 5
+menu
+esc
+swait 3
+check plain_crate_no_lootr_id | execute unless data block 6 201 4 LootrId
+log VANILLA_BARREL
+useblock 8 201 4
+swait 5
+menu
+esc
+swait 3
+hud off
+pose 5 202.6 0.5 0 25
+wait 6 render
+shot l03_containers
+checks

@@ -1,5 +1,6 @@
 """Last pass over the worldgen JSON (configured and placed features, processor lists, structures): the 26.3 forms
 the first conversion left alone, found when 1.21.1 loaded the data. Safe to run again on converted files."""
+import copy
 from . import feature
 
 # blocks the newer game renamed
@@ -152,4 +153,29 @@ def mixin_config(o):
     """Mixin configs: the compatibility level of Java 21 (1.21.1 runs on Java 21)."""
     if o.get('compatibilityLevel') not in (None, 'JAVA_21', 'JAVA_17', 'JAVA_8'):
         o = dict(o, compatibilityLevel='JAVA_21')
+    return o
+
+
+# vanilla sound files the newer game has and 1.21.1 does not: file -> (1.21.1 file, volume factor). The guardian's
+# underwater idle sounds are entity/guardian/ambient1-4 in 1.21.1, played by vanilla at a tenth of the volume.
+SOUND_FILES = {'minecraft:mob/guardian/guardian_idle%d' % i: ('minecraft:entity/guardian/ambient%d' % i, 0.1)
+               for i in range(1, 5)}
+
+
+def sounds(o):
+    """sounds.json: sound files that 1.21.1 does not have, replaced by its own (volume kept as heard)."""
+    o = copy.deepcopy(o)
+    for ev in o.values():
+        out = []
+        for s in ev.get('sounds', []):
+            d = {'name': s} if isinstance(s, str) else dict(s)
+            if d.get('type', 'file') == 'file' and d['name'] in SOUND_FILES:
+                name, factor = SOUND_FILES[d['name']]
+                d['name'] = name
+                d['volume'] = round(d.get('volume', 1.0) * factor, 4)
+                out.append(d)
+            else:
+                out.append(s)
+        if 'sounds' in ev:
+            ev['sounds'] = out
     return o
