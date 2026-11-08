@@ -21,6 +21,13 @@ from content.world.preview_terrain import biome_of, evaluator, sample
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 MASK48 = (1 << 48) - 1
 LAB = []
+MAJ = {}
+CLOSEST_MAJOR = []
+# keep in step with StructureSpacing.java (order = who stays when two majors of different kinds come too close)
+MAJOR_ORDER = ['ashen_forge', 'old_lighthouse', 'port_solace', 'saltmere_village', 'helix_station', 'abyssal_sanctum',
+               'coral_temple', 'pirate_cove', 'rusted_rig', 'iceberg_outpost', 'wreck_galleon', 'wreck_cargo_ship',
+               'sunken_plane']
+MAJOR_DISTANCE = int(os.environ.get('SURVEY_MAJOR_DISTANCE', '384'))
 
 
 def _i64(v):
@@ -140,12 +147,31 @@ def main():
                 if len(fl):
                     LAB.append(fl)
             good = [p for p, o in zip(pts, ok) if o]
+            if name in MAJOR_ORDER:
+                MAJ.setdefault(seed, {})[name] = good
+                continue
             closest = None
             for i in range(len(good)):
                 for k in range(i + 1, len(good)):
                     d = math.dist(good[i], good[k])
                     closest = d if closest is None else min(closest, d)
             rows.setdefault(name, []).append((len(good), closest))
+        # majors: greedy in MAJOR_ORDER, no start within MAJOR_DISTANCE of an earlier kind's start
+        kept = []
+        for name in MAJOR_ORDER:
+            mine = [p for p in MAJ.get(seed, {}).get(name, [])
+                    if all(math.dist(p, q) >= MAJOR_DISTANCE for q, _ in kept)]
+            closest = None
+            for i in range(len(mine)):
+                for k in range(i + 1, len(mine)):
+                    d = math.dist(mine[i], mine[k])
+                    closest = d if closest is None else min(closest, d)
+            kept += [(p, name) for p in mine]
+            rows.setdefault(name, []).append((len(mine), closest))
+        for p, name in kept:
+            d = min((math.dist(p, q) for q, _ in kept if q != p), default=None)
+            if d is not None:
+                CLOSEST_MAJOR.append(d)
     print('land share: ' + ', '.join(f'seed {s}: {l:.1f}%' for s, l in zip(seeds, land)) + f'  (mean {np.mean(land):.1f}%)')
     total = 0.0
     print(f'{"structure set":22s} {"per km2":>8s} {"closest pair (blocks)":>22s}')
@@ -155,6 +181,9 @@ def main():
         cl = [v[1] for v in vals if v[1] is not None]
         print(f'{name:22s} {per:8.3f} {min(cl) if cl else float("nan"):22.0f}')
     print(f'{"all":22s} {total:8.3f}')
+    major = sum(np.mean([v[0] for v in rows[n]]) / km2 for n in MAJOR_ORDER if n in rows)
+    print(f'{"majors":22s} {major:8.3f}   closest two majors of any kind: {min(CLOSEST_MAJOR):.0f} blocks, '
+          f'median nearest major {np.median(CLOSEST_MAJOR):.0f} (distance rule {MAJOR_DISTANCE})')
     if LAB:
         fl = np.concatenate(LAB)
         print(f'helix station floor (sea level 100): min {fl.min():.0f}, median {np.median(fl):.0f}, max {fl.max():.0f}; '

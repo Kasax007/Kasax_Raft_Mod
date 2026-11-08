@@ -609,7 +609,7 @@ def write_json_files():
                        'water_ambient': spawns([('raft:moray_eel', 3, 1, 1), ('minecraft:tropical_fish', 8, 3, 6),
                                                 ('minecraft:pufferfish', 2, 1, 2)]),
                    })
-    structure_set(SID, 40, 16, 31415961)
+    structure_set(SID, 56, 22, 31415961)
     template_pool(f'raft:{SID}/start', [(f'raft:{SID}/temple_0', 1, f'raft:{SID}')])
     processor_list(f'raft:{SID}', [NO_SPILL, {'processor_type': 'minecraft:rule', 'rules': [
         rule('raft:tidestone_bricks', 'raft:cracked_tidestone_bricks', probability=0.08),
