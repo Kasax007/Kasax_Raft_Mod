@@ -132,8 +132,8 @@ def sun_lounger():
         m.box((x, 0, 11.5), (x + 2, 3, 13.5), 'frame')
     m.box((1, 3, 10), (15, 5, 16), 'frame')
     # the raised back rest, tilted backwards
-    m.box((2, 5, 9.5), (14, 6.5, 16.5), 'cush', rot={'origin': [8, 5, 10], 'axis': 'x', 'angle': 22.5}, collide=False)
-    m.box((1, 4, 10), (15, 5.5, 16.5), 'frame', rot={'origin': [8, 5, 10], 'axis': 'x', 'angle': 22.5}, collide=False)
+    m.box((2, 5, 9.5), (14, 6.5, 16.5), 'cush', rot={'origin': [8, 5, 10], 'axis': 'x', 'angle': -22.5}, collide=False)
+    m.box((1, 4, 10), (15, 5.5, 16.5), 'frame', rot={'origin': [8, 5, 10], 'axis': 'x', 'angle': -22.5}, collide=False)
     m.write('sun_lounger')
     cm.shape(M, 'sun_lounger', [(1, 0, 0, 15, 6.5, 16), (1, 6.5, 12, 15, 10, 16)])
     A.blockstate(M, 'sun_lounger', facing_variants('block/sun_lounger'))

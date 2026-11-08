@@ -437,7 +437,7 @@
           10.0
         ],
         "axis": "x",
-        "angle": 22.5
+        "angle": -22.5
       },
       "faces": {
         "down": {
@@ -514,7 +514,7 @@
           10.0
         ],
         "axis": "x",
-        "angle": 22.5
+        "angle": -22.5
       },
       "faces": {
         "down": {

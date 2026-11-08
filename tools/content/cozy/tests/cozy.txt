@@ -145,12 +145,13 @@ check bench_single | execute if block 4 201 0 raft:teak_bench[part=single]
 pose 1.5 201 -1.6 0 30
 face 1.5 201.5 0.5
 swait 3
+wait 2 render
 use
 swait 10
 check sit_bench | execute as @p on vehicle if entity @s[type=raft:seat]
 swait 70
-check rested | execute as @p if predicate {condition:'minecraft:entity_properties',entity:'this',predicate:{effects:{'raft:rested':{}}}}
-check rested_comfort_5plus | execute as @p if predicate {condition:'minecraft:entity_properties',entity:'this',predicate:{effects:{'raft:rested':{duration:{min:8000}}}}}
+check rested | execute as @p if predicate {type:'minecraft:entity_properties',entity:'this',predicate:{effects:{'raft:rested':{}}}}
+check rested_comfort_5plus | execute as @p if predicate {type:'minecraft:entity_properties',entity:'this',predicate:{effects:{'raft:rested':{duration:{min:8000}}}}}
 hud on
 wait 4 render
 shot 30_sitting_rested
@@ -160,10 +161,11 @@ shot 31_sitting_third
 third off
 sneak
 swait 10
-check stood_up | execute as @p unless predicate {condition:'minecraft:entity_properties',entity:'this',predicate:{vehicle:{}}}
+check stood_up | execute as @p unless predicate {type:'minecraft:entity_properties',entity:'this',predicate:{vehicle:{}}}
 pose 6.5 201 -1.6 0 30
 face 6.5 201.8 0.5
 swait 3
+wait 2 render
 use
 swait 8
 check sit_stool | execute as @p on vehicle if entity @s[type=raft:seat]
@@ -172,6 +174,7 @@ swait 8
 pose 8.5 201 -1.6 0 30
 face 8.5 201.3 0.5
 swait 3
+wait 2 render
 use
 swait 8
 check sit_lounger | execute as @p on vehicle if entity @s[type=raft:seat]
@@ -180,6 +183,7 @@ swait 8
 pose 10.5 201 -1.6 0 30
 face 10.5 201.4 0.5
 swait 3
+wait 2 render
 use
 swait 8
 check sit_armchair | execute as @p on vehicle if entity @s[type=raft:seat]
@@ -188,54 +192,65 @@ swait 8
 pose 6.5 201 1.4 0 30
 face 6.5 201.4 3.5
 swait 3
+wait 2 render
 use
 swait 6
 check lantern_off | execute if block 6 201 3 raft:hurricane_lantern[lit=false]
 wait 3 render
 shot 32_lantern_off
+wait 2 render
 use
 swait 6
 check lantern_on | execute if block 6 201 3 raft:hurricane_lantern[lit=true]
 pose 9.5 201 1.4 0 30
 face 9.5 201.25 3.5
 swait 3
+wait 2 render
 use
 swait 6
 check candle_off | execute if block 9 201 3 raft:shell_candle[lit=false]
 pose 11.5 201 1.4 0 30
 face 11.5 201.6 3.5
 swait 3
+wait 2 render
 use
 swait 6
 check lamp_off | execute if block 11 201 3 raft:sea_glass_lamp[lit=false]
 pose 13.5 201 1.0 0 30
 face 13.5 202.45 3.6
 swait 3
+wait 2 render
 use
 swait 6
 check sconce_off | execute if block 13 202 3 raft:driftwood_sconce[lit=false]
+wait 2 render
 use
 swait 6
 check sconce_on | execute if block 13 202 3 raft:driftwood_sconce[lit=true]
 pose 16.5 201 5.0 0 30
 face 16.5 201.5 7.9
 swait 3
+wait 2 render
 use
 swait 6
 check blinds_open | execute if block 16 201 7 raft:bamboo_blinds[open=true]
 pose 2.5 201 4.4 0 30
 face 2.5 201.75 6.5
 swait 3
+wait 2 render
 use
 swait 6
+wait 2 render
 use
 swait 4
+wait 2 render
 use
 swait 4
 check drum_note3 | execute if block 2 201 6 raft:steel_drum[note=3]
 pose 0.5 201 4.4 0 30
 face 0.5 201.2 6.4
 swait 3
+wait 2 render
 use
 swait 6
 check conch_cooldown | execute if block 0 201 6 raft:conch_shell
@@ -243,6 +258,7 @@ cmd item replace entity @p weapon.mainhand with raft:banana 4
 pose 12.5 201 -1.4 0 30
 face 12.5 202.05 0.5
 swait 3
+wait 2 render
 sneakuse
 swait 6
 check plate_4 | execute if data block 12 202 0 {food:{count:4}}
@@ -253,6 +269,7 @@ cmd effect give @p minecraft:hunger 3 255
 swait 70
 cmd item replace entity @p weapon.mainhand with minecraft:air
 face 12.5 202.05 0.5
+wait 2 render
 use
 swait 6
 check plate_ate_one | execute if data block 12 202 0 {food:{count:3}}
@@ -261,6 +278,7 @@ cmd item replace entity @p weapon.mainhand with raft:conch_shell
 pose 16.5 201 -1.4 0 20
 face 16.5 201.6 0.6
 swait 3
+wait 2 render
 use
 swait 6
 check shelf_holds | execute if data block 16 201 0 Items[0]
@@ -273,6 +291,7 @@ slot 1
 pose 20.5 201 -1.4 0 30
 face 20.5 201.5 0.5
 swait 3
+wait 2 render
 use
 swait 10
 wait 3 render
@@ -291,6 +310,7 @@ check basket_items | execute if data block 20 201 0 Items[1]
 cmd gamemode survival @p
 pose 20.5 201 -1.2 0 30
 face 20.5 201.5 0.5
+wait 2 render
 hold attack 60
 swait 20
 check basket_keeps_items | execute if items entity @p container.* raft:wicker_basket[minecraft:container]
@@ -299,6 +319,7 @@ cmd item replace entity @p weapon.mainhand with raft:surfboard_red
 pose 23.5 201 5.2 0 20
 face 23.5 201.5 7.99
 swait 3
+wait 2 render
 use
 swait 6
 check surfboard_placed | execute if block 23 202 7 raft:surfboard_red[half=upper,facing=north]
@@ -306,6 +327,7 @@ cmd item replace entity @p weapon.mainhand with raft:thatch_parasol
 pose 25.5 201 -0.5 0 60
 face 25.5 201.0 1.5
 swait 3
+wait 2 render
 use
 swait 6
 check parasol_placed | execute if block 25 202 1 raft:thatch_parasol[half=upper]
@@ -313,6 +335,7 @@ cmd item replace entity @p weapon.mainhand with raft:palm_bench
 pose 2.5 201 -3.5 0 50
 face 3.5 201.0 -1.5
 swait 3
+wait 2 render
 use
 swait 6
 check bench_placed_joins | execute if block 2 201 0 raft:palm_bench[part=right]
@@ -331,6 +354,7 @@ esc
 cmd item replace entity @p weapon.mainhand with raft:seafarers_almanac
 pose 6.5 201 -8.5 0 0
 swait 3
+wait 2 render
 use
 wait 10 render
 shot 50_almanac_contents

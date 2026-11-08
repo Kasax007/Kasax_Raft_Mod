@@ -20,7 +20,7 @@ Rested lasts 2 minutes plus 1 minute per comfort point. Resting gives 1 point, a
 * shade: parasols and beach umbrellas
 * music: steel drum, conch, wind chime, ship bell, jukebox
 * storage, wall decor and a view of the water: aquarium, blinds, lattice, sea glass
-With everything around you, you stay Rested for 14 minutes. Keep sitting and it is topped up every 30 seconds.""",
+All of them make 14 minutes; sitting on tops it up.""",
         'almanac.raft.cozy.furniture.title': 'Furniture',
         'almanac.raft.cozy.furniture.text': """\
 # Seats

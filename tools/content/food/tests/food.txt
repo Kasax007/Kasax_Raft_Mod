@@ -53,195 +53,304 @@ cmd setblock 16 201 8 raft:cooking_pot[facing=north,contents=cooking]
 cmd setblock 18 201 8 raft:cooking_pot[facing=north,contents=ready]
 swait 20
 hud off
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 9 203 -3 0 30
+swait 3
 pose 9 203 -3 0 30
 wait 6 render
 shot 10_crops_front
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p -4 203.5 -1 -60 25
+swait 3
 pose -4 203.5 -1 -60 25
 wait 6 render
 shot 11_crops_side
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 4 202.5 2.5 0 25
+swait 3
 pose 4 202.5 2.5 0 25
 wait 6 render
 shot 12_wild
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 24.5 203.5 -2 0 50
+swait 3
 pose 24.5 203.5 -2 0 50
 wait 6 render
 shot 13_pool
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 24.5 198.5 -0.5 0 15
+swait 3
 pose 24.5 198.5 -0.5 0 15
 wait 6 render
 shot 14_pool_underwater
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 16 203 5 0 30
+swait 3
 pose 16 203 5 0 30
 wait 6 render
 shot 15_kitchen
 hud on
 cmd gamemode survival @p
 cmd item replace entity @p weapon.mainhand with minecraft:bone_meal 64
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 0.5 201 -1.6 0 50
+swait 3
 pose 0.5 201 -1.6 0 50
 face 0.5 201.1 0.5
 swait 2
+wait 2 render
 use
 swait 3
+wait 2 render
 use
 swait 3
+wait 2 render
 use
 swait 3
+wait 2 render
 use
 swait 3
+wait 2 render
 use
 swait 3
+wait 2 render
 use
 swait 3
+wait 2 render
 use
 swait 3
 check bonemeal_sweet_potatoes | execute if block 0 201 0 raft:sweet_potatoes[age=3]
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 5.5 201 -1.6 0 50
+swait 3
 pose 5.5 201 -1.6 0 50
 face 5.5 201.1 0.5
 swait 2
+wait 2 render
 use
 swait 3
+wait 2 render
 use
 swait 3
+wait 2 render
 use
 swait 3
+wait 2 render
 use
 swait 3
+wait 2 render
 use
 swait 3
+wait 2 render
 use
 swait 3
+wait 2 render
 use
 swait 3
 check bonemeal_chili_crop | execute if block 5 201 0 raft:chili_crop[age=3]
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 10.5 201 -1.6 0 50
+swait 3
 pose 10.5 201 -1.6 0 50
 face 10.5 201.1 0.5
 swait 2
+wait 2 render
 use
 swait 3
+wait 2 render
 use
 swait 3
+wait 2 render
 use
 swait 3
+wait 2 render
 use
 swait 3
+wait 2 render
 use
 swait 3
+wait 2 render
 use
 swait 3
+wait 2 render
 use
 swait 3
 check bonemeal_banana_crop | execute if block 10 201 0 raft:banana_crop[age=3]
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 15.5 201 -1.6 0 50
+swait 3
 pose 15.5 201 -1.6 0 50
 face 15.5 201.1 0.5
 swait 2
+wait 2 render
 use
 swait 3
+wait 2 render
 use
 swait 3
+wait 2 render
 use
 swait 3
+wait 2 render
 use
 swait 3
+wait 2 render
 use
 swait 3
+wait 2 render
 use
 swait 3
+wait 2 render
 use
 swait 3
 check bonemeal_rice_crop | execute if block 15 201 0 raft:rice_crop[age=3]
 cmd item replace entity @p weapon.mainhand with minecraft:bone_meal 64
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 22.5 201 -1.0 0 60
+swait 3
 pose 22.5 201 -1.0 0 60
 face 22.5 197.3 1.5
 swait 2
+wait 2 render
 use
 swait 3
+wait 2 render
 use
 swait 3
+wait 2 render
 use
 swait 3
+wait 2 render
 use
 swait 3
 check bonemeal_sea_grapes | execute if block 22 197 1 raft:sea_grapes_crop[age=3]
 cmd item replace entity @p weapon.mainhand with minecraft:air
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 0.5 201 -1.6 0 50
+swait 3
 pose 0.5 201 -1.6 0 50
 face 0.5 201.2 0.5
 swait 2
+wait 2 render
 attack
 swait 12
 check harvest_sweet_potatoes | execute if items entity @p container.* raft:sweet_potato
 cmd item replace entity @p weapon.mainhand with raft:sweet_potato
 face 0.5 200.99 0.5
 swait 2
+wait 2 render
 use
 swait 4
 check plant_sweet_potatoes | execute if block 0 201 0 raft:sweet_potatoes[age=0]
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 5.5 201 -1.6 0 50
+swait 3
 pose 5.5 201 -1.6 0 50
 face 5.5 201.2 0.5
 swait 2
+wait 2 render
 attack
 swait 12
 check harvest_chili_crop | execute if items entity @p container.* raft:chili_pepper
 cmd item replace entity @p weapon.mainhand with raft:chili_seeds
 face 5.5 200.99 0.5
 swait 2
+wait 2 render
 use
 swait 4
 check plant_chili_crop | execute if block 5 201 0 raft:chili_crop[age=0]
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 10.5 201 -1.6 0 50
+swait 3
 pose 10.5 201 -1.6 0 50
 face 10.5 201.2 0.5
 swait 2
+wait 2 render
 attack
 swait 12
 check harvest_banana_crop | execute if items entity @p container.* raft:banana
 cmd item replace entity @p weapon.mainhand with raft:banana_shoot
 face 10.5 200.99 0.5
 swait 2
+wait 2 render
 use
 swait 4
 check plant_banana_crop | execute if block 10 201 0 raft:banana_crop[age=0]
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 15.5 201 -1.6 0 50
+swait 3
 pose 15.5 201 -1.6 0 50
 face 15.5 201.2 0.5
 swait 2
+wait 2 render
 attack
 swait 12
 check harvest_rice_crop | execute if items entity @p container.* raft:rice
 cmd item replace entity @p weapon.mainhand with raft:rice
 face 15.5 200.99 0.5
 swait 2
+wait 2 render
 use
 swait 4
 check plant_rice_crop | execute if block 15 201 0 raft:rice_crop[age=0]
 cmd item replace entity @p weapon.mainhand with minecraft:air
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 22.5 201 -1.0 0 60
+swait 3
 pose 22.5 201 -1.0 0 60
 face 22.5 197.4 1.5
 swait 2
+wait 2 render
 use
 swait 10
 check pick_sea_grapes | execute if block 22 197 1 raft:sea_grapes_crop[age=1]
 check got_sea_grapes | execute if items entity @p container.* raft:sea_grapes
 cmd fill 27 197 0 27 197 0 minecraft:water
 cmd item replace entity @p weapon.mainhand with raft:sea_grapes 4
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 27.5 201 -1.2 0 60
+swait 3
 pose 27.5 201 -1.2 0 60
 face 27.5 196.99 0.5
 swait 2
+wait 2 render
 use
 swait 4
 check plant_sea_grapes | execute if block 27 197 0 raft:sea_grapes_crop
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 0.5 201 4.4 0 50
+swait 3
 pose 0.5 201 4.4 0 50
 face 0.5 201.3 6.5
 swait 2
+wait 2 render
 attack
 swait 10
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 2.5 201 4.4 0 50
+swait 3
 pose 2.5 201 4.4 0 50
 face 2.5 201.3 6.5
 swait 2
+wait 2 render
 attack
 swait 10
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 4.5 201 4.4 0 50
+swait 3
 pose 4.5 201 4.4 0 50
 face 4.5 201.3 6.5
 swait 2
+wait 2 render
 attack
 swait 10
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 6.5 201 4.4 0 50
+swait 3
 pose 6.5 201 4.4 0 50
 face 6.5 201.3 6.5
 swait 2
+wait 2 render
 attack
 swait 10
 check wild_chili_seeds | execute if items entity @p container.* raft:chili_seeds
@@ -260,11 +369,15 @@ check grows_banana_crop | execute if block 11 201 4 raft:banana_crop[age=3]
 swaitfor 1200 execute if block 16 201 4 raft:rice_crop[age=3]
 check grows_rice_crop | execute if block 16 201 4 raft:rice_crop[age=3]
 cmd gamerule random_tick_speed 0
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 6.5 201 -8.5 0 -70
+swait 3
 pose 6.5 201 -8.5 0 -70
 cmd effect clear @p
 cmd effect give @p minecraft:hunger 2 255
 swait 45
 cmd item replace entity @p weapon.mainhand with raft:banana
+wait 2 render
 hold use 45
 swait 4
 check eat_banana | execute unless items entity @p weapon.mainhand raft:banana
@@ -272,6 +385,7 @@ cmd effect clear @p
 cmd effect give @p minecraft:hunger 2 255
 swait 45
 cmd item replace entity @p weapon.mainhand with raft:sweet_potato
+wait 2 render
 hold use 45
 swait 4
 check eat_sweet_potato | execute unless items entity @p weapon.mainhand raft:sweet_potato
@@ -279,6 +393,7 @@ cmd effect clear @p
 cmd effect give @p minecraft:hunger 2 255
 swait 45
 cmd item replace entity @p weapon.mainhand with raft:baked_sweet_potato
+wait 2 render
 hold use 45
 swait 4
 check eat_baked_sweet_potato | execute unless items entity @p weapon.mainhand raft:baked_sweet_potato
@@ -286,14 +401,16 @@ cmd effect clear @p
 cmd effect give @p minecraft:hunger 2 255
 swait 45
 cmd item replace entity @p weapon.mainhand with raft:chili_pepper
+wait 2 render
 hold use 45
 swait 4
 check eat_chili_pepper | execute unless items entity @p weapon.mainhand raft:chili_pepper
-check effect_chili_pepper | execute as @p if predicate {condition:'minecraft:entity_properties',entity:'this',predicate:{effects:{'minecraft:fire_resistance':{}}}}
+check effect_chili_pepper | execute as @p if predicate {type:'minecraft:entity_properties',entity:'this',predicate:{effects:{'minecraft:fire_resistance':{}}}}
 cmd effect clear @p
 cmd effect give @p minecraft:hunger 2 255
 swait 45
 cmd item replace entity @p weapon.mainhand with raft:cooked_rice
+wait 2 render
 hold use 45
 swait 4
 check eat_cooked_rice | execute unless items entity @p weapon.mainhand raft:cooked_rice
@@ -301,6 +418,7 @@ cmd effect clear @p
 cmd effect give @p minecraft:hunger 2 255
 swait 45
 cmd item replace entity @p weapon.mainhand with raft:sea_grapes
+wait 2 render
 hold use 45
 swait 4
 check eat_sea_grapes | execute unless items entity @p weapon.mainhand raft:sea_grapes
@@ -308,6 +426,7 @@ cmd effect clear @p
 cmd effect give @p minecraft:hunger 2 255
 swait 45
 cmd item replace entity @p weapon.mainhand with raft:sushi_roll
+wait 2 render
 hold use 45
 swait 4
 check eat_sushi_roll | execute unless items entity @p weapon.mainhand raft:sushi_roll
@@ -315,6 +434,7 @@ cmd effect clear @p
 cmd effect give @p minecraft:hunger 2 255
 swait 45
 cmd item replace entity @p weapon.mainhand with raft:banana_bread
+wait 2 render
 hold use 45
 swait 4
 check eat_banana_bread | execute unless items entity @p weapon.mainhand raft:banana_bread
@@ -322,38 +442,43 @@ cmd effect clear @p
 cmd effect give @p minecraft:hunger 2 255
 swait 45
 cmd item replace entity @p weapon.mainhand with raft:fruit_salad
+wait 2 render
 hold use 45
 swait 4
 check eat_fruit_salad | execute if items entity @p weapon.mainhand minecraft:bowl
-check effect_fruit_salad | execute as @p if predicate {condition:'minecraft:entity_properties',entity:'this',predicate:{effects:{'minecraft:regeneration':{}}}}
+check effect_fruit_salad | execute as @p if predicate {type:'minecraft:entity_properties',entity:'this',predicate:{effects:{'minecraft:regeneration':{}}}}
 cmd effect clear @p
 cmd effect give @p minecraft:hunger 2 255
 swait 45
 cmd item replace entity @p weapon.mainhand with raft:chili_crab
+wait 2 render
 hold use 45
 swait 4
 check eat_chili_crab | execute if items entity @p weapon.mainhand minecraft:bowl
-check effect_chili_crab | execute as @p if predicate {condition:'minecraft:entity_properties',entity:'this',predicate:{effects:{'minecraft:fire_resistance':{}}}}
+check effect_chili_crab | execute as @p if predicate {type:'minecraft:entity_properties',entity:'this',predicate:{effects:{'minecraft:fire_resistance':{}}}}
 cmd effect clear @p
 cmd effect give @p minecraft:hunger 2 255
 swait 45
 cmd item replace entity @p weapon.mainhand with raft:island_curry
+wait 2 render
 hold use 45
 swait 4
 check eat_island_curry | execute if items entity @p weapon.mainhand minecraft:bowl
-check effect_island_curry | execute as @p if predicate {condition:'minecraft:entity_properties',entity:'this',predicate:{effects:{'minecraft:regeneration':{}}}}
+check effect_island_curry | execute as @p if predicate {type:'minecraft:entity_properties',entity:'this',predicate:{effects:{'minecraft:regeneration':{}}}}
 cmd effect clear @p
 cmd effect give @p minecraft:hunger 2 255
 swait 45
 cmd item replace entity @p weapon.mainhand with raft:seafood_chowder
+wait 2 render
 hold use 45
 swait 4
 check eat_seafood_chowder | execute if items entity @p weapon.mainhand minecraft:bowl
-check effect_seafood_chowder | execute as @p if predicate {condition:'minecraft:entity_properties',entity:'this',predicate:{effects:{'minecraft:water_breathing':{}}}}
+check effect_seafood_chowder | execute as @p if predicate {type:'minecraft:entity_properties',entity:'this',predicate:{effects:{'minecraft:water_breathing':{}}}}
 cmd effect clear @p
 cmd effect give @p minecraft:hunger 2 255
 swait 45
 cmd item replace entity @p weapon.mainhand with raft:sweet_potato_soup
+wait 2 render
 hold use 45
 swait 4
 check eat_sweet_potato_soup | execute if items entity @p weapon.mainhand minecraft:bowl
@@ -361,6 +486,7 @@ cmd effect clear @p
 cmd effect give @p minecraft:hunger 2 255
 swait 45
 cmd item replace entity @p weapon.mainhand with raft:coconut_ice_cream
+wait 2 render
 hold use 45
 swait 4
 check eat_coconut_ice_cream | execute if items entity @p weapon.mainhand minecraft:bowl
@@ -368,25 +494,33 @@ cmd effect clear @p
 cmd effect give @p minecraft:hunger 2 255
 swait 45
 cmd item replace entity @p weapon.mainhand with raft:tropical_smoothie
+wait 2 render
 hold use 45
 swait 4
 check eat_tropical_smoothie | execute if items entity @p weapon.mainhand minecraft:glass_bottle
-check effect_tropical_smoothie | execute as @p if predicate {condition:'minecraft:entity_properties',entity:'this',predicate:{effects:{'minecraft:haste':{}}}}
+check effect_tropical_smoothie | execute as @p if predicate {type:'minecraft:entity_properties',entity:'this',predicate:{effects:{'minecraft:haste':{}}}}
 cmd effect clear @p
 cmd setblock 14 202 8 raft:cooking_pot[facing=north]
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 14.5 201 6.0 0 40
+swait 3
 pose 14.5 201 6.0 0 40
 face 14.5 202.5 8.5
 swait 2
 cmd item replace entity @p weapon.mainhand with raft:cooked_rice
+wait 2 render
 use
 swait 4
 cmd item replace entity @p weapon.mainhand with raft:chili_pepper
+wait 2 render
 use
 swait 4
 cmd item replace entity @p weapon.mainhand with raft:sweet_potato
+wait 2 render
 use
 swait 4
 cmd item replace entity @p weapon.mainhand with raft:coconut
+wait 2 render
 use
 swait 4
 check pot_cooking | execute if block 14 202 8 raft:cooking_pot[contents=cooking]
@@ -395,10 +529,13 @@ shot 20_pot_cooking
 swaitfor 400 execute if block 14 202 8 raft:cooking_pot[contents=ready]
 check pot_ready | execute if block 14 202 8 raft:cooking_pot[contents=ready]
 cmd item replace entity @p weapon.mainhand with minecraft:bowl 3
+wait 2 render
 use
 swait 4
+wait 2 render
 use
 swait 4
+wait 2 render
 use
 swait 4
 check pot_served | execute if items entity @p container.* raft:island_curry
@@ -410,9 +547,13 @@ cmd data merge block 26 197 4 {timer:0}
 swait 4
 check trap_caught | execute if data block 26 197 4 Items[1]
 cmd item replace entity @p weapon.mainhand with minecraft:air
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 26.5 201 2.0 0 70
+swait 3
 pose 26.5 201 2.0 0 70
 face 26.5 197.5 4.5
 swait 2
+wait 2 render
 use
 swait 8
 wait 3 render
@@ -592,9 +733,13 @@ cmd clear @p
 cmd gamemode survival @p
 cmd summon minecraft:zombie 6.5 201 -4.5 {NoAI:1b,PersistenceRequired:1b,Silent:1b}
 cmd item replace entity @p weapon.mainhand with raft:shark_tooth_spear
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 6.5 201 -7.0 0 0
+swait 3
 pose 6.5 201 -7.0 0 0
 face 6.5 202.2 -4.5
 swait 25
+wait 2 render
 attack
 swait 5
 check spear_hits | execute as @e[type=zombie,limit=1] unless data entity @s {Health:20.0f}
@@ -602,15 +747,20 @@ cmd kill @e[type=zombie]
 cmd setblock 6 202 -6 minecraft:oak_leaves[persistent=true]
 cmd item replace entity @p weapon.mainhand with raft:machete
 face 6.5 202.5 -5.5
+wait 2 render
 hold attack 4
 swait 4
 check machete_cuts_leaves | execute if block 6 202 -6 air
 cmd summon minecraft:husk 6.5 201 3.5 {NoAI:1b,PersistenceRequired:1b,Silent:1b}
 cmd summon minecraft:item 6.5 202.4 -2.5 {Item:{id:'raft:palm_planks',count:5},NoGravity:1b,PickupDelay:0}
 cmd item replace entity @p weapon.mainhand with raft:boomerang
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 6.5 201 -7.0 0 0
+swait 3
 pose 6.5 201 -7.0 0 0
 face 6.5 202.2 3.5
 swait 3
+wait 2 render
 use
 wait 5 render
 third on
@@ -625,6 +775,7 @@ cmd kill @e[type=husk]
 cmd clear @p
 cmd item replace entity @p weapon.mainhand with raft:shell_helmet
 swait 3
+wait 2 render
 use
 swait 4
 check shell_helmet_equipped | execute if items entity @p armor.head raft:shell_helmet
@@ -633,13 +784,19 @@ cmd item replace entity @p armor.legs with raft:shell_leggings
 cmd item replace entity @p armor.feet with raft:shell_boots
 cmd tp @p 24.5 198 2.5
 swait 30
-check shell_set_resistance | execute as @p if predicate {condition:'minecraft:entity_properties',entity:'this',predicate:{effects:{'minecraft:resistance':{}}}}
+check shell_set_resistance | execute as @p if predicate {type:'minecraft:entity_properties',entity:'this',predicate:{effects:{'minecraft:resistance':{}}}}
 cmd tp @p 6.5 201 -8.5 0 0
 hud off
 third on
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 6.5 201 -8.5 180 10
+swait 3
 pose 6.5 201 -8.5 180 10
 wait 6 render
 shot 25_shell_armour_front
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 6.5 201 -8.5 0 10
+swait 3
 pose 6.5 201 -8.5 0 10
 wait 4 render
 shot 26_shell_armour_back
@@ -648,15 +805,19 @@ cmd item replace entity @p armor.chest with raft:explorer_chestplate
 cmd item replace entity @p armor.legs with raft:explorer_leggings
 cmd item replace entity @p armor.feet with raft:explorer_boots
 swait 30
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 6.5 201 -8.5 180 10
+swait 3
 pose 6.5 201 -8.5 180 10
 wait 6 render
 shot 27_explorer_front
 third off
 hud on
-check explorer_luck | execute as @p if predicate {condition:'minecraft:entity_properties',entity:'this',predicate:{effects:{'minecraft:luck':{}}}}
+check explorer_luck | execute as @p if predicate {type:'minecraft:entity_properties',entity:'this',predicate:{effects:{'minecraft:luck':{}}}}
 check explorer_speed | attribute @p minecraft:movement_speed modifier value get raft:explorer_speed 10
 cmd item replace entity @p weapon.mainhand with raft:wreck_compass
 swait 3
+wait 2 render
 use
 swait 40
 check wreck_compass_points | execute if items entity @p weapon.mainhand raft:wreck_compass[minecraft:lodestone_tracker]
@@ -664,6 +825,9 @@ wait 3 render
 shot 28_wreck_compass
 cmd summon minecraft:armor_stand 6.5 201 30.5 {NoGravity:1b,CustomName:'Target',CustomNameVisible:1b}
 cmd item replace entity @p weapon.mainhand with raft:captains_spyglass
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 6.5 201 -8.5 0 0
+swait 3
 pose 6.5 201 -8.5 0 0
 face 6.5 202 30.5
 press use
@@ -672,12 +836,17 @@ shot 29_captains_spyglass
 release use
 cmd item replace entity @p weapon.mainhand with minecraft:fishing_rod
 cmd item replace entity @p weapon.offhand with raft:fish_bait 4
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 24.5 201 -1.5 0 40
+swait 3
 pose 24.5 201 -1.5 0 40
 face 24.5 199.5 2.5
 swait 3
+wait 2 render
 use
 swait 10
 cmd execute store result storage bc:t n int 1 run clear @p raft:fish_bait 0
 check bait_used_on_cast | execute if data storage bc:t {n:3}
+wait 2 render
 use
 checks

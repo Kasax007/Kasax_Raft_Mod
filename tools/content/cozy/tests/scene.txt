@@ -95,39 +95,70 @@ cmd setblock 18 150 -1 raft:wild_banana
 cmd setblock 19 150 0 raft:wild_chili
 swait 40
 hud off
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 6.5 156 -13 0 20
+swait 3
 pose 6.5 156 -13 0 20
 wait 8 render
 shot 10_scene_day
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p -8 155 -6 -50 18
+swait 3
 pose -8 155 -6 -50 18
 wait 8 render
 shot 11_scene_side
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 5.5 152.5 -6 0 18
+swait 3
 pose 5.5 152.5 -6 0 18
 wait 8 render
 shot 16_beach
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 6 152 3.5 0 5
+swait 3
 pose 6 152 3.5 0 5
 wait 8 render
 shot 17_wall
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 18.5 153 -6 0 30
+swait 3
 pose 18.5 153 -6 0 30
 wait 8 render
 shot 18_garden
 cmd time set 12900
 swait 10
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 6.5 155 -11 0 18
+swait 3
 pose 6.5 155 -11 0 18
 wait 8 render
 shot 12_scene_dusk
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 6 152 2.5 0 8
+swait 3
 pose 6 152 2.5 0 8
 wait 6 render
 shot 12b_dusk_inside
 cmd time set 6000
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 14.5 153 1.0 0 40
+swait 3
 pose 14.5 153 1.0 0 40
 wait 6 render
 shot 14_kitchen
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 3.5 152.6 5.4 0 45
+swait 3
 pose 3.5 152.6 5.4 0 45
 wait 6 render
 shot 15_plate
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 7.5 150 6.3 0 30
+swait 3
 pose 7.5 150 6.3 0 30
 face 7.5 150.5 8.5
 swait 3
+wait 2 render
 use
 swait 80
 hud on
@@ -136,5 +167,5 @@ face 7.5 151.6 10
 wait 8 render
 shot 13_resting
 third off
-check rested_in_scene | execute as @p if predicate {condition:'minecraft:entity_properties',entity:'this',predicate:{effects:{'raft:rested':{duration:{min:12000}}}}}
+check rested_in_scene | execute as @p if predicate {type:'minecraft:entity_properties',entity:'this',predicate:{effects:{'raft:rested':{duration:{min:12000}}}}}
 checks
