@@ -12,70 +12,73 @@
                 "feature": {
                   "feature": {
                     "type": "minecraft:simple_block",
-                    "to_place": {
-                      "type": "minecraft:weighted_state_provider",
-                      "entries": [
-                        {
-                          "data": {
-                            "Name": "minecraft:tube_coral"
+                    "config": {
+                      "to_place": {
+                        "type": "minecraft:weighted_state_provider",
+                        "entries": [
+                          {
+                            "data": {
+                              "Name": "minecraft:tube_coral"
+                            },
+                            "weight": 1
                           },
-                          "weight": 1
-                        },
-                        {
-                          "data": {
-                            "Name": "minecraft:tube_coral_fan"
+                          {
+                            "data": {
+                              "Name": "minecraft:tube_coral_fan"
+                            },
+                            "weight": 1
                           },
-                          "weight": 1
-                        },
-                        {
-                          "data": {
-                            "Name": "minecraft:brain_coral"
+                          {
+                            "data": {
+                              "Name": "minecraft:brain_coral"
+                            },
+                            "weight": 1
                           },
-                          "weight": 1
-                        },
-                        {
-                          "data": {
-                            "Name": "minecraft:brain_coral_fan"
+                          {
+                            "data": {
+                              "Name": "minecraft:brain_coral_fan"
+                            },
+                            "weight": 1
                           },
-                          "weight": 1
-                        },
-                        {
-                          "data": {
-                            "Name": "minecraft:bubble_coral"
+                          {
+                            "data": {
+                              "Name": "minecraft:bubble_coral"
+                            },
+                            "weight": 1
                           },
-                          "weight": 1
-                        },
-                        {
-                          "data": {
-                            "Name": "minecraft:bubble_coral_fan"
+                          {
+                            "data": {
+                              "Name": "minecraft:bubble_coral_fan"
+                            },
+                            "weight": 1
                           },
-                          "weight": 1
-                        },
-                        {
-                          "data": {
-                            "Name": "minecraft:fire_coral"
+                          {
+                            "data": {
+                              "Name": "minecraft:fire_coral"
+                            },
+                            "weight": 1
                           },
-                          "weight": 1
-                        },
-                        {
-                          "data": {
-                            "Name": "minecraft:fire_coral_fan"
+                          {
+                            "data": {
+                              "Name": "minecraft:fire_coral_fan"
+                            },
+                            "weight": 1
                           },
-                          "weight": 1
-                        },
-                        {
-                          "data": {
-                            "Name": "minecraft:horn_coral"
+                          {
+                            "data": {
+                              "Name": "minecraft:horn_coral"
+                            },
+                            "weight": 1
                           },
-                          "weight": 1
-                        },
-                        {
-                          "data": {
-                            "Name": "minecraft:horn_coral_fan"
-                          },
-                          "weight": 1
-                        }
-                      ]
+                          {
+                            "data": {
+                              "Name": "minecraft:horn_coral_fan"
+                            },
+                            "weight": 1
+                          }
+                        ]
+                      },
+                      "schedule_tick": false
                     }
                   },
                   "placement": []
@@ -92,7 +95,8 @@
                 "chance": 0.8636,
                 "feature": {
                   "feature": {
-                    "type": "minecraft:no_op"
+                    "type": "minecraft:no_op",
+                    "config": {}
                   },
                   "placement": []
                 }
@@ -102,28 +106,31 @@
                 "feature": {
                   "feature": {
                     "type": "minecraft:simple_block",
-                    "to_place": {
-                      "type": "minecraft:weighted",
-                      "entries": [
-                        {
-                          "data": {
-                            "id": "raft:sea_anemone_red",
-                            "properties": {
-                              "waterlogged": "true"
-                            }
+                    "config": {
+                      "to_place": {
+                        "type": "minecraft:weighted_state_provider",
+                        "entries": [
+                          {
+                            "data": {
+                              "Name": "raft:sea_anemone_red",
+                              "Properties": {
+                                "waterlogged": "true"
+                              }
+                            },
+                            "weight": 2
                           },
-                          "weight": 2
-                        },
-                        {
-                          "data": {
-                            "id": "raft:sea_anemone_purple",
-                            "properties": {
-                              "waterlogged": "true"
-                            }
-                          },
-                          "weight": 2
-                        }
-                      ]
+                          {
+                            "data": {
+                              "Name": "raft:sea_anemone_purple",
+                              "Properties": {
+                                "waterlogged": "true"
+                              }
+                            },
+                            "weight": 2
+                          }
+                        ]
+                      },
+                      "schedule_tick": false
                     }
                   },
                   "placement": []
@@ -134,142 +141,145 @@
                 "feature": {
                   "feature": {
                     "type": "minecraft:simple_block",
-                    "to_place": {
-                      "type": "minecraft:weighted",
-                      "entries": [
-                        {
-                          "data": {
-                            "id": "raft:starfish_orange",
-                            "properties": {
-                              "face": "floor",
-                              "facing": "north",
-                              "waterlogged": "true"
-                            }
+                    "config": {
+                      "to_place": {
+                        "type": "minecraft:weighted_state_provider",
+                        "entries": [
+                          {
+                            "data": {
+                              "Name": "raft:starfish_orange",
+                              "Properties": {
+                                "face": "floor",
+                                "facing": "north",
+                                "waterlogged": "true"
+                              }
+                            },
+                            "weight": 1
                           },
-                          "weight": 1
-                        },
-                        {
-                          "data": {
-                            "id": "raft:starfish_orange",
-                            "properties": {
-                              "face": "floor",
-                              "facing": "east",
-                              "waterlogged": "true"
-                            }
+                          {
+                            "data": {
+                              "Name": "raft:starfish_orange",
+                              "Properties": {
+                                "face": "floor",
+                                "facing": "east",
+                                "waterlogged": "true"
+                              }
+                            },
+                            "weight": 1
                           },
-                          "weight": 1
-                        },
-                        {
-                          "data": {
-                            "id": "raft:starfish_orange",
-                            "properties": {
-                              "face": "floor",
-                              "facing": "south",
-                              "waterlogged": "true"
-                            }
+                          {
+                            "data": {
+                              "Name": "raft:starfish_orange",
+                              "Properties": {
+                                "face": "floor",
+                                "facing": "south",
+                                "waterlogged": "true"
+                              }
+                            },
+                            "weight": 1
                           },
-                          "weight": 1
-                        },
-                        {
-                          "data": {
-                            "id": "raft:starfish_orange",
-                            "properties": {
-                              "face": "floor",
-                              "facing": "west",
-                              "waterlogged": "true"
-                            }
+                          {
+                            "data": {
+                              "Name": "raft:starfish_orange",
+                              "Properties": {
+                                "face": "floor",
+                                "facing": "west",
+                                "waterlogged": "true"
+                              }
+                            },
+                            "weight": 1
                           },
-                          "weight": 1
-                        },
-                        {
-                          "data": {
-                            "id": "raft:starfish_purple",
-                            "properties": {
-                              "face": "floor",
-                              "facing": "north",
-                              "waterlogged": "true"
-                            }
+                          {
+                            "data": {
+                              "Name": "raft:starfish_purple",
+                              "Properties": {
+                                "face": "floor",
+                                "facing": "north",
+                                "waterlogged": "true"
+                              }
+                            },
+                            "weight": 1
                           },
-                          "weight": 1
-                        },
-                        {
-                          "data": {
-                            "id": "raft:starfish_purple",
-                            "properties": {
-                              "face": "floor",
-                              "facing": "east",
-                              "waterlogged": "true"
-                            }
+                          {
+                            "data": {
+                              "Name": "raft:starfish_purple",
+                              "Properties": {
+                                "face": "floor",
+                                "facing": "east",
+                                "waterlogged": "true"
+                              }
+                            },
+                            "weight": 1
                           },
-                          "weight": 1
-                        },
-                        {
-                          "data": {
-                            "id": "raft:starfish_purple",
-                            "properties": {
-                              "face": "floor",
-                              "facing": "south",
-                              "waterlogged": "true"
-                            }
+                          {
+                            "data": {
+                              "Name": "raft:starfish_purple",
+                              "Properties": {
+                                "face": "floor",
+                                "facing": "south",
+                                "waterlogged": "true"
+                              }
+                            },
+                            "weight": 1
                           },
-                          "weight": 1
-                        },
-                        {
-                          "data": {
-                            "id": "raft:starfish_purple",
-                            "properties": {
-                              "face": "floor",
-                              "facing": "west",
-                              "waterlogged": "true"
-                            }
+                          {
+                            "data": {
+                              "Name": "raft:starfish_purple",
+                              "Properties": {
+                                "face": "floor",
+                                "facing": "west",
+                                "waterlogged": "true"
+                              }
+                            },
+                            "weight": 1
                           },
-                          "weight": 1
-                        },
-                        {
-                          "data": {
-                            "id": "raft:starfish_red",
-                            "properties": {
-                              "face": "floor",
-                              "facing": "north",
-                              "waterlogged": "true"
-                            }
+                          {
+                            "data": {
+                              "Name": "raft:starfish_red",
+                              "Properties": {
+                                "face": "floor",
+                                "facing": "north",
+                                "waterlogged": "true"
+                              }
+                            },
+                            "weight": 1
                           },
-                          "weight": 1
-                        },
-                        {
-                          "data": {
-                            "id": "raft:starfish_red",
-                            "properties": {
-                              "face": "floor",
-                              "facing": "east",
-                              "waterlogged": "true"
-                            }
+                          {
+                            "data": {
+                              "Name": "raft:starfish_red",
+                              "Properties": {
+                                "face": "floor",
+                                "facing": "east",
+                                "waterlogged": "true"
+                              }
+                            },
+                            "weight": 1
                           },
-                          "weight": 1
-                        },
-                        {
-                          "data": {
-                            "id": "raft:starfish_red",
-                            "properties": {
-                              "face": "floor",
-                              "facing": "south",
-                              "waterlogged": "true"
-                            }
+                          {
+                            "data": {
+                              "Name": "raft:starfish_red",
+                              "Properties": {
+                                "face": "floor",
+                                "facing": "south",
+                                "waterlogged": "true"
+                              }
+                            },
+                            "weight": 1
                           },
-                          "weight": 1
-                        },
-                        {
-                          "data": {
-                            "id": "raft:starfish_red",
-                            "properties": {
-                              "face": "floor",
-                              "facing": "west",
-                              "waterlogged": "true"
-                            }
-                          },
-                          "weight": 1
-                        }
-                      ]
+                          {
+                            "data": {
+                              "Name": "raft:starfish_red",
+                              "Properties": {
+                                "face": "floor",
+                                "facing": "west",
+                                "waterlogged": "true"
+                              }
+                            },
+                            "weight": 1
+                          }
+                        ]
+                      },
+                      "schedule_tick": false
                     }
                   },
                   "placement": []
@@ -279,11 +289,17 @@
             "default": {
               "feature": {
                 "type": "minecraft:simple_block",
-                "to_place": {
-                  "id": "raft:sea_urchin",
-                  "properties": {
-                    "waterlogged": "true"
-                  }
+                "config": {
+                  "to_place": {
+                    "type": "minecraft:simple_state_provider",
+                    "state": {
+                      "Name": "raft:sea_urchin",
+                      "Properties": {
+                        "waterlogged": "true"
+                      }
+                    }
+                  },
+                  "schedule_tick": false
                 }
               },
               "placement": []

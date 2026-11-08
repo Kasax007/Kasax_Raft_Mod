@@ -22,8 +22,14 @@ def walk(o, kind):
         return BLOCK_RENAMES.get(o, o)
     if not isinstance(o, dict):
         return o
+    # inline configured features in the newer game's flat form ({"type", settings}): nest the settings under config
+    f = o.get('feature')
+    if isinstance(f, dict) and 'type' in f and 'config' not in f and len(f) > 1:
+        o = dict(o, feature=feature.configured(f))
     o = {k: walk(v, kind) for k, v in o.items()}
     t = o.get('type')
+    if t == 'minecraft:no_op' and 'config' not in o:
+        o['config'] = {}
     # int trapezoid (min/max/plateau): Beach Craft's own provider on 1.21.1 (the height provider has min_inclusive)
     if t == 'minecraft:trapezoid' and 'min' in o and 'max' in o and isinstance(o['min'], int):
         o['type'] = 'raft:trapezoid'
