@@ -4,40 +4,102 @@
     "features": [
       {
         "feature": {
-          "type": "minecraft:weighted_random_selector",
+          "type": "minecraft:random_selector",
           "config": {
             "features": [
               {
-                "data": {
+                "chance": 0.2247,
+                "feature": {
                   "feature": {
                     "type": "minecraft:simple_block",
                     "to_place": {
-                      "type": "minecraft:random_block",
-                      "blocks": "#minecraft:corals"
+                      "type": "minecraft:weighted_state_provider",
+                      "entries": [
+                        {
+                          "data": {
+                            "Name": "minecraft:tube_coral"
+                          },
+                          "weight": 1
+                        },
+                        {
+                          "data": {
+                            "Name": "minecraft:tube_coral_fan"
+                          },
+                          "weight": 1
+                        },
+                        {
+                          "data": {
+                            "Name": "minecraft:brain_coral"
+                          },
+                          "weight": 1
+                        },
+                        {
+                          "data": {
+                            "Name": "minecraft:brain_coral_fan"
+                          },
+                          "weight": 1
+                        },
+                        {
+                          "data": {
+                            "Name": "minecraft:bubble_coral"
+                          },
+                          "weight": 1
+                        },
+                        {
+                          "data": {
+                            "Name": "minecraft:bubble_coral_fan"
+                          },
+                          "weight": 1
+                        },
+                        {
+                          "data": {
+                            "Name": "minecraft:fire_coral"
+                          },
+                          "weight": 1
+                        },
+                        {
+                          "data": {
+                            "Name": "minecraft:fire_coral_fan"
+                          },
+                          "weight": 1
+                        },
+                        {
+                          "data": {
+                            "Name": "minecraft:horn_coral"
+                          },
+                          "weight": 1
+                        },
+                        {
+                          "data": {
+                            "Name": "minecraft:horn_coral_fan"
+                          },
+                          "weight": 1
+                        }
+                      ]
                     }
                   },
                   "placement": []
-                },
-                "weight": 20
+                }
               },
               {
-                "data": {
+                "chance": 0.0435,
+                "feature": {
                   "feature": "minecraft:sea_pickle",
                   "placement": []
-                },
-                "weight": 3
+                }
               },
               {
-                "data": {
+                "chance": 0.8636,
+                "feature": {
                   "feature": {
                     "type": "minecraft:no_op"
                   },
                   "placement": []
-                },
-                "weight": 57
+                }
               },
               {
-                "data": {
+                "chance": 0.6667,
+                "feature": {
                   "feature": {
                     "type": "minecraft:simple_block",
                     "to_place": {
@@ -65,11 +127,11 @@
                     }
                   },
                   "placement": []
-                },
-                "weight": 6
+                }
               },
               {
-                "data": {
+                "chance": 0.6667,
+                "feature": {
                   "feature": {
                     "type": "minecraft:simple_block",
                     "to_place": {
@@ -211,25 +273,21 @@
                     }
                   },
                   "placement": []
-                },
-                "weight": 2
-              },
-              {
-                "data": {
-                  "feature": {
-                    "type": "minecraft:simple_block",
-                    "to_place": {
-                      "id": "raft:sea_urchin",
-                      "properties": {
-                        "waterlogged": "true"
-                      }
-                    }
-                  },
-                  "placement": []
-                },
-                "weight": 1
+                }
               }
-            ]
+            ],
+            "default": {
+              "feature": {
+                "type": "minecraft:simple_block",
+                "to_place": {
+                  "id": "raft:sea_urchin",
+                  "properties": {
+                    "waterlogged": "true"
+                  }
+                }
+              },
+              "placement": []
+            }
           }
         },
         "placement": [
@@ -246,11 +304,41 @@
           "type": "minecraft:simple_block",
           "config": {
             "to_place": {
-              "type": "minecraft:rotated",
-              "direction": "north",
+              "type": "minecraft:rotated_block_provider",
               "state": {
-                "type": "minecraft:random_block",
-                "blocks": "#minecraft:wall_corals"
+                "type": "minecraft:weighted_state_provider",
+                "entries": [
+                  {
+                    "data": {
+                      "Name": "minecraft:tube_coral_wall_fan"
+                    },
+                    "weight": 1
+                  },
+                  {
+                    "data": {
+                      "Name": "minecraft:brain_coral_wall_fan"
+                    },
+                    "weight": 1
+                  },
+                  {
+                    "data": {
+                      "Name": "minecraft:bubble_coral_wall_fan"
+                    },
+                    "weight": 1
+                  },
+                  {
+                    "data": {
+                      "Name": "minecraft:fire_coral_wall_fan"
+                    },
+                    "weight": 1
+                  },
+                  {
+                    "data": {
+                      "Name": "minecraft:horn_coral_wall_fan"
+                    },
+                    "weight": 1
+                  }
+                ]
               }
             },
             "schedule_tick": false
@@ -258,7 +346,7 @@
         },
         "placement": [
           {
-            "type": "minecraft:random_chance",
+            "type": "raft:random_chance",
             "chance": 0.2
           },
           {
@@ -281,11 +369,41 @@
           "type": "minecraft:simple_block",
           "config": {
             "to_place": {
-              "type": "minecraft:rotated",
-              "direction": "east",
+              "type": "minecraft:rotated_block_provider",
               "state": {
-                "type": "minecraft:random_block",
-                "blocks": "#minecraft:wall_corals"
+                "type": "minecraft:weighted_state_provider",
+                "entries": [
+                  {
+                    "data": {
+                      "Name": "minecraft:tube_coral_wall_fan"
+                    },
+                    "weight": 1
+                  },
+                  {
+                    "data": {
+                      "Name": "minecraft:brain_coral_wall_fan"
+                    },
+                    "weight": 1
+                  },
+                  {
+                    "data": {
+                      "Name": "minecraft:bubble_coral_wall_fan"
+                    },
+                    "weight": 1
+                  },
+                  {
+                    "data": {
+                      "Name": "minecraft:fire_coral_wall_fan"
+                    },
+                    "weight": 1
+                  },
+                  {
+                    "data": {
+                      "Name": "minecraft:horn_coral_wall_fan"
+                    },
+                    "weight": 1
+                  }
+                ]
               }
             },
             "schedule_tick": false
@@ -293,7 +411,7 @@
         },
         "placement": [
           {
-            "type": "minecraft:random_chance",
+            "type": "raft:random_chance",
             "chance": 0.2
           },
           {
@@ -316,11 +434,41 @@
           "type": "minecraft:simple_block",
           "config": {
             "to_place": {
-              "type": "minecraft:rotated",
-              "direction": "south",
+              "type": "minecraft:rotated_block_provider",
               "state": {
-                "type": "minecraft:random_block",
-                "blocks": "#minecraft:wall_corals"
+                "type": "minecraft:weighted_state_provider",
+                "entries": [
+                  {
+                    "data": {
+                      "Name": "minecraft:tube_coral_wall_fan"
+                    },
+                    "weight": 1
+                  },
+                  {
+                    "data": {
+                      "Name": "minecraft:brain_coral_wall_fan"
+                    },
+                    "weight": 1
+                  },
+                  {
+                    "data": {
+                      "Name": "minecraft:bubble_coral_wall_fan"
+                    },
+                    "weight": 1
+                  },
+                  {
+                    "data": {
+                      "Name": "minecraft:fire_coral_wall_fan"
+                    },
+                    "weight": 1
+                  },
+                  {
+                    "data": {
+                      "Name": "minecraft:horn_coral_wall_fan"
+                    },
+                    "weight": 1
+                  }
+                ]
               }
             },
             "schedule_tick": false
@@ -328,7 +476,7 @@
         },
         "placement": [
           {
-            "type": "minecraft:random_chance",
+            "type": "raft:random_chance",
             "chance": 0.2
           },
           {
@@ -351,11 +499,41 @@
           "type": "minecraft:simple_block",
           "config": {
             "to_place": {
-              "type": "minecraft:rotated",
-              "direction": "west",
+              "type": "minecraft:rotated_block_provider",
               "state": {
-                "type": "minecraft:random_block",
-                "blocks": "#minecraft:wall_corals"
+                "type": "minecraft:weighted_state_provider",
+                "entries": [
+                  {
+                    "data": {
+                      "Name": "minecraft:tube_coral_wall_fan"
+                    },
+                    "weight": 1
+                  },
+                  {
+                    "data": {
+                      "Name": "minecraft:brain_coral_wall_fan"
+                    },
+                    "weight": 1
+                  },
+                  {
+                    "data": {
+                      "Name": "minecraft:bubble_coral_wall_fan"
+                    },
+                    "weight": 1
+                  },
+                  {
+                    "data": {
+                      "Name": "minecraft:fire_coral_wall_fan"
+                    },
+                    "weight": 1
+                  },
+                  {
+                    "data": {
+                      "Name": "minecraft:horn_coral_wall_fan"
+                    },
+                    "weight": 1
+                  }
+                ]
               }
             },
             "schedule_tick": false
@@ -363,7 +541,7 @@
         },
         "placement": [
           {
-            "type": "minecraft:random_chance",
+            "type": "raft:random_chance",
             "chance": 0.2
           },
           {

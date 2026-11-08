@@ -35,7 +35,9 @@
       "type": "minecraft:block_predicate_filter",
       "predicate": {
         "type": "minecraft:would_survive",
-        "state": "raft:palm_sapling"
+        "state": {
+          "Name": "raft:palm_sapling"
+        }
       }
     }
   ]

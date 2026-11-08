@@ -11,21 +11,15 @@
       "spawns": [
         {
           "type": "raft:drowned_corsair",
-          "count": {
-            "type": "minecraft:uniform",
-            "max_inclusive": 2,
-            "min_inclusive": 1
-          },
-          "weight": 6
+          "weight": 6,
+          "minCount": 1,
+          "maxCount": 2
         },
         {
           "type": "minecraft:drowned",
-          "count": {
-            "type": "minecraft:uniform",
-            "max_inclusive": 1,
-            "min_inclusive": 1
-          },
-          "weight": 2
+          "weight": 2,
+          "minCount": 1,
+          "maxCount": 1
         }
       ]
     }

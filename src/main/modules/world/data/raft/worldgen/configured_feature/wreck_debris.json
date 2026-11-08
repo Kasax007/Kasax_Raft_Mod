@@ -65,7 +65,7 @@
         },
         {
           "data": {
-            "Name": "minecraft:iron_chain",
+            "Name": "minecraft:chain",
             "Properties": {
               "axis": "x",
               "waterlogged": "true"

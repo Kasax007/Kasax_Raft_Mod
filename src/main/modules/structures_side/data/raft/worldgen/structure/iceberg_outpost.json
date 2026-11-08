@@ -10,21 +10,15 @@
       "spawns": [
         {
           "type": "raft:penguin",
-          "count": {
-            "type": "minecraft:uniform",
-            "max_inclusive": 4,
-            "min_inclusive": 2
-          },
-          "weight": 6
+          "weight": 6,
+          "minCount": 2,
+          "maxCount": 4
         },
         {
           "type": "minecraft:polar_bear",
-          "count": {
-            "type": "minecraft:uniform",
-            "max_inclusive": 1,
-            "min_inclusive": 1
-          },
-          "weight": 1
+          "weight": 1,
+          "minCount": 1,
+          "maxCount": 1
         }
       ]
     }

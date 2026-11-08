@@ -24,8 +24,8 @@ public record FallenTreeFeature(BlockStateProvider trunkProvider, IntProvider lo
     public static final MapCodec<FallenTreeFeature> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             BlockStateProvider.CODEC.fieldOf("trunk_provider").forGetter(FallenTreeFeature::trunkProvider),
             IntProvider.codec(0, 16).fieldOf("log_length").forGetter(FallenTreeFeature::logLength),
-            Codec.unit(List.of()).optionalFieldOf("log_decorators", List.of()).forGetter(f -> List.of()),
-            Codec.unit(List.of()).optionalFieldOf("stump_decorators", List.of()).forGetter(f -> List.of())
+            Codec.PASSTHROUGH.listOf().optionalFieldOf("log_decorators", List.of()).forGetter(f -> List.of()),
+            Codec.PASSTHROUGH.listOf().optionalFieldOf("stump_decorators", List.of()).forGetter(f -> List.of())
     ).apply(i, (t, l, a, b) -> new FallenTreeFeature(t, l)));
 
     @Override

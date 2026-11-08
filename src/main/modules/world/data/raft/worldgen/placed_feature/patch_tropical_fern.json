@@ -22,19 +22,19 @@
     {
       "type": "raft:offset",
       "x": {
-        "type": "minecraft:trapezoid",
+        "type": "raft:trapezoid",
         "max": 6,
         "min": -6,
         "plateau": 0
       },
       "y": {
-        "type": "minecraft:trapezoid",
+        "type": "raft:trapezoid",
         "max": 3,
         "min": -3,
         "plateau": 0
       },
       "z": {
-        "type": "minecraft:trapezoid",
+        "type": "raft:trapezoid",
         "max": 6,
         "min": -6,
         "plateau": 0

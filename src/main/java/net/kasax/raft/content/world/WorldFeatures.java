@@ -32,6 +32,8 @@ public final class WorldFeatures {
         register("block_blob", net.kasax.raft.compat.worldgen.BlockBlobFeature.CODEC);
         register("fallen_tree", net.kasax.raft.compat.worldgen.FallenTreeFeature.CODEC);
         Registry.register(BuiltInRegistries.PLACEMENT_MODIFIER_TYPE, Raft.id("offset"), net.kasax.raft.compat.worldgen.OffsetPlacement.TYPE);
+        Registry.register(BuiltInRegistries.PLACEMENT_MODIFIER_TYPE, Raft.id("random_chance"), net.kasax.raft.compat.worldgen.RandomChancePlacement.TYPE);
+        Registry.register(BuiltInRegistries.INT_PROVIDER_TYPE, Raft.id("trapezoid"), net.kasax.raft.compat.worldgen.TrapezoidInt.TYPE);
         // placement filter: keeps features (basalt columns, ash, lava, boulders...) out of structures
         Registry.register(BuiltInRegistries.PLACEMENT_MODIFIER_TYPE, Raft.id("clear_of_structures"), ClearOfStructuresFilter.TYPE);
     }

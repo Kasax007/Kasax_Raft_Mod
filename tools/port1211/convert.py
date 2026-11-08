@@ -10,7 +10,7 @@ import os
 import shutil
 import sys
 
-from . import advancement, density, feature, loot, models, nbt121, noise, recipe, worldgen
+from . import advancement, density, feature, fixups, loot, models, nbt121, noise, recipe, worldgen
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.normpath(os.path.join(HERE, '..', '..', 'src', 'main'))
@@ -106,6 +106,12 @@ def convert_data(root, stats, extras):
             extras.setdefault('material_rules', {})[ns + ':' + os.path.relpath(p, os.path.join(wg, 'material_rule'))[:-5]] = (p, load(p))
         for p, rel in files(wg, 'material_condition'):
             extras.setdefault('material_rules', {})[ns + ':' + os.path.relpath(p, os.path.join(wg, 'material_condition'))[:-5]] = (p, load(p))
+        for sub in ('configured_feature', 'placed_feature', 'processor_list', 'structure'):
+            for p, rel in files(wg, sub):
+                j = load(p)
+                f = fixups.walk(j, sub)
+                if f != j:
+                    save(p, f); stats['fixups'] = stats.get('fixups', 0) + 1
         for p, rel in files(nsdir, 'structure'):
             if p.endswith('.nbt'):
                 if nbt121.convert(p):

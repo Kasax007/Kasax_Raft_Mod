@@ -12,8 +12,8 @@
           "input_predicate": {
             "predicate_type": "minecraft:blockstate_match",
             "block_state": {
-              "id": "raft:buoy_red",
-              "properties": {
+              "Name": "raft:buoy_red",
+              "Properties": {
                 "waterlogged": "false"
               }
             }
@@ -33,8 +33,8 @@
           "input_predicate": {
             "predicate_type": "minecraft:blockstate_match",
             "block_state": {
-              "id": "raft:buoy_red",
-              "properties": {
+              "Name": "raft:buoy_red",
+              "Properties": {
                 "waterlogged": "false"
               }
             }
@@ -50,8 +50,8 @@
           "input_predicate": {
             "predicate_type": "minecraft:blockstate_match",
             "block_state": {
-              "id": "raft:buoy_green",
-              "properties": {
+              "Name": "raft:buoy_green",
+              "Properties": {
                 "waterlogged": "false"
               }
             }
@@ -71,8 +71,8 @@
           "input_predicate": {
             "predicate_type": "minecraft:blockstate_match",
             "block_state": {
-              "id": "raft:buoy_green",
-              "properties": {
+              "Name": "raft:buoy_green",
+              "Properties": {
                 "waterlogged": "false"
               }
             }
@@ -88,8 +88,8 @@
           "input_predicate": {
             "predicate_type": "minecraft:blockstate_match",
             "block_state": {
-              "id": "raft:palm_slab",
-              "properties": {
+              "Name": "raft:palm_slab",
+              "Properties": {
                 "type": "bottom",
                 "waterlogged": "false"
               }
@@ -111,8 +111,8 @@
           "input_predicate": {
             "predicate_type": "minecraft:blockstate_match",
             "block_state": {
-              "id": "raft:palm_slab",
-              "properties": {
+              "Name": "raft:palm_slab",
+              "Properties": {
                 "type": "bottom",
                 "waterlogged": "false"
               }
@@ -129,8 +129,8 @@
           "input_predicate": {
             "predicate_type": "minecraft:blockstate_match",
             "block_state": {
-              "id": "raft:palm_stairs",
-              "properties": {
+              "Name": "raft:palm_stairs",
+              "Properties": {
                 "facing": "east",
                 "half": "bottom",
                 "shape": "straight",
@@ -156,8 +156,8 @@
           "input_predicate": {
             "predicate_type": "minecraft:blockstate_match",
             "block_state": {
-              "id": "raft:palm_stairs",
-              "properties": {
+              "Name": "raft:palm_stairs",
+              "Properties": {
                 "facing": "east",
                 "half": "bottom",
                 "shape": "straight",
@@ -176,8 +176,8 @@
           "input_predicate": {
             "predicate_type": "minecraft:blockstate_match",
             "block_state": {
-              "id": "raft:palm_stairs",
-              "properties": {
+              "Name": "raft:palm_stairs",
+              "Properties": {
                 "facing": "west",
                 "half": "bottom",
                 "shape": "straight",
@@ -203,8 +203,8 @@
           "input_predicate": {
             "predicate_type": "minecraft:blockstate_match",
             "block_state": {
-              "id": "raft:palm_stairs",
-              "properties": {
+              "Name": "raft:palm_stairs",
+              "Properties": {
                 "facing": "west",
                 "half": "bottom",
                 "shape": "straight",

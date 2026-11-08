@@ -10,6 +10,8 @@ import io
 import struct
 
 DATA_VERSION_1211 = 3955
+# blocks the newer game renamed
+BLOCK_RENAMES = {'minecraft:iron_chain': 'minecraft:chain'}
 
 
 class Tag:
@@ -140,6 +142,9 @@ def convert(path, report=None):
         if 'properties' in st:
             st['Properties'] = st.pop('properties')
             changed = True
+        if st['Name'].v in BLOCK_RENAMES:
+            st['Name'] = Tag(8, BLOCK_RENAMES[st['Name'].v])
+            changed = True
         if report is not None:
             report.setdefault('blocks', set()).add(st['Name'].v)
     if 'palettes' in d:
@@ -151,6 +156,9 @@ def convert(path, report=None):
                     changed = True
                 if 'properties' in st:
                     st['Properties'] = st.pop('properties')
+                    changed = True
+                if 'Name' in st and st['Name'].v in BLOCK_RENAMES:
+                    st['Name'] = Tag(8, BLOCK_RENAMES[st['Name'].v])
                     changed = True
     dv = d.get('DataVersion')
     if dv is None or dv.v != DATA_VERSION_1211:
