@@ -28,15 +28,15 @@ public final class CozyShapeData {
         map.put("wicker_basket", new double[][]{{1.5, 0.0, 2.5, 14.5, 10.5, 13.5}});
         map.put("wicker_basket_open", new double[][]{{2.0, 0.0, 3.0, 14.0, 9.0, 13.0}});
         map.put("rope_rug", new double[][]{{0.0, 0.0, 0.0, 16.0, 1.0, 16.0}});
-        map.put("hurricane_lantern", new double[][]{{4.5, 0.0, 4.5, 11.5, 12.0, 11.5}});
-        map.put("hurricane_lantern_hanging", new double[][]{{4.5, 3.0, 4.5, 11.5, 15.0, 11.5}, {7.5, 15.0, 7.5, 8.5, 16.0, 8.5}});
+        map.put("hurricane_lantern", new double[][]{{4.5, 0.0, 4.5, 11.5, 12.0, 11.5}, {4.0, 8.0, 7.5, 12.0, 14.0, 8.5}});
+        map.put("hurricane_lantern_hanging", new double[][]{{4.5, 2.0, 4.5, 11.5, 14.0, 11.5}, {4.0, 10.0, 7.5, 12.0, 16.0, 8.5}});
         map.put("shell_candle", new double[][]{{2.0, 0.0, 3.0, 14.0, 3.5, 13.5}, {6.5, 3.5, 6.5, 9.5, 8.0, 9.5}});
         map.put("sea_glass_lamp", new double[][]{{5.0, 0.0, 5.0, 11.0, 1.5, 11.0}, {7.0, 1.5, 7.0, 9.0, 7.0, 9.0}, {3.5, 7.0, 3.5, 12.5, 15.0, 12.5}});
         map.put("driftwood_sconce", new double[][]{{5.0, 2.0, 14.0, 11.0, 12.0, 16.0}, {6.0, 5.0, 8.0, 10.0, 11.5, 14.0}});
         map.put("potted_monstera", new double[][]{{3.5, 0.0, 3.5, 12.5, 7.0, 12.5}, {2.0, 7.0, 2.0, 14.0, 16.0, 14.0}});
-        map.put("coconut_planter", new double[][]{{4.0, 0.0, 4.0, 12.0, 4.0, 12.0}, {4.0, 4.0, 4.0, 12.0, 12.0, 12.0}});
+        map.put("coconut_planter", new double[][]{{4.0, 0.0, 4.0, 12.0, 4.5, 12.0}, {4.0, 4.5, 4.0, 12.0, 12.0, 12.0}});
         map.put("flower_box", new double[][]{{0.0, 0.0, 3.0, 16.0, 7.0, 13.0}});
-        map.put("coral_vase", new double[][]{{5.0, 0.0, 5.0, 11.0, 8.0, 11.0}, {5.0, 8.0, 5.0, 11.0, 16.0, 11.0}});
+        map.put("coral_vase", new double[][]{{5.0, 0.0, 5.0, 11.0, 9.0, 11.0}, {5.0, 9.0, 5.0, 11.0, 16.0, 11.0}});
         map.put("conch_shell", new double[][]{{5.0, 0.0, 2.5, 11.0, 7.5, 14.5}});
         map.put("steel_drum", new double[][]{{1.0, 9.0, 1.0, 15.0, 14.0, 15.0}, {2.0, 0.0, 2.0, 14.0, 9.0, 14.0}});
         map.put("shell_garland", new double[][]{{0.0, 4.0, 15.0, 16.0, 16.0, 16.0}});
@@ -48,6 +48,7 @@ public final class CozyShapeData {
         map.put("bamboo_blinds", new double[][]{{0.0, 0.0, 15.0, 16.0, 16.0, 16.0}});
         map.put("bamboo_blinds_open", new double[][]{{0.0, 13.0, 13.5, 16.0, 16.0, 16.0}});
         map.put("thatch_parasol_lower", new double[][]{{5.0, 0.0, 5.0, 11.0, 1.5, 11.0}, {7.0, 1.5, 7.0, 9.0, 16.0, 9.0}});
+        map.put("thatch_parasol_middle", new double[][]{{7.0, 0.0, 7.0, 9.0, 16.0, 9.0}});
         map.put("thatch_parasol_upper", new double[][]{{7.0, 0.0, 7.0, 9.0, 15.5, 9.0}, {0.0, 8.0, 0.0, 16.0, 12.0, 16.0}});
     }
 

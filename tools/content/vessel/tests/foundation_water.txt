@@ -1,0 +1,137 @@
+# Beach Craft 3.4: raft foundations in the sea must sit in still water (no flowing water around them).
+# 1) foundations placed by hand onto the open sea (looking at the water) and against the side of a foundation;
+# 2) a small raft set sail, drifted and moored by NBT; the spot it left and the spot it moored at.
+# FLUIDS lines in latest.log list every flowing (non-source) water block in the box.
+# Run: tools/bctest/run.sh tools/content/vessel/tests/foundation_water.txt <outdir>
+deadline 20
+world foundationtest
+rd 5
+gui 2
+chat off
+cmd gamerule raft:shark_bites false
+cmd gamerule spawn_monsters false
+cmd gamerule random_tick_speed 0
+cmd execute in raft:raftdim run tp @p 0.5 112 0.5 0 40
+wait 20
+settle 200
+swait 40
+cmd execute in raft:raftdim run fill -24 100 -24 24 107 48 air
+cmd execute in raft:raftdim run fill -24 108 -24 24 115 48 air
+cmd execute in raft:raftdim run fill -24 92 -24 24 99 48 water
+cmd execute in raft:raftdim run kill @e[type=!minecraft:player,distance=..90]
+swait 20
+fluids raft:raftdim -12 95 -12 24 100 40
+# ---- 1) by hand
+log HAND
+cmd execute in raft:raftdim run setblock 0 99 0 raft:raft_foundation
+cmd item replace entity @p weapon.mainhand with raft:raft_foundation 64
+cmd execute in raft:raftdim run tp @p 0.5 100 0.5 -90 40
+swait 5
+pose 0.5 100 0.5 -90 40
+face 1.5 99.95 0.5
+swait 2
+use
+swait 6
+face 2.5 99.95 0.5
+swait 2
+use
+swait 6
+face 1.5 99.95 1.5
+swait 2
+use
+swait 6
+face 1.5 99.95 -0.5
+swait 2
+use
+swait 6
+face 3.0 99.97 0.5
+swait 2
+use
+swait 6
+face 0.5 99.95 2.5
+swait 2
+use
+swait 40
+states raft:raftdim -2 98 -2 5 100 4
+fluids raft:raftdim -4 95 -4 6 100 5
+# break a foundation on a straight edge (two foundations beside it, one behind): the sea must close the gap with
+# still water (a water source), not with flowing water
+cmd execute in raft:raftdim run setblock 1 99 2 raft:raft_foundation
+cmd execute in raft:raftdim run setblock 2 99 2 raft:raft_foundation
+cmd execute in raft:raftdim run setblock 2 99 1 raft:raft_foundation
+cmd execute in raft:raftdim run setblock 2 100 0 air
+swait 10
+log BREAK_EDGE
+face 1.5 99.9 2.5
+swait 2
+attack
+swait 60
+fluids raft:raftdim -4 95 -4 6 100 5
+check edge_gap_still_water | execute in raft:raftdim if block 1 99 2 minecraft:water[level=0]
+hud off
+fly on
+pose 1.5 101.8 -2.2 0 45
+wait 8 render
+shot 10_hand_placed
+pose -1.5 100.6 3.5 -135 30
+wait 8 render
+shot 11_hand_placed_side
+fly off
+hud on
+# ---- 2) a raft that sets sail and moors
+log RAFT
+cmd execute in raft:raftdim run fill 8 99 14 12 99 18 raft:raft_foundation
+cmd execute in raft:raftdim run setblock 10 100 15 raft:helm[facing=south]
+cmd execute in raft:raftdim run setblock 10 100 17 raft:sail[facing=south]
+swait 40
+fluids raft:raftdim 4 95 10 16 100 22
+nearblock raft:helm 48 1.3 0.5 0
+swait 10
+use
+swaitfor 1500 execute in raft:raftdim if entity @e[type=raft:vessel]
+swait 20
+hold sneak 8
+swait 10
+log SAILED
+fluids raft:raftdim 4 95 10 16 100 22
+cmd data merge entity @e[type=raft:vessel,limit=1] {Autopilot:{Forward:1b,Turn:0b,Ticks:60}}
+swait 120
+cmd data merge entity @e[type=raft:vessel,limit=1] {DropAnchor:1b}
+swaitfor 600 execute in raft:raftdim unless entity @e[type=raft:vessel]
+swait 40
+log MOORED
+find raft:helm 48
+fluids raft:raftdim 4 95 10 16 100 40
+states raft:raftdim 4 99 10 16 100 40
+cmd execute in raft:raftdim run tp @p 10.5 104 9 0 40
+swait 10
+hud off
+fly on
+pose 10.5 104 9 0 40
+wait 8 render
+shot 20_moored
+pose 4.5 101.5 {fz} -60 25
+wait 8 render
+shot 21_moored_side
+pose 10.5 104 9 180 50
+wait 8 render
+shot 22_left_spot
+fly off
+hud on
+# break a foundation on the moored raft's straight edge (the side facing west, x=8)
+log BREAK_MOORED_EDGE
+cmd execute in raft:raftdim run tp @p 9.5 100 29.5 90 40
+swait 10
+pose 9.5 100 29.5 90 40
+face 8.5 99.9 29.5
+swait 2
+attack
+swait 60
+fluids raft:raftdim 4 95 10 16 100 40
+check moored_gap_still_water | execute in raft:raftdim if block 8 99 29 minecraft:water[level=0]
+hud off
+fly on
+pose 5.5 101.3 29.5 -90 35
+wait 8 render
+shot 23_moored_gap
+checks

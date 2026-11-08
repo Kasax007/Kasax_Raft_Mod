@@ -1,0 +1,239 @@
+# Beach Craft 3.4 look check: close-ups of the cozy decorations (rope rug on grass, hurricane lantern standing and
+# hanging, coconut planter, flower box, coral vase, parasol with a player under it), every other cozy decoration,
+# the island kitchen food items in item frames, the banana crop, and the creative tabs.
+# Run: tools/bctest/run.sh tools/content/cozy/tests/look.txt <outdir>
+deadline 25
+world looktest
+rd 4
+gui 2
+chat off
+cmd gamerule spawn_monsters false
+cmd gamerule random_tick_speed 0
+cmd tp @p 6.5 203 -9.5 0 20
+settle 60
+swait 20
+cmd fill -4 199 -10 28 199 16 minecraft:dirt
+cmd fill -4 200 -10 28 200 16 minecraft:grass_block
+cmd fill -4 201 -10 28 216 16 air
+swait 5
+fly on
+# ---- row A: the reported blocks on grass
+cmd setblock 2 201 3 raft:rope_rug
+cmd setblock 3 201 3 raft:rope_rug
+cmd setblock 2 201 4 raft:rope_rug
+cmd setblock 6 201 3 raft:hurricane_lantern
+cmd setblock 8 203 3 minecraft:spruce_planks
+cmd setblock 8 202 3 raft:hurricane_lantern[hanging=true]
+cmd setblock 10 201 3 raft:coconut_planter
+cmd setblock 12 201 3 raft:flower_box[facing=north]
+cmd setblock 14 201 3 raft:coral_vase
+cmd setblock 18 201 3 raft:thatch_parasol[half=lower]
+cmd setblock 18 202 3 raft:thatch_parasol[half=upper]
+# ---- row B: the other cozy decorations
+cmd setblock 0 201 7 raft:palm_bench[facing=north]
+cmd setblock 1 201 7 raft:palm_bench[facing=north]
+cmd setblock 3 201 7 raft:teak_bench[facing=north]
+cmd setblock 5 201 7 raft:bar_stool
+cmd setblock 7 201 7 raft:sun_lounger[facing=north]
+cmd setblock 9 201 7 raft:rattan_armchair[facing=north]
+cmd setblock 11 201 7 raft:teak_table
+cmd setblock 11 202 7 raft:serving_plate
+cmd setblock 13 201 7 raft:bamboo_table
+cmd setblock 15 201 7 raft:wicker_basket[facing=north]
+cmd setblock 16 201 7 raft:wicker_basket[facing=north,open=true]
+cmd setblock 18 201 7 raft:shell_candle
+cmd setblock 19 201 7 raft:sea_glass_lamp
+cmd setblock 20 201 7 raft:potted_monstera
+cmd setblock 21 201 7 raft:conch_shell[facing=north]
+cmd setblock 22 201 7 raft:steel_drum
+cmd setblock 23 201 7 raft:dock_bollard
+cmd setblock 24 201 7 raft:beach_towel_red
+cmd setblock 25 201 7 raft:beach_towel_blue
+cmd setblock 26 201 7 raft:beach_towel_yellow
+# ---- row C: wall decor on a wall at z=10
+cmd fill 0 201 10 26 204 10 minecraft:spruce_planks
+cmd setblock 1 202 9 raft:shell_garland[facing=north]
+cmd setblock 3 202 9 raft:fishing_net[facing=north]
+cmd setblock 5 202 9 raft:fish_trophy[facing=north]
+cmd setblock 7 201 9 raft:surfboard_red[facing=north,half=lower]
+cmd setblock 7 202 9 raft:surfboard_red[facing=north,half=upper]
+cmd setblock 8 201 9 raft:surfboard_blue[facing=north,half=lower]
+cmd setblock 8 202 9 raft:surfboard_blue[facing=north,half=upper]
+cmd setblock 9 201 9 raft:surfboard_yellow[facing=north,half=lower]
+cmd setblock 9 202 9 raft:surfboard_yellow[facing=north,half=upper]
+cmd setblock 11 201 9 raft:bamboo_blinds[facing=north]
+cmd setblock 12 201 9 raft:bamboo_blinds[facing=north,open=true]
+cmd setblock 14 203 9 raft:driftwood_sconce[facing=north]
+cmd setblock 16 201 9 raft:palm_shelf[facing=north]
+cmd setblock 17 201 9 raft:teak_shelf[facing=north]
+cmd setblock 18 201 9 raft:weathered_shelf[facing=north]
+cmd item replace block 16 201 9 container.0 with raft:banana
+cmd item replace block 16 201 9 container.1 with raft:island_curry
+cmd item replace block 16 201 9 container.2 with raft:banana_bread
+cmd setblock 20 201 9 raft:hurricane_lantern
+cmd setblock 21 201 9 raft:hurricane_lantern[lit=false]
+# ---- food items in frames on a wall at z=-6 (frames at z=-5 face south)
+cmd fill 0 201 -6 10 204 -6 minecraft:spruce_planks
+cmd summon item_frame 2 203 -5 {block_pos:[I;2,203,-5],Facing:3b,Fixed:1b,Invisible:1b,Item:{id:"raft:banana",count:1}}
+cmd summon item_frame 3 203 -5 {block_pos:[I;3,203,-5],Facing:3b,Fixed:1b,Invisible:1b,Item:{id:"raft:island_curry",count:1}}
+cmd summon item_frame 4 203 -5 {block_pos:[I;4,203,-5],Facing:3b,Fixed:1b,Invisible:1b,Item:{id:"raft:seafood_chowder",count:1}}
+cmd summon item_frame 5 203 -5 {block_pos:[I;5,203,-5],Facing:3b,Fixed:1b,Invisible:1b,Item:{id:"raft:sweet_potato_soup",count:1}}
+cmd summon item_frame 6 203 -5 {block_pos:[I;6,203,-5],Facing:3b,Fixed:1b,Invisible:1b,Item:{id:"raft:chili_crab",count:1}}
+cmd summon item_frame 7 203 -5 {block_pos:[I;7,203,-5],Facing:3b,Fixed:1b,Invisible:1b,Item:{id:"raft:fruit_salad",count:1}}
+cmd summon item_frame 8 203 -5 {block_pos:[I;8,203,-5],Facing:3b,Fixed:1b,Invisible:1b,Item:{id:"raft:coconut_ice_cream",count:1}}
+cmd summon item_frame 9 203 -5 {block_pos:[I;9,203,-5],Facing:3b,Fixed:1b,Invisible:1b,Item:{id:"minecraft:mushroom_stew",count:1}}
+cmd summon item_frame 2 202 -5 {block_pos:[I;2,202,-5],Facing:3b,Fixed:1b,Invisible:1b,Item:{id:"raft:sushi_roll",count:1}}
+cmd summon item_frame 3 202 -5 {block_pos:[I;3,202,-5],Facing:3b,Fixed:1b,Invisible:1b,Item:{id:"raft:banana_bread",count:1}}
+cmd summon item_frame 4 202 -5 {block_pos:[I;4,202,-5],Facing:3b,Fixed:1b,Invisible:1b,Item:{id:"raft:tropical_smoothie",count:1}}
+cmd summon item_frame 5 202 -5 {block_pos:[I;5,202,-5],Facing:3b,Fixed:1b,Invisible:1b,Item:{id:"raft:baked_sweet_potato",count:1}}
+cmd summon item_frame 6 202 -5 {block_pos:[I;6,202,-5],Facing:3b,Fixed:1b,Invisible:1b,Item:{id:"raft:cooked_rice",count:1}}
+cmd summon item_frame 7 202 -5 {block_pos:[I;7,202,-5],Facing:3b,Fixed:1b,Invisible:1b,Item:{id:"raft:sweet_potato",count:1}}
+cmd summon item_frame 8 202 -5 {block_pos:[I;8,202,-5],Facing:3b,Fixed:1b,Invisible:1b,Item:{id:"raft:chili_pepper",count:1}}
+cmd summon item_frame 9 202 -5 {block_pos:[I;9,202,-5],Facing:3b,Fixed:1b,Invisible:1b,Item:{id:"raft:banana_shoot",count:1}}
+cmd summon item_frame 2 201 -5 {block_pos:[I;2,201,-5],Facing:3b,Fixed:1b,Invisible:1b,Item:{id:"raft:rice",count:1}}
+cmd summon item_frame 3 201 -5 {block_pos:[I;3,201,-5],Facing:3b,Fixed:1b,Invisible:1b,Item:{id:"raft:sea_grapes",count:1}}
+cmd summon item_frame 4 201 -5 {block_pos:[I;4,201,-5],Facing:3b,Fixed:1b,Invisible:1b,Item:{id:"raft:chili_seeds",count:1}}
+cmd summon item_frame 5 201 -5 {block_pos:[I;5,201,-5],Facing:3b,Fixed:1b,Invisible:1b,Item:{id:"minecraft:bowl",count:1}}
+cmd summon item_frame 6 201 -5 {block_pos:[I;6,201,-5],Facing:3b,Fixed:1b,Invisible:1b,Item:{id:"minecraft:bread",count:1}}
+cmd summon item_frame 7 201 -5 {block_pos:[I;7,201,-5],Facing:3b,Fixed:1b,Invisible:1b,Item:{id:"minecraft:apple",count:1}}
+# ---- banana crop and wild banana on farmland
+cmd fill 14 200 -1 20 200 -1 minecraft:farmland[moisture=7]
+cmd setblock 14 201 -1 raft:banana_crop[age=0]
+cmd setblock 15 201 -1 raft:banana_crop[age=1]
+cmd setblock 16 201 -1 raft:banana_crop[age=2]
+cmd setblock 17 201 -1 raft:banana_crop[age=3]
+cmd setblock 19 201 -1 raft:wild_banana
+swait 20
+hud off
+# ---- close-ups (narrow field of view)
+fov 45
+pose 2.9 203.2 1.0 0 40
+face 2.9 201.0 3.6
+wait 6 render
+shot 10_rope_rug
+pose 5.2 202.2 1.5 0 20
+face 6.5 201.5 3.5
+wait 6 render
+shot 11_lantern
+pose 6.5 203.1 2.3 0 50
+face 6.5 201.75 3.5
+wait 6 render
+shot 11b_lantern_top
+pose 7.3 202.4 1.7 0 10
+face 8.5 202.5 3.5
+wait 6 render
+shot 11c_lantern_hanging
+pose 12 202.6 0.6 0 30
+face 12 201.3 3.5
+wait 6 render
+shot 12_planter_box_vase
+pose 10.5 202.5 1.9 0 40
+face 10.5 201.3 3.5
+wait 6 render
+shot 12b_planter
+pose 12.5 202.6 1.6 0 40
+face 12.5 201.3 3.5
+wait 6 render
+shot 12c_flower_box
+pose 14.5 202.6 2.0 0 40
+face 14.5 201.5 3.5
+wait 6 render
+shot 12d_vase
+pose 18.5 202.2 -1.5 0 5
+face 18.5 202.6 3.5
+wait 6 render
+shot 13_parasol
+pose 15.5 202.8 5.0 0 45
+face 15.9 201.4 7.5
+wait 6 render
+shot 13b_baskets
+pose 20.5 203.0 5.2 0 45
+face 20.5 201.5 7.5
+wait 6 render
+shot 13c_monstera_lights
+fov 70
+pose 13 205 -2 0 25
+wait 6 render
+shot 14_rowA
+pose 13 203.5 3.5 0 25
+wait 6 render
+shot 15_rowB
+pose 13 203.5 5.5 0 15
+wait 6 render
+shot 16_rowC
+pose 5.5 202.5 -2.6 180 5
+wait 6 render
+shot 17_food_frames
+pose 17 202.6 -3.2 0 25
+wait 6 render
+shot 18_banana_crop
+# ---- the parasol: a player standing under it (third person)
+cmd tp @p 17.75 201 3.5 180 10
+fly off
+swait 10
+third on
+pose 17.75 201 3.5 180 10
+wait 8 render
+shot 19_under_parasol
+third off
+# ---- placing and breaking the parasol with real input
+log PARASOL
+cmd kill @e[type=item]
+cmd clear @p
+cmd item replace entity @p weapon.mainhand with raft:thatch_parasol
+cmd tp @p 22.5 201 -3.5 0 40
+swait 5
+pose 22.5 201 -3.5 0 40
+face 22.5 201.0 -0.5
+swait 2
+use
+swait 6
+check parasol_lower | execute if block 22 201 -1 raft:thatch_parasol[half=lower]
+check parasol_pole | execute if block 22 202 -1 raft:thatch_parasol[half=upper,canopy=false]
+check parasol_canopy | execute if block 22 203 -1 raft:thatch_parasol[half=upper,canopy=true]
+cmd clear @p
+cmd gamemode survival @p
+face 22.5 203.65 -0.5
+swait 2
+hold attack 80
+swait 30
+check parasol_gone_lower | execute if block 22 201 -1 air
+check parasol_gone_pole | execute if block 22 202 -1 air
+check parasol_gone_canopy | execute if block 22 203 -1 air
+cmd tp @p 22.5 201 -1.5
+swait 30
+check parasol_dropped_once | clear @p raft:thatch_parasol 0
+cmd gamemode creative @p
+swait 10
+cmd kill @e[type=item]
+swait 2
+cmd setblock 24 201 -1 raft:thatch_parasol[half=lower,canopy=false]
+cmd setblock 24 202 -1 raft:thatch_parasol[half=upper,canopy=false]
+cmd setblock 24 203 -1 raft:thatch_parasol[half=upper,canopy=true]
+cmd tp @p 24.5 201 -3.5 0 20
+swait 5
+pose 24.5 201 -3.5 0 20
+face 24.5 202.5 -0.5
+swait 2
+attack
+swait 10
+check parasol_creative_all_gone | execute if block 24 201 -1 air
+check parasol_creative_canopy_gone | execute if block 24 203 -1 air
+cmd execute as @e[type=item] run data get entity @s Item
+cmd execute as @e[type=item] run data get entity @s Pos
+check parasol_creative_no_drop | execute unless entity @e[type=item]
+# a parasol from 3.3 (two blocks: base and canopy) stays as it is
+cmd setblock 26 201 -1 raft:thatch_parasol[half=lower]
+cmd setblock 26 202 -1 raft:thatch_parasol[half=upper]
+swait 5
+check parasol_old_kept | execute if block 26 202 -1 raft:thatch_parasol[half=upper,canopy=true]
+fly on
+tab raft:bc_kitchen
+wait 4 render
+shot 40_tab_kitchen
+esc
+tab raft:bc_cozy
+wait 4 render
+shot 40_tab_cozy
+esc
+checks
