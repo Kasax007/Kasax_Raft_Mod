@@ -201,7 +201,7 @@ check parasol_gone_lower | execute if block 22 201 -1 air
 check parasol_gone_pole | execute if block 22 202 -1 air
 check parasol_gone_canopy | execute if block 22 203 -1 air
 cmd tp @p 22.5 201 -1.5
-swait 30
+swait 60
 check parasol_dropped_once | clear @p raft:thatch_parasol 0
 cmd gamemode creative @p
 swait 10
