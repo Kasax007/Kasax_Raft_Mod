@@ -78,6 +78,34 @@ public final class ClientGameTestContext {
         this.waitTick();
     }
 
+    /**
+     * Waits until a world is open and its sections are drawn. A confirmation the game asks on the way (1.21.1 warns
+     * that modded world settings are "experimental") is answered with Yes, as a player does.
+     */
+    public void waitForWorld() {
+        for (int t = 0; t < 12000; t++) {
+            boolean open = this.computeOnClient(mc -> {
+                if (mc.screen != null) {
+                    for (var child : mc.screen.children()) {
+                        if (child instanceof net.minecraft.client.gui.components.Button b
+                                && (b.getMessage().equals(net.minecraft.network.chat.CommonComponents.GUI_YES)
+                                || b.getMessage().equals(net.minecraft.network.chat.CommonComponents.GUI_PROCEED))) {
+                            b.onPress();
+                            return false;
+                        }
+                    }
+                }
+                return mc.level != null && mc.player != null && mc.getSingleplayerServer() != null && mc.screen == null;
+            });
+            if (open) {
+                this.waitFor(mc -> mc.levelRenderer.hasRenderedAllSections(), 2400);
+                return;
+            }
+            this.waitTick();
+        }
+        throw new AssertionError("no world after 12000 ticks");
+    }
+
     public TestInput getInput() {
         return this.input;
     }

@@ -27,8 +27,7 @@ public final class TestWorldSaveImpl implements TestWorldSave {
     public TestSingleplayerContext open() {
         String id = this.dir.getFileName().toString();
         this.ctx.runOnClient(mc -> mc.createWorldOpenFlows().openWorld(id, () -> mc.setScreen(new TitleScreen())));
-        this.ctx.waitFor(mc -> mc.level != null && mc.player != null && mc.getSingleplayerServer() != null && mc.screen == null, 12000);
-        this.ctx.waitFor(mc -> mc.levelRenderer.hasRenderedAllSections(), 2400);
+        this.ctx.waitForWorld();
         TestServerContext server = TestServers.of(this.ctx, this.ctx.computeOnClient(mc -> mc.getSingleplayerServer()));
         return new TestSingleplayerContext(this.ctx, server, this);
     }

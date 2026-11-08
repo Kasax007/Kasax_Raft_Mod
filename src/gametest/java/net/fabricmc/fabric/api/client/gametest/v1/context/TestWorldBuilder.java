@@ -37,8 +37,7 @@ public final class TestWorldBuilder {
             this.settings.accept(screen.getUiState());
             ((CreateWorldScreenInvoker) screen).bc$onCreate();
         });
-        this.ctx.waitFor(mc -> mc.level != null && mc.player != null && mc.getSingleplayerServer() != null && mc.screen == null, 12000);
-        this.ctx.waitFor(mc -> mc.levelRenderer.hasRenderedAllSections(), 2400);
+        this.ctx.waitForWorld();
         Path dir = this.ctx.computeOnClient(mc -> mc.getSingleplayerServer().getWorldPath(LevelResource.ROOT).toAbsolutePath().normalize());
         TestServerContext server = new TestServerContext(this.ctx, this.ctx.computeOnClient(mc -> mc.getSingleplayerServer()));
         TestWorldSave save = () -> dir;
