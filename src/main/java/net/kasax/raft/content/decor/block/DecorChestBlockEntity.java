@@ -2,6 +2,7 @@ package net.kasax.raft.content.decor.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
@@ -20,8 +21,11 @@ import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.UUID;
+import net.kasax.raft.content.decor.lootr.LootrCompat;
 
 /**
  * The 27 slots of a treasure chest or wooden crate (works with loot tables like vanilla chests). Opening sets the
@@ -29,6 +33,11 @@ import java.util.List;
  */
 public class DecorChestBlockEntity extends RandomizableContainerBlockEntity {
     private NonNullList<ItemStack> items = NonNullList.withSize(27, ItemStack.EMPTY);
+    /** With Lootr (3.4): the id of this container's per-player inventories, whether anyone opened it, and the Lootr
+     * view of it (LootrCompat). Plain fields: nothing here needs Lootr. */
+    private UUID lootrId;
+    private boolean lootrOpened;
+    private Object lootrView;
 
     private final ContainerOpenersCounter openers = new ContainerOpenersCounter() {
         @Override
@@ -49,7 +58,8 @@ public class DecorChestBlockEntity extends RandomizableContainerBlockEntity {
 
         @Override
         public boolean isOwnContainer(Player player) {
-            return player.containerMenu instanceof ChestMenu menu && menu.getContainer() == DecorChestBlockEntity.this;
+            return player.containerMenu instanceof ChestMenu menu && (menu.getContainer() == DecorChestBlockEntity.this
+                    || LootrCompat.isOwnMenu(menu.getContainer(), DecorChestBlockEntity.this));
         }
     };
 
@@ -61,6 +71,10 @@ public class DecorChestBlockEntity extends RandomizableContainerBlockEntity {
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
         if (!trySaveLootTable(output)) ContainerHelper.saveAllItems(output, items);
+        if (lootrId != null) {
+            output.store("LootrId", UUIDUtil.CODEC, lootrId);
+            output.putBoolean("LootrOpened", lootrOpened);
+        }
     }
 
     @Override
@@ -68,6 +82,48 @@ public class DecorChestBlockEntity extends RandomizableContainerBlockEntity {
         super.loadAdditional(input);
         items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
         if (!tryLoadLootTable(input)) ContainerHelper.loadAllItems(input, items);
+        lootrId = input.read("LootrId", UUIDUtil.CODEC).orElse(null);
+        lootrOpened = input.getBooleanOr("LootrOpened", false);
+    }
+
+    /** With Lootr the loot table stays: each player gets their own roll of it when they open the container. */
+    @Override
+    public void unpackLootTable(@Nullable Player player) {
+        if (!LootrCompat.handles(this)) {
+            super.unpackLootTable(player);
+        }
+    }
+
+    public boolean hasLootrId() {
+        return lootrId != null;
+    }
+
+    /** The id Lootr keeps this container's inventories under (made the first time Lootr asks). */
+    public UUID lootrId() {
+        if (lootrId == null) {
+            lootrId = UUID.randomUUID();
+            setChanged();
+        }
+        return lootrId;
+    }
+
+    public boolean lootrOpened() {
+        return lootrOpened;
+    }
+
+    public void setLootrOpened(boolean opened) {
+        if (lootrOpened != opened) {
+            lootrOpened = opened;
+            setChanged();
+        }
+    }
+
+    public Object lootrView() {
+        return lootrView;
+    }
+
+    public void setLootrView(Object view) {
+        lootrView = view;
     }
 
     @Override

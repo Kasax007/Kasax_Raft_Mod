@@ -11,6 +11,11 @@ base {
 }
 
 repositories {
+	// Lootr (optional, compile only): Beach Craft's crates and treasure chests become per-player loot when it is installed
+	exclusiveContent {
+		forRepository { maven { url "https://api.modrinth.com/maven" } }
+		filter { includeGroup "maven.modrinth" }
+	}
 }
 
 fabricApi {
@@ -48,6 +53,12 @@ dependencies {
 	// No mappings line: Minecraft 26.x ships unobfuscated.
 	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+	// Lootr (optional): compiled against, not bundled; -PwithLootr puts it into the dev runtime (bctest)
+	compileOnly "maven.modrinth:lootr:${project.lootr_version}"
+	if (project.hasProperty('withLootr')) {
+		runtimeOnly "maven.modrinth:lootr:${project.lootr_version}"
+	}
 
 	// Team Reborn Energy (bundled): cables, batteries and solar panels talk to Tech Reborn machines.
 	include implementation("teamreborn:energy:${project.energy_version}")
