@@ -19,6 +19,7 @@ Worlds of the 26.3 version cannot be opened in 1.21.1 (Minecraft never loads wor
 ### Fixes for Minecraft 1.21.1
 - **Story chests**: the chests of the story places (castaway, Old Lighthouse, Saltmere, Helix Station, Port Solace, Ashen Forge, Coral Temple) and the galleon wreck were empty in 3.2.0 for 1.21.1: their loot tables did not load because of the map they give out. They are filled again, map included.
 - **Crop Plot**: seeds can be planted on it again and it speeds up the crop like farmland, as in the 26.3 version.
+- **Signs** in the Old Lighthouse, Saltmere and Port Solace show their texts again.
 - **Cracked Concrete** can be crafted again (its recipe needed a concrete item tag that Minecraft 1.21.1 does not have).
 - Composting chances are the same as in the 26.3 version (the pineapple fills the composter more often).
 
