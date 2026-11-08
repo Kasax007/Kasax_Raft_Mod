@@ -26,7 +26,7 @@ All of them make 14 minutes; sitting on tops it up.""",
 # Seats
 Palm and Teak Benches join into one long bench when you place them side by side. The Bamboo Bar Stool, the Sun Lounger and the Rattan Armchair are seats too. Right-click to sit down.
 # Tables and plates
-Put a Serving Plate on a Teak or Bamboo Table and right-click it with food: it holds up to 4 portions (sneak to put down more at once).
+Put a Serving Plate on a Teak or Bamboo Table and right-click it with food to serve a portion; it holds up to 4.
 Right-click with an empty hand to eat a portion when you are hungry; its effects work as usual. Sneak-click with an empty hand to take the food back.
 # Storage
 Palm, Teak and Weathered Shelves show up to three items. Right-click swaps the item in your hand with the spot you point at; with redstone power a shelf swaps a whole row with your hotbar.

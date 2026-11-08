@@ -19,7 +19,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Serving plate: holds up to four of one food, shown lying on the plate. Right-click with food to serve it,
+ * Serving plate: holds up to four of one food, shown lying on the plate. Right-click with food to serve a portion,
  * right-click with an empty hand to eat one portion right from the plate (when hungry), sneak-click to take it back.
  */
 public class PlateBlock extends CozyBlock implements EntityBlock {
@@ -49,7 +49,7 @@ public class PlateBlock extends CozyBlock implements EntityBlock {
             return InteractionResult.SUCCESS;
         }
         if (!level.isClientSide()) {
-            int n = Math.min(MAX - held.getCount(), player.isShiftKeyDown() ? stack.getCount() : 1);
+            int n = 1;
             ItemStack put = stack.copyWithCount(held.getCount() + n);
             stack.consume(n, player);
             plate.setFood(put);

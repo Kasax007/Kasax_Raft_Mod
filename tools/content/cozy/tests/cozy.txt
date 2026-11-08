@@ -295,7 +295,13 @@ pose 12.5 201 -1.4 0 30
 face 12.5 202.05 0.5
 swait 3
 wait 2 render
-sneakuse
+use
+swait 3
+use
+swait 3
+use
+swait 3
+use
 swait 6
 check plate_4 | execute if data block 12 202 0 {food:{count:4}}
 wait 3 render
@@ -359,7 +365,9 @@ pose 20.5 201 -1.2 0 30
 face 20.5 201.5 0.5
 wait 2 render
 hold attack 60
-swait 20
+swait 5
+cmd tp @p 20.5 201 0.5
+swait 15
 check basket_keeps_items | execute if items entity @p container.* raft:wicker_basket[minecraft:container]
 cmd gamemode creative @p
 cmd item replace entity @p weapon.mainhand with raft:surfboard_red
