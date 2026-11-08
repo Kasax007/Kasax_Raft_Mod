@@ -34,9 +34,9 @@ public abstract class ServerLevelShipyardMixin {
         VesselShipyard.relocate((ServerLevel) (Object) this, entity);
     }
 
-    @Inject(method = "playSeededSound(Lnet/minecraft/world/entity/Entity;DDDLnet/minecraft/core/Holder;Lnet/minecraft/sounds/SoundSource;FFJ)V",
+    @Inject(method = "playSeededSound(Lnet/minecraft/world/entity/player/Player;DDDLnet/minecraft/core/Holder;Lnet/minecraft/sounds/SoundSource;FFJ)V",
             at = @At("HEAD"), cancellable = true)
-    private void raft$soundFromPlot(@Nullable Entity except, double x, double y, double z, Holder<SoundEvent> sound, SoundSource source,
+    private void raft$soundFromPlot(@Nullable net.minecraft.world.entity.player.Player except, double x, double y, double z, Holder<SoundEvent> sound, SoundSource source,
                                     float volume, float pitch, long seed, CallbackInfo ci) {
         if (VesselShipyard.maybePlot(x, z)) {
             ServerLevel self = (ServerLevel) (Object) this;
@@ -49,7 +49,7 @@ public abstract class ServerLevelShipyardMixin {
     }
 
     @Inject(method = "levelEvent", at = @At("HEAD"), cancellable = true)
-    private void raft$eventFromPlot(@Nullable Entity source, int type, BlockPos pos, int data, CallbackInfo ci) {
+    private void raft$eventFromPlot(@Nullable net.minecraft.world.entity.player.Player source, int type, BlockPos pos, int data, CallbackInfo ci) {
         if (VesselShipyard.maybePlot(pos.getX(), pos.getZ())) {
             ServerLevel self = (ServerLevel) (Object) this;
             Vec3 at = VesselShipyard.toWorld(self, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
