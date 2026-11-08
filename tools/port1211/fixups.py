@@ -29,10 +29,27 @@ def walk(o, kind):
         o['type'] = 'raft:trapezoid'
     if kind in ('placed_feature', 'configured_feature') and t == 'minecraft:random_chance' and 'chance' in o:
         o['type'] = 'raft:random_chance'
-    if t == 'minecraft:rotated':
-        o = {'type': 'minecraft:rotated_block_provider', 'state': feature.state(o['state'])}
-    if t is None and 'fallback' in o and 'rules' in o:
-        o = dict(o, type='minecraft:rule_based_state_provider')
+    if t in ('minecraft:rotated', 'minecraft:rotated_block_provider'):
+        st = o['state']
+        if isinstance(st, dict) and st.get('type') == 'minecraft:weighted_state_provider':
+            # a random block turned to a random side: every block in all four horizontal facings
+            entries = []
+            for e in st['entries']:
+                for f in ('north', 'south', 'east', 'west'):
+                    d = dict(e['data'])
+                    d['Properties'] = dict(d.get('Properties', {}), facing=f)
+                    entries.append({'data': d, 'weight': e.get('weight', 1)})
+            o = {'type': 'minecraft:weighted_state_provider', 'entries': entries}
+        else:
+            o = {'type': 'minecraft:rotated_block_provider', 'state': feature.state(st)}
+    # a block chosen by rules (1.21.1 has no rule based block state provider): Beach Craft's raft:rule_block
+    if t == 'minecraft:simple_block':
+        cfg = o.get('config', {})
+        tp = cfg.get('to_place')
+        if isinstance(tp, dict) and 'fallback' in tp and 'rules' in tp:
+            o = {'type': 'raft:rule_block', 'config': {'fallback': tp['fallback'], 'rules': tp['rules']}}
+    if o.get('processor_type') == 'minecraft:block_ignore':
+        o['blocks'] = [feature.state(b) for b in o.get('blocks', [])]
     if t == 'minecraft:random_block' and o.get('blocks') in RANDOM_BLOCK_TAGS:
         o = {'type': 'minecraft:weighted_state_provider',
              'entries': [{'data': {'Name': b}, 'weight': 1} for b in RANDOM_BLOCK_TAGS[o['blocks']]]}

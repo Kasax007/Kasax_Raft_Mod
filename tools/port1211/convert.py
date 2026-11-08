@@ -230,6 +230,13 @@ def finish_items(extras, stats):
                     if not os.path.exists(gui_path):
                         shutil.copyfile(existing[own], gui_path)
                     o['model'] = gui
+            if base_model == own and own in existing:
+                # the item's own model is the base: keep it as _base, the item model becomes the overrides file
+                base_path = os.path.join(os.path.dirname(existing[own]), os.path.basename(existing[own])[:-5] + '_base.json')
+                cur = load(existing[own])
+                if not os.path.exists(base_path) and 'overrides' not in cur:
+                    save(base_path, cur)
+                base_model = own + '_base'
             data = {'parent': base_model, 'overrides': overrides}
             if own in existing and existing[own] != target:
                 os.remove(existing[own])

@@ -1,5 +1,5 @@
 {
-  "parent": "raft:item/harpoon_gun",
+  "parent": "raft:item/harpoon_gun_base",
   "overrides": [
     {
       "predicate": {

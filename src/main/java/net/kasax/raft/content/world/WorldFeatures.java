@@ -31,6 +31,7 @@ public final class WorldFeatures {
         register("overlay", net.kasax.raft.compat.worldgen.OverlayFeature.CODEC);
         register("block_blob", net.kasax.raft.compat.worldgen.BlockBlobFeature.CODEC);
         register("fallen_tree", net.kasax.raft.compat.worldgen.FallenTreeFeature.CODEC);
+        register("rule_block", net.kasax.raft.compat.worldgen.RuleBlockFeature.CODEC);
         Registry.register(BuiltInRegistries.PLACEMENT_MODIFIER_TYPE, Raft.id("offset"), net.kasax.raft.compat.worldgen.OffsetPlacement.TYPE);
         Registry.register(BuiltInRegistries.PLACEMENT_MODIFIER_TYPE, Raft.id("random_chance"), net.kasax.raft.compat.worldgen.RandomChancePlacement.TYPE);
         Registry.register(BuiltInRegistries.INT_PROVIDER_TYPE, Raft.id("trapezoid"), net.kasax.raft.compat.worldgen.TrapezoidInt.TYPE);

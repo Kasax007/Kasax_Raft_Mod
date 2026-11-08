@@ -1,5 +1,5 @@
 {
-  "parent": "raft:item/diving_helmet",
+  "parent": "raft:item/diving_helmet_base",
   "overrides": [
     {
       "predicate": {
