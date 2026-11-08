@@ -36,7 +36,7 @@ New worlds get the new sea. In an existing world only the parts you have not exp
 Exploring was a scavenger hunt without a fight until the Leviathan. Now most structures are guarded, and the guards get tougher the further the story leads you:
 - **When you come close** to a guarded structure for the first time, a warning sounds (a shout, a horn, the hum of the reef...) with a line on screen, and two seconds later its guards appear around the unopened chests. Once per structure; they stay until you beat them, and they never stand in the way of the story.
 - **Start** (abandoned raft, beach shack, fishing boat wreck, Old Lighthouse, iceberg outpost): a few scavengers with fists, wooden blades or a bow, drowned, strays.
-- **Middle** (sunken plane, sunken ruins, cargo ship wreck, Helix Station, rusted rig): scavengers with stone and iron blades and leather armour, reef guardians, drowned groups, and the **Scavenger Chief** on the rig.
+- **Middle** (sunken plane, sunken ruins, cargo ship wreck, Helix Station, rusted rig): scavengers with stone blades or bows and leather armour, reef guardians, drowned groups, and the **Scavenger Chief** on the rig.
 - **Late** (Port Solace, Ashen Forge, Coral Temple, and Saltjaw's pirate cove and galleon): corsair crews, blazes and ember crabs in the forge, the **Corsair Captain**, the Scavenger Chief of Port Solace and the **Reef Warden** of the Coral Temple.
 - Easy has one guard less per group, Hard one more; nothing in Peaceful. Saltmere, the castaway camp and the sanctum stay quiet.
 
