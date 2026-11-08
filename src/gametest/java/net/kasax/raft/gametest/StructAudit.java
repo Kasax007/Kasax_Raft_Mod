@@ -474,6 +474,46 @@ public final class StructAudit {
     }
 
     /**
+     * A side camera for a structure box: out from one of its four sides (and the four diagonals), far enough to see
+     * the whole box (horizontal field of view about 70 degrees), at the height of its middle, in water or air. Of the
+     * eight, the one whose line to the middle of the box crosses the fewest solid blocks outside the box.
+     */
+    public static double[] sideview(ServerLevel level, BoundingBox bb) {
+        Vec3 c = new Vec3((bb.minX() + bb.maxX() + 1) / 2.0, (bb.minY() + bb.maxY() + 1) / 2.0, (bb.minZ() + bb.maxZ() + 1) / 2.0);
+        double[] best = null;
+        int bestHits = Integer.MAX_VALUE;
+        for (int k = 0; k < 8; k++) {
+            double a = Math.toRadians(45 * k);
+            double dx = Math.cos(a), dz = Math.sin(a);
+            double half = Math.abs(dz) * bb.getXSpan() / 2.0 + Math.abs(dx) * bb.getZSpan() / 2.0;
+            double depth = Math.abs(dx) * bb.getXSpan() / 2.0 + Math.abs(dz) * bb.getZSpan() / 2.0;
+            double dist = depth + Math.max(half / Math.tan(Math.toRadians(35)), bb.getYSpan() / 2.0 / Math.tan(Math.toRadians(25))) + 4;
+            // under water the fog hides what is further away: closer (the view then shows most of it)
+            boolean wet = !level.getFluidState(BlockPos.containing(c.x + dx * dist, c.y, c.z + dz * dist)).isEmpty();
+            if (wet) dist = Math.min(dist, depth + 36);
+            Vec3 eye = new Vec3(c.x + dx * dist, wet ? c.y : c.y + bb.getYSpan() * 0.3, c.z + dz * dist);
+            level.getChunk((int) Math.floor(eye.x) >> 4, (int) Math.floor(eye.z) >> 4);
+            for (int i = 0; i < 60 && !level.getBlockState(BlockPos.containing(eye)).getCollisionShape(level, BlockPos.containing(eye)).isEmpty(); i++) {
+                eye = eye.add(0, 1, 0);
+            }
+            int hits = 0;
+            int steps = (int) dist;
+            for (int i = 1; i < steps; i++) {
+                Vec3 p = eye.lerp(c, i / (double) steps);
+                BlockPos bp = BlockPos.containing(p);
+                if (bb.isInside(bp)) break;
+                if (!level.getBlockState(bp).getCollisionShape(level, bp).isEmpty()) hits++;
+            }
+            if (hits < bestHits) {
+                bestHits = hits;
+                float[] r = BcScript.aim(eye.x, eye.y, eye.z, c);
+                best = new double[]{eye.x, eye.y, eye.z, r[0], r[1]};
+            }
+        }
+        return best;
+    }
+
+    /**
      * An overview camera for a structure box: out from the center towards one of the four diagonals (dir 0-3), above
      * the terrain there, looking at the center. Eye position, yaw, pitch.
      */

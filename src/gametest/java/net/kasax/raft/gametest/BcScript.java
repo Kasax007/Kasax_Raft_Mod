@@ -120,7 +120,9 @@ import java.util.function.Function;
  *                         as the game would generate them: CENSUS lines (count per km2, closest pairs), OUT/census/&lt;label&gt;.txt
  *                         (audit also logs FLOAT: columns of the structure with water or air under them; sets the
  *                         camera fcx fcy fcz fcyaw fcpitch beside the worst one)
- * footings on|off        structures generate with or without their footings (StructureFoundations, for comparisons)
+ * footings on|off        structures generate with or without settling and footings (StructureFoundations), to compare
+ * pieceview &lt;structure&gt; &lt;x&gt; &lt;z&gt; &lt;piece&gt; [height]   camera out past one piece (e.g. the forge vault), looking back
+ * sideview                camera beside the last audited box showing all of it from the side: svx svy svz svyaw svpitch
  * nearbe &lt;block&gt; [table|-]   nearest such container with a loot table (with that text; "-": without one): bx by bz
  * useblock x y z          the player right-clicks that block (server side);  useas &lt;name&gt; x y z  a fake player does
  * menu                    log the player's open menu, its container class and items (MENU)
@@ -146,8 +148,6 @@ public class BcScript implements FabricClientGameTest {
     public static volatile long throttleMs;
     /** Detached camera (x, eye y, z, yaw, pitch) while not null: see FreeCamMixin. The player stays where it is. */
     public static volatile double[] freeCam;
-    /** "footings off": structures generate without StructureFoundations (FootingsToggleMixin), for before/after shots. */
-    public static volatile boolean footings = true;
     /** Script variables ({name} or {name+5} in a line): set by scout, find, height, where and set. */
     private int checksPassed, checksFailed;
     private final Map<String, Double> vars = new HashMap<>();
@@ -929,7 +929,52 @@ public class BcScript implements FabricClientGameTest {
                 });
                 LOG.info("[bctest] USE {}", res);
             }
-            case "footings" -> footings = !arg.equals("off");
+            case "footings" -> net.kasax.raft.content.world.StructureFoundations.enabled = !arg.equals("off");
+            case "pieceview" -> {
+                // pieceview <structure> <x> <z> <piece> [height]: camera out from the structure's middle past that piece
+                // (e.g. the Ashen Forge vault), looking at it, height blocks above its middle: sets svx svy svz svyaw svpitch
+                String[] a = arg.split("\\s+");
+                double up = a.length > 4 ? Double.parseDouble(a[4]) : 8;
+                double[] c = need().getServer().computeOnServer(server -> {
+                    ServerLevel level = StructAudit.sea(server);
+                    StructureStart st = StructAudit.find(level, a[0], new BlockPos(Integer.parseInt(a[1]), 64, Integer.parseInt(a[2])));
+                    if (st == null) return null;
+                    BoundingBox all = st.getBoundingBox();
+                    BoundingBox pb = st.getPieces().get(Math.min(Integer.parseInt(a[3]), st.getPieces().size() - 1)).getBoundingBox();
+                    Vec3 pc = Vec3.atCenterOf(pb.getCenter());
+                    Vec3 ac = Vec3.atCenterOf(all.getCenter());
+                    Vec3 dir = new Vec3(pc.x - ac.x, 0, pc.z - ac.z);
+                    dir = dir.lengthSqr() < 1 ? new Vec3(1, 0, 0) : dir.normalize();
+                    double dist = Math.max(all.getXSpan(), all.getZSpan()) * 0.5 + 28;
+                    Vec3 eye = new Vec3(pc.x + dir.x * dist, pc.y + up, pc.z + dir.z * dist);
+                    float[] r = aim(eye.x, eye.y, eye.z, new Vec3(ac.x, pc.y, ac.z));
+                    return new double[]{eye.x, eye.y, eye.z, r[0], r[1]};
+                });
+                if (c != null) {
+                    vars.put("svx", c[0]);
+                    vars.put("svy", c[1] - 1.62);
+                    vars.put("svz", c[2]);
+                    vars.put("svyaw", c[3]);
+                    vars.put("svpitch", c[4]);
+                    LOG.info("[bctest] PIECEVIEW {}", String.format(Locale.ROOT, "%.1f %.1f %.1f %.1f %.1f", c[0], c[1], c[2], c[3], c[4]));
+                }
+            }
+            case "sideview" -> {
+                // sideview: a camera beside the last audited box, far enough to see all of it from the side, from the
+                // side with the clearest view: sets svx svy (feet) svz svyaw svpitch
+                if (lastBox == null) {
+                    LOG.warn("[bctest] sideview: no audited box");
+                    break;
+                }
+                BoundingBox b = lastBox;
+                double[] c = need().getServer().computeOnServer(server -> StructAudit.sideview(StructAudit.sea(server), b));
+                vars.put("svx", c[0]);
+                vars.put("svy", c[1] - 1.62);
+                vars.put("svz", c[2]);
+                vars.put("svyaw", c[3]);
+                vars.put("svpitch", c[4]);
+                LOG.info("[bctest] SIDEVIEW {}", String.format(Locale.ROOT, "%.1f %.1f %.1f %.1f %.1f", c[0], c[1], c[2], c[3], c[4]));
+            }
             case "lootstat" -> {
                 // lootstat <loot table> <n>: roll a chest table n times at the player: empty rolls, stacks and items
                 // per roll, and how often each item comes (LOOTSTAT)

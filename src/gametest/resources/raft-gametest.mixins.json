@@ -5,8 +5,7 @@
   "mixins": [
     "StructureTemplateAccess",
     "SinglePoolElementAccess",
-    "HoldWorldMixin",
-    "FootingsToggleMixin"
+    "HoldWorldMixin"
   ],
   "client": [
     "ScreenshotLeakMixin",
