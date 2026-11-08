@@ -1,0 +1,8 @@
+{
+  "values": [
+    {
+      "id": "raft:banana_shoot",
+      "required": false
+    }
+  ]
+}

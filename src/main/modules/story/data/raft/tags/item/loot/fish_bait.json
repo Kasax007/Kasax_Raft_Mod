@@ -1,0 +1,8 @@
+{
+  "values": [
+    {
+      "id": "raft:fish_bait",
+      "required": false
+    }
+  ]
+}

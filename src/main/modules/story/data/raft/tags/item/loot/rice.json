@@ -1,0 +1,8 @@
+{
+  "values": [
+    {
+      "id": "raft:rice",
+      "required": false
+    }
+  ]
+}
