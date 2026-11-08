@@ -18,7 +18,9 @@ public class Harness implements ClientModInitializer {
     public void onInitializeClient() {
         ClientTickEvents.END_CLIENT_TICK.register(mc -> {
             ClientGameTestContext.onClientTick();
-            if (!started && mc.screen instanceof TitleScreen && mc.getOverlay() == null) {
+            // the title screen, or the accessibility screen 1.21.1 shows on a first start
+            if (!started && mc.getOverlay() == null && (mc.screen instanceof TitleScreen
+                    || mc.screen instanceof net.minecraft.client.gui.screens.AccessibilityOnboardingScreen)) {
                 started = true;
                 start(mc);
             }
@@ -27,6 +29,8 @@ public class Harness implements ClientModInitializer {
 
     private static void start(Minecraft mc) {
         mc.options.pauseOnLostFocus = false;
+        mc.options.onboardAccessibility = false;
+        BcScript.LOG.info("[bctest] harness starts the script");
         Thread t = new Thread(() -> {
             try {
                 new BcScript().runTest(new ClientGameTestContext());
