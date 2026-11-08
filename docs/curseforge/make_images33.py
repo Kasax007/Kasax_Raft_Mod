@@ -35,11 +35,11 @@ def _item_icon(module, name):
 
 def collage():
     m3.collage('cozy_33.jpg', [
-        (430, [dict(src='10_scene_day.png', w=1.6, cap='A cozy beach house'),
-               dict(src='12_scene_dusk.png', w=1, cap='Lights for the evening')]),
-        (330, [dict(src='13_resting.png', w=1, cap='Sit down and rest'),
-               dict(src='14_kitchen.png', w=1, cap='Cook in the pot'),
-               dict(src='15_plate.png', w=1, cap='Serve on a plate')]),
+        (430, [dict(src='10_scene_day.jpg', w=1.6, cap='A cozy beach house'),
+               dict(src='12_scene_dusk.jpg', w=1, cap='Lights for the evening')]),
+        (330, [dict(src='13_resting.jpg', w=1, cap='Sit down and rest'),
+               dict(src='14_kitchen.jpg', w=1, cap='Cook in the pot'),
+               dict(src='15_plate.jpg', w=1, cap='Serve on a plate')]),
     ])
 
 
