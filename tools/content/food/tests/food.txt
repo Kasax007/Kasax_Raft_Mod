@@ -223,6 +223,8 @@ swait 3
 wait 2 render
 use
 swait 3
+wait 3 render
+shot 16_sea_grapes_bonemeal
 check bonemeal_sea_grapes | execute if block 22 199 1 raft:sea_grapes_crop[age=3]
 cmd item replace entity @p weapon.mainhand with minecraft:air
 cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
@@ -312,7 +314,7 @@ wait 2 render
 use
 swait 10
 check pick_sea_grapes | execute if block 22 199 1 raft:sea_grapes_crop[age=1]
-check got_sea_grapes | execute if items entity @p container.* raft:sea_grapes
+check got_sea_grapes | execute if entity @e[type=item,nbt={Item:{id:'raft:sea_grapes'}}]
 cmd fill 27 199 0 27 199 0 minecraft:water
 cmd item replace entity @p weapon.mainhand with raft:sea_grapes 4
 cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
@@ -324,6 +326,8 @@ swait 2
 wait 2 render
 use
 swait 4
+wait 3 render
+shot 17_sea_grapes_planted
 check plant_sea_grapes | execute if block 27 199 0 raft:sea_grapes_crop
 cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
 cmd tp @p 0.5 201 4.4 0 50
@@ -375,15 +379,18 @@ cmd setblock 1 201 4 raft:sweet_potatoes[age=0]
 cmd setblock 6 201 4 raft:chili_crop[age=0]
 cmd setblock 11 201 4 raft:banana_crop[age=0]
 cmd setblock 16 201 4 raft:rice_crop[age=0]
+cmd setblock 24 199 3 raft:sea_grapes_crop[age=0]
 cmd gamerule random_tick_speed 400
-swaitfor 1200 execute if block 1 201 4 raft:sweet_potatoes[age=3]
+swaitfor 3000 execute if block 1 201 4 raft:sweet_potatoes[age=3]
 check grows_sweet_potatoes | execute if block 1 201 4 raft:sweet_potatoes[age=3]
-swaitfor 1200 execute if block 6 201 4 raft:chili_crop[age=3]
+swaitfor 3000 execute if block 6 201 4 raft:chili_crop[age=3]
 check grows_chili_crop | execute if block 6 201 4 raft:chili_crop[age=3]
-swaitfor 1200 execute if block 11 201 4 raft:banana_crop[age=3]
+swaitfor 3000 execute if block 11 201 4 raft:banana_crop[age=3]
 check grows_banana_crop | execute if block 11 201 4 raft:banana_crop[age=3]
-swaitfor 1200 execute if block 16 201 4 raft:rice_crop[age=3]
+swaitfor 3000 execute if block 16 201 4 raft:rice_crop[age=3]
 check grows_rice_crop | execute if block 16 201 4 raft:rice_crop[age=3]
+swaitfor 3000 execute if block 24 199 3 raft:sea_grapes_crop[age=3]
+check grows_sea_grapes | execute if block 24 199 3 raft:sea_grapes_crop[age=3]
 cmd gamerule random_tick_speed 0
 cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
 cmd tp @p 6.5 201 -8.5 0 -70
@@ -589,23 +596,31 @@ check trap_to_player | execute unless data block 26 199 1 Items[2]
 cmd clear @p
 cmd item replace entity @p hotbar.0 with minecraft:kelp 2
 cmd item replace entity @p hotbar.1 with minecraft:rotten_flesh 2
-key inventory
-wait 6
+cmd setblock 2 201 -6 minecraft:crafting_table
+cmd tp @p 2.5 201 -8.2 0 30
+swait 3
+pose 2.5 201 -8.2 0 30
+face 2.5 201.5 -5.5
+swait 3
+wait 2 render
+use
+swait 8
 wait 4 render
 click 496 494
-wait 2
-click 676 246
-wait 2
+wait 3
+click 540 244
+wait 3
 click 532 494
-wait 2
-click 712 246
-wait 3 render
+wait 3
+click 576 244
+wait 4 render
 shot 23_craft_grid
-click 788 266
+click 728 280
 wait 3
 click 568 494
 wait 3
 esc
+swait 4
 check crafted_fish_bait | execute if items entity @p container.* raft:fish_bait
 cmd gamemode creative @p
 cmd recipe take @p *
@@ -727,13 +742,9 @@ check loot_shell_tile_wall | loot spawn -6 202 -11 loot raft:blocks/shell_tile_w
 check loot_shell_tiles | loot spawn -6 202 -11 loot raft:blocks/shell_tiles
 check loot_steel_drum | loot spawn -6 202 -11 loot raft:blocks/steel_drum
 check loot_sun_lounger | loot spawn -6 202 -11 loot raft:blocks/sun_lounger
-check loot_surfboard_blue | loot spawn -6 202 -11 loot raft:blocks/surfboard_blue
-check loot_surfboard_red | loot spawn -6 202 -11 loot raft:blocks/surfboard_red
-check loot_surfboard_yellow | loot spawn -6 202 -11 loot raft:blocks/surfboard_yellow
 check loot_teak_bench | loot spawn -6 202 -11 loot raft:blocks/teak_bench
 check loot_teak_shelf | loot spawn -6 202 -11 loot raft:blocks/teak_shelf
 check loot_teak_table | loot spawn -6 202 -11 loot raft:blocks/teak_table
-check loot_thatch_parasol | loot spawn -6 202 -11 loot raft:blocks/thatch_parasol
 check loot_weathered_shelf | loot spawn -6 202 -11 loot raft:blocks/weathered_shelf
 check loot_wild_banana | loot spawn -6 202 -11 loot raft:blocks/wild_banana
 check loot_wild_chili | loot spawn -6 202 -11 loot raft:blocks/wild_chili
@@ -750,6 +761,22 @@ cmd loot give @p loot raft:chests/castaway_camp
 check seeds_in_island_chests | execute if items entity @p container.* #raft:island_seeds
 cmd clear @p
 cmd gamemode survival @p
+cmd clear @p
+cmd setblock -4 201 -4 raft:thatch_parasol[half=lower]
+cmd setblock -4 202 -4 raft:thatch_parasol[half=upper]
+cmd tp @p -3.5 201 -6.5 0 0
+swait 3
+pose -3.5 201 -6.5 0 0
+face -3.5 202.5 -3.5
+swait 3
+wait 2 render
+hold attack 40
+swait 5
+cmd tp @p -3.5 201 -3.5
+swait 15
+cmd execute store result storage bc:t p int 1 run clear @p raft:thatch_parasol 0
+check tall_block_drops_once | execute if data storage bc:t {p:1}
+check tall_block_gone | execute if block -4 201 -4 air
 cmd summon minecraft:zombie 6.5 201 -4.5 {NoAI:1b,PersistenceRequired:1b,Silent:1b}
 cmd item replace entity @p weapon.mainhand with raft:shark_tooth_spear
 cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
