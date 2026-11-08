@@ -37,6 +37,10 @@ class Float(_Num): pass
 class Double(_Num): pass
 
 
+class IntArray(list): pass
+class LongArray(list): pass
+
+
 class TypedList(list):
     """List with an explicit element tag id (e.g. TypedList(6, [...]) for doubles)."""
     def __init__(self, tag, items=()):
@@ -52,6 +56,8 @@ def _tag_of(v):
     if isinstance(v, Float): return 5
     if isinstance(v, Double) or isinstance(v, float): return 6
     if isinstance(v, (bytes, bytearray)): return 7
+    if isinstance(v, IntArray): return 11
+    if isinstance(v, LongArray): return 12
     if isinstance(v, str): return 8
     if isinstance(v, list): return 9
     if isinstance(v, dict): return 10
@@ -122,6 +128,37 @@ def read(path):
     f = io.BytesIO(raw)
     t = f.read(1)[0]; _r(f, 8)
     return _r(f, t)
+
+
+_TYPED = {1: Byte, 2: Short, 3: Int, 4: Long, 5: Float, 6: Double}
+
+
+def _rt(f, tag):
+    """Like _r, but numbers keep their NBT type (Byte, Short, ...), lists their element type (TypedList) and int /
+    long arrays theirs: write() then gives back the same bytes."""
+    if tag in _TYPED:
+        return _TYPED[tag](_r(f, tag))
+    if tag == 9:
+        et, n = struct.unpack('>bi', f.read(5)); return TypedList(et, [_rt(f, et) for _ in range(n)])
+    if tag == 10:
+        d = {}
+        while True:
+            t = f.read(1)[0]
+            if t == 0: return d
+            k = _r(f, 8); d[k] = _rt(f, t)
+    if tag == 11: return IntArray(_r(f, 11))
+    if tag == 12: return LongArray(_r(f, 12))
+    return _r(f, tag)
+
+
+def read_typed(path):
+    """The root compound with every value typed (see _rt): for patching a file without changing anything else."""
+    raw = open(path, 'rb').read()
+    if raw[:2] == b'\x1f\x8b':
+        raw = gzip.decompress(raw)
+    f = io.BytesIO(raw)
+    t = f.read(1)[0]; _r(f, 8)
+    return _rt(f, t)
 
 
 # ----------------------------------------------------------------------------------------------- structures
@@ -362,6 +399,9 @@ class Structure:
     def save(self, module, name=None):
         """Write data/raft/structure/<name>.nbt into the module folder. name may contain '/'."""
         name = name or self.name
+        from . import stock
+        if module in stock.STRUCTURE_MODULES:
+            stock.stock(self, name)        # 3.4: a share of the empty barrels and crates gets loot
         p = out(module, 'data', NS, 'structure', *(name + '.nbt').split('/'))
         write(p, self.to_nbt())
         return p

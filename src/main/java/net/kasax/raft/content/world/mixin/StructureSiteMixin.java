@@ -49,6 +49,10 @@ public abstract class StructureSiteMixin {
      * kelp and seagrass on it) stood out of the sea. */
     @Unique
     private static final int RAFT$PLANE_RADIUS = 14, RAFT$PLANE_CLEARANCE = 14;
+    /** 3.4: places that settle onto the ground under their whole footprint: lowest drop, highest stand (see raft$settle). */
+    @Unique
+    private static final Map<String, int[]> RAFT$SETTLE = Map.of("ashen_forge", new int[] {8, 10},
+            "abyssal_sanctum", new int[] {6, 10}, "coral_temple", new int[] {4, 10}, "helix_station", new int[] {3, 8});
     /** Helix Station (the lab): footprint radius, lowest floor, floor at least this far below the sea. */
     @Unique
     private static final int RAFT$LAB_RADIUS = 22, RAFT$LAB_MIN_FLOOR = 45, RAFT$LAB_CLEARANCE = 24;
@@ -107,10 +111,63 @@ public abstract class StructureSiteMixin {
                 cir.setReturnValue(Optional.empty());
             }
         }
+        // 3.4: the big places settle onto the real ground under their whole footprint, or are not built there
+        int[] settle = RAFT$SETTLE.get(id.getPath());
+        if (settle != null && net.kasax.raft.content.world.StructureFoundations.enabled && cir.getReturnValue().isPresent()) {
+            cir.setReturnValue(raft$settle(context, cir.getReturnValue().get(), settle[0], settle[1]));
+        }
         // a structure must not grow into a structure of a higher rank (story places, places with a person)
         if (cir.getReturnValue().isPresent()) {
             cir.setReturnValue(net.kasax.raft.content.world.StructurePriority.check((Structure) (Object) this, context, cir.getReturnValue().get()));
         }
+    }
+
+    /**
+     * The start height comes from one point (the start chunk); a big place on a slope or a hill then hangs over the
+     * lower side (the Ashen Forge vault stood 31 blocks above its island's shore). Its footing columns (from the
+     * templates, every 4th block) are compared with the ground under them: the structure is lowered by the median
+     * height above the ground (at most maxDown), and if a tenth of it would still stand more than maxFloat above the
+     * ground, the place is not built here.
+     */
+    @Unique
+    private static Optional<Structure.GenerationStub> raft$settle(Structure.GenerationContext context,
+                                                                  Structure.GenerationStub stub, int maxDown, int maxFloat) {
+        net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder pieces = stub.getPiecesBuilder();
+        Structure.GenerationStub built = new Structure.GenerationStub(stub.position(), com.mojang.datafixers.util.Either.right(pieces));
+        if (pieces.isEmpty()) {
+            return Optional.of(built);
+        }
+        java.util.List<Integer> above = new java.util.ArrayList<>();
+        for (net.minecraft.world.level.levelgen.structure.StructurePiece pc : pieces.build().pieces()) {
+            ResourceLocation tid = net.kasax.raft.content.world.StructureFootprint.templateOf(pc);
+            if (tid == null) {
+                continue;
+            }
+            var t = net.kasax.raft.content.world.StructureFootprint.template(context.structureTemplateManager(), tid);
+            if (t == null) {
+                continue;
+            }
+            for (var f : net.kasax.raft.content.world.StructureFootprint.feet(
+                    (net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece) pc, t)) {
+                if (Math.floorMod(f.x(), 4) == 0 && Math.floorMod(f.z(), 4) == 0) {
+                    above.add(f.y() - context.chunkGenerator().getFirstOccupiedHeight(f.x(), f.z(),
+                            Heightmap.Types.OCEAN_FLOOR_WG, context.heightAccessor(), context.randomState()));
+                }
+            }
+        }
+        if (above.isEmpty()) {
+            return Optional.of(built);
+        }
+        java.util.Collections.sort(above);
+        int down = Math.max(0, Math.min(maxDown, above.get(above.size() / 2)));
+        int high = above.get(Math.min(above.size() - 1, (int) (above.size() * 0.9))) - down;
+        if (high > maxFloat) {
+            return Optional.empty();
+        }
+        if (down > 0) {
+            pieces.offsetPiecesVertically(-down);
+        }
+        return Optional.of(built);
     }
 
     /** height difference of the ground (top solid block, fluids ignored) over the center, edges and corners at r. */

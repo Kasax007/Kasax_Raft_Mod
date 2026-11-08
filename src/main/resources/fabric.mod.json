@@ -20,6 +20,9 @@
 		],
 		"client": [
 			"net.kasax.raft.RaftClient"
+		],
+		"jei_mod_plugin": [
+			"net.kasax.raft.compat.jei.BcJeiPlugin"
 		]
 	},
 	"mixins": [
@@ -46,5 +49,9 @@
 		"minecraft": "1.21.1",
 		"java": ">=21",
 		"fabric-api": "*"
+	},
+	"suggests": {
+		"jei": "*",
+		"lootr": "*"
 	}
 }

@@ -1,0 +1,13 @@
+{
+  "cooking_pot.done": {
+    "sounds": [
+      {
+        "name": "minecraft:block.note_block.bell",
+        "type": "event",
+        "pitch": 1.26,
+        "volume": 0.8
+      }
+    ],
+    "subtitle": "subtitles.raft.cooking_pot.done"
+  }
+}

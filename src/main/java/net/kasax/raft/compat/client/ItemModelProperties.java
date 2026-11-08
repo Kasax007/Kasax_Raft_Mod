@@ -48,6 +48,15 @@ public final class ItemModelProperties {
                     net.minecraft.world.item.component.LodestoneTracker tracker = stack.get(net.minecraft.core.component.DataComponents.LODESTONE_TRACKER);
                     return tracker != null ? tracker.target().orElse(null) : net.minecraft.world.item.CompassItem.getSpawnPosition(level);
                 }));
+        // Driftwood Fishing Rod: the vanilla 'cast' property (1.21.1 registers it for the vanilla rod only)
+        ItemProperties.register(net.kasax.raft.content.gear.GearContent.DRIFTWOOD_FISHING_ROD,
+                net.minecraft.resources.ResourceLocation.withDefaultNamespace("cast"), (stack, level, entity, seed) -> {
+                    if (!(entity instanceof Player p) || p.fishing == null) return 0.0F;
+                    boolean main = entity.getMainHandItem() == stack;
+                    boolean off = entity.getOffhandItem() == stack;
+                    if (entity.getMainHandItem().getItem() instanceof net.minecraft.world.item.FishingRodItem) off = false;
+                    return main || off ? 1.0F : 0.0F;
+                });
     }
 
     /** Items with a flat GUI model and a different model in the hand (the newer game's display context select). */

@@ -176,6 +176,6 @@ def main(preview=False):
         print('  preview', contact(s, 'iceberg_outpost', cuts=(TOP + 3,), scale=6))
     write_structure('iceberg_outpost', [(path, 1)], None,
                     step='surface_structures', terrain='none', start_height=100 - (TOP - y0), heightmap=None,
-                    biomes=['frost_floes'], spacing=34, separation=14, salt=31415910, max_distance=40,
+                    biomes=['frost_floes'], spacing=48, separation=20, salt=31415910, max_distance=40,
                     spawn_overrides={'creature': spawns([('raft:penguin', 6, 2, 4), ('minecraft:polar_bear', 1, 1, 1)])})
     return [(path, s)]

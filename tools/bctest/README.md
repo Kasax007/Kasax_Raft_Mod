@@ -25,14 +25,20 @@ Script commands (one per line, `#` comments):
 | `size <w> <h>` | window size (default 1280×720) |
 | `hud on/off`, `third on/off`, `gui <n>`, `rd <n>` | HUD, third person camera, GUI scale, render distance |
 | `use`, `attack`, `sneak`, `hold <use/attack/forward/jump/sneak> <ticks>` | input |
+| `click <x> <y>`, `rclick <x> <y>`, `cursor <x> <y>` | left / right mouse click at a window position, or just move the cursor |
+| `keyc <letter or code>` | press a raw key, e.g. `keyc u` |
+| `type <text>` | type text into the focused text box (e.g. the JEI search field after clicking it) |
 | `sneakuse` | hold sneak and press use |
 | `esc` | close the open screen |
 | `slot <1-9>` | select a hotbar slot |
-| `tab <id> [rows]` | open the creative inventory on a tab (`raft:bc_decor`, `raft:raft`, ...), scrolled down by rows, and log its items (`TAB` line) |
+| `tab <id> [rows]` | open the creative inventory on a tab (`raft:bc_2_decor`, `raft:bc_0_raft`, ...; the ids from before 3.4 such as `raft:bc_decor` still work), scrolled down by rows, and log its items (`TAB` line) |
 | `count [dim]` | log loaded entities per type (`COUNT` line in latest.log) |
 | `sounds <name>` / `sounds off` | log every sound the client starts (event, file, volume, pitch, position) to `<outdir>/<name>/sounds.jsonl`, without recording frames |
 | `music [constant]` | log the music the game would pick now and the audio module's state (`MUSIC` line: situational music, key place, Leviathan fight, open sea, night, playing piece); `constant` removes the pauses between pieces |
 | `log <text>` | marker in the log |
+| `census <half> [x z] [label]` | every structure start in the square of that half size around x z, worked out like the game does (placement, then every site check of the mod) without generating chunks: `CENSUS` lines (per km², closest pair of a kind, closest majors of different kinds), all starts in `<outdir>/census/<label>.txt` |
+| `audit <structure> [x z] [label]` | compares the nearest such structure with its templates block by block (`AUDIT` line, `<outdir>/audit/<label>.txt`); the `FLOAT` part counts the footing columns (bottom of a piece) with water or air under them and sets a camera `{fcx} {fcy} {fcz} {fcyaw} {fcpitch}` beside the worst one |
+| `menu` | logs the open container menu of the player (menu and container class, items): `MENU` line |
 
 Example:
 
@@ -46,7 +52,12 @@ hud off
 shot lighthouse
 ```
 
+`BC_LOOTR=1 tools/bctest/run.sh ...` runs the client with Lootr (optional dependency, `-PwithLootr`; on 1.21.1 Lootr
+1.11 for 1.21.1 together with the Cloth Config it needs).
+
 `settle` logs how long it took (`settle took N s`). Chunk generation on the test machine is slow (3–5 min for a new
 area at render distance 8): use `rd 5` and reuse areas within one script. `BC_JFR=/path/x.jfr` records a profile.
+`BC_JEI=1` runs the client with JEI (Just Enough Items) installed, to test the recipe viewer plugin (on 1.21.1: JEI 19.x for
+Fabric 1.21.1).
 
 Errors from the mod (exceptions, missing models/textures) are in `latest.log`; `run.sh` prints the important lines.

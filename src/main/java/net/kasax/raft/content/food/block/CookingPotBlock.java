@@ -3,8 +3,6 @@ package net.kasax.raft.content.food.block;
 import net.kasax.raft.content.food.FoodContent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -31,7 +29,10 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import net.minecraft.world.ItemInteractionResult;
 
-/** The cooking pot: put ingredients in, set it on a fire, ladle the dish out with bowls (see CookingPotBlockEntity). */
+/**
+ * The cooking pot: put ingredients in, set it on a fire, ladle the dish out with bowls (see CookingPotBlockEntity).
+ * The liquid, the ingredients and the finished dish are drawn by CookingPotRenderer; the block model is the empty pot.
+ */
 public class CookingPotBlock extends BaseEntityBlock {
     public enum Contents implements StringRepresentable {
         EMPTY("empty"), COOKING("cooking"), READY("ready");
@@ -89,7 +90,8 @@ public class CookingPotBlock extends BaseEntityBlock {
 
     @Override
     public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide ? null : createTickerHelper(type, FoodContent.COOKING_POT_ENTITY, CookingPotBlockEntity::serverTick);
+        return createTickerHelper(type, FoodContent.COOKING_POT_ENTITY,
+                level.isClientSide ? CookingPotBlockEntity::clientTick : CookingPotBlockEntity::serverTick);
     }
 
     @Override
@@ -104,16 +106,6 @@ public class CookingPotBlock extends BaseEntityBlock {
         if (!(level.getBlockEntity(pos) instanceof CookingPotBlockEntity pot)) return InteractionResult.PASS;
         if (!level.isClientSide) pot.useEmptyHand(player);
         return InteractionResult.SUCCESS;
-    }
-
-    @Override
-    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
-        if (state.getValue(CONTENTS) == Contents.EMPTY || !CookingPotBlockEntity.heated(level, pos)) return;
-        double x = pos.getX() + 0.25 + random.nextDouble() * 0.5, z = pos.getZ() + 0.25 + random.nextDouble() * 0.5;
-        if (state.getValue(CONTENTS) == Contents.COOKING) {
-            level.addParticle(ParticleTypes.BUBBLE_POP, x, pos.getY() + 0.45, z, 0, 0.02, 0);
-        }
-        if (random.nextInt(3) == 0) level.addParticle(ParticleTypes.WHITE_SMOKE, x, pos.getY() + 0.6, z, 0, 0.03, 0);
     }
 
     @Override

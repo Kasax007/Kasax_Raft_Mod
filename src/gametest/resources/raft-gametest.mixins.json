@@ -14,6 +14,7 @@
     "FreeCamMixin",
     "HoldPlayerMixin",
     "MouseHandlerInvoker",
+    "KeyboardHandlerInvoker",
     "CreateWorldScreenInvoker",
     "CreativeScreenInvoker"
   ],

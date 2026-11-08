@@ -110,6 +110,9 @@ def item_overrides(m):
             # a compass needle (lodestone target or spawn): 1.21.1 decides the target in the item property
             # raft:angle (ItemModelProperties), the models are the same both ways
             return item_overrides(m['on_false'])
+        if prop == 'minecraft:fishing_rod/cast':
+            # 1.21.1: the vanilla item property 'cast' (registered for Beach Craft's rods in ItemModelProperties)
+            return _model_ref(m['on_false']), [{'predicate': {'cast': 1}, 'model': _model_ref(m['on_true'])}]
         raise ValueError('condition %s' % prop)
     if t == 'minecraft:range_dispatch':
         prop = m.get('property')

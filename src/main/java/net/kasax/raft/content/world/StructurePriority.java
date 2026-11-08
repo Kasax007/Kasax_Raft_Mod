@@ -60,6 +60,10 @@ public final class StructurePriority {
         if (pieces.isEmpty() || RAW.get()) {
             return Optional.of(built);
         }
+        // 3.4: major structures keep their distance from earlier major structures of other kinds
+        if (StructureSpacing.tooClose(structures.getKey(self), context, pieces.getBoundingBox())) {
+            return Optional.empty();
+        }
         // the set this structure belongs to: structures of the same rank but another set give way by a fixed draw
         String mySet = null;
         for (Holder.Reference<StructureSet> set : context.registryAccess().lookupOrThrow(Registries.STRUCTURE_SET).listElements().toList()) {
@@ -146,7 +150,7 @@ public final class StructurePriority {
     }
 
     /** The box of that structure if it starts in that chunk (as the game would generate it), else null. */
-    private static BoundingBox boxOf(Holder<Structure> structure, Structure.GenerationContext context, ChunkPos at) {
+    static BoundingBox boxOf(Holder<Structure> structure, Structure.GenerationContext context, ChunkPos at) {
         Key key = new Key(structure.value(), context.seed(), ChunkPos.asLong(at.x, at.z));
         BoundingBox cached = BOXES.get(key);
         if (cached == null) {

@@ -1,147 +1,148 @@
 package net.kasax.raft.item;
 
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.kasax.raft.Raft;
 import net.kasax.raft.block.ModBlocks;
 import net.kasax.raft.block.cable.RaftCable;
+import net.kasax.raft.content.BcTabs;
 import net.kasax.raft.util.FurnaceBlocks;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 
+/**
+ * The items of the original Raft mod for the creative tab "Raft & Survival" ({@link BcTabs.Tab#RAFT}). Their order on
+ * screen, and the wood sets and food that moved to the Building, Nature, Kitchen and Creatures tabs, are set in
+ * {@link net.kasax.raft.content.BcTabOrder}.
+ */
 public class ModItemGroups {
-    public static final CreativeModeTab RAFT_GROUP = Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB,
-            Raft.id("raft"),
-            FabricItemGroup.builder().title(Component.translatable("itemgroup.raft"))
-                    .icon(() -> new ItemStack(ModItems.ANCIENT_ENERGY)).displayItems((displayContext, entries) -> {
-                        entries.accept(ModItems.ANCIENT_BROKEN_RING);
-                        entries.accept(ModItems.ANCIENT_ENERGY);
-                        entries.accept(ModItems.ANCIENT_CRYSTAL);
-                        entries.accept(ModItems.PLASTIC);
-                        entries.accept(ModItems.CIRCUIT_BOARD);
-                        entries.accept(ModItems.TRASH_CUBE);
-                        entries.accept(ModItems.UNREFINED_OCEAN_GARBAGE);
-
-                        entries.accept(ModItems.ENERGY_STAFF);
-                        entries.accept(ModItems.RAFT_TELEPORTER);
-                        entries.accept(ModItems.METAL_DETECTOR);
-
-                        entries.accept(ModBlocks.DRIFTWOOD_PORTAL_FRAME);
-
-                        entries.accept(ModBlocks.STRIPPED_DRIFTWOOD_LOG);
-                        entries.accept(ModBlocks.STRIPPED_DRIFTWOOD_WOOD);
-                        entries.accept(ModBlocks.DRIFTWOOD_LEAVES);
-                        entries.accept(ModBlocks.DRIFTWOOD_SAPLING);
-                        entries.accept(ModBlocks.DRIFTWOOD_LOG);
-                        entries.accept(ModBlocks.DRIFTWOOD_WOOD);
-                        entries.accept(ModBlocks.DRIFTWOOD_PLANKS);
-
-                        entries.accept(ModBlocks.DRIFTWOOD_STAIRS);
-                        entries.accept(ModBlocks.DRIFTWOOD_SLAB);
-                        entries.accept(ModBlocks.DRIFTWOOD_DOOR);
-                        entries.accept(ModBlocks.DRIFTWOOD_TRAPDOOR);
-                        entries.accept(ModBlocks.DRIFTWOOD_FENCE);
-                        entries.accept(ModBlocks.DRIFTWOOD_FENCE_GATE);
-                        entries.accept(ModBlocks.DRIFTWOOD_BUTTON);
-                        entries.accept(ModBlocks.DRIFTWOOD_PRESSURE_PLATE);
-
-                        entries.accept(ModBlocks.STRIPPED_PALM_LOG);
-                        entries.accept(ModBlocks.STRIPPED_PALM_WOOD);
-                        entries.accept(ModBlocks.PALM_LEAVES);
-                        entries.accept(ModBlocks.PALM_COCONUT_LEAVES);
-                        entries.accept(ModItems.COCONUT);
-                        entries.accept(ModItems.PINA_COLADA);
-                        entries.accept(ModBlocks.PALM_SAPLING);
-                        entries.accept(ModBlocks.PALM_LOG);
-                        entries.accept(ModBlocks.PALM_WOOD);
-                        entries.accept(ModBlocks.PALM_PLANKS);
-
-                        entries.accept(ModBlocks.PALM_STAIRS);
-                        entries.accept(ModBlocks.PALM_SLAB);
-                        entries.accept(ModBlocks.PALM_DOOR);
-                        entries.accept(ModBlocks.PALM_TRAPDOOR);
-                        entries.accept(ModBlocks.PALM_FENCE);
-                        entries.accept(ModBlocks.PALM_FENCE_GATE);
-                        entries.accept(ModBlocks.PALM_BUTTON);
-                        entries.accept(ModBlocks.PALM_PRESSURE_PLATE);
-
-                        entries.accept(ModBlocks.TITANIUM_ORE);
-                        entries.accept(ModBlocks.DEEPSLATE_TITANIUM_ORE);
-                        entries.accept(ModBlocks.RAW_TITANIUM_BLOCK);
-                        entries.accept(ModBlocks.TITANIUM_BLOCK);
-                        entries.accept(ModItems.RAW_TITANIUM);
-                        entries.accept(ModItems.TITANIUM_INGOT);
-                        entries.accept(ModItems.TITANIUM_NUGGET);
-
-                        entries.accept(ModItems.TITANIUM_HELMET);
-                        entries.accept(ModItems.TITANIUM_CHESTPLATE);
-                        entries.accept(ModItems.TITANIUM_LEGGINGS);
-                        entries.accept(ModItems.TITANIUM_BOOTS);
-
-                        entries.accept(ModBlocks.TITANIUM_GRATES);
-                        entries.accept(ModBlocks.MAKESHIFT_SOLAR_PANEL);
-                        entries.accept(ModBlocks.MAKESHIFT_BATTERY);
-
-                        for (RaftCable.Cables cable : RaftCable.Cables.values()) {
-                            entries.accept(new ItemStack(cable));
-                        }
-
-                        entries.accept(ModBlocks.QUARRY);
-                        entries.accept(ModBlocks.CHUNK_DESTROYER);
-
-                        entries.accept(ModItems.SOME_GAME_MUSIC_MUSIC_DISC);
-                        entries.accept(ModItems.LOFI_BEAT_MUSIC_DISC);
-                        entries.accept(ModItems.CRYSTAL_CASTLES_MUSIC_DISC);
-
-                        entries.accept(ModBlocks.ITEM_CATCHER);
-                        entries.accept(ModItems.NET);
-
-                        // decoration
-                        entries.accept(ModBlocks.PALM_THATCH);
-                        entries.accept(ModBlocks.PALM_THATCH_STAIRS);
-                        entries.accept(ModBlocks.PALM_THATCH_SLAB);
-                        entries.accept(ModBlocks.RAFT_FOUNDATION);
-                        entries.accept(ModBlocks.REINFORCED_FOUNDATION);
-                        entries.accept(ModBlocks.SCRAP_METAL_BLOCK);
-                        entries.accept(ModBlocks.PLASTIC_BLOCK);
-                        entries.accept(ModBlocks.ROPE_LADDER);
-                        entries.accept(ModBlocks.ROPE_COIL);
-                        entries.accept(ModBlocks.SAIL_CANVAS);
-                        entries.accept(ModBlocks.SAIL_CANVAS_RED_STRIPED);
-                        entries.accept(ModBlocks.SHIP_WHEEL);
-                        entries.accept(ModBlocks.SHARK_JAW_TROPHY);
-                        entries.accept(ModBlocks.RAFT_FLAG);
-                        entries.accept(ModBlocks.COCONUT_LANTERN);
-
-                        // survival on the raft
-                        entries.accept(ModBlocks.CROP_PLOT);
-                        entries.accept(ModBlocks.SIMPLE_GRILL);
-                        entries.accept(ModBlocks.WATER_PURIFIER);
-                        entries.accept(ModBlocks.SCARECROW);
-                        entries.accept(ModItems.ROPE);
-                        entries.accept(ModItems.SCRAP_METAL);
-                        entries.accept(ModItems.FRESH_WATER);
-                        entries.accept(ModItems.COCONUT_MILK);
-                        entries.accept(ModItems.RECEIVER);
-                        entries.accept(ModItems.PLASTIC_HOOK);
-                        entries.accept(ModItems.PADDLE);
-
-                        entries.accept(ModItems.SHARK_TOOTH);
-                        entries.accept(ModItems.SHARK_MEAT);
-                        entries.accept(ModItems.COOKED_SHARK_MEAT);
-                        entries.accept(ModItems.SHARK_SPAWN_EGG);
-
-                        // Add custom furnaces to the group
-                        for (Block furnace : FurnaceBlocks.getFurnaces()) {
-                            entries.accept(new ItemStack(furnace));
-                        }
-                    }).build());
-
+    private static void add(ItemLike item) {
+        BcTabs.add(BcTabs.Tab.RAFT, item);
+    }
 
     public static void registerItemGroups() {
         Raft.LOGGER.info("Registering Raft Item Group for " + Raft.MOD_ID);
+        BcTabs.icon(BcTabs.Tab.RAFT, () -> new ItemStack(ModItems.ANCIENT_ENERGY));
+
+        add(ModItems.ANCIENT_BROKEN_RING);
+        add(ModItems.ANCIENT_ENERGY);
+        add(ModItems.ANCIENT_CRYSTAL);
+        add(ModItems.PLASTIC);
+        add(ModItems.CIRCUIT_BOARD);
+        add(ModItems.TRASH_CUBE);
+        add(ModItems.UNREFINED_OCEAN_GARBAGE);
+
+        add(ModItems.ENERGY_STAFF);
+        add(ModItems.RAFT_TELEPORTER);
+        add(ModItems.METAL_DETECTOR);
+
+        add(ModBlocks.DRIFTWOOD_PORTAL_FRAME);
+
+        add(ModBlocks.STRIPPED_DRIFTWOOD_LOG);
+        add(ModBlocks.STRIPPED_DRIFTWOOD_WOOD);
+        add(ModBlocks.DRIFTWOOD_LEAVES);
+        add(ModBlocks.DRIFTWOOD_SAPLING);
+        add(ModBlocks.DRIFTWOOD_LOG);
+        add(ModBlocks.DRIFTWOOD_WOOD);
+        add(ModBlocks.DRIFTWOOD_PLANKS);
+
+        add(ModBlocks.DRIFTWOOD_STAIRS);
+        add(ModBlocks.DRIFTWOOD_SLAB);
+        add(ModBlocks.DRIFTWOOD_DOOR);
+        add(ModBlocks.DRIFTWOOD_TRAPDOOR);
+        add(ModBlocks.DRIFTWOOD_FENCE);
+        add(ModBlocks.DRIFTWOOD_FENCE_GATE);
+        add(ModBlocks.DRIFTWOOD_BUTTON);
+        add(ModBlocks.DRIFTWOOD_PRESSURE_PLATE);
+
+        add(ModBlocks.STRIPPED_PALM_LOG);
+        add(ModBlocks.STRIPPED_PALM_WOOD);
+        add(ModBlocks.PALM_LEAVES);
+        add(ModBlocks.PALM_COCONUT_LEAVES);
+        add(ModItems.COCONUT);
+        add(ModItems.PINA_COLADA);
+        add(ModBlocks.PALM_SAPLING);
+        add(ModBlocks.PALM_LOG);
+        add(ModBlocks.PALM_WOOD);
+        add(ModBlocks.PALM_PLANKS);
+
+        add(ModBlocks.PALM_STAIRS);
+        add(ModBlocks.PALM_SLAB);
+        add(ModBlocks.PALM_DOOR);
+        add(ModBlocks.PALM_TRAPDOOR);
+        add(ModBlocks.PALM_FENCE);
+        add(ModBlocks.PALM_FENCE_GATE);
+        add(ModBlocks.PALM_BUTTON);
+        add(ModBlocks.PALM_PRESSURE_PLATE);
+
+        add(ModBlocks.TITANIUM_ORE);
+        add(ModBlocks.DEEPSLATE_TITANIUM_ORE);
+        add(ModBlocks.RAW_TITANIUM_BLOCK);
+        add(ModBlocks.TITANIUM_BLOCK);
+        add(ModItems.RAW_TITANIUM);
+        add(ModItems.TITANIUM_INGOT);
+        add(ModItems.TITANIUM_NUGGET);
+
+        add(ModItems.TITANIUM_HELMET);
+        add(ModItems.TITANIUM_CHESTPLATE);
+        add(ModItems.TITANIUM_LEGGINGS);
+        add(ModItems.TITANIUM_BOOTS);
+
+        add(ModBlocks.TITANIUM_GRATES);
+        add(ModBlocks.MAKESHIFT_SOLAR_PANEL);
+        add(ModBlocks.MAKESHIFT_BATTERY);
+
+        for (RaftCable.Cables cable : RaftCable.Cables.values()) {
+            add(cable);
+        }
+
+        add(ModBlocks.QUARRY);
+        add(ModBlocks.CHUNK_DESTROYER);
+
+        add(ModItems.SOME_GAME_MUSIC_MUSIC_DISC);
+        add(ModItems.LOFI_BEAT_MUSIC_DISC);
+        add(ModItems.CRYSTAL_CASTLES_MUSIC_DISC);
+
+        add(ModBlocks.ITEM_CATCHER);
+        add(ModItems.NET);
+
+        // decoration
+        add(ModBlocks.PALM_THATCH);
+        add(ModBlocks.PALM_THATCH_STAIRS);
+        add(ModBlocks.PALM_THATCH_SLAB);
+        add(ModBlocks.RAFT_FOUNDATION);
+        add(ModBlocks.REINFORCED_FOUNDATION);
+        add(ModBlocks.SCRAP_METAL_BLOCK);
+        add(ModBlocks.PLASTIC_BLOCK);
+        add(ModBlocks.ROPE_LADDER);
+        add(ModBlocks.ROPE_COIL);
+        add(ModBlocks.SAIL_CANVAS);
+        add(ModBlocks.SAIL_CANVAS_RED_STRIPED);
+        add(ModBlocks.SHIP_WHEEL);
+        add(ModBlocks.SHARK_JAW_TROPHY);
+        add(ModBlocks.RAFT_FLAG);
+        add(ModBlocks.COCONUT_LANTERN);
+
+        // survival on the raft
+        add(ModBlocks.CROP_PLOT);
+        add(ModBlocks.SIMPLE_GRILL);
+        add(ModBlocks.WATER_PURIFIER);
+        add(ModBlocks.SCARECROW);
+        add(ModItems.ROPE);
+        add(ModItems.SCRAP_METAL);
+        add(ModItems.FRESH_WATER);
+        add(ModItems.COCONUT_MILK);
+        add(ModItems.RECEIVER);
+        add(ModItems.PLASTIC_HOOK);
+        add(ModItems.PADDLE);
+
+        add(ModItems.SHARK_TOOTH);
+        add(ModItems.SHARK_MEAT);
+        add(ModItems.COOKED_SHARK_MEAT);
+        add(ModItems.SHARK_SPAWN_EGG);
+
+        // Add custom furnaces to the group
+        for (Block furnace : FurnaceBlocks.getFurnaces()) {
+            add(furnace);
+        }
     }
 }

@@ -112,25 +112,52 @@ def chili_stage(s):
     return im
 
 
+BANANA_TRUNK = pal('#2e5a24', '#3e7230', '#4f8a3a')
+
+
+def _banana_leaf(im, x0, y0, d, n, a, b):
+    """A broad banana leaf from (x0, y0) going sideways (d = -1/+1) for n px: it rises with slope a and droops by
+    b * i^2; lit edge on top, shaded edge below."""
+    for i in range(n):
+        yc = y0 - a * i + b * i * i
+        w = 1 if i == 0 or i >= n - 2 else 2
+        top = int(round(yc - w / 2))
+        for j in range(w + 1):
+            P(im, x0 + d * i, top + j, BANANA_LEAF[4 if j == 0 else 3 if j < w else 2])
+
+
 def banana_stage(s):
+    """Banana plant: a green pseudo-stem with broad arching leaves; when grown, a hanging bunch of bananas (fingers
+    pointing up, as on a real plant) with the purple flower bud below it."""
     im = img()
-    h = [10, 6, 3, 1][s]
-    for y in range(h + 3, 16):
-        P(im, 7, y, BANANA_LEAF[1])
-        P(im, 8, y, BANANA_LEAF[2])
-    for k, (x, y, d) in enumerate(((7, h + 3, -1), (8, h + 2, 1), (7, h + 6, -1), (8, h + 7, 1))):
-        if k > s + 1:
-            continue
-        for i in range(6 - k):
-            yy = y + (i * i) // 6
-            P(im, x + d * i, yy, BANANA_LEAF[3])
-            P(im, x + d * i, yy + 1, BANANA_LEAF[4] if i % 2 else BANANA_LEAF[2])
+    top = [12, 8, 5, 4][s]
+    for y in range(top, 16):
+        P(im, 7, y, BANANA_TRUNK[1])
+        P(im, 8, y, BANANA_TRUNK[2] if y % 3 else BANANA_TRUNK[1])
+    leaves = {
+        0: [(-1, 0, 4, 0.9, 0.12), (1, 0, 4, 0.9, 0.12)],
+        1: [(-1, 0, 6, 1.0, 0.13), (1, 0, 6, 1.0, 0.13), (-1, 3, 4, 0.6, 0.1)],
+        2: [(-1, 0, 7, 1.0, 0.12), (1, 0, 7, 1.0, 0.12), (-1, 3, 6, 0.6, 0.12), (1, 3, 6, 0.6, 0.12)],
+        3: [(-1, 0, 8, 1.0, 0.12), (1, 0, 8, 1.0, 0.12), (-1, 3, 7, 0.6, 0.12), (1, 3, 6, 0.6, 0.12)],
+    }[s]
+    for d, dy, n, a, b in leaves:
+        _banana_leaf(im, 7 if d < 0 else 8, top + dy, d, n, a, b)
+    P(im, 8, top - 1, BANANA_LEAF[4])          # the next leaf unfurling
+    if s >= 2:
+        P(im, 8, top - 2, BANANA_LEAF[3])
     if s == 3:
-        for y in range(9, 13):
-            for x in range(9, 12):
-                P(im, x, y, YELLOW[3] if (x + y) % 2 else YELLOW[2])
-        P(im, 10, 8, STEM[2])
-        P(im, 10, 13, '#5a3a1a')
+        bunch = {'s': '#3e5a1e', 'a': '#fbef8a', 'b': '#ecd03e', 'c': '#c8a424', 'g': '#8a9a2a', 'p': '#7a2a4a',
+                 'q': '#a8406a'}
+        grid(im, ['s.....',
+                  '.s....',
+                  '.gsgg.',
+                  '.abab.',
+                  'abcbcg',
+                  'bcgcab',
+                  'c.sbcc',
+                  '...cg.',
+                  '...qp.',
+                  '...p..'], bunch, 8, 6)
     return im
 
 
@@ -169,62 +196,332 @@ def sea_grapes_stage(s):
 
 
 # ------------------------------------------------------------------------------------------------- items
-def sweet_potato():
+# Item sprites in the vanilla style: a clear silhouette with a dark outline, light from the top left, 3-5 tones per
+# material and no noise. Dishes sit in the vanilla bowl (same shape and wood tones as minecraft:item/bowl).
+def grid(im, rows, colours, x0=0, y0=0):
+    """Paints a character map: every character a key of colours ('.' and ' ' stay as they are)."""
+    for j, row in enumerate(rows):
+        for i, ch in enumerate(row):
+            if ch in '. ':
+                continue
+            P(im, x0 + i, y0 + j, colours[ch])
+    return im
+
+
+def outline_part(im, part, colour=None, f=0.42):
+    """Outlines only the given pixels (a set of (x, y)), so the bowl's own outline is not doubled."""
+    src = im.copy()
+    for (x, y) in sorted(part):
+        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            xx, yy = x + dx, y + dy
+            if 0 <= xx < 16 and 0 <= yy < 16 and src.getpixel((xx, yy))[3] == 0:
+                c = colour or tex.darker(src.getpixel((x, y)), f)
+                im.putpixel((xx, yy), tex.rgb(c))
+    return im
+
+
+def _painted(im, before):
+    return {(x, y) for y in range(16) for x in range(16)
+            if im.getpixel((x, y))[3] and im.getpixel((x, y)) != before.getpixel((x, y))}
+
+
+# the vanilla bowl: R rim outline, K bottom outline, L light wood, M mid wood, S inner shadow, W inner wall, D dark
+BOWL_WOOD = {'R': '#3f2b0b', 'K': '#1f1502', 'L': '#714f0f', 'M': '#533909', 'S': '#45320d', 'W': '#3a2706',
+             'D': '#302109'}
+BOWL_ROWS = [
+    '.....RRRRRR.....',
+    '...RRccccccRR...',
+    '..RccccccccccK..',
+    '..RWWccccccWWK..',
+    '..RLMSSSSSSMWK..',
+    '...DLLLLLLLMK...',
+    '....KKMLLMKK....',
+    '......KKKK......',
+]
+# shading of the filling inside the rim: 1 dark .. 4 light (light from the top left)
+FILL_SHADE = {
+    6: {5: 3, 6: 3, 7: 3, 8: 2, 9: 2, 10: 2},
+    7: {3: 3, 4: 4, 5: 4, 6: 3, 7: 3, 8: 3, 9: 2, 10: 2, 11: 2, 12: 1},
+    8: {5: 2, 6: 2, 7: 2, 8: 2, 9: 1, 10: 1},
+}
+
+
+def bowl(fill, toppings=(), heap=None):
+    """A dish: the vanilla bowl filled with a soup/stew ramp (5 tones), toppings (x, y, colour) on the surface and an
+    optional heap (a function drawing food piled above the rim; it gets its own outline)."""
     im = img()
-    blob(im, 7.5, 8.5, 6.2, 3.6, PURPLE)
-    for x, y in ((5, 7), (9, 9), (11, 7)):
-        P(im, x, y, PURPLE[0])
-    P(im, 1, 10, STEM[2])
-    P(im, 14, 7, PURPLE[1])
+    colours = dict(BOWL_WOOD)
+    colours['c'] = fill[2]
+    grid(im, BOWL_ROWS, colours, 0, 5)
+    for y, row in FILL_SHADE.items():
+        for x, k in row.items():
+            P(im, x, y, fill[k])
+    for x, y, c in toppings:
+        P(im, x, y, c)
+    if heap:
+        before = im.copy()
+        heap(im)
+        outline_part(im, _painted(im, before) - {(x, y) for y in range(6, 9) for x in range(3, 13)})
+    return im
+
+
+DISH_CURRY = pal('#6e3a0c', '#9c5712', '#c87a1c', '#e49c2e', '#f4c058')
+DISH_CHOWDER = pal('#8e8068', '#b8aa8e', '#d8ccb0', '#ece4cc', '#faf5e6')
+DISH_SOUP = pal('#8a3e0e', '#bc5a18', '#e07c28', '#f49c42', '#fcc070')
+CHILI_SAUCE = pal('#5e120e', '#8c2014', '#ba341e', '#dc502a', '#f07a46')
+RICE_GRAIN = pal('#9c968a', '#c4beb0', '#dedacd', '#efece2', '#fbfaf4')
+HERB = '#4f8a2a'
+HERB_LIGHT = '#78b043'
+
+
+def island_curry():
+    def rice_heap(im):
+        grid(im, ['..ab.',
+                  '.abcc',
+                  'abbcc',
+                  'bbcc.'], {'a': RICE_GRAIN[4], 'b': RICE_GRAIN[3], 'c': RICE_GRAIN[2]}, 3, 3)
+    return bowl(DISH_CURRY, ((9, 6, '#d23a22'), (10, 7, '#f0d090'), (11, 7, HERB), (8, 7, '#f0d090'), (8, 6, '#a8301c'),
+                        (6, 8, '#d23a22'), (9, 8, HERB_LIGHT)), rice_heap)
+
+
+def seafood_chowder():
+    shrimp = {'a': '#ffc09a', 'b': '#f8844e', 'c': '#d2582e'}
+    im = bowl(DISH_CHOWDER, ((4, 7, '#7d6e8e'), (5, 7, '#b8aac8'), (5, 6, '#f2e2a0'), (11, 6, HERB), (7, 8, HERB_LIGHT),
+                             (6, 7, DISH_CHOWDER[4])))
+    grid(im, ['ab.', 'b.c', '.cc'], shrimp, 8, 6)
+    P(im, 9, 7, DISH_CHOWDER[3])
+    return im
+
+
+def sweet_potato_soup():
+    cream = '#fbf3de'
+    return bowl(DISH_SOUP, ((5, 7, cream), (6, 7, cream), (7, 6, cream), (8, 6, '#e8dcc0'), (9, 7, cream), (10, 6, HERB),
+                       (11, 6, HERB_LIGHT), (10, 8, DISH_SOUP[0])))
+
+
+def chili_crab():
+    """A whole red crab sitting in chili sauce, claws up."""
+    c = {'k': '#2a120c', 'a': '#ffa070', 'b': '#f06a40', 'c': '#c8402a', 'd': '#8e2418', 'w': '#fbe4cc'}
+
+    def crab(im):
+        grid(im, ['ab.......ab.',
+                  'bc.......bc.',
+                  'cbk.k.k.kcd.',
+                  '.cbbabbbbcd.',
+                  '.bbaabbbccd.',
+                  '..cbbbbccd..'], c, 2, 1)
+    return bowl(CHILI_SAUCE, ((4, 7, '#fbe4cc'), (12, 7, '#4f8a2a'), (3, 7, '#f2c84a'), (10, 8, '#fbe4cc'),
+                              (6, 8, '#4f8a2a')), crab)
+
+
+def fruit_salad():
+    def heap(im):
+        grid(im, ['....mmBb....',
+                  '..yYmMBbgG..',
+                  '.pPyYkKmMyY.',
+                  'oOpPkKmMyYgG',
+                  'oOyYgGpPkKmM'],
+             {'m': '#f0545c', 'M': '#c42c3a', 'B': '#5a5ad0', 'b': '#3a3a9a', 'y': '#fbeaa0', 'Y': '#e6cc6e',
+              'g': '#9ccc52', 'G': '#6a9c34', 'p': '#fbcf4a', 'P': '#e0a024', 'k': '#a0d060', 'K': '#5e9030',
+              'o': '#f8a048', 'O': '#d87a24'}, 2, 3)
+        P(im, 7, 5, '#1e2a12')
+        P(im, 10, 7, '#1e2a12')
+    return bowl(pal('#5a8a2a', '#7aa83a', '#9cc44e', '#bcdc6a', '#d8f08c'), (), heap)
+
+
+def coconut_ice_cream():
+    """Two scoops of coconut ice cream with toasted coconut flakes and a mint leaf."""
+    cream = pal('#b4ab96', '#d6cfbe', '#ebe6da', '#f8f6f0', '#ffffff')
+
+    def scoops(im):
+        for cx, cy in ((10.2, 4.4), (5.8, 5.0)):
+            for y in range(1, 9):
+                for x in range(2, 14):
+                    dx, dy = (x + 0.5 - cx) / 2.6, (y + 0.5 - cy) / 2.6
+                    d = dx * dx + dy * dy
+                    if d <= 1.0 and not (y >= 7 and 3 <= x <= 12):
+                        k = 4 if dx + dy < -0.8 else 3 if dx + dy < 0.0 else 2 if dx + dy < 0.7 else 1
+                        P(im, x, y, cream[k])
+        for x, y in ((5, 4), (7, 6), (9, 3), (11, 5), (4, 6)):
+            P(im, x, y, '#c89a64')
+        grid(im, ['gG', 'G.'], {'g': '#7cc05a', 'G': '#4f8a34'}, 10, 1)
+    return bowl(cream, (), scoops)
+
+
+def sushi_roll():
+    """Two maki pieces in a three-quarter view: rice ring around salmon and cucumber, wrapped in nori."""
+    c = {'n': '#1a2e1c', 'N': '#2c4a2c', 'h': '#3e6440', 'w': '#fbfaf4', 'W': '#e2ded0', 'v': '#c4beb0',
+         's': '#f48a5a', 'S': '#d8643a', 'g': '#8cc860'}
+    im = img()
+    grid(im, ['..nnnn..',
+              '.nwwwWn.',
+              'nwwssgWn',
+              'nwWsSWvn',
+              'hnwWWvnN',
+              'hhnnnnNN',
+              'hhhNNNNN',
+              '.hhNNNN.'], c, 1, 2)
+    grid(im, ['..nnnn..',
+              '.nwwwWn.',
+              'nwwsgWWn',
+              'nwWSsWvn',
+              'hnwWWvnN',
+              'hhnnnnNN',
+              'hhhNNNNN',
+              '.hhNNNN.'], c, 7, 6)
+    return outline(im)
+
+
+def banana_bread():
+    """A loaf with a domed, split crust and a cut end showing the crumb with banana pieces."""
+    c = {'k': '#4a2810', 'd': '#6e3c18', 'm': '#8e5424', 'l': '#ac6e32', 'h': '#c88a48', 'y': '#e2b060',
+         'q': '#f2d494', 'Q': '#e4c07a', 'b': '#8a5a28', 'e': '#d8a858'}
+    im = img()
+    grid(im, ['....hhhhhh......',
+              '..hhyyyehhll....',
+              '.hlhhhhlllmmq...',
+              '.lllllmmmmdqQq..',
+              '.mmmmmmmmddqbQq.',
+              '.mmmmmmmmddQqqQ.',
+              '.dmmmmmmmddqqbQ.',
+              '.ddmmmmmmdkQQQq.',
+              '..ddddddddkQQQ..',
+              '...kkkkkkkk.....'], c, 0, 4)
+    return outline(im)
+
+
+def tropical_smoothie():
+    """A glass of sunset smoothie (mango at the bottom, passion fruit on top) with a straw and a pineapple wedge."""
+    c = {'g': '#d8eef0', 'G': '#a8c8cc', 'e': '#7a9ca4', 'r': '#f06a5a', 'o': '#f6923a', 'O': '#e07428',
+         'y': '#f8c844', 'Y': '#e0a428', 'h': '#fde88a', 'p': '#f2d24a', 'P': '#d8a622', 'l': '#5e9a34',
+         'L': '#86c04a', 's': '#f05a8a', 'S': '#c23a6a'}
+    im = img()
+    grid(im, ['..........s.....',
+              '.L........S.....',
+              'lLl......s......',
+              '.pPp.....S......',
+              'ppPPgGGGsGGGG...',
+              '.pPPrrrrSrrre...',
+              '..pGrhrrrrrOe...',
+              '...GohoooooOe...',
+              '...GohooooOOe...',
+              '...GyhyyyyyYe...',
+              '...GyhyyyyYYe...',
+              '...GyyyyyyYYe...',
+              '...GgggggGGee...',
+              '....eeeeeeee....'], c, 1, 1)
     return outline(im)
 
 
 def baked_sweet_potato():
+    """A baked sweet potato split open: dark roasted skin, orange flesh and a pat of butter melting on top."""
+    c = {'k': '#3a1626', 'd': '#55223a', 'm': '#74314c', 'l': '#924660', 'o': '#e8862c', 'O': '#c4641c',
+         'h': '#f8b450', 'b': '#fff0a0', 'B': '#f0d060', 'w': '#fff8d8'}
     im = img()
-    blob(im, 7.5, 8.5, 6.2, 3.6, pal('#2e1420', '#45202f', '#5c2c3e', '#73384c', '#8a4c5e'))
-    for y in range(7, 10):
-        for x in range(4, 12):
-            P(im, x, y, ORANGE_FLESH[3 if y == 7 else 2])
-    for x in (5, 8, 10):
-        P(im, x, 7, ORANGE_FLESH[4])
-    P(im, 7, 6, '#fff0b0')
+    grid(im, ['......wb........',
+              '...lllbBlll.....',
+              '.lllhhooOOmmm...',
+              'lllhhhoooOOOmmm.',
+              'mlmmhoooooOmmmmd',
+              '.mmmmmmmmmmmmmdd',
+              '..dmmmmmmmmmddd.',
+              '....ddddddddd...'], c, 0, 4)
+    return outline(im)
+
+
+def cooked_rice():
+    """A heap of steamed rice on a banana leaf."""
+    c = {'a': RICE_GRAIN[4], 'b': RICE_GRAIN[3], 'c': RICE_GRAIN[2], 'd': RICE_GRAIN[1], 'l': '#5ea648',
+         'L': '#7cc05a', 'k': '#3a7a30', 'v': '#2c5e26'}
+    im = img()
+    grid(im, ['......abba......',
+              '....aabbbbcc....',
+              '...abababbcbc...',
+              '..aabbbbbcbccd..',
+              '.Labbabbbbccbdk.',
+              'LLlcbbbbbcccddkv',
+              '.LLllddddddkkkv.',
+              '...LLlllllkkv...'], c, 0, 5)
+    return outline(im)
+
+
+def sweet_potato():
+    c = {'a': '#b06a88', 'b': '#93486a', 'c': '#743352', 'd': '#57223f', 'e': '#3d1830', 'r': '#c88a6a'}
+    im = img()
+    grid(im, ['.....aab........',
+              '...aaabbbbc.....',
+              '..abbbbbbbccc...',
+              '.rbbbcbbbbcccd..',
+              '..ccccccccccddde',
+              '...dddcdddddde..',
+              '.....ddddeee....'], c, 0, 5)
     return outline(im)
 
 
 def chili_pepper():
+    c = {'g': '#86b040', 'G': '#4f7a24', 'a': '#fb8a6a', 'b': '#e84a30', 'c': '#b82a1c', 'd': '#7e1a14'}
     im = img()
-    for i in range(10):
-        x = 4 + i
-        y = 5 + int(3 * math.sin(i / 3.2)) + i // 3
-        for k in range(3 - (i > 7)):
-            P(im, x, y + k, RED[4 if k == 0 else 3 if k == 1 else 2])
-    P(im, 3, 5, STEM[3])
-    P(im, 3, 4, STEM[2])
-    P(im, 2, 4, STEM[1])
+    grid(im, ['..gG............',
+              '.gGgG...........',
+              '..Gbbc..........',
+              '..abbbcc........',
+              '...abbbccc......',
+              '....abbbccc.....',
+              '.....aabbccd....',
+              '.......abbcd....',
+              '........abcd....',
+              '.........bcd....',
+              '.........ccd....',
+              '..........cd....',
+              '.........cd.....'], c, 1, 1)
     return outline(im)
 
 
 def chili_seeds():
     im = img()
     for x, y in ((5, 6), (9, 5), (7, 9), (11, 9), (4, 11), (8, 12)):
-        P(im, x, y, '#f2e0a0')
-        P(im, x + 1, y, '#d8c27a')
+        P(im, x, y, '#f6e6a8')
+        P(im, x + 1, y, '#dcc480')
         P(im, x, y + 1, '#c4a85e')
+        P(im, x + 1, y + 1, '#a88a44')
     return outline(im)
 
 
-def banana():
+def _bez(p0, p1, p2, t):
+    return ((1 - t) ** 2 * p0[0] + 2 * (1 - t) * t * p1[0] + t * t * p2[0],
+            (1 - t) ** 2 * p0[1] + 2 * (1 - t) * t * p1[1] + t * t * p2[1])
+
+
+BANANA_PEEL = pal('#8a6414', '#c08f1c', '#e2b52e', '#f4d24a', '#fde77e', '#fff6c0')
+
+
+def banana(p0=(2.0, 9.5), p1=(10.5, 13.0), p2=(13.0, 2.5), rmax=2.3, rmin=0.55, peel=BANANA_PEEL, outline_col='#4e3510'):
+    """A ripe banana lying as a crescent from the tip (bottom left) to the stalk (top right), the curve bulging
+    to the bottom right; the inner side catches the light."""
     im = img()
-    for i in range(11):
-        t = i / 10
-        x = 3 + i
-        y = int(10 - 6 * math.sin(t * math.pi * 0.9))
-        for k in range(3):
-            P(im, x, y + k - 1, YELLOW[4 if k == 0 else 3 if k == 1 else 2])
-    P(im, 13, 3, '#5a4a20')
-    P(im, 14, 3, '#3e321a')
-    P(im, 3, 9, '#4a3a1a')
-    return outline(im)
+    pts = [_bez(p0, p1, p2, i / 400) for i in range(401)]
+    for y in range(16):
+        for x in range(16):
+            cx, cy = x + 0.5, y + 0.5
+            d, i = min(((cx - px) ** 2 + (cy - py) ** 2, i) for i, (px, py) in enumerate(pts))
+            t = i / 400
+            r = rmin + (rmax - rmin) * math.sin(math.pi * min(1.0, t * 1.05)) ** 0.8
+            if math.sqrt(d) > r:
+                continue
+            j = min(399, i)
+            tx, ty = pts[j + 1][0] - pts[j][0], pts[j + 1][1] - pts[j][1]
+            nx, ny = ty, -tx
+            s = ((cx - pts[i][0]) * nx + (cy - pts[i][1]) * ny) / (math.hypot(nx, ny) or 1) / r
+            k = 5 if s > 0.55 else 4 if s > 0.1 else 3 if s > -0.35 else 2 if s > -0.75 else 1
+            col = peel[k]
+            if t < 0.07:
+                col = tex.rgb('#4a3416')
+            elif t > 0.93:
+                col = tex.rgb('#7d6a2a') if s > 0 else tex.rgb('#5e4c1e')
+            elif t > 0.86:
+                col = tex.rgb('#c9c24a') if s > 0 else tex.rgb('#a8a032')
+            im.putpixel((x, y), col)
+    return tex.outline(im, outline_col) if outline_col else im
 
 
 def banana_shoot():
@@ -252,15 +549,6 @@ def rice():
     return outline(im)
 
 
-def cooked_rice():
-    im = img()
-    blob(im, 7.5, 9.5, 6, 4.2, RICE_WHITE)
-    for x, y in ((5, 8), (8, 7), (10, 9), (6, 11), (9, 11)):
-        P(im, x, y, RICE_WHITE[4])
-        P(im, x + 1, y, RICE_WHITE[1])
-    return outline(im)
-
-
 def sea_grapes():
     im = img()
     for y in range(3, 15):
@@ -270,107 +558,6 @@ def sea_grapes():
             if dx == 2 and y % 4:
                 continue
             blob(im, 7.5 + dx * 1.6 + (y > 9), y + 0.5, 1.2, 1.2, SEA_GREEN[1:])
-    return outline(im)
-
-
-def sushi_roll():
-    im = img()
-    blob(im, 7.5, 8.5, 5.5, 5.5, pal('#0f2418', '#163220', '#1e4029', '#284f33'))
-    blob(im, 7.5, 8.5, 4.2, 4.2, RICE_WHITE)
-    blob(im, 7.5, 8.5, 2.0, 2.0, pal('#a03a2a', '#c8503a', '#e8705a', '#f8987e'))
-    return outline(im)
-
-
-def _bowl(fill_ramp, bits=()):
-    """A bowl (side view, from the top-left) filled with fill_ramp; bits: (x, y, colour) toppings."""
-    im = img()
-    for y in range(8, 14):
-        w = [7, 7, 6, 5, 4, 3][y - 8]
-        for x in range(8 - w, 8 + w):
-            k = 3 if x < 6 else 2 if x < 11 else 1
-            if y == 13:
-                k = 0
-            P(im, x, y, BOWL[k])
-    for x in range(1, 15):
-        P(im, x, 7, fill_ramp[2] if x % 3 else fill_ramp[3])
-    for x in range(2, 14):
-        P(im, x, 6, fill_ramp[3] if x % 4 else fill_ramp[4])
-    for x in range(4, 12):
-        P(im, x, 5, fill_ramp[3])
-    for x, y, c in bits:
-        P(im, x, y, c)
-    return outline(im)
-
-
-def chili_crab():
-    return _bowl(pal('#7a1a10', '#a02a18', '#c43c22', '#e05a32', '#f48850'),
-                 ((5, 4, RED[4]), (6, 4, RED[3]), (9, 5, '#f8c8a0'), (10, 4, '#fbe0c8'), (11, 5, RED[2])))
-
-
-def fruit_salad():
-    return _bowl(pal('#5a8a2a', '#7aa83a', '#9cc44e', '#bcdc6a', '#d8f08c'),
-                 ((4, 5, YELLOW[4]), (6, 4, '#e8434a'), (8, 5, YELLOW[3]), (10, 4, '#f29a3a'), (11, 5, '#e8434a'),
-                  (7, 6, '#7a3a8a')))
-
-
-def island_curry():
-    return _bowl(CURRY, ((5, 5, RICE_WHITE[4]), (6, 4, RICE_WHITE[3]), (9, 4, RED[3]), (10, 5, ORANGE_FLESH[3]),
-                         (8, 5, '#5a9a3a')))
-
-
-def seafood_chowder():
-    return _bowl(CHOWDER, ((5, 4, '#e8846a'), (8, 5, ORANGE_FLESH[3]), (10, 4, '#e8846a'), (7, 5, SEA_GREEN[3])))
-
-
-def sweet_potato_soup():
-    return _bowl(SOUP, ((6, 5, CREAM[4]), (7, 5, CREAM[3]), (9, 4, '#5a9a3a')))
-
-
-def coconut_ice_cream():
-    im = _bowl(pal('#cfc8b8', '#e2dccd', '#f0ece2', '#faf8f2', '#ffffff'))
-    blob(im, 7.5, 4.5, 3.5, 2.6, pal('#d8d2c4', '#ece8de', '#f8f6f0', '#ffffff'))
-    P(im, 8, 1, '#8a5a3a')
-    P(im, 9, 2, '#a87a50')
-    return outline(im)
-
-
-def tropical_smoothie():
-    """A glass with an orange-yellow smoothie, a straw and a pineapple wedge."""
-    im = img()
-    glass = pal('#8aa8b0', '#b0c8cc', '#d4e4e4', '#eef6f4')
-    for y in range(4, 15):
-        w = 4 if y < 13 else 3
-        for x in range(8 - w, 8 + w):
-            P(im, x, y, YELLOW[3] if y > 5 else glass[3])
-        P(im, 8 - w, y, glass[2])
-        P(im, 7 + w, y, glass[1])
-    for y in range(6, 14):
-        P(im, 5, y, YELLOW[4])
-    for x in range(4, 12):
-        P(im, x, 6, pal('#e8803a')[0])
-    for y in range(0, 7):
-        P(im, 10 + (y < 2), y, '#e84a6a')
-    P(im, 3, 4, YELLOW[4])
-    P(im, 2, 5, YELLOW[3])
-    P(im, 2, 3, LEAF[4])
-    return outline(im)
-
-
-def banana_bread():
-    im = img()
-    for y in range(6, 13):
-        for x in range(2, 14):
-            k = 3 if y == 6 else 2
-            if x in (2, 13) or y == 12:
-                k = 1
-            P(im, x, y, pal('#5a3414', '#7a4a1e', '#9a622a', '#b87c3a', '#d49a52')[k])
-    for x in range(3, 13):
-        P(im, x, 5, pal('#7a4a1e', '#9a622a', '#b87c3a')[2 if x % 3 else 1])
-    for x in (5, 9):
-        P(im, x, 4, YELLOW[3])
-        P(im, x + 1, 4, YELLOW[2])
-    for x, y in ((4, 9), (8, 8), (11, 10)):
-        P(im, x, y, '#4a2a10')
     return outline(im)
 
 
@@ -398,6 +585,23 @@ def surface(ramp, bubbles=True):
         for x, y in ((4, 5), (10, 3), (7, 10), (12, 11)):
             P(im, x, y, ramp[4])
             P(im, x + 1, y, ramp[3])
+    return im
+
+
+def liquid():
+    """Grey liquid surface with soft ripples and a few bright specks; tinted in the world (water -> dish)."""
+    g = pal('#a6a6a6', '#bdbdbd', '#d2d2d2', '#e4e4e4', '#f4f4f4', '#ffffff')
+    im = img()
+    for y in range(16):
+        for x in range(16):
+            r = math.hypot(x - 7.5, y - 7.5)
+            k = 3 if int(r * 0.9 + (x + y) * 0.15) % 3 else 2
+            if (x * 7 + y * 3) % 13 == 0:
+                k = 4
+            P(im, x, y, g[k])
+    for x, y in ((4, 5), (10, 3), (7, 10), (12, 11), (3, 12)):
+        P(im, x, y, g[5])
+        P(im, x + 1, y, g[4])
     return im
 
 

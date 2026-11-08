@@ -116,6 +116,16 @@ import java.util.function.Function;
  *                         and nx ny nz (first person found)
  * npcview &lt;entity type&gt;   free camera spot with a clear view of the face of the nearest such person to {cx} {cz}:
  *                         sets camx camy (feet) camz camyaw campitch
+ * census &lt;half&gt; [x z] [label] [drop]   every structure start in the square of that half size around x z (default 0 0),
+ *                         as the game would generate them: CENSUS lines (count per km2, closest pairs), OUT/census/&lt;label&gt;.txt
+ *                         (audit also logs FLOAT: columns of the structure with water or air under them; sets the
+ *                         camera fcx fcy fcz fcyaw fcpitch beside the worst one)
+ * footings on|off        structures generate with or without settling and footings (StructureFoundations), to compare
+ * pieceview &lt;structure&gt; &lt;x&gt; &lt;z&gt; &lt;piece&gt; [height]   camera out past one piece (e.g. the forge vault), looking back
+ * sideview                camera beside the last audited box showing all of it from the side: svx svy svz svyaw svpitch
+ * nearbe &lt;block&gt; [table|-]   nearest such container with a loot table (with that text; "-": without one): bx by bz
+ * useblock x y z          the player right-clicks that block (server side);  useas &lt;name&gt; x y z  a fake player does
+ * menu                    log the player's open menu, its container class and items (MENU)
  * overview [0-3]          camera above the terrain beside the last audited box, looking at it: ovx ovy ovz ovyaw ovpitch
  * clouds on|off           show or hide the clouds
  * set &lt;name&gt; &lt;value&gt;     a script variable: {name} or {name+5} anywhere in later lines (scout sets x0 y0 z0 x1 y1 z1 and
@@ -267,6 +277,20 @@ public class BcScript implements FabricClientGameTest {
             }
         }
         LOG.info("[bctest] script done after {} s", (System.currentTimeMillis() - started) / 1000);
+    }
+
+    /** A creative tab by id; ids from before 3.4 (raft:raft, raft:bc_cozy) find the tab whose id ends in that name. */
+    private static net.minecraft.world.item.CreativeModeTab findTab(String id) {
+        var tab = BuiltInRegistries.CREATIVE_MODE_TAB.get(ResourceLocation.parse(id));
+        if (tab == null && id.startsWith("raft:")) {
+            String name = id.substring(5).replaceFirst("^bc_", "");
+            for (var key : BuiltInRegistries.CREATIVE_MODE_TAB.keySet()) {
+                if (key.getNamespace().equals("raft") && key.getPath().matches("bc_\\d_" + name)) {
+                    tab = BuiltInRegistries.CREATIVE_MODE_TAB.get(key);
+                }
+            }
+        }
+        return tab;
     }
 
     // ------------------------------------------------------------------ commands
@@ -432,6 +456,19 @@ public class BcScript implements FabricClientGameTest {
                 ctx.waitTick();
                 ctx.getInput().pressMouse(InputConstants.MOUSE_BUTTON_LEFT);
             }
+            case "rclick" -> {
+                // rclick x y: right mouse button at that window position (e.g. loading bait onto a rod)
+                double[] v = nums(arg);
+                ctx.getInput().setCursorPos(v[0], v[1]);
+                ctx.waitTick();
+                ctx.getInput().pressMouse(InputConstants.MOUSE_BUTTON_RIGHT);
+            }
+            case "keyc" -> {
+                // keyc <letter or GLFW key code>: press a raw key (keys of other mods, e.g. JEI's R and U)
+                int code = arg.length() == 1 ? Character.toUpperCase(arg.charAt(0)) : Integer.parseInt(arg);
+                ctx.getInput().holdKeyFor(code, 2);
+            }
+            case "type" -> ctx.getInput().typeChars(arg);
             case "cursor" -> {
                 double[] v = nums(arg);
                 ctx.getInput().setCursorPos(v[0], v[1]);
@@ -448,7 +485,7 @@ public class BcScript implements FabricClientGameTest {
             case "tab" -> {
                 // tab <id> [rows]: open the creative inventory on that tab (scrolled down by rows) and log its items
                 String[] ta = arg.split("\\s+");
-                var tab = BuiltInRegistries.CREATIVE_MODE_TAB.get(ResourceLocation.parse(ta[0]));
+                var tab = findTab(ta[0]);
                 ctx.runOnClient(mc -> mc.setScreen(new net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen(
                         mc.player, mc.player.connection.enabledFeatures(), false)));
                 ctx.waitTicks(2);
@@ -546,6 +583,28 @@ public class BcScript implements FabricClientGameTest {
                     return sb.toString();
                 });
                 LOG.info("[bctest] STATES {}{}", arg, res);
+            }
+            case "fluids" -> {
+                // fluids <dim> x0 y0 z0 x1 y1 z1: log every flowing (non-source) fluid in the box (FLUIDS line)
+                String[] a = arg.split("\\s+");
+                int[] c = new int[6];
+                for (int i = 0; i < 6; i++) c[i] = (int) Math.floor(Double.parseDouble(a[i + 1]));
+                String res = need().getServer().computeOnServer(server -> {
+                    var level = server.getLevel(ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(a[0])));
+                    if (level == null) return "no level";
+                    StringBuilder sb = new StringBuilder();
+                    int n = 0;
+                    for (BlockPos bp : BlockPos.betweenClosed(Math.min(c[0], c[3]), Math.min(c[1], c[4]), Math.min(c[2], c[5]),
+                            Math.max(c[0], c[3]), Math.max(c[1], c[4]), Math.max(c[2], c[5]))) {
+                        var fs = level.getFluidState(bp);
+                        if (!fs.isEmpty() && !fs.isSource()) {
+                            n++;
+                            if (n <= 40) sb.append("\n  ").append(bp.toShortString()).append(' ').append(fs).append(" in ").append(level.getBlockState(bp));
+                        }
+                    }
+                    return n + " flowing" + sb;
+                });
+                LOG.info("[bctest] FLUIDS {}: {}", arg, res);
             }
             case "dumpmodels" -> {
                 // dumpmodels <file>: every polygon of every raft: entity model layer in its default pose (model units,
@@ -809,6 +868,15 @@ public class BcScript implements FabricClientGameTest {
                     vars.put("cy", (b.minY() + b.maxY() + 1) / 2.0);
                     vars.put("cz", (b.minZ() + b.maxZ() + 1) / 2.0);
                 }
+                if (r.floatCam() != null) {
+                    vars.put("fcx", r.floatCam()[0]);
+                    vars.put("fcy", r.floatCam()[1] - 1.62);
+                    vars.put("fcz", r.floatCam()[2]);
+                    vars.put("fcyaw", r.floatCam()[3]);
+                    vars.put("fcpitch", r.floatCam()[4]);
+                } else {
+                    for (String k : new String[]{"fcx", "fcy", "fcz", "fcyaw", "fcpitch"}) vars.remove(k);
+                }
                 if (!r.npcs().isEmpty()) {
                     vars.put("nx", r.npcs().getFirst()[0]);
                     vars.put("ny", r.npcs().getFirst()[1]);
@@ -860,6 +928,162 @@ public class BcScript implements FabricClientGameTest {
                 vars.put("ovyaw", c[3]);
                 vars.put("ovpitch", c[4]);
                 LOG.info("[bctest] OVERVIEW {} {}", dir, String.format(Locale.ROOT, "%.1f %.1f %.1f %.1f %.1f", c[0], c[1], c[2], c[3], c[4]));
+            }
+            case "nearbe" -> {
+                // nearbe <block id> [loot table part|-]: the nearest such container to the player that still has a loot
+                // table (with that text), or with "-" none: sets bx by bz
+                String[] a = arg.split("\\s+");
+                BlockPos bp = need().getServer().computeOnServer(server -> {
+                    var pl = server.getPlayerList().getPlayers().getFirst();
+                    ServerLevel level = (ServerLevel) pl.level();
+                    BlockPos c = pl.blockPosition(), best = null;
+                    for (int cx = (c.getX() >> 4) - 6; cx <= (c.getX() >> 4) + 6; cx++) {
+                        for (int cz = (c.getZ() >> 4) - 6; cz <= (c.getZ() >> 4) + 6; cz++) {
+                            LevelChunk ch = level.getChunkSource().getChunkNow(cx, cz);
+                            if (ch == null) continue;
+                            for (BlockEntity be : ch.getBlockEntities().values()) {
+                                if (!BuiltInRegistries.BLOCK.getKey(be.getBlockState().getBlock()).toString().equals(a[0])) continue;
+                                var lt = be instanceof RandomizableContainer rc ? rc.getLootTable() : null;
+                                boolean ok = a.length < 2 ? lt != null : a[1].equals("-") ? lt == null : lt != null && lt.location().toString().contains(a[1]);
+                                if (ok && (best == null || be.getBlockPos().distSqr(c) < best.distSqr(c))) best = be.getBlockPos();
+                            }
+                        }
+                    }
+                    return best;
+                });
+                if (bp == null) {
+                    LOG.warn("[bctest] nearbe: no {}", arg);
+                    for (String k : new String[]{"bx", "by", "bz"}) vars.remove(k);
+                } else {
+                    vars.put("bx", (double) bp.getX());
+                    vars.put("by", (double) bp.getY());
+                    vars.put("bz", (double) bp.getZ());
+                    LOG.info("[bctest] NEARBE {} at {}", arg, bp.toShortString());
+                }
+            }
+            case "useblock", "useas" -> {
+                // useblock x y z: the player right-clicks that block (server side, like an empty hand)
+                // useas <name> x y z: a second (fake) player with that name does it; logs its uuid
+                String[] a = arg.split("\\s+");
+                String fake = cmd.equals("useas") ? a[0] : null;
+                double[] v = nums(String.join(" ", java.util.Arrays.copyOfRange(a, fake == null ? 0 : 1, a.length)));
+                String res = need().getServer().computeOnServer(server -> {
+                    var pl = server.getPlayerList().getPlayers().getFirst();
+                    ServerLevel level = (ServerLevel) pl.level();
+                    BlockPos bp = BlockPos.containing(v[0], v[1], v[2]);
+                    net.minecraft.server.level.ServerPlayer user = pl;
+                    if (fake != null) {
+                        java.util.UUID id = java.util.UUID.nameUUIDFromBytes(("bctest:" + fake).getBytes(java.nio.charset.StandardCharsets.UTF_8));
+                        user = net.fabricmc.fabric.api.entity.FakePlayer.get(level, new com.mojang.authlib.GameProfile(id, fake));
+                        user.setPos(bp.getX() + 0.5, bp.getY() + 1, bp.getZ() + 0.5);
+                    }
+                    var hit = new net.minecraft.world.phys.BlockHitResult(Vec3.atCenterOf(bp), net.minecraft.core.Direction.UP, bp, false);
+                    var r = level.getBlockState(bp).useWithoutItem(level, user, hit);
+                    return r + " on " + level.getBlockState(bp).getBlock() + " as " + user.getName().getString() + " " + user.getUUID();
+                });
+                LOG.info("[bctest] USE {}", res);
+            }
+            case "footings" -> net.kasax.raft.content.world.StructureFoundations.enabled = !arg.equals("off");
+            case "pieceview" -> {
+                // pieceview <structure> <x> <z> <piece> [height]: camera out from the structure's middle past that piece
+                // (e.g. the Ashen Forge vault), looking at it, height blocks above its middle: sets svx svy svz svyaw svpitch
+                String[] a = arg.split("\\s+");
+                double up = a.length > 4 ? Double.parseDouble(a[4]) : 8;
+                double[] c = need().getServer().computeOnServer(server -> {
+                    ServerLevel level = StructAudit.sea(server);
+                    StructureStart st = StructAudit.find(level, a[0], new BlockPos(Integer.parseInt(a[1]), 64, Integer.parseInt(a[2])));
+                    if (st == null) return null;
+                    BoundingBox all = st.getBoundingBox();
+                    BoundingBox pb = st.getPieces().get(Math.min(Integer.parseInt(a[3]), st.getPieces().size() - 1)).getBoundingBox();
+                    Vec3 pc = Vec3.atCenterOf(pb.getCenter());
+                    Vec3 ac = Vec3.atCenterOf(all.getCenter());
+                    Vec3 dir = new Vec3(pc.x - ac.x, 0, pc.z - ac.z);
+                    dir = dir.lengthSqr() < 1 ? new Vec3(1, 0, 0) : dir.normalize();
+                    double dist = Math.max(all.getXSpan(), all.getZSpan()) * 0.5 + 28;
+                    Vec3 eye = new Vec3(pc.x + dir.x * dist, pc.y + up, pc.z + dir.z * dist);
+                    float[] r = aim(eye.x, eye.y, eye.z, new Vec3(ac.x, pc.y, ac.z));
+                    return new double[]{eye.x, eye.y, eye.z, r[0], r[1]};
+                });
+                if (c != null) {
+                    vars.put("svx", c[0]);
+                    vars.put("svy", c[1] - 1.62);
+                    vars.put("svz", c[2]);
+                    vars.put("svyaw", c[3]);
+                    vars.put("svpitch", c[4]);
+                    LOG.info("[bctest] PIECEVIEW {}", String.format(Locale.ROOT, "%.1f %.1f %.1f %.1f %.1f", c[0], c[1], c[2], c[3], c[4]));
+                }
+            }
+            case "sideview" -> {
+                // sideview: a camera beside the last audited box, far enough to see all of it from the side, from the
+                // side with the clearest view: sets svx svy (feet) svz svyaw svpitch
+                if (lastBox == null) {
+                    LOG.warn("[bctest] sideview: no audited box");
+                    break;
+                }
+                BoundingBox b = lastBox;
+                double[] c = need().getServer().computeOnServer(server -> StructAudit.sideview(StructAudit.sea(server), b));
+                vars.put("svx", c[0]);
+                vars.put("svy", c[1] - 1.62);
+                vars.put("svz", c[2]);
+                vars.put("svyaw", c[3]);
+                vars.put("svpitch", c[4]);
+                LOG.info("[bctest] SIDEVIEW {}", String.format(Locale.ROOT, "%.1f %.1f %.1f %.1f %.1f", c[0], c[1], c[2], c[3], c[4]));
+            }
+            case "lootstat" -> {
+                // lootstat <loot table> <n>: roll a chest table n times at the player: empty rolls, stacks and items
+                // per roll, and how often each item comes (LOOTSTAT)
+                String[] a = arg.split("\\s+");
+                int n = a.length > 1 ? Integer.parseInt(a[1]) : 100;
+                String res = need().getServer().computeOnServer(server -> {
+                    var pl = server.getPlayerList().getPlayers().getFirst();
+                    ServerLevel level = (ServerLevel) pl.level();
+                    var key = net.minecraft.resources.ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.parse(a[0]));
+                    var table = server.reloadableRegistries().getLootTable(key);
+                    int empty = 0, stacks = 0, items = 0;
+                    Map<String, Integer> per = new TreeMap<>();
+                    for (int i = 0; i < n; i++) {
+                        var params = new net.minecraft.world.level.storage.loot.LootParams.Builder(level)
+                                .withParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.ORIGIN, pl.position())
+                                .create(net.minecraft.world.level.storage.loot.parameters.LootContextParamSets.CHEST);
+                        var got = table.getRandomItems(params, level.getRandom());
+                        if (got.isEmpty()) empty++;
+                        for (var st : got) {
+                            stacks++;
+                            items += st.getCount();
+                            per.merge(BuiltInRegistries.ITEM.getKey(st.getItem()).getPath(), st.getCount(), Integer::sum);
+                        }
+                    }
+                    return String.format(Locale.ROOT, "%s n=%d empty=%d stacks/roll=%.2f items/roll=%.2f %s", a[0], n, empty,
+                            stacks / (double) n, items / (double) n, per);
+                });
+                LOG.info("[bctest] LOOTSTAT {}", res);
+            }
+            case "menu" -> {
+                // menu: log the player's open container menu (server side): menu and container class, the items
+                String res = need().getServer().computeOnServer(server -> {
+                    var pl = server.getPlayerList().getPlayers().getFirst();
+                    var m = pl.containerMenu;
+                    StringBuilder sb = new StringBuilder(m.getClass().getSimpleName());
+                    if (m instanceof net.minecraft.world.inventory.ChestMenu cm) {
+                        var c = cm.getContainer();
+                        sb.append(" container ").append(c.getClass().getName()).append(" items");
+                        for (int i = 0; i < c.getContainerSize(); i++) {
+                            var st = c.getItem(i);
+                            if (!st.isEmpty()) sb.append(' ').append(st.getCount()).append('x').append(BuiltInRegistries.ITEM.getKey(st.getItem()).getPath());
+                        }
+                    }
+                    return sb.toString();
+                });
+                LOG.info("[bctest] MENU {}", res);
+            }
+            case "census" -> {
+                // census <half size> [x z] [label]: every structure start in that square (Census)
+                String[] a = arg.split("\\s+");
+                int half = Integer.parseInt(a[0]);
+                int x = a.length >= 3 ? Integer.parseInt(a[1]) : 0, z = a.length >= 3 ? Integer.parseInt(a[2]) : 0;
+                String label = a.length >= 4 ? a[3] : "census";
+                boolean drop = a.length >= 5 && a[4].equals("drop");
+                for (String l : need().getServer().computeOnServer(server -> Census.run(server, half, x, z, out, label, drop))) LOG.info("[bctest] {}", l);
             }
             case "chests" -> {
                 int r = arg.isEmpty() ? 64 : Integer.parseInt(arg);

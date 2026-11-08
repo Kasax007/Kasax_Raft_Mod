@@ -3,7 +3,7 @@
   "package": "net.kasax.raft.content.gear.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": ["FishingHookMixin", "PlayerScopingMixin"],
-  "client": ["ClientPlayerZoomMixin"],
+  "client": ["ClientPlayerZoomMixin", "FishingHookRendererMixin"],
   "injectors": {
     "defaultRequire": 1
   }

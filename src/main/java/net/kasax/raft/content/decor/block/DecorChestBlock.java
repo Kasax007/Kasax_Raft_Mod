@@ -1,9 +1,11 @@
 package net.kasax.raft.content.decor.block;
 
 import net.kasax.raft.content.decor.DecorBlocks;
+import net.kasax.raft.content.decor.lootr.LootrCompat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
@@ -71,7 +73,11 @@ public class DecorChestBlock extends DecorBlock implements EntityBlock {
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (level instanceof ServerLevel && level.getBlockEntity(pos) instanceof DecorChestBlockEntity chest) {
-            player.openMenu(chest);
+            if (player instanceof ServerPlayer sp && LootrCompat.handles(chest)) {
+                LootrCompat.open(chest, sp);        // 3.4: with Lootr every player gets their own loot
+            } else {
+                player.openMenu(chest);
+            }
         }
         return InteractionResult.SUCCESS;
     }

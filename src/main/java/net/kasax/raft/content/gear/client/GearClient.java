@@ -21,6 +21,7 @@ public final class GearClient {
     public static void init() {
         EntityRendererRegistry.register(GearContent.BOOMERANG_ENTITY, BoomerangRenderer::new);
         ClientTickEvents.END_CLIENT_TICK.register(GearClient::rangeFinder);
+        net.minecraft.client.gui.screens.MenuScreens.register(GearContent.TACKLE_MENU, TackleScreen::new);
     }
 
     private static void rangeFinder(Minecraft mc) {

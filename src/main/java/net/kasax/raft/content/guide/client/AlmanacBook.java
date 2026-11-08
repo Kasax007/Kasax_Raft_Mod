@@ -122,7 +122,8 @@ final class AlmanacBook {
                 new Section("armour", "gear.armour", List.of("raft:shell_helmet", "raft:shell_chestplate", "raft:shell_leggings",
                         "raft:shell_boots", "raft:explorer_helmet", "raft:explorer_chestplate", "raft:explorer_boots"),
                         null, true, false),
-                new Section("tools", "gear.tools", List.of("raft:wreck_compass", "raft:captains_spyglass", "raft:fish_bait",
+                new Section("tools", "gear.tools", List.of("raft:wreck_compass", "raft:captains_spyglass"), null, true, false),
+                new Section("fishing", "gear.fishing", List.of("raft:driftwood_fishing_rod", "raft:fish_bait",
                         "raft:golden_lure", "minecraft:fishing_rod"), null, true, false))));
         list.add(simple("tips", "raft:coconut", "raft:coconut", "raft:hammock", "raft:scarecrow", "raft:bubble_vent",
                 "raft:seashell", "raft:supply_barrel"));

@@ -6,6 +6,9 @@ import net.kasax.raft.content.BcTabs;
 import net.kasax.raft.content.gear.entity.BoomerangEntity;
 import net.kasax.raft.content.gear.item.BoomerangItem;
 import net.kasax.raft.content.gear.item.CaptainsSpyglassItem;
+import net.kasax.raft.content.gear.item.DriftwoodFishingRodItem;
+import net.kasax.raft.content.gear.item.Tackle;
+import net.kasax.raft.content.gear.menu.TackleMenu;
 import net.kasax.raft.content.gear.item.WreckCompassItem;
 import net.kasax.raft.item.custom.TooltipItem;
 import net.minecraft.core.registries.Registries;
@@ -37,6 +40,7 @@ import java.util.Map;
  * Items of the "gear" module (Beach Craft 3.3), balanced against vanilla: the shark tooth spear is an iron spear
  * with more durability, the machete a fast iron blade that clears plants, the shell armour sits between chainmail
  * and iron (13 armour) with Resistance in water as a set, the explorer set is leather-strong (7) with speed and luck.
+ * The Driftwood Fishing Rod (3.4) lasts twice as long as a plain rod and carries its own bait and lures.
  */
 public final class GearContent {
     private static final BcTabs.Tab TAB = BcTabs.Tab.GEAR;
@@ -123,9 +127,23 @@ public final class GearContent {
     public static final Item CAPTAINS_SPYGLASS = BcReg.item("captains_spyglass", CaptainsSpyglassItem::new,
             new Item.Properties().stacksTo(1).rarity(Rarity.UNCOMMON), TAB);
     public static final Item FISH_BAIT = BcReg.item("fish_bait", p -> new TooltipItem(p, "tooltip.raft.fish_bait",
-            "tooltip.raft.fish_bait.1"), new Item.Properties(), TAB);
-    public static final Item GOLDEN_LURE = BcReg.item("golden_lure", p -> new TooltipItem(p, "tooltip.raft.golden_lure"),
+            "tooltip.raft.fish_bait.1", "tooltip.raft.fish_bait.rod"), new Item.Properties(), TAB);
+    public static final Item GOLDEN_LURE = BcReg.item("golden_lure", p -> new TooltipItem(p, "tooltip.raft.golden_lure",
+            "tooltip.raft.fish_bait.rod"),
             new Item.Properties().rarity(Rarity.UNCOMMON), TAB);
+
+    // ------------------------------------------------------------------------------------------------ fishing
+    /** Bait and lures loaded into a Driftwood Fishing Rod. */
+    public static final net.minecraft.core.component.DataComponentType<Tackle> TACKLE = net.minecraft.core.Registry.register(
+            net.minecraft.core.registries.BuiltInRegistries.DATA_COMPONENT_TYPE, Raft.id("tackle"),
+            net.minecraft.core.component.DataComponentType.<Tackle>builder().persistent(Tackle.CODEC)
+                    .networkSynchronized(Tackle.STREAM_CODEC).cacheEncoding().build());
+    public static final Item DRIFTWOOD_FISHING_ROD = BcReg.item("driftwood_fishing_rod", DriftwoodFishingRodItem::new,
+            new Item.Properties().durability(128), TAB);
+    public static final net.minecraft.world.inventory.MenuType<TackleMenu> TACKLE_MENU = net.minecraft.core.Registry.register(
+            net.minecraft.core.registries.BuiltInRegistries.MENU, Raft.id("tackle_box"),
+            new net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType<>(TackleMenu::new,
+                    net.minecraft.network.codec.ByteBufCodecs.VAR_INT));
 
     private static Item armour(String name, Holder<ArmorMaterial> material, Type type, String tooltip) {
         Item.Properties p = GearItem.gear(new Item.Properties().durability(type.getDurability(DURABILITY.get(material))),

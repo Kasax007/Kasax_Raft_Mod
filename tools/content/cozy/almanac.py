@@ -60,7 +60,9 @@ Seeds also float by in flotsam barrels, hide in supply barrels and island chests
         'almanac.raft.kitchen.pot.title': 'Cooking Pot and Fish Trap',
         'almanac.raft.kitchen.pot.text': """\
 # The Cooking Pot
-Set it on a campfire, fire, brazier, simple grill, magma block or lava. Right-click it with up to 4 ingredients; when they make a dish it cooks in 10 seconds. Serve it with bowls. Sneak-click with an empty hand to take the ingredients back.
+Set it on a campfire, fire, brazier, simple grill, magma block or lava. Right-click it with up to 4 ingredients. It only takes what fits a dish, and the action bar tells you what is still missing.
+When the ingredients make a dish it cooks in 10 seconds: the water turns the colour of the dish, and a chime rings when it is done. Serve it with bowls.
+Changed your mind? Sneak-click the pot with an empty hand and you get every ingredient back.
 * Island Curry, 3 bowls: cooked rice, chili pepper, sweet potato, coconut
 * Seafood Chowder, 3 bowls: a fish, crab claw or eel fillet, sweet potato, kelp, sea grapes
 * Sweet Potato Soup, 2 bowls: 2 sweet potatoes, chili pepper
@@ -103,7 +105,21 @@ Right-click and the needle turns to the nearest shipwreck within about 1000 bloc
 # Captain's Spyglass
 Zooms twice as far as a spyglass and shows the distance to what you look at.
 # Bait
-Fish Bait: 4 from kelp and rotten flesh, a spider eye, a crab claw or a cod. Keep it in your bag while fishing: bites come faster, like Lure I. One per cast.
-Golden Lure: bait and 3 gold nuggets. Faster bites and better treasure, like Luck of the Sea II.""",
+Fish Bait: 4 from kelp and rotten flesh, a spider eye, a crab claw or a cod. Bites come 5 seconds sooner, like Lure I.
+Golden Lure: bait and 3 gold nuggets. Better treasure, like Luck of the Sea II, and bites come sooner too.""",
+        'almanac.raft.gear.fishing.title': 'Fishing',
+        'almanac.raft.gear.fishing.text': """\
+# Driftwood Fishing Rod
+Made from 3 driftwood planks and 2 string. It lasts twice as long as a plain rod and has its own tackle box: one slot for Fish Bait and one for Golden Lures.
+* Sneak-use the rod to open the tackle box.
+* Or, in your inventory, right-click bait or lures onto the rod. Right-click the rod with an empty hand to take them out.
+* The tooltip shows what is loaded.
+Every cast uses one bait and one lure, if loaded, on top of the rod's enchantments. It only uses what is loaded, never bait from your bag.
+---
+# Bait and lures
+* Fish Bait: bites come 5 seconds sooner, like Lure I.
+* Golden Lure: better treasure, like Luck of the Sea II, and bites come 5 seconds sooner.
+With a plain fishing rod, keep bait or a lure in your off hand or bag: each cast uses one.
+In a Fish Trap, bait or a lure makes it catch twice as fast.""",
     },
 }

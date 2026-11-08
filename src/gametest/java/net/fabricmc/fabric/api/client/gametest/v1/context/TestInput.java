@@ -75,6 +75,25 @@ public final class TestInput {
         this.releaseKey(mapping);
     }
 
+    /** A raw key by its GLFW key code held for some ticks (keys of other mods, e.g. JEI's R and U). */
+    public void holdKeyFor(int keyCode, int ticks) {
+        InputConstants.Key key = InputConstants.Type.KEYSYM.getOrCreate(keyCode);
+        this.ctx.runOnClient(mc -> key(mc, key, true));
+        this.ctx.waitTicks(ticks);
+        this.ctx.runOnClient(mc -> key(mc, key, false));
+    }
+
+    /** Types text into the focused text box of the open screen (character events like the keyboard sends them). */
+    public void typeChars(String text) {
+        this.ctx.runOnClient(mc -> {
+            long window = mc.getWindow().getWindow();
+            for (char c : text.toCharArray()) {
+                ((net.kasax.raft.gametest.mixin.KeyboardHandlerInvoker) mc.keyboardHandler).bc$charTyped(window, c, 0);
+            }
+        });
+        this.ctx.waitTick();
+    }
+
     public void setCursorPos(double x, double y) {
         this.cursorX = x;
         this.cursorY = y;

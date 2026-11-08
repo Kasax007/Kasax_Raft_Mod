@@ -23,6 +23,8 @@ RAFT_3 = """pineapple pineapple_crown pearl seashell sea_glass_shard urchin_spin
 ember_shell cutlass gold_coin cannonball jelly_blob glow_jelly angler_lure eel_fillet cooked_eel_fillet diving_helmet
 oxygen_tank wetsuit flippers gold_coin_pile rum_bottles ship_lantern jelly_lamp seashell_lamp hibiscus
 seafarers_almanac""".split()
+# 3.4 (barrel loot): items of the food, fishing and farming modules
+RAFT_34 = """fish_bait golden_lure chili_seeds rice sweet_potato banana banana_shoot sea_grapes""".split()
 RAFT_STORY = """expedition_journal message_in_a_bottle supply_barrel coral_sigil pearl_sigil storm_sigil ember_sigil
 tidewarden_key""".split()
 _known = None
@@ -39,7 +41,7 @@ def known(item):
     global _known
     if _known is None:
         _known = {'minecraft:' + f[:-5] for f in os.listdir(os.path.join(VANILLA, 'assets', 'minecraft', 'items'))}
-        _known |= {rid(x) for x in RAFT_2 + RAFT_3 + RAFT_STORY}
+        _known |= {rid(x) for x in RAFT_2 + RAFT_3 + RAFT_34 + RAFT_STORY}
     return iid(item) in _known
 
 
@@ -369,6 +371,8 @@ def loot_tables():
              rolls=(3, 6)),
         letter_pool(0.15)])
 
+    barrel_tables()
+
     # ---- gameplay
     table('gameplay/supply_barrel', [
         pool([item('raft:driftwood_planks', 2, 5, weight=6), item('raft:palm_planks', 2, 5, weight=5),
@@ -383,6 +387,56 @@ def loot_tables():
         letter_pool(0.08)])
     letters = [book(k) for k in T.LETTERS]
     table('story/bottle_letters', [pool(letters)])
+
+
+def barrel_tables():
+    """3.4: small themed tables for a share of the barrels and crates of the structures (bclib/stock.py picks which).
+    One to three stacks of common things (some rolls stay empty), well below the real chests of a place; only the
+    salvage of the harder places (rig, Helix Station, Port Solace) has a small chance of a better find."""
+    coins = lambda c: pool([item('raft:gold_coin', 1, 2, weight=c), empty(100 - c)])
+    table('chests/barrel/supplies', [
+        pool([item('raft:rope', 1, 3, weight=5), item('raft:plastic', 2, 5, weight=5), item('raft:scrap_metal', 1, 3, weight=4),
+              item('raft:driftwood_planks', 2, 6, weight=4), item('raft:palm_planks', 2, 6, weight=3),
+              item('string', 1, 4, weight=3), item('stick', 2, 6, weight=2), item('raft:fresh_water', 1, 2, weight=3),
+              item('raft:fish_bait', 1, 3, weight=2), item('torch', 2, 4, weight=2), item('iron_nugget', 1, 4, weight=2),
+              empty(3)], rolls=(1, 3)),
+        coins(15)])
+    table('chests/barrel/food', [
+        pool([item('cooked_cod', 1, 3, weight=4), item('dried_kelp', 2, 6, weight=4), item('bread', 1, 2, weight=3),
+              item('raft:coconut', 1, 3, weight=4), item('raft:pineapple', 1, 2, weight=3), item('raft:banana', 1, 3, weight=3),
+              item('raft:rice', 1, 3, weight=2), item('raft:sweet_potato', 1, 3, weight=3), item('raft:fresh_water', 1, 2, weight=3),
+              item('raft:sea_grapes', 1, 3, weight=2), empty(2)], rolls=(1, 3))])
+    table('chests/barrel/seeds', [
+        pool([item('raft:pineapple_crown', 1, 2, weight=3), item('raft:chili_seeds', 1, 3, weight=3), item('raft:rice', 2, 4, weight=3),
+              item('raft:sweet_potato', 1, 3, weight=3), item('raft:banana_shoot', weight=2), item('raft:palm_sapling', 1, 2, weight=2),
+              item('wheat_seeds', 2, 5, weight=2), item('melon_seeds', 1, 3, weight=1), empty(1)], rolls=(1, 2))])
+    table('chests/barrel/fishing', [
+        pool([item('raft:fish_bait', 2, 5, weight=5), item('cod', 1, 3, weight=4), item('salmon', 1, 2, weight=3),
+              item('string', 2, 4, weight=3), item('kelp', 2, 5, weight=2), item('raft:rope', 1, 3, weight=3),
+              item('raft:plastic_hook', weight=1), item('raft:net', weight=1), empty(2)], rolls=(1, 3))])
+    table('chests/barrel/scrap', [
+        pool([item('raft:scrap_metal', 2, 5, weight=5), item('raft:plastic', 2, 5, weight=4), item('iron_nugget', 2, 6, weight=4),
+              item('copper_ingot', 1, 3, weight=3), item('raft:titanium_nugget', 1, 3, weight=2), item('raft:rope', 1, 2, weight=2),
+              item('coal', 2, 5, weight=3), item('redstone', 1, 3, weight=1), empty(2)], rolls=(1, 3)),
+        coins(10)])
+    table('chests/barrel/ship_stores', [
+        pool([item('raft:gold_coin', 1, 4, weight=4), item('raft:rope', 1, 3, weight=4), item('gunpowder', 1, 3, weight=3),
+              item('raft:cannonball', 1, 3, weight=3), item('bone', 1, 3, weight=2), item('string', 1, 3, weight=2),
+              item('dried_kelp', 2, 5, weight=2), item('raft:sail_canvas', 1, 2, weight=1), item('raft:rum_bottles', weight=1),
+              empty(3)], rolls=(1, 3))])
+    table('chests/barrel/city', [
+        pool([item('paper', 2, 6, weight=4), item('book', weight=2), item('glass_bottle', 1, 3, weight=3),
+              item('gold_nugget', 2, 5, weight=3), item('raft:gold_coin', 1, 3, weight=3), item('candle', 1, 2, weight=2),
+              item('raft:plastic', 1, 4, weight=3), item('bread', 1, 2, weight=2), item('emerald', weight=1), empty(3)],
+             rolls=(1, 3))])
+    table('chests/barrel/salvage', [
+        pool([item('raft:scrap_metal', 2, 5, weight=4), item('raft:titanium_nugget', 2, 5, weight=4),
+              item('raft:circuit_board', weight=2), item('iron_ingot', 1, 3, weight=3), item('copper_ingot', 1, 4, weight=3),
+              item('raft:plastic', 2, 4, weight=3), item('redstone', 1, 4, weight=2), item('glow_ink_sac', 1, 2, weight=1),
+              empty(3)], rolls=(1, 3)),
+        # a better find now and then (about one barrel in eight)
+        pool([item('raft:titanium_ingot', 1, 2, weight=4), item('raft:oxygen_tank', weight=1), item('raft:golden_lure', weight=1),
+              empty(42)])])
 
 
 # ------------------------------------------------------------------------------------------------- block loot

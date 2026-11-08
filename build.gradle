@@ -11,6 +11,16 @@ base {
 }
 
 repositories {
+	// JEI (optional): its API to compile the plugin in net.kasax.raft.compat.jei, the mod itself only in dev runs
+	maven {
+		url = "https://maven.blamejared.com/"
+		content { includeGroup "mezz.jei" }
+	}
+	// Lootr (optional, compile only): Beach Craft's crates and treasure chests become per-player loot when it is installed
+	exclusiveContent {
+		forRepository { maven { url "https://api.modrinth.com/maven" } }
+		filter { includeGroup "maven.modrinth" }
+	}
 }
 
 // In-game test harness (src/gametest): a scripted client test driven by client ticks, see tools/bctest/README.md.
@@ -50,6 +60,33 @@ dependencies {
 	mappings loom.officialMojangMappings()
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+	// JEI is optional: the plugin (entrypoint jei_mod_plugin) is only loaded when JEI is installed. -Pjei puts JEI
+	// into dev runs (tools/bctest/run.sh: BC_JEI=1). JEI for Fabric 1.21.1 is published as a mod jar (remapped here).
+	modCompileOnly "mezz.jei:jei-1.21.1-fabric-api:${project.jei_version}"
+	if (project.hasProperty('jei')) {
+		modLocalRuntime("mezz.jei:jei-1.21.1-fabric:${project.jei_version}") { transitive = false }
+		// the JEI jar carries its config library (mezz_config) as a nested jar, which dev runs do not load: unpacked
+		def jeiJar = configurations.detachedConfiguration(dependencies.create("mezz.jei:jei-1.21.1-fabric:${project.jei_version}") {
+			transitive = false
+		}).singleFile
+		def nested = layout.buildDirectory.dir('jei-nested').get().asFile
+		copy {
+			from(zipTree(jeiJar)) { include 'META-INF/jars/*.jar' }
+			into nested
+			eachFile { it.path = it.name }
+			includeEmptyDirs = false
+		}
+		modLocalRuntime fileTree(nested) { include '*.jar' }
+	}
+
+	// Lootr (optional): compiled against, not bundled; -PwithLootr puts it into the dev runtime (bctest: BC_LOOTR=1)
+	// together with Cloth Config, which Lootr for 1.21.1 needs
+	modCompileOnly("maven.modrinth:lootr:${project.lootr_version}") { transitive = false }
+	if (project.hasProperty('withLootr')) {
+		modLocalRuntime("maven.modrinth:lootr:${project.lootr_version}") { transitive = false }
+		modLocalRuntime("maven.modrinth:cloth-config:${project.cloth_config_version}") { transitive = false }
+	}
 
 	// Team Reborn Energy (bundled): cables, batteries and solar panels talk to Tech Reborn machines.
 	include modImplementation("teamreborn:energy:${project.energy_version}")

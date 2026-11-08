@@ -1,0 +1,295 @@
+# Beach Craft 3.4 kitchen test: the cooking pot (refuses what fits no dish, says what is missing, gives the
+# ingredients back, shows its contents and the colour of the dish in the world, the done state and its chime), the
+# Driftwood Fishing Rod (loading bait and lures in the inventory, the tackle box, a cast uses what is loaded and
+# nothing from the bag, the hook stays out; plain rods still use bait from the off hand) and the sorted creative tabs.
+# With BC_JEI=1 (JEI installed) the last part opens the JEI pages of the pot, the crops, the fish trap, the rod and
+# the bait; without JEI those shots just show the creative inventory.
+deadline 15
+world kitchen
+rd 4
+gui 2
+chat off
+sounds kitchen
+cmd gamerule spawn_monsters false
+cmd gamerule random_tick_speed 0
+cmd tp @p 4.5 201 0.5 0 20
+settle 60
+cmd fill -6 200 -8 14 200 12 minecraft:spruce_planks
+cmd fill -6 201 -8 14 210 12 air
+cmd fill 6 196 -4 12 200 2 minecraft:glass hollow
+cmd fill 7 197 -3 11 200 1 minecraft:water
+cmd setblock 4 201 4 minecraft:campfire
+cmd setblock 4 202 4 raft:cooking_pot[facing=north]
+cmd setblock 4 201 2 minecraft:spruce_planks
+swait 5
+check floor | execute if block 4 200 4 minecraft:spruce_planks
+cmd tp @p 4.5 202 2.5 0 50
+swait 3
+cmd effect give @p resistance 9999 255 true
+cmd gamemode survival @p
+pose 4.5 202 2.5 0 50
+face 4.5 202.35 4.6
+swait 2
+# --- the pot refuses what is in no dish
+cmd item replace entity @p weapon.mainhand with minecraft:dirt 4
+wait 2 render
+use
+swait 4
+check dirt_refused | execute if items entity @p weapon.mainhand minecraft:dirt[count=4]
+check dirt_not_in_pot | execute unless data block 4 202 4 Items[0]
+wait 3 render
+shot k01_refuse_dirt
+# --- ingredients go in one by one, the action bar says what is still missing
+cmd item replace entity @p weapon.mainhand with raft:cooked_rice
+wait 2 render
+use
+swait 4
+check rice_in | execute if data block 4 202 4 Items[0]
+wait 3 render
+shot k02_rice_in
+cmd item replace entity @p weapon.mainhand with raft:chili_pepper
+wait 2 render
+use
+swait 4
+cmd item replace entity @p weapon.mainhand with raft:sweet_potato
+wait 2 render
+use
+swait 4
+check three_in | execute if data block 4 202 4 Items[2]
+# --- sea grapes do not go with rice, chili and sweet potato: refused, nothing lost
+cmd item replace entity @p weapon.mainhand with raft:sea_grapes 2
+wait 2 render
+use
+swait 4
+check sea_grapes_refused | execute if items entity @p weapon.mainhand raft:sea_grapes[count=2]
+check still_three | execute unless data block 4 202 4 Items[3]
+wait 3 render
+shot k03_no_fit
+cmd item replace entity @p weapon.mainhand with raft:coconut
+wait 2 render
+use
+swait 4
+check pot_cooking | execute if block 4 202 4 raft:cooking_pot[contents=cooking]
+wait 50 render
+hud off
+shot k04_cooking_early
+wait 100 render
+shot k05_cooking_late
+swaitfor 200 execute if block 4 202 4 raft:cooking_pot[contents=ready]
+check pot_ready | execute if block 4 202 4 raft:cooking_pot[contents=ready]
+wait 12 render
+shot k06_ready
+hud on
+cmd item replace entity @p weapon.mainhand with minecraft:bowl 3
+wait 2 render
+use
+swait 4
+wait 2 render
+use
+swait 4
+wait 2 render
+use
+swait 4
+check pot_served | execute if items entity @p container.* raft:island_curry[count=3]
+check pot_empty | execute if block 4 202 4 raft:cooking_pot[contents=empty]
+# --- two sweet potatoes: only the soup is left; then take them back with an empty hand
+cmd item replace entity @p weapon.mainhand with raft:sweet_potato 2
+wait 2 render
+use
+swait 4
+wait 2 render
+use
+swait 4
+check two_in | execute if data block 4 202 4 Items[1]
+wait 3 render
+shot k07_soup_hint
+# (a torch in the off hand must not stop it: vanilla skips block use when sneaking with anything in hand)
+cmd item replace entity @p weapon.mainhand with minecraft:air
+cmd item replace entity @p weapon.offhand with minecraft:torch
+wait 2 render
+sneakuse
+swait 4
+check taken_back | execute if items entity @p container.* raft:sweet_potato[count=2]
+check pot_empty_again | execute unless data block 4 202 4 Items[0]
+wait 3 render
+shot k08_taken_back
+# --- a mix that makes nothing (only possible in pots from older worlds): murky, smoke, and how to get it back
+cmd data merge block 4 202 4 {Items:[{Slot:0b,id:"raft:chili_pepper",count:1},{Slot:1b,id:"raft:chili_pepper",count:1},{Slot:2b,id:"raft:chili_pepper",count:1}]}
+swait 4
+cmd item replace entity @p weapon.mainhand with minecraft:air
+wait 2 render
+use
+swait 4
+wait 3 render
+shot k09_no_dish
+sneakuse
+swait 4
+check chilis_back | execute if items entity @p container.* raft:chili_pepper[count=3]
+cmd item replace entity @p weapon.offhand with minecraft:air
+# --- Driftwood Fishing Rod: load bait and lures by right-clicking them onto the rod in the inventory
+cmd clear @p
+cmd item replace entity @p hotbar.0 with raft:driftwood_fishing_rod
+cmd item replace entity @p hotbar.1 with raft:fish_bait 10
+cmd item replace entity @p hotbar.2 with raft:golden_lure 3
+slot 1
+swait 3
+key inventory
+wait 6 render
+click 532 494
+wait 3
+rclick 496 494
+wait 3
+click 568 494
+wait 3
+rclick 496 494
+wait 3
+cursor 496 494
+wait 4 render
+shot k10_rod_loaded_tooltip
+esc
+swait 3
+cmd execute store result storage bc:t n int 1 run data get entity @p Inventory[{Slot:0b}].components."raft:tackle".bait.count
+check rod_bait_loaded | execute if data storage bc:t {n:10}
+cmd execute store result storage bc:t n int 1 run data get entity @p Inventory[{Slot:0b}].components."raft:tackle".lure.count
+check rod_lure_loaded | execute if data storage bc:t {n:3}
+check bait_left_bag | execute unless items entity @p container.* raft:fish_bait
+# --- the tackle box (sneak-use)
+cmd tp @p 9.5 201 -5.5 0 35
+swait 3
+pose 9.5 201 -5.5 0 35
+wait 2 render
+sneakuse
+wait 8 render
+shot k11_tackle_box
+cursor 496 300
+wait 3 render
+esc
+swait 3
+# --- a cast uses one bait and one lure from the rod, nothing from the off hand, and the hook stays out
+cmd item replace entity @p weapon.offhand with raft:fish_bait 4
+pose 9.5 201 -5.5 0 35
+wait 2 render
+use
+swait 10
+check hook_out | execute if entity @e[type=minecraft:fishing_bobber]
+cmd execute store result storage bc:t n int 1 run data get entity @p SelectedItem.components."raft:tackle".bait.count
+check cast_used_bait | execute if data storage bc:t {n:9}
+cmd execute store result storage bc:t n int 1 run data get entity @p SelectedItem.components."raft:tackle".lure.count
+check cast_used_lure | execute if data storage bc:t {n:2}
+check offhand_bait_kept | execute if items entity @p weapon.offhand raft:fish_bait[count=4]
+wait 6 render
+shot k12_cast
+swait 60
+check hook_stays | execute if entity @e[type=minecraft:fishing_bobber]
+wait 2 render
+use
+swait 6
+check hook_reeled_in | execute unless entity @e[type=minecraft:fishing_bobber]
+# --- a plain rod still uses bait from the off hand
+cmd item replace entity @p weapon.mainhand with minecraft:fishing_rod
+wait 2 render
+use
+swait 10
+check plain_rod_uses_offhand_bait | execute if items entity @p weapon.offhand raft:fish_bait[count=3]
+wait 2 render
+use
+swait 6
+# --- the creative tabs in their new order
+cmd gamemode creative @p
+tab raft:bc_0_raft
+wait 4 render
+shot t0_raft
+tab raft:bc_1_building
+wait 4 render
+shot t1_building
+tab raft:bc_2_decor
+wait 4 render
+shot t2_decor
+tab raft:bc_3_cozy
+wait 4 render
+shot t3_cozy
+tab raft:bc_4_nature
+wait 4 render
+shot t4_nature
+tab raft:bc_5_kitchen
+wait 4 render
+shot t5_kitchen
+tab raft:bc_6_gear
+wait 4 render
+shot t6_gear
+tab raft:bc_7_voyage
+wait 4 render
+shot t7_voyage
+tab raft:bc_8_creatures
+wait 4 render
+shot t8_creatures
+tab raft:bc_9_story
+wait 4 render
+shot t9_story
+tab raft:bc_cozy
+log old tab id raft:bc_cozy still opens the cozy tab
+esc
+# --- JEI (BC_JEI=1): search an item in JEI's list (right-click clears the field), then left-click it for its
+# recipes; a click on a later tab (crafting, anvil, info) opens its info page
+key inventory
+wait 6 render
+rclick 1085 688
+type island curry
+wait 6 render
+click 962 78
+wait 8 render
+shot j01_curry_in_pot
+esc
+key inventory
+wait 6 render
+rclick 1085 688
+type chili pepper
+wait 6 render
+click 962 78
+wait 8 render
+shot j02_crops
+esc
+key inventory
+wait 6 render
+rclick 1085 688
+type nautilus shell
+wait 6 render
+click 962 78
+wait 8 render
+shot j03_fish_trap
+esc
+key inventory
+wait 6 render
+rclick 1085 688
+type driftwood fishing
+wait 6 render
+click 962 78
+wait 8 render
+shot j04_rod_recipe
+click 568 72
+wait 6 render
+shot j05_rod_info
+esc
+key inventory
+wait 6 render
+rclick 1085 688
+type golden lure
+wait 6 render
+click 962 78
+wait 8 render
+click 518 72
+wait 6 render
+shot j06_lure_info
+esc
+key inventory
+wait 6 render
+rclick 1085 688
+type cooking pot
+wait 6 render
+click 962 78
+wait 8 render
+click 518 72
+wait 6 render
+shot j07_pot_info
+esc
+checks

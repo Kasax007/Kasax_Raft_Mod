@@ -503,6 +503,6 @@ def main(preview=False):
         print('  preview', contact(s, 'pirate_cove', cuts=(WL + 3, WL + 9), scale=4, slices_y=[WL - 2, WL + 2, WL + 4, WL + 8]))
     write_structure('pirate_cove', [(path, 1)], None,
                     step='surface_structures', terrain='none', start_height=W0 - ROOT, heightmap=None,
-                    biomes=['jungle_isle', 'palm_isle'], spacing=44, separation=18, salt=31415904, max_distance=64,
+                    biomes=['jungle_isle', 'palm_isle'], spacing=52, separation=22, salt=31415904, max_distance=64,
                     spawn_overrides={'monster': spawns([('raft:drowned_corsair', 6, 1, 2), ('minecraft:skeleton', 1, 1, 1)])})
     return [(path, s)]
