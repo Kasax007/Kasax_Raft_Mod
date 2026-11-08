@@ -202,10 +202,9 @@ def serving_plate():
 def shelves():
     """Display shelves: the vanilla shelf (three item spots, swap with the hotbar) in palm, teak and weathered wood."""
     src = tex.load('minecraft:block/oak_shelf').convert('RGBA')
-    for wood, base in (('palm', '#c49a5c'), ('teak', '#87512f'), ('weathered', '#8a8378')):
+    for wood, ramp in (('palm', art.PALM), ('teak', art.TEAK), ('weathered', tex.ramp('#8a8378', 6, 0.5))):
         bid = f'{wood}_shelf'
         blk(bid, f'{wood.capitalize()} Shelf', 'axe')
-        ramp = tex.ramp(base, 7, 0.7)
         P.save(P.recolour(src, None, ramp), f'block/{bid}')
         A.from_vanilla(M, bid, 'oak_shelf', {'all': f'raft:block/{bid}', 'particle': f'raft:block/{bid}'})
 
