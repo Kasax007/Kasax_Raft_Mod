@@ -72,7 +72,7 @@ swait 100
 cmd data get entity @p Health
 cmd effect give @p minecraft:instant_health 1 10
 near 40
-pcmd damage @e[tag=raft_guard,distance=..64] 500 minecraft:player_attack by @p
+pcmd execute as @e[tag=raft_guard,distance=..64] run damage @s 500 minecraft:player_attack by @p
 swait 20
 near 40
 respawn
@@ -105,7 +105,7 @@ cmd effect give @p minecraft:instant_health 1 10
 near 48
 wait 5 render
 shot 83_rig_bossbar
-pcmd damage @e[tag=raft_guard,distance=..64] 500 minecraft:player_attack by @p
+pcmd execute as @e[tag=raft_guard,distance=..64] run damage @s 500 minecraft:player_attack by @p
 swait 20
 near 48
 respawn
@@ -137,9 +137,9 @@ shot 85_captain_rally
 swait 100
 cmd data get entity @p Health
 cmd effect give @p minecraft:instant_health 1 10
-pcmd damage @e[type=raft:corsair_captain,distance=..64] 500 minecraft:player_attack by @p
-pcmd damage @e[tag=raft_guard,distance=..64] 500 minecraft:player_attack by @p
-pcmd damage @e[type=raft:drowned_corsair,distance=..64] 500 minecraft:player_attack by @p
+pcmd execute as @e[type=raft:corsair_captain,distance=..64] run damage @s 500 minecraft:player_attack by @p
+pcmd execute as @e[tag=raft_guard,distance=..64] run damage @s 500 minecraft:player_attack by @p
+pcmd execute as @e[type=raft:drowned_corsair,distance=..64] run damage @s 500 minecraft:player_attack by @p
 swait 20
 near 48
 respawn
