@@ -37,3 +37,8 @@ Make yourself at home on the Endless Sea. 3.3 brings cozy furniture and lights y
 
 ### Creative tabs
 - Three new tabs: **Beach Craft: Cozy**, **Beach Craft: Island Kitchen** and **Beach Craft: Gear**.
+
+### Fixes
+- The Air Compressor no longer drops itself when an explosion destroys it (its loot table was still in the old format, which Minecraft 26.3 ignores).
+
+Worlds from 3.2 load as they are. The wild crops grow in newly explored chunks.
