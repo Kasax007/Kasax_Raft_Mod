@@ -14,11 +14,11 @@
     "R": "raft:rope"
   },
   "pattern": [
-    "RR",
-    "RR"
+    "RRR",
+    "RRR"
   ],
   "result": {
-    "count": 2,
+    "count": 3,
     "id": "raft:rope_rug"
   }
 }

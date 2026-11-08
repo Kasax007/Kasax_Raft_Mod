@@ -130,7 +130,7 @@ def cozy_recipes(M, BLOCKS):
     for col, (d1, d2) in (('red', ('red', 'white')), ('blue', ('blue', 'white')), ('yellow', ('yellow', 'orange'))):
         b.shaped(f'beach_towel_{col}', ['AB'], {'A': f'minecraft:{d1}_wool', 'B': f'minecraft:{d2}_wool'},
                  f'beach_towel_{col}', 4, group='beach_towel')
-    b.shaped('rope_rug', ['RR', 'RR'], {'R': ROPE}, 'rope_rug', 2)
+    b.shaped('rope_rug', ['RRR', 'RRR'], {'R': ROPE}, 'rope_rug', 3)
     b.shaped('hurricane_lantern', [' N ', 'GTG', 'NIN'], {'N': 'minecraft:copper_nugget', 'G': 'minecraft:glass_pane',
                                                           'T': 'minecraft:torch', 'I': 'minecraft:copper_ingot'},
              'hurricane_lantern')
