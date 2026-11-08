@@ -63,7 +63,10 @@ public final class VesselPicker {
         Vec3 from = camera.getEyePosition(partialTicks);
         Vec3 to = from.add(camera.getViewVector(partialTicks).scale(range));
         HitResult current = mc.hitResult;
-        double best = current != null && current.getType() != HitResult.Type.MISS ? current.getLocation().distanceToSqr(from) : range * range;
+        // vanilla's own pick of a raft entity (its box; from inside the box: the eye itself) does not count, only its blocks
+        boolean vanillaHit = current != null && current.getType() != HitResult.Type.MISS
+                && !(current instanceof EntityHitResult eh && eh.getEntity() instanceof VesselEntity);
+        double best = vanillaHit ? current.getLocation().distanceToSqr(from) : range * range;
         Vec3 bestHit = null;
         for (VesselEntity vessel : vessels) {
             VesselStructure structure = vessel.structure();
