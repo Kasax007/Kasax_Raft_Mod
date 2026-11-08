@@ -51,7 +51,7 @@ LANG = {
     'jei.raft.fish_trap.bait': 'Optional: twice as fast, one per catch',
     'jei.raft.fish_trap.chance': '%s%% of catches',
     'jei.raft.fish_trap.count': '%s to %s at a time',
-    'jei.raft.fish_trap.time': 'In open water it catches something every 1 to 2 minutes, with bait twice as often',
+    'jei.raft.fish_trap.time': 'In open water: a catch every 1 to 2 minutes, twice as fast with bait',
     'jei.raft.island_crops': 'Island Crops',
     'jei.raft.crops.soil': 'Plant it here',
     'jei.raft.crops.farm': 'Farmland or crop plot',

@@ -48,7 +48,7 @@
   "jei.raft.fish_trap.bait": "Optional: twice as fast, one per catch",
   "jei.raft.fish_trap.chance": "%s%% of catches",
   "jei.raft.fish_trap.count": "%s to %s at a time",
-  "jei.raft.fish_trap.time": "In open water it catches something every 1 to 2 minutes, with bait twice as often",
+  "jei.raft.fish_trap.time": "In open water: a catch every 1 to 2 minutes, twice as fast with bait",
   "jei.raft.info.cooking_pot": "Set the pot on a campfire, fire, brazier, simple grill, magma block or lava. Right-click it with up to 4 ingredients: it only takes what fits a dish, and the action bar tells you what is still missing. When the ingredients make a dish it cooks in 10 seconds: the liquid turns the colour of the dish, and a chime rings when it is done. Serve it with bowls. Changed your mind? Sneak-use the pot with an empty hand to get every ingredient back.",
   "jei.raft.info.crop_plot": "Farmland that never dries out and cannot be trampled. Crops on it grow about one and a half times as fast; the island crops grow on it too.",
   "jei.raft.info.fish_trap": "Place it in water with open water around it. Every 1 to 2 minutes it catches something. Fish Bait or a Golden Lure inside makes it twice as fast (one per catch). Hoppers can empty it.",

@@ -28,7 +28,7 @@ public class FishTrapCategory extends AbstractRecipeCategory<FishTrapCategory.Pa
     }
 
     public static final IRecipeType<Page> TYPE = IRecipeType.create(Raft.id("fish_trap"), Page.class);
-    private static final int W = 150, H = 72;
+    private static final int W = 150, H = 86;
 
     public FishTrapCategory(IGuiHelper gui) {
         super(TYPE, Component.translatable("jei.raft.fish_trap"), gui.createDrawableItemLike(FoodContent.FISH_TRAP), W, H);
@@ -62,7 +62,7 @@ public class FishTrapCategory extends AbstractRecipeCategory<FishTrapCategory.Pa
     @Override
     public void createRecipeExtras(IRecipeExtrasBuilder builder, Page page, IFocusGroup focuses) {
         builder.addRecipeArrowWidget().setPosition(25, 10);
-        builder.addText(Component.translatable("jei.raft.fish_trap.time"), W - 2, 30).setPosition(1, 42)
+        builder.addText(Component.translatable("jei.raft.fish_trap.time"), W - 2, 44).setPosition(1, 42)
                 .setColor(0xFF404040);
     }
 }
