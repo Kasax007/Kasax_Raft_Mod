@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import net.kasax.raft.Raft;
+import net.kasax.raft.block.custom.FoundationBlock;
 import net.kasax.raft.content.vessel.block.HelmBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -358,7 +359,12 @@ public final class VesselAssembler {
             BlockPos world = BlockPos.of(order.getLong(i));
             BlockPos at = origin.offset(rel[i].subtract(shift));
             BlockEntity be = level.getBlockEntity(world);
-            level.setBlock(at, level.getBlockState(world).rotate(toLocal), FLAGS_PLACE);
+            BlockState state = level.getBlockState(world).rotate(toLocal);
+            if (state.getBlock() instanceof FoundationBlock) {
+                // the sea's water stays in the world (a foundation broken at sea must not leave water on the raft)
+                state = state.setValue(FoundationBlock.WATERLOGGED, false);
+            }
+            level.setBlock(at, state, FLAGS_PLACE);
             plotPositions.add(at);
             blockEntities.add(be != null ? saveBlockEntity(be, level) : null);
         }
@@ -655,7 +661,12 @@ public final class VesselAssembler {
             }
             BlockEntity be = level.getBlockEntity(from);
             BlockPos to = pose.worldBlock(BlockPos.getX(key), BlockPos.getY(key), BlockPos.getZ(key));
-            level.setBlock(to, state.rotate(rotation), FLAGS_PLACE);
+            BlockState landed = state.rotate(rotation);
+            if (landed.getBlock() instanceof FoundationBlock) {
+                // foundations that land in the sea keep its water (still water when one is broken later)
+                landed = FoundationBlock.settle(landed, level, to);
+            }
+            level.setBlock(to, landed, FLAGS_PLACE);
             placed.add(to);
             sources.add(from);
             blockEntities.add(be != null ? saveBlockEntity(be, level) : null);

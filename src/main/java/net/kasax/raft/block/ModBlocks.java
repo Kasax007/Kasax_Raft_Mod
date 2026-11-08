@@ -147,9 +147,9 @@ public class ModBlocks {
             SlabBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.HAY_BLOCK).strength(0.5f));
 
     public static final Block RAFT_FOUNDATION = register("raft_foundation",
-            Block::new, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).strength(2.5f, 6.0f));
+            FoundationBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).strength(2.5f, 6.0f));
     public static final Block REINFORCED_FOUNDATION = register("reinforced_foundation",
-            Block::new, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).strength(5.0f, 14.0f));
+            FoundationBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).strength(5.0f, 14.0f));
     public static final Block SCRAP_METAL_BLOCK = register("scrap_metal_block",
             Block::new, BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(3.0f, 6.0f));
     public static final Block PLASTIC_BLOCK = register("plastic_block",

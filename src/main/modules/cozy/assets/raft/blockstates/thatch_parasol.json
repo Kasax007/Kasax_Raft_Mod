@@ -3,7 +3,10 @@
     "half=lower": {
       "model": "raft:block/thatch_parasol_lower"
     },
-    "half=upper": {
+    "half=upper,canopy=false": {
+      "model": "raft:block/thatch_parasol_middle"
+    },
+    "half=upper,canopy=true": {
       "model": "raft:block/thatch_parasol_upper"
     }
   }

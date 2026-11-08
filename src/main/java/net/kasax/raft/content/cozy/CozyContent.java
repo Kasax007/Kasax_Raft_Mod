@@ -11,6 +11,7 @@ import net.kasax.raft.content.cozy.block.ConchShellBlock;
 import net.kasax.raft.content.cozy.block.CozyBlock;
 import net.kasax.raft.content.cozy.block.CozyBlock.Config;
 import net.kasax.raft.content.cozy.block.PlateBlock;
+import net.kasax.raft.content.cozy.block.ParasolBlock;
 import net.kasax.raft.content.cozy.block.PlateBlockEntity;
 import net.kasax.raft.content.cozy.block.SteelDrumBlock;
 import net.kasax.raft.content.cozy.effect.RestedEffect;
@@ -86,7 +87,11 @@ public final class CozyContent {
     }
 
     private static Block tall(String name, Config config, Properties properties, String... tooltips) {
-        CozyBlock block = BcReg.block(name, CozyBlock.factory(config), properties);
+        return tall(name, CozyBlock.factory(config), properties, tooltips);
+    }
+
+    private static Block tall(String name, Function<Properties, ? extends CozyBlock> factory, Properties properties, String... tooltips) {
+        CozyBlock block = BcReg.block(name, factory, properties);
         BcReg.blockItem(name, (b, p) -> new TooltipDoubleBlockItem(b, p, tooltips), block, new Item.Properties(), TAB);
         return block;
     }
@@ -179,7 +184,8 @@ public final class CozyContent {
             wood(MapColor.COLOR_BROWN, 1.0F), COMFORT));
     public static final Block BAMBOO_BLINDS = flammable(cozy("bamboo_blinds", Config.of("bamboo_blinds").facing().openable(),
             props(MapColor.COLOR_YELLOW, SoundType.BAMBOO_WOOD, 0.8F).ignitedByLava(), "tooltip.raft.bamboo_blinds"));
-    public static final Block THATCH_PARASOL = flammable(tall("thatch_parasol", Config.of("thatch_parasol").tall(),
+    public static final Block THATCH_PARASOL = flammable(tall("thatch_parasol",
+            CozyBlock.create(Config.of("thatch_parasol").tall(), ParasolBlock::new),
             props(MapColor.COLOR_YELLOW, SoundType.GRASS, 1.0F).ignitedByLava().pushReaction(PushReaction.POPPED),
             "tooltip.raft.parasol"));
 
@@ -215,8 +221,10 @@ public final class CozyContent {
     }
 
     private static Block rug(String name, MapColor color) {
-        return flammable(add(name, CarpetBlock::new, Properties.of().mapColor(color).sound(SoundType.WOOL).strength(0.1F)
-                .ignitedByLava(), COMFORT));
+        Properties p = Properties.of().mapColor(color).sound(SoundType.WOOL).strength(0.1F).ignitedByLava();
+        // the round rope rug shows the floor at its corners: it must not hide the face of the block under it
+        if (name.equals("rope_rug")) p = p.noOcclusion();
+        return flammable(add(name, CarpetBlock::new, p, COMFORT));
     }
 
     /** Called from {@link CozyModule#init()}: forces class loading (registration), fire spread and the tab icon. */

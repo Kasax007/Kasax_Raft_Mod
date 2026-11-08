@@ -107,21 +107,31 @@ def towel(c1, c2):
 
 
 def rope_rug():
-    """Round braided rope mat; the corners show the floor (cutout)."""
+    """Round coiled rope mat seen from above: rings of twisted rope (each ring lit on its upper-left side), a dark gap
+    between the rings; the corners are transparent and show the floor (cutout)."""
     r = art.ROPE
     im = img()
     for y in range(16):
         for x in range(16):
-            d = math.hypot(x - 7.5, y - 7.5)
+            dx, dy = x + 0.5 - 8, y + 0.5 - 8
+            d = math.hypot(dx, dy)
             if d > 8.0:
                 continue
-            ring = int(d) % 2
-            ang = math.atan2(y - 7.5, x - 7.5)
-            twist = int((ang * 4 + d) * 1.3) % 3
-            k = 2 + ring + (1 if twist == 0 else 0)
-            if d > 7.2:
-                k = 1
-            im.putpixel((x, y), r[min(5, k)])
+            ring = d / 1.75                     # one ring every 1.75 px
+            f = ring - int(ring)
+            ang = math.atan2(dy, dx)
+            twist = (int(ang * 8 / math.pi + ring * 3)) % 2   # the twist of the rope strands
+            if f < 0.22:
+                k = 1                            # the groove between two rings
+            else:
+                k = 3 + twist
+                if dx + dy < -2 and f > 0.5:
+                    k += 1                       # light from the top left
+                elif dx + dy > 3 and f < 0.55:
+                    k -= 1
+            if d > 7.3:
+                k = min(k, 2)                    # the outer edge of the mat
+            im.putpixel((x, y), r[max(0, min(5, k))])
     return im
 
 
@@ -489,6 +499,97 @@ def conch():
 
 def conch_lip():
     return flat(CORAL_PINK, 3)
+
+
+def polished_brass():
+    """Polished brass for small fittings: smooth, a bright streak on the left, darker on the right and bottom."""
+    b = art.BRASS
+    im = img()
+    for y in range(16):
+        for x in range(16):
+            k = 3
+            if x in (2, 3, 4):
+                k = 4
+            if x == 3:
+                k = 5
+            if x >= 12:
+                k = 2
+            if y == 0:
+                k = min(5, k + 1)
+            if y == 15:
+                k = max(1, k - 1)
+            im.putpixel((x, y), b[k])
+    return im
+
+
+def lantern_iron():
+    """Blackened iron of the lantern cap and wire handle: smooth, a soft highlight on the left."""
+    i = art.IRON
+    im = img()
+    for y in range(16):
+        for x in range(16):
+            k = 3 if x < 5 else 2 if x < 12 else 1
+            if x == 2:
+                k = 4
+            if y == 0:
+                k = min(5, k + 1)
+            im.putpixel((x, y), i[k])
+    return im
+
+
+def coconut_husk():
+    """Brown fibrous coconut husk: vertical fibres, lit from the left."""
+    h = pal('#3a2414', '#4e321c', '#634126', '#785231', '#8e643d', '#a87a4c')
+    rnd = random.Random(12)
+    im = img()
+    for x in range(16):
+        base = 3 if x < 6 else 2 if x < 12 else 1
+        for y in range(16):
+            k = base + (1 if (x * 7 + y // 3) % 5 == 0 else 0) - (1 if (x * 3 + y) % 7 == 0 else 0)
+            im.putpixel((x, y), h[max(0, min(5, k))])
+    for _ in range(6):
+        x, y = rnd.randrange(16), rnd.randrange(16)
+        for k in range(3):
+            P(im, x, (y + k) % 16, h[5] if x < 8 else h[4])
+    return im
+
+
+def coconut_meat():
+    """The white coconut flesh along the cut rim of the shell."""
+    c = pal('#cfc6b0', '#e2dbc8', '#f0ebde', '#faf7ef')
+    im = img()
+    for y in range(16):
+        for x in range(16):
+            im.putpixel((x, y), c[2] if (x + y) % 5 else c[3])
+    return im
+
+
+def sea_glass_vase():
+    """Frosted sea glass of the coral vase: smooth, a bright streak on the left, a few tiny bubbles."""
+    g = art.SEA_GLASS
+    im = img()
+    for y in range(16):
+        for x in range(16):
+            k = 3 if x < 11 else 2
+            if x in (2, 3):
+                k = 4
+            if y >= 14:
+                k -= 1
+            im.putpixel((x, y), g[k])
+    for x, y in ((6, 4), (9, 9), (5, 11), (12, 6)):
+        P(im, x, y, g[5])
+    return im
+
+
+def sea_glass_vase_top():
+    """Top of the vase lip: a glass ring round the dark opening."""
+    g = art.SEA_GLASS
+    im = img()
+    for y in range(16):
+        for x in range(16):
+            d = max(abs(x - 7.5), abs(y - 7.5))
+            im.putpixel((x, y), g[4] if d > 5.5 else g[3] if d > 4.5 else g[0] if d > 3.5 else tex.rgb('#1c3a37'))
+    return im
 
 
 def iron_dark():

@@ -215,8 +215,12 @@ def wicker_basket():
     lid = tx(P.wicker(), 'wicker_basket_lid')
     for open_ in (False, True):
         m = Model(M, {'w': wk, 'lid': lid, 'cloth': 'raft:block/rattan_cushion'}, ao=True, particle=wk)
-        m.box((2, 0, 3), (14, 9, 13), 'w', faces={'up': None})
-        m.box((2.5, 1, 3.5), (13.5, 8.5, 12.5), 'cloth', only=('up',), collide=False, solid=False)
+        # a closed body with the cloth lining on top and a 1 px wicker rim round it (an open box without inner
+        # faces would show the floor through the basket)
+        m.box((2, 0, 3), (14, 8, 13), 'w', faces={'up': 'cloth'})
+        for frm, to in (((2, 8, 3), (14, 9, 4)), ((2, 8, 12), (14, 9, 13)), ((2, 8, 4), (3, 9, 12)),
+                        ((13, 8, 4), (14, 9, 12))):
+            m.box(frm, to, 'w', collide=False)
         if open_:
             m.box((2, 9, 12), (14, 19, 13), 'lid', rot={'origin': [8, 9, 13], 'axis': 'x', 'angle': -22.5}, collide=False)
         else:
@@ -257,29 +261,33 @@ def rugs():
 
 # ================================================================================================= lights
 def hurricane_lantern():
+    """A hurricane lantern: brass fuel tank, glass globe in a wire guard, a blackened iron cap with a chimney and a
+    wire bail handle arching over it. Hanging, it hangs from the ceiling by its handle."""
     blk('hurricane_lantern', 'Hurricane Lantern', 'pickaxe')
-    br = tx(P.brass(), 'hurricane_lantern_brass')
+    br = tx(P.polished_brass(), 'hurricane_lantern_brass')
+    ir = tx(P.lantern_iron(), 'hurricane_lantern_iron')
     for lit in (False, True):
         g = tx(P.lantern_glass(lit), f'hurricane_lantern_glass{"_lit" if lit else ""}')
         for hanging in (False, True):
-            dy = 3 if hanging else 0
-            m = Model(M, {'b': br, 'g': g}, ao=False, particle=br)
-            m.box((4.5, 0 + dy, 4.5), (11.5, 1.5 + dy, 11.5), 'b')
-            m.box((5.5, 1.5 + dy, 5.5), (10.5, 9.5 + dy, 10.5), 'g', light=(13 if lit else None))
-            for x, z in ((5, 5), (10, 5), (5, 10), (10, 10)):
-                m.box((x, 1.5 + dy, z), (x + 1, 9.5 + dy, z + 1), 'b', collide=False)
-            m.box((5, 9.5 + dy, 5), (11, 11 + dy, 11), 'b')
-            m.box((7, 11 + dy, 7), (9, 12 + dy, 9), 'b', collide=False)
-            if hanging:
-                m.box((7.5, 15, 7.5), (8.5, 16, 8.5), 'b', collide=False)
-                m.box((7.5, 12 + dy, 7.5), (8.5, 15, 8.5), 'b', collide=False)
-            else:
-                m.box((6.5, 12, 7.5), (9.5, 14, 8.5), 'b', faces={'north': None, 'south': None}, collide=False)
+            dy = 2 if hanging else 0
+            m = Model(M, {'b': br, 'g': g, 'i': ir}, ao=False, particle=br)
+            m.box((4.5, 0 + dy, 4.5), (11.5, 1.5 + dy, 11.5), 'b')                         # fuel tank
+            m.box((5, 1.5 + dy, 5), (11, 2 + dy, 11), 'b', collide=False)                   # burner collar
+            m.box((5.5, 2 + dy, 5.5), (10.5, 9 + dy, 10.5), 'g', light=(13 if lit else None))   # globe
+            for x, z in ((5, 5), (10, 5), (5, 10), (10, 10)):                              # wire guard
+                m.box((x, 2 + dy, z), (x + 1, 9 + dy, z + 1), 'i', collide=False)
+            m.box((5, 9 + dy, 5), (11, 10 + dy, 11), 'b')                                   # cap ring
+            m.box((6, 10 + dy, 6), (10, 11 + dy, 10), 'i')                                  # cap
+            m.box((7, 11 + dy, 7), (9, 12 + dy, 9), 'i', collide=False)                     # chimney
+            # bail handle: two wires up the sides and a bar over the chimney
+            m.box((4, 8 + dy, 7.5), (5, 13 + dy, 8.5), 'i', collide=False)
+            m.box((11, 8 + dy, 7.5), (12, 13 + dy, 8.5), 'i', collide=False)
+            m.box((4, 13 + dy, 7.5), (12, 14 + dy, 8.5), 'i', collide=False)
             name = 'hurricane_lantern' + ('_hanging' if hanging else '') + ('_lit' if lit else '')
             m.write(name)
             if not lit:
                 cm.shape(M, 'hurricane_lantern' + ('_hanging' if hanging else ''),
-                         [(4.5, dy, 4.5, 11.5, 12 + dy, 11.5)] + ([(7.5, 12 + dy, 7.5, 8.5, 16, 8.5)] if hanging else []))
+                         [(4.5, dy, 4.5, 11.5, 12 + dy, 11.5), (4, 8 + dy, 7.5, 12, 14 + dy, 8.5)])
     v = {}
     for h in ('false', 'true'):
         for lit in ('false', 'true'):
@@ -366,9 +374,11 @@ def plants():
     leaves = tx(P.monstera(), 'monstera_leaves')
     blk('potted_monstera', 'Potted Monstera')
     m = Model(M, {'p': pot, 's': soil, 'l': leaves}, ao=True, particle=pot)
-    m.box((4, 0, 4), (12, 6, 12), 'p', faces={'up': None})
-    m.box((4.5, 0, 4.5), (11.5, 5.5, 11.5), 's', only=('up',), collide=False, solid=False)
-    m.box((3.5, 5, 3.5), (12.5, 7, 12.5), 'p', faces={'up': ('p', [3.5, 3.5, 12.5, 12.5])})
+    # pot filled with soil up to 6 px, a 1 px rim round it (the soil shows inside the rim)
+    m.box((4, 0, 4), (12, 6, 12), 'p', faces={'up': 's'})
+    for frm, to in (((3.5, 5, 3.5), (12.5, 7, 4.5)), ((3.5, 5, 11.5), (12.5, 7, 12.5)), ((3.5, 5, 4.5), (4.5, 7, 11.5)),
+                    ((11.5, 5, 4.5), (12.5, 7, 11.5))):
+        m.box(frm, to, 'p')
     m.cross(8, 8, 7.5, 6, 16, 'l')
     m.write('potted_monstera')
     cm.shape(M, 'potted_monstera', [(3.5, 0, 3.5, 12.5, 7, 12.5), (2, 7, 2, 14, 16, 14)])
@@ -377,41 +387,49 @@ def plants():
 
     fl = tx(P.flowers(), 'tropical_flowers')
     blk('coconut_planter', 'Coconut Planter')
-    shell = 'raft:block/coconut_planter_shell'
-    P.save(art.wood(art.pal('#3b2614', '#4f331c', '#654426', '#7a5531', '#8f673d'), seed=8), 'block/coconut_planter_shell')
-    m = Model(M, {'c': shell, 's': soil, 'f': fl}, ao=True, particle=shell)
-    m.box((4, 0, 4), (12, 4, 12), 'c', faces={'up': None})
-    m.box((4.5, 0, 4.5), (11.5, 3.5, 11.5), 's', only=('up',), collide=False, solid=False)
+    # half a coconut: the brown husk, the white flesh along the cut rim, soil inside and flowers growing from it
+    shell = tx(P.coconut_husk(), 'coconut_planter_shell')
+    meat = tx(P.coconut_meat(), 'coconut_planter_rim')
+    m = Model(M, {'c': shell, 's': soil, 'f': fl, 'w': meat}, ao=True, particle=shell)
+    m.box((5, 0, 5), (11, 1, 11), 'c')
+    m.box((4, 1, 4), (12, 3.5, 12), 'c', faces={'up': 's'})
+    for frm, to in (((4, 3.5, 4), (12, 4.5, 5)), ((4, 3.5, 11), (12, 4.5, 12)), ((4, 3.5, 5), (5, 4.5, 11)),
+                    ((11, 3.5, 5), (12, 4.5, 11))):
+        m.box(frm, to, 'c', faces={'up': 'w'}, collide=False)
     m.cross(8, 8, 5, 3.5, 13.5, 'f')
     m.write('coconut_planter')
-    cm.shape(M, 'coconut_planter', [(4, 0, 4, 12, 4, 12), (4, 4, 4, 12, 12, 12)])
+    cm.shape(M, 'coconut_planter', [(4, 0, 4, 12, 4.5, 12), (4, 4.5, 4, 12, 12, 12)])
     stateless('coconut_planter', 'block/coconut_planter')
     cm.block_item(M, 'coconut_planter', 'block/coconut_planter', scale=0.9, lift=1)
 
     blk('flower_box', 'Driftwood Flower Box', 'axe')
+    # a closed box filled with soil up to 5 px, a 2 px rim all round, two clumps of flowers
     m = Model(M, {'w': DRIFT, 's': soil, 'f': fl}, ao=True, particle=DRIFT)
-    m.box((0, 0, 3), (16, 6, 13), 'w', faces={'up': None})
-    m.box((0.5, 0, 3.5), (15.5, 5, 12.5), 's', only=('up',), collide=False, solid=False)
-    m.box((0, 6, 3), (16, 7, 4), 'w', collide=False)
-    m.box((0, 6, 12), (16, 7, 13), 'w', collide=False)
-    m.cross(4, 8, 4, 5, 13, 'f')
-    m.cross(12, 8, 4, 5, 13, 'f')
+    m.box((0, 0, 3), (16, 5, 13), 'w', faces={'up': 's'})
+    m.box((0, 5, 3), (16, 7, 4), 'w', collide=False)
+    m.box((0, 5, 12), (16, 7, 13), 'w', collide=False)
+    m.box((0, 5, 4), (1, 7, 12), 'w', collide=False)
+    m.box((15, 5, 4), (16, 7, 12), 'w', collide=False)
+    m.cross(4.5, 8, 4, 5, 13, 'f')
+    m.cross(11.5, 8, 4, 5, 13, 'f')
     m.write('flower_box')
     cm.shape(M, 'flower_box', [(0, 0, 3, 16, 7, 13)])
     A.blockstate(M, 'flower_box', facing_variants('block/flower_box'))
     cm.block_item(M, 'flower_box', 'block/flower_box', scale=0.6)
 
     blk('coral_vase', 'Coral Vase')
-    vase = tx(art.metal(art.SEA_GLASS, seed=4, scratches=1), 'coral_vase_glass')
+    # a closed sea glass vase (bulb, shoulder, neck, lip with a dark opening) with a coral branch in it
+    vase = tx(P.sea_glass_vase(), 'coral_vase_glass')
+    top = tx(P.sea_glass_vase_top(), 'coral_vase_top')
     cor = tx(P.coral_branches(), 'coral_vase_coral')
-    m = Model(M, {'v': vase, 'c': cor}, ao=False, particle=vase)
-    m.box((5, 0, 5), (11, 6, 11), 'v', faces={'up': None})
-    m.box((6, 6, 6), (10, 8, 10), 'v', faces={'up': None})
-    m.box((6.5, 0, 6.5), (9.5, 7.5, 9.5), 'v', only=('up',), collide=False, solid=False,
-          faces={'up': ('v', [0, 0, 3, 3])})
-    m.cross(8, 8, 4.5, 6, 16, 'c')
+    m = Model(M, {'v': vase, 't': top, 'c': cor}, ao=False, particle=vase)
+    m.box((5, 0, 5), (11, 5, 11), 'v')
+    m.box((5.5, 5, 5.5), (10.5, 6, 10.5), 'v')
+    m.box((6.5, 6, 6.5), (9.5, 8, 9.5), 'v')
+    m.box((6, 8, 6), (10, 9, 10), 'v', faces={'up': ('t', [4, 4, 12, 12])})
+    m.cross(8, 8, 4.5, 8.5, 16, 'c')
     m.write('coral_vase')
-    cm.shape(M, 'coral_vase', [(5, 0, 5, 11, 8, 11), (5, 8, 5, 11, 16, 11)])
+    cm.shape(M, 'coral_vase', [(5, 0, 5, 11, 9, 11), (5, 9, 5, 11, 16, 11)])
     stateless('coral_vase', 'block/coral_vase')
     cm.block_item(M, 'coral_vase', 'block/coral_vase', scale=0.8)
 
@@ -562,6 +580,8 @@ def wall_decor():
 
 
 def parasol():
+    """Thatch parasol, three blocks tall (3.4): base and pole, pole, and pole with the canopy on top, so a player can
+    stand under it. Blockstate: half=lower | half=upper,canopy=false (pole) | half=upper,canopy=true (canopy)."""
     blk('thatch_parasol', 'Thatch Parasol', 'axe', 'lower')
     fr = tx(P.palm_fronds(), 'thatch_parasol')
     fringe = tx(P.palm_fringe(), 'thatch_parasol_fringe')
@@ -569,29 +589,34 @@ def parasol():
     m.box((5, 0, 5), (11, 1.5, 11), 'p')
     m.box((7, 1.5, 7), (9, 16, 9), 'p')
     m.write('thatch_parasol_lower')
+    m = Model(M, {'p': BAMBOO_BLOCK, 'f': fr}, ao=True, particle=fr)
+    m.box((7, 0, 7), (9, 16, 9), 'p')
+    m.write('thatch_parasol_middle')
     m = Model(M, {'p': BAMBOO_BLOCK, 'f': fr, 'e': fringe}, ao=True, particle=fr)
     m.box((7, 0, 7), (9, 10, 9), 'p')
-    m.box((-6, 8, -6), (22, 10, 22), 'f', collide=False)
-    m.box((-2, 10, -2), (18, 12, 18), 'f', collide=False)
-    m.box((3, 12, 3), (13, 14, 13), 'f', collide=False)
+    m.box((-8, 8, -8), (24, 10, 24), 'f', collide=False)
+    m.box((-3, 10, -3), (19, 12, 19), 'f', collide=False)
+    m.box((2.5, 12, 2.5), (13.5, 14, 13.5), 'f', collide=False)
     m.box((6, 14, 6), (10, 15.5, 10), 'f', collide=False)
     # leaf tips hanging over the rim
-    m.plane_z(-6, 5, 22, 8, -6, 'e', uv=[0, 0, 16, 3])
-    m.plane_z(-6, 5, 22, 8, 22, 'e', uv=[0, 0, 16, 3])
-    m.plane_x(-6, 5, 22, 8, -6, 'e', uv=[0, 0, 16, 3])
-    m.plane_x(-6, 5, 22, 8, 22, 'e', uv=[0, 0, 16, 3])
+    m.plane_z(-8, 5, 24, 8, -8, 'e', uv=[0, 0, 16, 3])
+    m.plane_z(-8, 5, 24, 8, 24, 'e', uv=[0, 0, 16, 3])
+    m.plane_x(-8, 5, 24, 8, -8, 'e', uv=[0, 0, 16, 3])
+    m.plane_x(-8, 5, 24, 8, 24, 'e', uv=[0, 0, 16, 3])
     m.write('thatch_parasol_upper')
     cm.shape(M, 'thatch_parasol_lower', [(5, 0, 5, 11, 1.5, 11), (7, 1.5, 7, 9, 16, 9)])
+    cm.shape(M, 'thatch_parasol_middle', [(7, 0, 7, 9, 16, 9)])
     cm.shape(M, 'thatch_parasol_upper', [(7, 0, 7, 9, 15.5, 9), (0, 8, 0, 16, 12, 16)])
     A.blockstate(M, 'thatch_parasol', {'half=lower': {'model': rid('block/thatch_parasol_lower')},
-                                       'half=upper': {'model': rid('block/thatch_parasol_upper')}})
+                                       'half=upper,canopy=false': {'model': rid('block/thatch_parasol_middle')},
+                                       'half=upper,canopy=true': {'model': rid('block/thatch_parasol_upper')}})
     sp = P.img()
     g = P.pal('#5a5a24', '#787630', '#96933e', '#b2ac52', '#cbc46c')
-    for y in range(2, 7):
-        w = 2 + (y - 2) * 1.6
+    for y in range(1, 6):
+        w = 2 + (y - 1) * 1.6
         for x in range(int(8 - w), int(8 + w)):
-            sp.putpixel((x, y), g[3 if x < 8 else 2] if y < 6 else g[1])
-    for y in range(7, 15):
+            sp.putpixel((x, y), g[3 if x < 8 else 2] if y < 5 else g[1])
+    for y in range(6, 15):
         sp.putpixel((7, y), art.BAMBOO[3])
         sp.putpixel((8, y), art.BAMBOO[2])
     P.save(P.outline(sp), 'item/thatch_parasol')

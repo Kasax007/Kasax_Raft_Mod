@@ -228,6 +228,8 @@ public class SharkRaftGoal extends Goal {
         this.shark.setDeltaMovement(this.shark.getDeltaMovement().add(c.subtract(this.shark.position()).normalize().scale(0.15)));
         if (this.bites >= BITES_TO_BREAK) {
             level.destroyBlockProgress(this.shark.getId(), this.edge, -1);
+            // the sea closes the gap with still water (no flowing water between the foundations)
+            net.kasax.raft.block.custom.FoundationBlock.soak(level, this.edge);
             level.destroyBlock(this.edge, false, this.shark);
             level.playSound(null, this.edge, AudioSounds.SHARK_RAFT_BREAK, SoundSource.HOSTILE, 1.0F,
                     0.95F + this.shark.getRandom().nextFloat() * 0.1F);
