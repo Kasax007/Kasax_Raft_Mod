@@ -56,8 +56,8 @@ import java.util.Set;
  * stage 1 (start, chapters 1-2): abandoned raft, beach shack, fishing boat wreck, old lighthouse, iceberg outpost
  *   scavengers 20 hp, fists 2 or wooden blade 5, a few with bows (arrows 2-4); drowned 20 hp / 3; strays 20 hp / bow
  * stage 2 (chapters 3-4, side wrecks): sunken plane, sunken ruins, cargo ship wreck, Helix Station, rusted rig
- *   scavengers with stone blades 6 and leather (mid), iron sword 7 or bow (rig), reef guardians 30 hp / beam 5;
- *   elite: Scavenger Chief (rig) 50 hp, armour 4 + iron, iron sword 9
+ *   scavengers with stone blades 6 and leather (mid and rig, or a bow on the rig), reef guardians 30 hp / beam 5;
+ *   elite: Scavenger Chief (rig) 50 hp, armour 4 + iron, iron sword 7
  * stage 3 (chapters 5-7 and the pirate side story): Port Solace, pirate cove, galleon, Ashen Forge, Coral Temple
  *   corsairs 24 hp / cutlass 9, drowned groups, blazes 20 hp / fire, ember crabs 14 hp / 4 + fire;
  *   elites: Corsair Captain 80 hp, armour 6, cutlass 9, calls two corsairs at half health;

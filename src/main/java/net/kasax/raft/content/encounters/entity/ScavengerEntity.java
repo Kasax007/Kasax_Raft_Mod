@@ -84,7 +84,7 @@ public class ScavengerEntity extends Skeleton {
                 this.wear(EquipmentSlot.CHEST, Items.LEATHER_CHESTPLATE);
             }
             case RIG -> {
-                this.hand(random.nextFloat() < 0.4F ? Items.BOW : Items.IRON_SWORD);
+                this.hand(random.nextFloat() < 0.4F ? Items.BOW : Items.STONE_SWORD);
                 this.wear(EquipmentSlot.CHEST, Items.LEATHER_CHESTPLATE);
                 this.wear(EquipmentSlot.LEGS, Items.LEATHER_LEGGINGS);
             }
@@ -102,13 +102,13 @@ public class ScavengerEntity extends Skeleton {
         this.setDropChance(slot, 0.04F);
     }
 
-    /** Scavenger Chief: 1.15x size, 50 health, iron sword, iron helmet and chestplate, a boss bar. */
+    /** Scavenger Chief: 1.15x size, 50 health, iron sword (7 damage), iron helmet and chestplate, a boss bar. */
     public void makeChief() {
         this.chief = true;
         this.hand(Items.IRON_SWORD);
         this.wear(EquipmentSlot.HEAD, Items.IRON_HELMET);
         this.wear(EquipmentSlot.CHEST, Items.IRON_CHESTPLATE);
-        EliteBar.makeElite(this, 1.15, 50.0, 3.0, 4.0);
+        EliteBar.makeElite(this, 1.15, 50.0, 2.0, 4.0);
         this.setCustomName(Component.translatable("entity.raft.scavenger_chief"));
         this.bar.setVisible(true);
         this.xpReward = 25;
