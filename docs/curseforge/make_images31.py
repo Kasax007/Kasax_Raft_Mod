@@ -540,7 +540,7 @@ def flow_start(name='flow_start.png'):
 
 # ----------------------------------------------------------------------------------------------- flow: your own raft
 def flow_raft(name='flow_raft.png'):
-    """Foundations, helm and keys, power, anchor (vessel module: VesselEntity power 1/3/6, changelog 3.1.0)."""
+    """Foundations, helm and keys, power, mooring (vessel module: VesselEntity power 1/3/6, changelogs 3.1.0 and 3.2.0)."""
     M, gapx, ch = 24, 44, 404
     n = 4
     cw = (W - 2 * M - (n - 1) * gapx) // n
@@ -589,11 +589,11 @@ def flow_raft(name='flow_raft.png'):
         c3.alpha_composite(pic, (int(cx - pic.width / 2), 74))
         d3.text((cx, 164), lab, font=small(20), fill=INK, anchor='mm')
         outlined(d3, (cx, 202), val, font(40), fill=WHITE, stroke=5, stroke_fill=SEA, anchor='mm')
-    para(d3, (20, 240), 'Stack sails for a taller mast. The motor runs on furnace fuel. Heavy rafts are slower.',
+    para(d3, (20, 240), 'Set sails next to a mast: they join into one sheet. The motor takes furnace fuel. Heavy rafts are slower.',
          small(21), cw - 36)
     cards.append(c3)
     # 4 anchor
-    c4 = icon_card(cw, ch, 4, 'DROP ANCHOR')
+    c4 = icon_card(cw, ch, 4, 'MOOR')
     d4 = ImageDraw.Draw(c4)
     r = 56
     cx, cy = cw // 2, 128
@@ -601,7 +601,7 @@ def flow_raft(name='flow_raft.png'):
     d4.ellipse([cx - r, cy - r, cx + r, cy + r], fill=SEA)
     an = anchor_glyph(84)
     c4.alpha_composite(an, (cx - 42, cy - 44))
-    para(d4, (20, 214), 'Use the wheel again: the raft turns back into blocks, just as it was.', small(21), cw - 36)
+    para(d4, (20, 214), 'Sneak and use the wheel: the raft turns back into blocks, just as it was.', small(21), cw - 36)
     cards.append(c4)
     x = M
     xs = []
