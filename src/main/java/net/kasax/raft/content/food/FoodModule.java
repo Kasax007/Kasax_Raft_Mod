@@ -37,6 +37,31 @@ public class FoodModule implements ContentModule {
         FoodContent.init();
         worldgen();
         loot();
+        emptyPotEvenWithOffhandItem();
+    }
+
+    /**
+     * Sneak-use with an empty main hand gives the ingredients of a cooking pot back. Vanilla skips block use while
+     * sneaking with anything in either hand, so a torch or shield in the off hand would block it; this event comes
+     * before that check.
+     */
+    private static void emptyPotEvenWithOffhandItem() {
+        net.fabricmc.fabric.api.event.player.UseBlockCallback.EVENT.register((player, level, hand, hit) -> {
+            if (hand != net.minecraft.world.InteractionHand.MAIN_HAND || !player.isSecondaryUseActive()
+                    || !player.getMainHandItem().isEmpty() || player.isSpectator()) {
+                return net.minecraft.world.InteractionResult.PASS;
+            }
+            if (!(level.getBlockEntity(hit.getBlockPos()) instanceof net.kasax.raft.content.food.block.CookingPotBlockEntity pot)) {
+                return net.minecraft.world.InteractionResult.PASS;
+            }
+            if (!level.isClientSide()) pot.useEmptyHand(player);
+            return net.minecraft.world.InteractionResult.SUCCESS;
+        });
+    }
+
+    @Override
+    public void initClient() {
+        net.kasax.raft.content.food.client.FoodClient.init();
     }
 
     private static ResourceKey<Biome> biome(String name) {

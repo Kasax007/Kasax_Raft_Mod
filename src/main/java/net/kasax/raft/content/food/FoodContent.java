@@ -130,9 +130,12 @@ public final class FoodContent {
             .usingConvertsTo(Items.GLASS_BOTTLE));
 
     // ------------------------------------------------------------------------------------------------ kitchen
+    /** A dish in the cooking pot is done: a bright chime. */
+    public static final net.minecraft.sounds.SoundEvent COOKING_POT_DONE = BcReg.sound("cooking_pot.done");
     public static final Block COOKING_POT = BcReg.blockWithItem("cooking_pot", CookingPotBlock::new,
             Properties.of().mapColor(MapColor.METAL).sound(SoundType.LANTERN).strength(2.0F).noOcclusion()
-                    .requiresCorrectToolForDrops(), TAB, "tooltip.raft.cooking_pot", "tooltip.raft.cooking_pot.1");
+                    .requiresCorrectToolForDrops(), TAB, "tooltip.raft.cooking_pot", "tooltip.raft.cooking_pot.1",
+            "tooltip.raft.cooking_pot.2");
     public static final Block FISH_TRAP = BcReg.blockWithItem("fish_trap",
             CozyBlock.create(CozyBlock.Config.of("fish_trap").facing().water(), FishTrapBlock::new),
             Properties.of().mapColor(MapColor.SAND).sound(SoundType.BAMBOO_WOOD).strength(1.0F).noOcclusion()
