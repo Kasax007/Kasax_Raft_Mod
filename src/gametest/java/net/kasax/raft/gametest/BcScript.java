@@ -283,8 +283,8 @@ public class BcScript implements FabricClientGameTest {
                     s.setAllowCommands(true);
                     s.setDifficulty(Difficulty.NORMAL);
                 }).create();
-                sp.getServer().runCommand("gamerule advance_time false");
-                sp.getServer().runCommand("gamerule advance_weather false");
+                sp.getServer().runCommand("gamerule doDaylightCycle false");
+                sp.getServer().runCommand("gamerule doWeatherCycle false");
                 sp.getServer().runCommand("time set 6000");
                 sp.getServer().runCommand("weather clear");
                 LOG.info("[bctest] WORLD {}", sp.getWorldSave().getSaveDirectory().getFileName());
