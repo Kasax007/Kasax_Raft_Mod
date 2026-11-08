@@ -74,7 +74,7 @@ public final class StructAudit {
     }
 
     /** Result for the script: the summary, the box of the structure and the person spots. */
-    public record Result(String summary, BoundingBox box, List<double[]> npcs) {
+    public record Result(String summary, BoundingBox box, List<double[]> npcs, double[] floatCam) {
     }
 
     public static ServerLevel sea(MinecraftServer server) {
@@ -135,7 +135,7 @@ public final class StructAudit {
         ServerLevel level = sea(server);
         StructureStart st = find(level, id, from);
         if (st == null) {
-            return new Result("AUDIT " + label + " " + id + ": none found near " + from.toShortString(), null, List.of());
+            return new Result("AUDIT " + label + " " + id + ": none found near " + from.toShortString(), null, List.of(), null);
         }
         BoundingBox bb = st.getBoundingBox();
         for (int cx = bb.minX() >> 4; cx <= bb.maxX() >> 4; cx++) {
@@ -308,6 +308,10 @@ public final class StructAudit {
             npcFound.add(new double[]{n.getX(), n.getY(), n.getZ()});
         }
 
+        Floating fl = floating(level, exp, bb, st.getPieces());
+        lines.add(fl.summary);
+        lines.addAll(fl.detail);
+
         // worst cells (where terrain or features fill rooms)
         List<Map.Entry<String, Integer>> worst = new ArrayList<>(cells.entrySet());
         worst.sort(Map.Entry.<String, Integer>comparingByValue().reversed());
@@ -341,7 +345,99 @@ public final class StructAudit {
             BcScript.LOG.warn("[bctest] audit report: {}", e.toString());
         }
         String npcSummary = String.join(" || ", npcLines);
-        return new Result(sum + (npcSummary.isEmpty() ? "" : " || " + npcSummary), bb, npcFound);
+        return new Result(sum + " | " + fl.summary + (npcSummary.isEmpty() ? "" : " || " + npcSummary), bb, npcFound, fl.cam);
+    }
+
+    private record Floating(String summary, List<String> detail, double[] cam) {
+    }
+
+    /** a block a structure can stand on: not air, not a fluid, something with a collision box. */
+    private static boolean holds(BlockState s) {
+        return !s.isAir() && !(s.getBlock() instanceof net.minecraft.world.level.block.LiquidBlock) && s.isSolid();
+    }
+
+    /**
+     * Floating check: for every column of the structure, the lowest block of the templates that something can stand
+     * on, and in the world the free blocks (air, water, plants) right under it down to the ground. A column with a
+     * gap of 2 or more blocks floats. Also a camera beside the worst column (eye x y z, yaw, pitch), looking at the gap.
+     */
+    private static Floating floating(ServerLevel level, Map<Long, Exp> exp, BoundingBox bb, List<StructurePiece> pieces) {
+        // per column: the lowest block something can stand on, and whether it is a footing (in the two bottom layers
+        // of its piece: the part that should stand on the ground; decks of a rig or a stilt village are not)
+        Map<Long, int[]> lowest = new HashMap<>();
+        for (Map.Entry<Long, Exp> en : exp.entrySet()) {
+            if (!holds(en.getValue().state())) continue;
+            BlockPos p = BlockPos.of(en.getKey());
+            long col = BlockPos.asLong(p.getX(), 0, p.getZ());
+            int[] cur = lowest.get(col);
+            if (cur == null || p.getY() < cur[0]) {
+                lowest.put(col, new int[]{p.getY(), pieces.get(en.getValue().piece()).getBoundingBox().minY()});
+            }
+        }
+        int cols = 0, floating = 0, deep = 0, worstGap = 0;
+        BlockPos worst = null;
+        long gapSum = 0;
+        BlockPos.MutableBlockPos mp = new BlockPos.MutableBlockPos();
+        for (Map.Entry<Long, int[]> en : lowest.entrySet()) {
+            BlockPos c = BlockPos.of(en.getKey());
+            int y0 = en.getValue()[0];
+            if (y0 > en.getValue()[1] + 1) continue;                                   // not a footing
+            if (!holds(level.getBlockState(mp.set(c.getX(), y0, c.getZ())))) continue;   // broken off / not placed
+            cols++;
+            int gap = 0;
+            for (int y = y0 - 1; y > level.getMinY() && gap < 128; y--) {
+                if (holds(level.getBlockState(mp.set(c.getX(), y, c.getZ())))) break;
+                gap++;
+            }
+            if (gap >= 2) {
+                floating++;
+                gapSum += gap;
+            }
+            if (gap >= 6) deep++;
+            if (gap > worstGap) {
+                worstGap = gap;
+                worst = new BlockPos(c.getX(), y0, c.getZ());
+            }
+        }
+        String summary = String.format(Locale.ROOT, "FLOAT footing columns %d floating(gap>=2) %d (%.1f%%) gap>=6 %d max gap %d%s mean gap %.1f",
+                cols, floating, cols == 0 ? 0 : 100.0 * floating / cols, deep, worstGap,
+                worst == null ? "" : " at " + worst.toShortString(), floating == 0 ? 0 : (double) gapSum / floating);
+        // camera: a free spot (water or air) 12 to 28 blocks from the worst column, at the height of its gap or a
+        // little above, with a clear line to the middle of the gap; outward from the structure first
+        Vec3 mid = Vec3.atCenterOf(bb.getCenter());
+        BlockPos target = worst != null ? worst : new BlockPos((bb.minX() + bb.maxX()) / 2, bb.minY() + 4, (bb.minZ() + bb.maxZ()) / 2);
+        double gapMid = worst != null ? worstGap / 2.0 : 0;
+        Vec3 w = new Vec3(target.getX() + 0.5, target.getY() - gapMid, target.getZ() + 0.5);
+        double base = Math.atan2(w.z - mid.z, w.x - mid.x);
+        Vec3 eye = null;
+        Vec3 firstFree = null;
+        search:
+        for (double dist : new double[]{16, 22, 12, 28, 9}) {
+            for (int up : new int[]{2, 6, 0, 10, -2}) {
+                for (int k = 0; k < 24; k++) {
+                    double a = base + (k % 2 == 0 ? 1 : -1) * ((k + 1) / 2) * Math.PI / 12;
+                    Vec3 e = new Vec3(w.x + Math.cos(a) * dist, w.y + up, w.z + Math.sin(a) * dist);
+                    BlockPos ep = BlockPos.containing(e);
+                    level.getChunk(ep.getX() >> 4, ep.getZ() >> 4);
+                    BlockState st = level.getBlockState(ep);
+                    // in open water or under the sky (not in kelp, the ground or a cave)
+                    if (!(st.is(Blocks.WATER) || st.isAir() && level.canSeeSky(ep)) || bb.isInside(ep)) continue;
+                    if (firstFree == null) firstFree = e;
+                    HitResult hit = level.clip(new ClipContext(e, w, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, CollisionContext.empty()));
+                    if (hit.getType() == HitResult.Type.MISS || hit.getLocation().distanceTo(w) < 1.5) {
+                        eye = e;
+                        break search;
+                    }
+                }
+            }
+        }
+        if (eye == null) {
+            eye = firstFree != null ? firstFree : new Vec3(w.x + Math.cos(base) * 20, w.y + 8, w.z + Math.sin(base) * 20);
+        }
+        float[] r = BcScript.aim(eye.x, eye.y, eye.z, w);
+        double[] cam = new double[]{eye.x, eye.y, eye.z, r[0], r[1]};
+        summary += String.format(Locale.ROOT, " | CAM %.2f %.2f %.2f %.1f %.1f", cam[0], cam[1], cam[2], cam[3], cam[4]);
+        return new Floating(summary, List.of(), cam);
     }
 
     public static String box(BoundingBox b) {

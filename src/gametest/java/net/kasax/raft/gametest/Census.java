@@ -39,10 +39,24 @@ public final class Census {
     private Census() {
     }
 
-    private record Start(String id, double x, double z, BoundingBox box) {
+    private record Start(String id, double x, double z, BoundingBox box, int drop) {
     }
 
-    public static List<String> run(MinecraftServer server, int half, int cx, int cz, Path out, String label) {
+    /**
+     * How far the ground drops below the bottom of the start piece somewhere under the structure (sea floor or land
+     * height of the noise, every 4 blocks): where a structure can hang in the water without its footings.
+     */
+    private static int drop(ChunkGenerator gen, RandomState rs, ServerLevel level, BoundingBox pieceBox, BoundingBox box) {
+        int low = Integer.MAX_VALUE;
+        for (int x = box.minX(); x <= box.maxX(); x += 4) {
+            for (int z = box.minZ(); z <= box.maxZ(); z += 4) {
+                low = Math.min(low, gen.getFirstOccupiedHeight(x, z, net.minecraft.world.level.levelgen.Heightmap.Types.OCEAN_FLOOR_WG, level, rs));
+            }
+        }
+        return pieceBox.minY() - low;
+    }
+
+    public static List<String> run(MinecraftServer server, int half, int cx, int cz, Path out, String label, boolean withDrop) {
         ServerLevel level = StructAudit.sea(server);
         ChunkGenerator gen = level.getChunkSource().getGenerator();
         ChunkGeneratorStructureState state = level.getChunkSource().getGeneratorState();
@@ -78,7 +92,9 @@ public final class Census {
                         var pieces = stub.get().getPiecesBuilder();
                         if (pieces.isEmpty()) continue;
                         BoundingBox b = pieces.getBoundingBox();
-                        starts.add(new Start(id.toString(), (b.minX() + b.maxX() + 1) / 2.0, (b.minZ() + b.maxZ() + 1) / 2.0, b));
+                        int drop = withDrop && MAJOR.contains(id.getPath())
+                                ? drop(gen, rs, level, pieces.build().pieces().getFirst().getBoundingBox(), b) : 0;
+                        starts.add(new Start(id.toString(), (b.minX() + b.maxX() + 1) / 2.0, (b.minZ() + b.maxZ() + 1) / 2.0, b, drop));
                         break;          // one structure per set and chunk (our sets have one structure each)
                     }
                 }
@@ -133,7 +149,7 @@ public final class Census {
                 nearest.isEmpty() ? Double.NaN : nearest.get(nearest.size() / 2)));
         List<String> file = new ArrayList<>(lines);
         for (Start s : starts) {
-            file.add(String.format(Locale.ROOT, "%s %.0f %.0f %s", s.id(), s.x(), s.z(), StructAudit.box(s.box())));
+            file.add(String.format(Locale.ROOT, "%s %.0f %.0f %s drop %d", s.id(), s.x(), s.z(), StructAudit.box(s.box()), s.drop()));
         }
         try {
             Files.createDirectories(out.resolve("census"));
