@@ -16,7 +16,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:bamboo_blinds"
+        "recipe": "raft:bamboo_blinds"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

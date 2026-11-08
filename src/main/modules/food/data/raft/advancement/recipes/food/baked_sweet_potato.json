@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:baked_sweet_potato"
+        "recipe": "raft:baked_sweet_potato"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

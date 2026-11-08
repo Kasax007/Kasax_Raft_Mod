@@ -20,21 +20,21 @@
       "count": 6
     },
     {
-      "type": "minecraft:offset",
+      "type": "raft:offset",
       "x": {
-        "type": "minecraft:trapezoid",
+        "type": "raft:trapezoid",
         "max": 3,
         "min": -3,
         "plateau": 0
       },
       "y": {
-        "type": "minecraft:trapezoid",
+        "type": "raft:trapezoid",
         "max": 1,
         "min": -1,
         "plateau": 0
       },
       "z": {
-        "type": "minecraft:trapezoid",
+        "type": "raft:trapezoid",
         "max": 3,
         "min": -3,
         "plateau": 0

@@ -72,8 +72,17 @@ def element(e):
     return e
 
 
+# vanilla models of the newer game that 1.21.1 lacks: Beach Craft keeps copies (src/main/resources)
+PARENTS = {'minecraft:item/spear_in_hand': 'raft:item/port1211/spear_in_hand'}
+# the shelf templates (Beach Craft's own shelf block on 1.21.1 uses the newer game's shelf models)
+PARENTS.update({'minecraft:block/template_shelf_%s' % n: 'raft:block/port1211/template_shelf_%s' % n
+                for n in ('body', 'center', 'inventory', 'left', 'right', 'unconnected', 'unpowered')})
+
+
 def model(j):
     j = copy.deepcopy(j)
+    if j.get('parent') in PARENTS:
+        j['parent'] = PARENTS[j['parent']]
     tex = j.get('textures')
     if isinstance(tex, dict):
         for k, v in list(tex.items()):
@@ -97,14 +106,22 @@ def item_overrides(m):
         prop = m.get('property')
         if prop == 'minecraft:has_component' and m.get('component') == 'raft:diving_lamp':
             return _model_ref(m['on_false']), [{'predicate': {'raft:lamp': 1}, 'model': _model_ref(m['on_true'])}]
+        if prop == 'minecraft:has_component' and m.get('component') == 'minecraft:lodestone_tracker':
+            # a compass needle (lodestone target or spawn): 1.21.1 decides the target in the item property
+            # raft:angle (ItemModelProperties), the models are the same both ways
+            return item_overrides(m['on_false'])
         raise ValueError('condition %s' % prop)
     if t == 'minecraft:range_dispatch':
         prop = m.get('property')
-        name = {'minecraft:cooldown': 'raft:cooldown'}.get(prop)
+        name = {'minecraft:cooldown': 'raft:cooldown', 'minecraft:compass': 'raft:angle'}.get(prop)
         if name is None:
             raise ValueError('range_dispatch %s' % prop)
-        over = [{'predicate': {name: e['threshold']}, 'model': _model_ref(e['model'])} for e in m.get('entries', [])]
-        return _model_ref(m['fallback']), over
+        scale = float(m.get('scale', 1.0))
+        entries = m.get('entries', [])
+        over = [{'predicate': {name: round(e['threshold'] / scale, 6)}, 'model': _model_ref(e['model'])} for e in entries]
+        fallback = m.get('fallback')
+        base = _model_ref(fallback) if fallback else _model_ref(entries[0]['model'])
+        return base, over
     if t == 'minecraft:select':
         prop = m.get('property')
         if prop == 'minecraft:display_context':

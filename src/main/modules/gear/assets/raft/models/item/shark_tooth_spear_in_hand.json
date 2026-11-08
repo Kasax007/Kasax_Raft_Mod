@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:item/spear_in_hand",
+  "parent": "raft:item/port1211/spear_in_hand",
   "textures": {
     "layer0": "raft:item/shark_tooth_spear_in_hand"
   }

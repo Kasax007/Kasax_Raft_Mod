@@ -3,7 +3,9 @@
   "category": "food",
   "cookingtime": 100,
   "experience": 0.35,
-  "ingredient": "raft:sweet_potato",
+  "ingredient": {
+    "item": "raft:sweet_potato"
+  },
   "result": {
     "id": "raft:baked_sweet_potato"
   }

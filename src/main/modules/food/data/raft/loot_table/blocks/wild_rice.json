@@ -2,25 +2,29 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "rolls": 1,
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "raft:rice",
-          "modifier": {
-            "count": {
-              "type": "minecraft:uniform",
-              "min": 1,
-              "max": 2
-            },
-            "type": "minecraft:set_count"
-          }
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ],
+          "name": "raft:rice"
         }
-      ]
+      ],
+      "rolls": 1
     }
   ],
   "random_sequence": "raft:blocks/wild_rice",
-  "modifier": {
-    "type": "minecraft:explosion_decay"
-  }
+  "functions": [
+    {
+      "function": "minecraft:explosion_decay"
+    }
+  ]
 }

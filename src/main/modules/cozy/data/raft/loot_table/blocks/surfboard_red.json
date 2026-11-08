@@ -2,24 +2,28 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "raft:surfboard_red",
-          "condition": {
-            "type": "minecraft:match_block",
-            "blocks": "raft:surfboard_red",
-            "state": {
-              "half": "lower"
+          "conditions": [
+            {
+              "condition": "minecraft:block_state_property",
+              "block": "raft:surfboard_red",
+              "properties": {
+                "half": "lower"
+              }
             }
-          }
+          ],
+          "name": "raft:surfboard_red"
         }
       ],
-      "rolls": 1.0,
-      "condition": {
-        "type": "minecraft:survives_explosion"
-      }
+      "bonus_rolls": 0.0,
+      "rolls": 1.0
     }
   ],
   "random_sequence": "raft:blocks/surfboard_red"

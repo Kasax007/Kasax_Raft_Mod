@@ -12,13 +12,25 @@
   "category": "building",
   "key": {
     "C": [
-      "minecraft:tube_coral",
-      "minecraft:brain_coral",
-      "minecraft:bubble_coral",
-      "minecraft:fire_coral",
-      "minecraft:horn_coral"
+      {
+        "item": "minecraft:tube_coral"
+      },
+      {
+        "item": "minecraft:brain_coral"
+      },
+      {
+        "item": "minecraft:bubble_coral"
+      },
+      {
+        "item": "minecraft:fire_coral"
+      },
+      {
+        "item": "minecraft:horn_coral"
+      }
     ],
-    "G": "raft:sea_glass_shard"
+    "G": {
+      "item": "raft:sea_glass_shard"
+    }
   },
   "pattern": [
     "C",

@@ -24,7 +24,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:weathered_shelf"
+        "recipe": "raft:weathered_shelf"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

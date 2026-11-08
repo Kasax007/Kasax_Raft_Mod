@@ -16,7 +16,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:wicker_basket"
+        "recipe": "raft:wicker_basket"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

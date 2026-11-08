@@ -11,8 +11,12 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "raft:seashell",
-    "minecraft:candle"
+    {
+      "item": "raft:seashell"
+    },
+    {
+      "item": "minecraft:candle"
+    }
   ],
   "result": {
     "count": 1,

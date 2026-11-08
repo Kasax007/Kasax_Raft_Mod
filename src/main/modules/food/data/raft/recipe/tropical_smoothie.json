@@ -12,10 +12,18 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "raft:banana",
-    "raft:pineapple",
-    "minecraft:sugar",
-    "raft:fresh_water"
+    {
+      "item": "raft:banana"
+    },
+    {
+      "item": "raft:pineapple"
+    },
+    {
+      "item": "minecraft:sugar"
+    },
+    {
+      "item": "raft:fresh_water"
+    }
   ],
   "result": {
     "count": 1,

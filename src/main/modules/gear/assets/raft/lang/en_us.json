@@ -1,7 +1,7 @@
 {
   "almanac.raft.gear.armour.text": "# Shell Armour\nMade from seashells: 13 armour points in all (between chainmail and iron) and a little toughness. Wear all four pieces for Resistance I while in water.\n# Explorer's Outfit\nHat, Jacket, Trousers and Boots made from sail canvas: 7 armour points, like leather. The full outfit lets you walk 10% faster and gives Luck I for better fishing and loot.",
   "almanac.raft.gear.armour.title": "Armour",
-  "almanac.raft.gear.text": "# Weapons\n* Shark Tooth Spear: a stick and a shark tooth. Jab or charge like any spear; as strong as an iron spear, with 320 uses.\n* Driftwood Boomerang: right-click to throw. It flies about 18 blocks, hits for 5, then comes back to you, even through walls. On the way it picks up to 3 stacks of floating items. 200 throws.\n* Machete: 5.5 damage and quick swings. It cuts leaves, plants, bamboo, vines and crops in a blink. 280 uses.",
+  "almanac.raft.gear.text": "# Weapons\n* Shark Tooth Spear: a stick and a shark tooth. Long jabs; hold right-click to charge, let go to lunge. 320 uses.\n* Driftwood Boomerang: right-click to throw. It flies about 18 blocks, hits for 5, then comes back to you, even through walls. On the way it picks up to 3 stacks of floating items. 200 throws.\n* Machete: 5.5 damage and quick swings. It cuts leaves, plants, bamboo, vines and crops in a blink. 280 uses.",
   "almanac.raft.gear.title": "Gear & Gadgets",
   "almanac.raft.gear.tools.text": "# Wreck Compass\nRight-click and the needle turns to the nearest shipwreck within about 1000 blocks: galleons, cargo ships, fishing boats, sunken planes and overworld shipwrecks. It also tells you how far it is. Once every 5 seconds.\n# Captain's Spyglass\nZooms twice as far as a spyglass and shows the distance to what you look at.\n# Bait\nFish Bait: 4 from kelp and rotten flesh, a spider eye, a crab claw or a cod. Keep it in your bag while fishing: bites come faster, like Lure I. One per cast.\nGolden Lure: bait and 3 gold nuggets. Faster bites and better treasure, like Luck of the Sea II.",
   "almanac.raft.gear.tools.title": "Tools",
@@ -36,7 +36,7 @@
   "tooltip.raft.fish_bait.1": "Also makes fish traps twice as fast",
   "tooltip.raft.golden_lure": "Keep it with your fishing rod: better catches",
   "tooltip.raft.machete": "Cuts leaves, plants, bamboo and vines fast",
-  "tooltip.raft.shark_tooth_spear": "Charge and jab like any spear",
+  "tooltip.raft.shark_tooth_spear": "Long jabs; hold use to charge a thrust",
   "tooltip.raft.shell_set": "Full set: Resistance in water",
   "tooltip.raft.wreck_compass": "Use: points to the nearest shipwreck"
 }

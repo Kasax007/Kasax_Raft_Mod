@@ -19,7 +19,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:sushi_roll"
+        "recipe": "raft:sushi_roll"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

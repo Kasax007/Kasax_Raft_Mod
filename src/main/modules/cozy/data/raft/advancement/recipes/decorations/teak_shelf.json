@@ -24,7 +24,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:teak_shelf"
+        "recipe": "raft:teak_shelf"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

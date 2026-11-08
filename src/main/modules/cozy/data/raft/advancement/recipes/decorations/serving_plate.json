@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:serving_plate"
+        "recipe": "raft:serving_plate"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

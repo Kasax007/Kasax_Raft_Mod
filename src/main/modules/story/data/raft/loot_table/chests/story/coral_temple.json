@@ -58,7 +58,7 @@
             {
               "function": "minecraft:exploration_map",
               "decoration": "minecraft:target_x",
-              "destination": "#raft:on_abyssal_sanctum_maps",
+              "destination": "raft:on_abyssal_sanctum_maps",
               "search_radius": 120,
               "skip_existing_chunks": false,
               "zoom": 2

@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:pumice_brick_wall"
+        "recipe": "raft:pumice_brick_wall"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

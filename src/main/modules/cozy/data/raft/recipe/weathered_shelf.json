@@ -11,7 +11,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "L": "raft:weathered_planks"
+    "L": {
+      "item": "raft:weathered_planks"
+    }
   },
   "pattern": [
     "LLL",

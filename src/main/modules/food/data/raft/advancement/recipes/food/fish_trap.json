@@ -16,7 +16,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:fish_trap"
+        "recipe": "raft:fish_trap"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -7,7 +7,7 @@
           {
             "items": [
               "minecraft:copper_ingot",
-              "minecraft:copper_nugget",
+              "minecraft:iron_nugget",
               "minecraft:glass_pane",
               "minecraft:torch"
             ]
@@ -18,7 +18,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:hurricane_lantern"
+        "recipe": "raft:hurricane_lantern"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

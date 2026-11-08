@@ -24,7 +24,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:shell_tiles"
+        "recipe": "raft:shell_tiles"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -11,7 +11,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "P": "raft:pumice"
+    "P": {
+      "item": "raft:pumice"
+    }
   },
   "pattern": [
     "PP",

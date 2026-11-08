@@ -3,7 +3,9 @@
   "category": "food",
   "cookingtime": 100,
   "experience": 0.2,
-  "ingredient": "raft:rice",
+  "ingredient": {
+    "item": "raft:rice"
+  },
   "result": {
     "id": "raft:cooked_rice"
   }

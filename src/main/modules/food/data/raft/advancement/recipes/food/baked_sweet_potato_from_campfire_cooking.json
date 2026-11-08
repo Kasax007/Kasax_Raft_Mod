@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:baked_sweet_potato_from_campfire_cooking"
+        "recipe": "raft:baked_sweet_potato_from_campfire_cooking"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

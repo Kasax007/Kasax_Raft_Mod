@@ -28,7 +28,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:fish_bait"
+        "recipe": "raft:fish_bait"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

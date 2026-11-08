@@ -1,6 +1,11 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "raft:item/shark_tooth_spear"
-  }
+  "parent": "raft:item/shark_tooth_spear_in_hand",
+  "overrides": [
+    {
+      "predicate": {
+        "raft:gui": 1
+      },
+      "model": "raft:item/shark_tooth_spear_gui"
+    }
+  ]
 }

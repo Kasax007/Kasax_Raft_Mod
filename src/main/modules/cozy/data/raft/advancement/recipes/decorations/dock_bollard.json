@@ -25,7 +25,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:dock_bollard"
+        "recipe": "raft:dock_bollard"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

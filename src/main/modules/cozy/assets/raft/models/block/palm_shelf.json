@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/template_shelf_body",
+  "parent": "raft:block/port1211/template_shelf_body",
   "textures": {
     "all": "raft:block/palm_shelf",
     "particle": "raft:block/palm_shelf"

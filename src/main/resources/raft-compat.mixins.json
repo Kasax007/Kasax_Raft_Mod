@@ -8,7 +8,8 @@
     "FurnaceCookTimeMixin",
     "BubbleColumnMixin",
     "ItemEntityResistMixin",
-    "SinglePoolElementTemplateAccess"
+    "SinglePoolElementTemplateAccess",
+    "CropBlockMixin"
   ],
   "client": [
     "ClientAdvancementsAccess",

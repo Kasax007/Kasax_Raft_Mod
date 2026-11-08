@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/template_shelf_unconnected",
+  "parent": "raft:block/port1211/template_shelf_unconnected",
   "textures": {
     "all": "raft:block/teak_shelf",
     "particle": "raft:block/teak_shelf"

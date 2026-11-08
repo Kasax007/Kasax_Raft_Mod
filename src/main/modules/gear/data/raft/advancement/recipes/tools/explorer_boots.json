@@ -24,7 +24,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:explorer_boots"
+        "recipe": "raft:explorer_boots"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

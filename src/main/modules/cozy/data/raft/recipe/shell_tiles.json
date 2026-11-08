@@ -11,7 +11,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "S": "raft:shell_sand"
+    "S": {
+      "item": "raft:shell_sand"
+    }
   },
   "pattern": [
     "SS",

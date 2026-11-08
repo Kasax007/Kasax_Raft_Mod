@@ -1,0 +1,203 @@
+{
+  "parent": "raft:item/wreck_compass_16",
+  "overrides": [
+    {
+      "predicate": {
+        "raft:angle": 0.0
+      },
+      "model": "raft:item/wreck_compass_16"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.015625
+      },
+      "model": "raft:item/wreck_compass_17"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.046875
+      },
+      "model": "raft:item/wreck_compass_18"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.078125
+      },
+      "model": "raft:item/wreck_compass_19"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.109375
+      },
+      "model": "raft:item/wreck_compass_20"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.140625
+      },
+      "model": "raft:item/wreck_compass_21"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.171875
+      },
+      "model": "raft:item/wreck_compass_22"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.203125
+      },
+      "model": "raft:item/wreck_compass_23"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.234375
+      },
+      "model": "raft:item/wreck_compass_24"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.265625
+      },
+      "model": "raft:item/wreck_compass_25"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.296875
+      },
+      "model": "raft:item/wreck_compass_26"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.328125
+      },
+      "model": "raft:item/wreck_compass_27"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.359375
+      },
+      "model": "raft:item/wreck_compass_28"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.390625
+      },
+      "model": "raft:item/wreck_compass_29"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.421875
+      },
+      "model": "raft:item/wreck_compass_30"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.453125
+      },
+      "model": "raft:item/wreck_compass_31"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.484375
+      },
+      "model": "raft:item/wreck_compass_00"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.515625
+      },
+      "model": "raft:item/wreck_compass_01"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.546875
+      },
+      "model": "raft:item/wreck_compass_02"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.578125
+      },
+      "model": "raft:item/wreck_compass_03"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.609375
+      },
+      "model": "raft:item/wreck_compass_04"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.640625
+      },
+      "model": "raft:item/wreck_compass_05"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.671875
+      },
+      "model": "raft:item/wreck_compass_06"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.703125
+      },
+      "model": "raft:item/wreck_compass_07"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.734375
+      },
+      "model": "raft:item/wreck_compass_08"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.765625
+      },
+      "model": "raft:item/wreck_compass_09"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.796875
+      },
+      "model": "raft:item/wreck_compass_10"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.828125
+      },
+      "model": "raft:item/wreck_compass_11"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.859375
+      },
+      "model": "raft:item/wreck_compass_12"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.890625
+      },
+      "model": "raft:item/wreck_compass_13"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.921875
+      },
+      "model": "raft:item/wreck_compass_14"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.953125
+      },
+      "model": "raft:item/wreck_compass_15"
+    },
+    {
+      "predicate": {
+        "raft:angle": 0.984375
+      },
+      "model": "raft:item/wreck_compass_16"
+    }
+  ]
+}

@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:pumice_brick_wall_from_stonecutting"
+        "recipe": "raft:pumice_brick_wall_from_stonecutting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

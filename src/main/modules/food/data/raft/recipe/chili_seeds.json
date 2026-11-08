@@ -2,7 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "raft:chili_pepper"
+    {
+      "item": "raft:chili_pepper"
+    }
   ],
   "result": {
     "count": 2,

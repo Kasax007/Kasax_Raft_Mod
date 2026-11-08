@@ -2,24 +2,28 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "raft:thatch_parasol",
-          "condition": {
-            "type": "minecraft:match_block",
-            "blocks": "raft:thatch_parasol",
-            "state": {
-              "half": "lower"
+          "conditions": [
+            {
+              "condition": "minecraft:block_state_property",
+              "block": "raft:thatch_parasol",
+              "properties": {
+                "half": "lower"
+              }
             }
-          }
+          ],
+          "name": "raft:thatch_parasol"
         }
       ],
-      "rolls": 1.0,
-      "condition": {
-        "type": "minecraft:survives_explosion"
-      }
+      "bonus_rolls": 0.0,
+      "rolls": 1.0
     }
   ],
   "random_sequence": "raft:blocks/thatch_parasol"

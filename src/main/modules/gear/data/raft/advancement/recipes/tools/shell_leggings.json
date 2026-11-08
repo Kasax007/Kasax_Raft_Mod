@@ -24,7 +24,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:shell_leggings"
+        "recipe": "raft:shell_leggings"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

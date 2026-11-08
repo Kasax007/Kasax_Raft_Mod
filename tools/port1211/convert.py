@@ -112,6 +112,12 @@ def convert_data(root, stats, extras):
             f = fixups.loot(j)
             if f != j:
                 save(p, f); stats['fixups'] = stats.get('fixups', 0) + 1
+        for sub in ('recipe', 'advancement'):
+            for p, rel in files(nsdir, sub):
+                j = load(p)
+                f = fixups.items(j)
+                if f != j:
+                    save(p, f); stats['fixups'] = stats.get('fixups', 0) + 1
         for p, rel in files(nsdir, 'tags'):
             j = load(p)
             f = fixups.tag(j)
@@ -188,6 +194,11 @@ def convert_assets(root, stats, extras):
                 k = models.model(j)
                 if k != j:
                     save(p, k); stats['model'] += 1
+        for p, rel in files(nsdir, 'lang'):
+            j = load(p)
+            f = fixups.lang(j)
+            if f != j:
+                save(p, f); stats['fixups'] = stats.get('fixups', 0) + 1
         for p, rel in list(files(nsdir, 'items')):
             item = os.path.relpath(p, os.path.join(nsdir, 'items'))[:-5]
             extras.setdefault('items', []).append((root, ns, item, load(p)))
@@ -301,6 +312,14 @@ def main():
     from . import layers
     stats['render_layers'] = layers.build(roots(), os.path.join(SRC, 'resources', 'assets', 'raft', 'port1211', 'render_layers.json'))
     finish_equipment(extras, stats)
+    # mixin configs (src/main/resources/*.mixins.json)
+    for fn in sorted(os.listdir(os.path.join(SRC, 'resources'))):
+        if fn.endswith('.mixins.json'):
+            p = os.path.join(SRC, 'resources', fn)
+            j = load(p)
+            f = fixups.mixin_config(j)
+            if f != j:
+                save(p, f); stats['fixups'] = stats.get('fixups', 0) + 1
     # facts other parts of the mod need
     world = os.path.join(SRC, 'modules', 'world')
     # biomes converted in an earlier run are skipped: add to what is there instead of replacing it

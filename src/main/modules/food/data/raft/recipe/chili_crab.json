@@ -11,9 +11,15 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "raft:cooked_crab_claw",
-    "raft:chili_pepper",
-    "minecraft:bowl"
+    {
+      "item": "raft:cooked_crab_claw"
+    },
+    {
+      "item": "raft:chili_pepper"
+    },
+    {
+      "item": "minecraft:bowl"
+    }
   ],
   "result": {
     "count": 1,

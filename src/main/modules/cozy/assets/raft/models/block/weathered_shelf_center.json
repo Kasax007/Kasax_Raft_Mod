@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/template_shelf_center",
+  "parent": "raft:block/port1211/template_shelf_center",
   "textures": {
     "all": "raft:block/weathered_shelf",
     "particle": "raft:block/weathered_shelf"

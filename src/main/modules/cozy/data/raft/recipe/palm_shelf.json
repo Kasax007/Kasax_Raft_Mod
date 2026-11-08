@@ -11,7 +11,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "L": "raft:stripped_palm_log"
+    "L": {
+      "item": "raft:stripped_palm_log"
+    }
   },
   "pattern": [
     "LLL",

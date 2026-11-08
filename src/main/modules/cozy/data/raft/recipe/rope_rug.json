@@ -11,7 +11,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "R": "raft:rope"
+    "R": {
+      "item": "raft:rope"
+    }
   },
   "pattern": [
     "RRR",

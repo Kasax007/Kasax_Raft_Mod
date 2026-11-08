@@ -12,12 +12,22 @@
   "category": "misc",
   "ingredients": [
     [
-      "minecraft:rotten_flesh",
-      "minecraft:spider_eye",
-      "raft:crab_claw",
-      "minecraft:cod"
+      {
+        "item": "minecraft:rotten_flesh"
+      },
+      {
+        "item": "minecraft:spider_eye"
+      },
+      {
+        "item": "raft:crab_claw"
+      },
+      {
+        "item": "minecraft:cod"
+      }
     ],
-    "minecraft:kelp"
+    {
+      "item": "minecraft:kelp"
+    }
   ],
   "result": {
     "count": 4,

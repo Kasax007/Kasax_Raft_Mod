@@ -2,10 +2,18 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "N": "minecraft:copper_nugget",
-    "G": "minecraft:glass_pane",
-    "T": "minecraft:torch",
-    "I": "minecraft:copper_ingot"
+    "N": {
+      "item": "minecraft:iron_nugget"
+    },
+    "G": {
+      "item": "minecraft:glass_pane"
+    },
+    "T": {
+      "item": "minecraft:torch"
+    },
+    "I": {
+      "item": "minecraft:copper_ingot"
+    }
   },
   "pattern": [
     " N ",

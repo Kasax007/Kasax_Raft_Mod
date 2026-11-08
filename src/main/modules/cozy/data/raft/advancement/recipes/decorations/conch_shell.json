@@ -25,7 +25,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:conch_shell"
+        "recipe": "raft:conch_shell"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

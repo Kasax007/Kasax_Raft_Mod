@@ -25,7 +25,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:shark_tooth_spear"
+        "recipe": "raft:shark_tooth_spear"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -11,9 +11,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "C": "minecraft:candle",
-    "I": "minecraft:copper_nugget",
-    "L": "raft:stripped_driftwood_log"
+    "C": {
+      "item": "minecraft:candle"
+    },
+    "I": {
+      "item": "minecraft:iron_nugget"
+    },
+    "L": {
+      "item": "raft:stripped_driftwood_log"
+    }
   },
   "pattern": [
     "C",

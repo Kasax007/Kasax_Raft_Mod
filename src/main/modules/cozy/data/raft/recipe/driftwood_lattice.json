@@ -11,8 +11,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "S": "minecraft:stick",
-    "P": "raft:driftwood_planks"
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "P": {
+      "item": "raft:driftwood_planks"
+    }
   },
   "pattern": [
     "SPS",

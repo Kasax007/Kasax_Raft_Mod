@@ -165,7 +165,7 @@
             {
               "function": "minecraft:exploration_map",
               "decoration": "minecraft:red_x",
-              "destination": "#raft:on_pirate_maps",
+              "destination": "raft:on_pirate_maps",
               "search_radius": 120,
               "skip_existing_chunks": false,
               "zoom": 2

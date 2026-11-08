@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "W": "#minecraft:wool",
-    "B": "minecraft:bamboo"
+    "W": {
+      "tag": "minecraft:wool"
+    },
+    "B": {
+      "item": "minecraft:bamboo"
+    }
   },
   "pattern": [
     "W",

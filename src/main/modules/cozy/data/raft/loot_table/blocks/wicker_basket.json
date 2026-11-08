@@ -2,21 +2,23 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "raft:wicker_basket",
-          "modifier": {
-            "source": "block_entity",
-            "include": [
-              "minecraft:custom_name",
-              "minecraft:container"
-            ],
-            "type": "minecraft:copy_components"
-          }
+          "functions": [
+            {
+              "function": "minecraft:copy_components",
+              "source": "block_entity",
+              "include": [
+                "minecraft:custom_name",
+                "minecraft:container"
+              ]
+            }
+          ],
+          "name": "raft:wicker_basket"
         }
       ],
+      "bonus_rolls": 0.0,
       "rolls": 1.0
     }
   ],

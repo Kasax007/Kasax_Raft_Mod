@@ -2,12 +2,24 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "raft:banana",
-    "raft:banana",
-    "minecraft:wheat",
-    "minecraft:wheat",
-    "minecraft:wheat",
-    "minecraft:sugar"
+    {
+      "item": "raft:banana"
+    },
+    {
+      "item": "raft:banana"
+    },
+    {
+      "item": "minecraft:wheat"
+    },
+    {
+      "item": "minecraft:wheat"
+    },
+    {
+      "item": "minecraft:wheat"
+    },
+    {
+      "item": "minecraft:sugar"
+    }
   ],
   "result": {
     "count": 1,

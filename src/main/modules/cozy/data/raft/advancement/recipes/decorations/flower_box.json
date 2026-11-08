@@ -35,7 +35,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:flower_box"
+        "recipe": "raft:flower_box"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

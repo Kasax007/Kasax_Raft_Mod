@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:chili_seeds"
+        "recipe": "raft:chili_seeds"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

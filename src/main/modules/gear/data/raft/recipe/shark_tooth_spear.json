@@ -11,8 +11,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "T": "raft:shark_tooth",
-    "S": "minecraft:stick"
+    "T": {
+      "item": "raft:shark_tooth"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
   },
   "pattern": [
     "  T",

@@ -2,17 +2,19 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
           "name": "raft:sea_glass_lamp"
         }
       ],
-      "rolls": 1.0,
-      "condition": {
-        "type": "minecraft:survives_explosion"
-      }
+      "bonus_rolls": 0.0,
+      "rolls": 1.0
     }
   ],
   "random_sequence": "raft:blocks/sea_glass_lamp"

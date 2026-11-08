@@ -101,7 +101,11 @@ def loot(o):
         return [loot(x) for x in o if not (isinstance(x, dict) and x.get('function') == 'minecraft:filtered'
                                              and 'modifier' not in x)]
     if isinstance(o, dict):
-        return {k: loot(v) for k, v in o.items()}
+        o = {k: loot(v) for k, v in o.items()}
+        # exploration maps: 1.21.1 names the structure tag without '#' (the whole table fails to load otherwise)
+        if o.get('function') == 'minecraft:exploration_map' and str(o.get('destination', '')).startswith('#'):
+            o['destination'] = o['destination'][1:]
+        return o
     return o
 
 
@@ -110,4 +114,42 @@ def tag(o):
         vals = [v for v in o['values'] if (v if isinstance(v, str) else v.get('id')) not in MISSING_IDS]
         if vals != o['values']:
             o = dict(o, values=vals)
+    return o
+
+
+# items of the newer game that 1.21.1 does not have, in recipes and recipe advancements: the closest 1.21.1 item
+ITEM_RENAMES = {'minecraft:copper_nugget': 'minecraft:iron_nugget'}
+
+
+def items(o):
+    if isinstance(o, list):
+        return [items(x) for x in o]
+    if isinstance(o, dict):
+        return {k: items(v) for k, v in o.items()}
+    if isinstance(o, str):
+        return ITEM_RENAMES.get(o, o)
+    return o
+
+
+# texts that describe a feature 1.21.1 does in its own way: (key, old part, new part). The shark tooth spear has no
+# vanilla spear to work like on 1.21.1 (see SharkToothSpearItem).
+LANG_EDITS = [
+    ('tooltip.raft.shark_tooth_spear', 'Charge and jab like any spear', 'Long jabs; hold use to charge a thrust'),
+    ('almanac.raft.gear.text', 'Jab or charge like any spear; as strong as an iron spear, with 320 uses.',
+     'Long jabs; hold right-click to charge, let go to lunge. 320 uses.'),
+]
+
+
+def lang(o):
+    o = dict(o)
+    for key, old, new in LANG_EDITS:
+        if key in o and old in o[key]:
+            o[key] = o[key].replace(old, new)
+    return o
+
+
+def mixin_config(o):
+    """Mixin configs: the compatibility level of Java 21 (1.21.1 runs on Java 21)."""
+    if o.get('compatibilityLevel') not in (None, 'JAVA_21', 'JAVA_17', 'JAVA_8'):
+        o = dict(o, compatibilityLevel='JAVA_21')
     return o

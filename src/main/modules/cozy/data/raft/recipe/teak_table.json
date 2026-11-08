@@ -12,8 +12,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "P": "raft:teak_planks",
-    "S": "raft:teak_slab"
+    "P": {
+      "item": "raft:teak_planks"
+    },
+    "S": {
+      "item": "raft:teak_slab"
+    }
   },
   "pattern": [
     "PPP",

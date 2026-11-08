@@ -27,7 +27,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:coconut_ice_cream"
+        "recipe": "raft:coconut_ice_cream"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

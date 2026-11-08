@@ -11,7 +11,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "L": "raft:teak_planks"
+    "L": {
+      "item": "raft:teak_planks"
+    }
   },
   "pattern": [
     "LLL",

@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "net.kasax.raft.content.food.mixin",
-  "compatibilityLevel": "JAVA_25",
+  "compatibilityLevel": "JAVA_21",
   "mixins": [],
   "client": [],
   "injectors": {

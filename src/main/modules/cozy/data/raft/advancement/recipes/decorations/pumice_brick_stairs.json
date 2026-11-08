@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:pumice_brick_stairs"
+        "recipe": "raft:pumice_brick_stairs"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

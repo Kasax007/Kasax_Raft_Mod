@@ -11,8 +11,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "W": "#minecraft:wool",
-    "P": "raft:palm_planks"
+    "W": {
+      "tag": "minecraft:wool"
+    },
+    "P": {
+      "item": "raft:palm_planks"
+    }
   },
   "pattern": [
     "  W",

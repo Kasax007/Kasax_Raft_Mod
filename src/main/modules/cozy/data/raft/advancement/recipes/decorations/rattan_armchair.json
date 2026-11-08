@@ -25,7 +25,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:rattan_armchair"
+        "recipe": "raft:rattan_armchair"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

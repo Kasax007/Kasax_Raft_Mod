@@ -25,7 +25,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:thatch_parasol"
+        "recipe": "raft:thatch_parasol"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -25,7 +25,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:shell_garland"
+        "recipe": "raft:shell_garland"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

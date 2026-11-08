@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:shell_tile_stairs_from_stonecutting"
+        "recipe": "raft:shell_tile_stairs_from_stonecutting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

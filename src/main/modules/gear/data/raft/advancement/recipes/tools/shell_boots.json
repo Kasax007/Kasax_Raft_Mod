@@ -24,7 +24,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:shell_boots"
+        "recipe": "raft:shell_boots"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

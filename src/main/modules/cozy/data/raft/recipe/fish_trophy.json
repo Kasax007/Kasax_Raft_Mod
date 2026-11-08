@@ -11,8 +11,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "F": "#minecraft:fishes",
-    "P": "raft:teak_planks"
+    "F": {
+      "tag": "minecraft:fishes"
+    },
+    "P": {
+      "item": "raft:teak_planks"
+    }
   },
   "pattern": [
     "F",

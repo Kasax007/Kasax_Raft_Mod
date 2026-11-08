@@ -29,7 +29,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:coral_vase"
+        "recipe": "raft:coral_vase"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

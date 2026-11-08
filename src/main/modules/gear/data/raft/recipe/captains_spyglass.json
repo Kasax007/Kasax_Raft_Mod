@@ -11,9 +11,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "G": "minecraft:gold_ingot",
-    "S": "minecraft:spyglass",
-    "P": "raft:pearl"
+    "G": {
+      "item": "minecraft:gold_ingot"
+    },
+    "S": {
+      "item": "minecraft:spyglass"
+    },
+    "P": {
+      "item": "raft:pearl"
+    }
   },
   "pattern": [
     "G",

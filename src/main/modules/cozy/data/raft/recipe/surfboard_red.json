@@ -11,8 +11,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "P": "raft:plastic",
-    "D": "minecraft:red_dye"
+    "P": {
+      "item": "raft:plastic"
+    },
+    "D": {
+      "item": "minecraft:red_dye"
+    }
   },
   "pattern": [
     "P",

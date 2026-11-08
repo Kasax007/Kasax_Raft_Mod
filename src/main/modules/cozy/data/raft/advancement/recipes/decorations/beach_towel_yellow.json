@@ -16,7 +16,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:beach_towel_yellow"
+        "recipe": "raft:beach_towel_yellow"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

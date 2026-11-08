@@ -27,7 +27,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:sea_glass_lamp"
+        "recipe": "raft:sea_glass_lamp"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

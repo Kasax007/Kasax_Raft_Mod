@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "A": "minecraft:red_wool",
-    "B": "minecraft:white_wool"
+    "A": {
+      "item": "minecraft:red_wool"
+    },
+    "B": {
+      "item": "minecraft:white_wool"
+    }
   },
   "pattern": [
     "AB"

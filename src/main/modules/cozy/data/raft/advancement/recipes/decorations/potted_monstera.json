@@ -25,7 +25,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:potted_monstera"
+        "recipe": "raft:potted_monstera"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

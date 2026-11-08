@@ -11,8 +11,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "S": "minecraft:string",
-    "G": "raft:sea_glass_shard"
+    "S": {
+      "item": "minecraft:string"
+    },
+    "G": {
+      "item": "raft:sea_glass_shard"
+    }
   },
   "pattern": [
     "S S",

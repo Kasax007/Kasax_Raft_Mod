@@ -27,7 +27,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:fruit_salad"
+        "recipe": "raft:fruit_salad"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

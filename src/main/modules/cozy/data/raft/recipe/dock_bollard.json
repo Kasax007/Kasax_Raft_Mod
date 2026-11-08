@@ -11,8 +11,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "I": "minecraft:iron_ingot",
-    "R": "raft:rope"
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "R": {
+      "item": "raft:rope"
+    }
   },
   "pattern": [
     "III",

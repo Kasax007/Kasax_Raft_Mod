@@ -25,7 +25,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:shell_candle"
+        "recipe": "raft:shell_candle"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

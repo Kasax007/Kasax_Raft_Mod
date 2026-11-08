@@ -16,7 +16,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:wreck_compass"
+        "recipe": "raft:wreck_compass"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

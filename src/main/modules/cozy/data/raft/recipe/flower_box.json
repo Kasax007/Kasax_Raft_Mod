@@ -11,9 +11,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "F": "#minecraft:small_flowers",
-    "D": "minecraft:dirt",
-    "P": "raft:driftwood_planks"
+    "F": {
+      "tag": "minecraft:small_flowers"
+    },
+    "D": {
+      "item": "minecraft:dirt"
+    },
+    "P": {
+      "item": "raft:driftwood_planks"
+    }
   },
   "pattern": [
     "FDF",

@@ -2,7 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "X": "raft:shell_tiles"
+    "X": {
+      "item": "raft:shell_tiles"
+    }
   },
   "pattern": [
     "XXX"

@@ -24,7 +24,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:rope_rug"
+        "recipe": "raft:rope_rug"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

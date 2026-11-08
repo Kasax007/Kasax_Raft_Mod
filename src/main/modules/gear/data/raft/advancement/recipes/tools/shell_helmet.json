@@ -24,7 +24,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:shell_helmet"
+        "recipe": "raft:shell_helmet"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -28,7 +28,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:tropical_smoothie"
+        "recipe": "raft:tropical_smoothie"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

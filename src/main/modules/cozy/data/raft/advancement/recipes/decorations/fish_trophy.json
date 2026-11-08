@@ -34,7 +34,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:fish_trophy"
+        "recipe": "raft:fish_trophy"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -12,9 +12,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "G": "raft:sea_glass_shard",
-    "T": "minecraft:torch",
-    "L": "raft:stripped_driftwood_log"
+    "G": {
+      "item": "raft:sea_glass_shard"
+    },
+    "T": {
+      "item": "minecraft:torch"
+    },
+    "L": {
+      "item": "raft:stripped_driftwood_log"
+    }
   },
   "pattern": [
     "GGG",

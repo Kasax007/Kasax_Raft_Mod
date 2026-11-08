@@ -2,13 +2,23 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "raft:cooked_rice",
+    {
+      "item": "raft:cooked_rice"
+    },
     [
-      "minecraft:cod",
-      "minecraft:salmon",
-      "minecraft:tropical_fish"
+      {
+        "item": "minecraft:cod"
+      },
+      {
+        "item": "minecraft:salmon"
+      },
+      {
+        "item": "minecraft:tropical_fish"
+      }
     ],
-    "minecraft:dried_kelp"
+    {
+      "item": "minecraft:dried_kelp"
+    }
   ],
   "result": {
     "count": 3,

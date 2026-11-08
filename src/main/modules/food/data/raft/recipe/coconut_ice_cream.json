@@ -11,10 +11,18 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "raft:coconut",
-    "minecraft:snowball",
-    "minecraft:sugar",
-    "minecraft:bowl"
+    {
+      "item": "raft:coconut"
+    },
+    {
+      "item": "minecraft:snowball"
+    },
+    {
+      "item": "minecraft:sugar"
+    },
+    {
+      "item": "minecraft:bowl"
+    }
   ],
   "result": {
     "count": 1,

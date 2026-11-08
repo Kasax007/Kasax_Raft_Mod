@@ -24,7 +24,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:explorer_helmet"
+        "recipe": "raft:explorer_helmet"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

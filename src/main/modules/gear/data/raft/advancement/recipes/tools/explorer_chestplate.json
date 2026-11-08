@@ -24,7 +24,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:explorer_chestplate"
+        "recipe": "raft:explorer_chestplate"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

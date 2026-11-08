@@ -25,7 +25,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:surfboard_blue"
+        "recipe": "raft:surfboard_blue"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

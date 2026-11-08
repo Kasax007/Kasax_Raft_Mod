@@ -16,7 +16,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:cooking_pot"
+        "recipe": "raft:cooking_pot"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

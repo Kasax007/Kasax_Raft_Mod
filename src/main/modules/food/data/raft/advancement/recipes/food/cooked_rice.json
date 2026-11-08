@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:cooked_rice"
+        "recipe": "raft:cooked_rice"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

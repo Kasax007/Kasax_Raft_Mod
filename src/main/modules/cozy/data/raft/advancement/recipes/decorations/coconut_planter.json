@@ -35,7 +35,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:coconut_planter"
+        "recipe": "raft:coconut_planter"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -71,7 +71,7 @@
             {
               "function": "minecraft:exploration_map",
               "decoration": "minecraft:target_x",
-              "destination": "#raft:on_port_solace_maps",
+              "destination": "raft:on_port_solace_maps",
               "search_radius": 120,
               "skip_existing_chunks": false,
               "zoom": 2

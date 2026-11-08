@@ -11,8 +11,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "F": "raft:tropical_fern",
-    "P": "minecraft:flower_pot"
+    "F": {
+      "item": "raft:tropical_fern"
+    },
+    "P": {
+      "item": "minecraft:flower_pot"
+    }
   },
   "pattern": [
     "FF",

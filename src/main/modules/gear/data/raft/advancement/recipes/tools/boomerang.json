@@ -24,7 +24,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:boomerang"
+        "recipe": "raft:boomerang"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

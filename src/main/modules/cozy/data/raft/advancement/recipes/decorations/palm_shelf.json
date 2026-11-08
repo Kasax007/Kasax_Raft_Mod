@@ -24,7 +24,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:palm_shelf"
+        "recipe": "raft:palm_shelf"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

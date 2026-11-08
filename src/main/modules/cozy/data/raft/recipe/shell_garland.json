@@ -11,8 +11,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "S": "minecraft:string",
-    "H": "raft:seashell"
+    "S": {
+      "item": "minecraft:string"
+    },
+    "H": {
+      "item": "raft:seashell"
+    }
   },
   "pattern": [
     "SSS",

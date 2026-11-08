@@ -11,9 +11,15 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "raft:coconut",
-    "minecraft:dirt",
-    "#minecraft:small_flowers"
+    {
+      "item": "raft:coconut"
+    },
+    {
+      "item": "minecraft:dirt"
+    },
+    {
+      "tag": "minecraft:small_flowers"
+    }
   ],
   "result": {
     "count": 1,

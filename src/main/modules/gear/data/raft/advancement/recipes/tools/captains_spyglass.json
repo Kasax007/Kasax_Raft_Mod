@@ -26,7 +26,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:captains_spyglass"
+        "recipe": "raft:captains_spyglass"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

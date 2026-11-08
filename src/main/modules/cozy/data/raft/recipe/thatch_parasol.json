@@ -11,8 +11,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "T": "raft:palm_thatch",
-    "B": "minecraft:bamboo"
+    "T": {
+      "item": "raft:palm_thatch"
+    },
+    "B": {
+      "item": "minecraft:bamboo"
+    }
   },
   "pattern": [
     "TTT",

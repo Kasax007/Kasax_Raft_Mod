@@ -25,7 +25,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:machete"
+        "recipe": "raft:machete"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -34,7 +34,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "raft:sun_lounger"
+        "recipe": "raft:sun_lounger"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

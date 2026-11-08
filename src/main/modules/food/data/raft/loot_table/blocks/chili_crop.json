@@ -2,52 +2,56 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "rolls": 1,
       "entries": [
         {
           "type": "minecraft:item",
           "name": "raft:chili_seeds"
         }
-      ]
+      ],
+      "rolls": 1
     },
     {
-      "rolls": 1,
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "raft:chili_crop",
+          "properties": {
+            "age": "3"
+          }
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "raft:chili_pepper",
-          "modifier": [
+          "functions": [
             {
+              "function": "minecraft:set_count",
               "count": {
                 "type": "minecraft:uniform",
                 "min": 1,
                 "max": 3
-              },
-              "type": "minecraft:set_count"
+              }
             },
             {
+              "function": "minecraft:apply_bonus",
               "enchantment": "minecraft:fortune",
               "formula": "minecraft:binomial_with_bonus_count",
               "parameters": {
                 "extra": 2,
                 "probability": 0.5714286
-              },
-              "type": "minecraft:apply_bonus"
+              }
             }
-          ]
+          ],
+          "name": "raft:chili_pepper"
         }
       ],
-      "condition": {
-        "type": "minecraft:match_block",
-        "blocks": "raft:chili_crop",
-        "state": {
-          "age": "3"
-        }
-      }
+      "rolls": 1
     }
   ],
   "random_sequence": "raft:blocks/chili_crop",
-  "modifier": {
-    "type": "minecraft:explosion_decay"
-  }
+  "functions": [
+    {
+      "function": "minecraft:explosion_decay"
+    }
+  ]
 }

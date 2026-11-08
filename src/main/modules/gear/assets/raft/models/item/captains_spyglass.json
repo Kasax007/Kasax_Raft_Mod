@@ -1,6 +1,11 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "raft:item/captains_spyglass"
-  }
+  "parent": "raft:item/captains_spyglass_in_hand",
+  "overrides": [
+    {
+      "predicate": {
+        "raft:gui": 1
+      },
+      "model": "raft:item/captains_spyglass_gui"
+    }
+  ]
 }
