@@ -29,14 +29,13 @@ public final class TestInput {
 
     private static void key(Minecraft mc, InputConstants.Key key, boolean down) {
         long window = mc.getWindow().getWindow();
-        if (key.getType() == InputConstants.Type.MOUSE) {
+        if (key.getType() == InputConstants.Type.MOUSE && mc.screen != null) {
             ((MouseHandlerInvoker) mc.mouseHandler).bc$onPress(window, key.getValue(), down ? GLFW.GLFW_PRESS : GLFW.GLFW_RELEASE, 0);
-            if (mc.screen == null) {
-                // a released mouse (no focus under Xvfb) only grabs on the first click: press the mapping as well
-                KeyMapping.set(key, down);
-                if (down) {
-                    KeyMapping.click(key);
-                }
+        } else if (key.getType() == InputConstants.Type.MOUSE) {
+            // in the world: the key mapping alone (the mouse handler would grab the mouse and could count the click twice)
+            KeyMapping.set(key, down);
+            if (down) {
+                KeyMapping.click(key);
             }
         } else if (mc.screen != null) {
             mc.keyboardHandler.keyPress(window, key.getValue(), 0, down ? GLFW.GLFW_PRESS : GLFW.GLFW_RELEASE, 0);
