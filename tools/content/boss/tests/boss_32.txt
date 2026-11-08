@@ -1,7 +1,7 @@
 # Run: tools/bctest/run.sh tools/content/boss/tests/boss_32.txt <outdir>
 # Beach Craft 3.2 Leviathan: the altar spends the Tidewarden Key on a real right-click (and not while the boss is
 # awake), the boss keeps deep in its pool (TRACK lines: y + 2.5 is the top of its hitbox, the surface is y 100),
-# a fight in full titanium armour (player health every 10 s, phases 2 and 3 with their tidelings), the rewards land
+# a fight in full titanium armour (player health every 10 s, then healed, so each line is the damage of 10 s, phases 2 and 3 with their tidelings), the rewards land
 # on dry floor (item positions).
 world 7
 rd 5
@@ -13,7 +13,7 @@ cmd execute in raft:raftdim run fill 22 84 -18 58 108 18 minecraft:air
 cmd execute in raft:raftdim run fill 22 84 -18 58 99 18 minecraft:polished_deepslate
 cmd execute in raft:raftdim run fill 32 86 -8 48 99 8 minecraft:water
 cmd execute in raft:raftdim run setblock 31 100 0 raft:leviathan_altar[facing=east]
-cmd execute in raft:raftdim run kill @e[type=!minecraft:player,distance=..80]
+cmd execute in raft:raftdim run kill @e[type=!minecraft:player,x=40,y=100,z=0,distance=..80]
 swait 20
 log KEY_USE
 cmd gamemode survival @p
@@ -59,7 +59,7 @@ track raft:leviathan 64
 swait 20
 track raft:leviathan 64
 hud off
-freecam 46 97 -7 -40 10
+freecam 46 96 -6 43 12
 wait 10 render
 shot 89_leviathan_deep
 freecam 40 104 -12 0 35
@@ -96,6 +96,7 @@ track raft:leviathan 64
 swait 20
 track raft:leviathan 64
 cmd data get entity @p Health
+cmd effect give @p minecraft:instant_health 1 10
 swait 20
 track raft:leviathan 64
 swait 20
@@ -117,6 +118,7 @@ track raft:leviathan 64
 swait 20
 track raft:leviathan 64
 cmd data get entity @p Health
+cmd effect give @p minecraft:instant_health 1 10
 hud on
 wait 5 render
 shot 90_leviathan_fight
@@ -143,6 +145,7 @@ track raft:leviathan 64
 swait 20
 track raft:leviathan 64
 cmd data get entity @p Health
+cmd effect give @p minecraft:instant_health 1 10
 near 32
 swait 20
 track raft:leviathan 64
@@ -165,6 +168,7 @@ track raft:leviathan 64
 swait 20
 track raft:leviathan 64
 cmd data get entity @p Health
+cmd effect give @p minecraft:instant_health 1 10
 near 32
 wait 5 render
 shot 91_phase2_tidelings
@@ -192,6 +196,7 @@ track raft:leviathan 64
 swait 20
 track raft:leviathan 64
 cmd data get entity @p Health
+cmd effect give @p minecraft:instant_health 1 10
 near 32
 swait 20
 track raft:leviathan 64
@@ -214,17 +219,20 @@ track raft:leviathan 64
 swait 20
 track raft:leviathan 64
 cmd data get entity @p Health
+cmd effect give @p minecraft:instant_health 1 10
 near 32
 respawn
+cmd execute in raft:raftdim run tp @a 29.5 100 5.5 -90 10
 # ---- the end: killed by the player, rewards on the floor
 log KILL
 cmd effect give @p minecraft:instant_health 1 10
-cmd execute in raft:raftdim run tp @p 29.5 100 5.5 -90 10
+cmd execute in raft:raftdim run tp @a 29.5 100 5.5 -90 10
+swait 5
 cmd execute in raft:raftdim run damage @e[type=raft:leviathan,limit=1] 5000 minecraft:generic_kill by @p
 swait 140
 near 40
-cmd execute in raft:raftdim as @e[type=minecraft:item,distance=..48] run data get entity @s Pos
-cmd execute in raft:raftdim as @e[type=minecraft:item,distance=..48] run data get entity @s Item
+cmd execute in raft:raftdim as @e[type=minecraft:item,x=40,y=100,z=0,distance=..48] run data get entity @s Pos
+cmd execute in raft:raftdim as @e[type=minecraft:item,x=40,y=100,z=0,distance=..48] run data get entity @s Item
 hud off
 freecam 26 104 10 -120 30
 wait 10 render

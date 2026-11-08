@@ -45,6 +45,9 @@ log ENC_LIGHTHOUSE
 cmd difficulty normal
 scout raft:old_lighthouse 0 0
 cmd execute in raft:raftdim run tp @p {cx} {cy+2} {cz}
+settle 100
+openloot lighthouse 96 peek
+cmd execute in raft:raftdim run tp @p {ox} {oy+1} {oz}
 settle 200
 cmd item replace entity @p armor.head with minecraft:iron_helmet
 cmd item replace entity @p armor.chest with minecraft:iron_chestplate
@@ -57,7 +60,7 @@ near 40
 swait 40
 near 40
 hud off
-freecam {cx+10} {cy+8} {cz+10} 135 30
+freecam {ox+7} {oy+6} {oz+7} 135 35
 wait 10 render
 shot 81_lighthouse_guards
 freecam off
@@ -65,22 +68,25 @@ hud on
 swait 200
 cmd data get entity @p Health
 near 40
-cmd execute in raft:raftdim run damage @e[tag=raft_guard,distance=..64] 500 minecraft:player_attack by @p
+pcmd damage @e[tag=raft_guard,distance=..64] 500 minecraft:player_attack by @p
 swait 20
 near 40
 cmd gamemode creative @p
 cmd effect give @p minecraft:instant_health 1 10
-cmd execute in raft:raftdim run kill @e[type=minecraft:item,distance=..64]
+pcmd kill @e[type=minecraft:item,distance=..64]
 # ---- stage 2: the rusted rig (scavenger gang and the chief)
 log ENC_RIG
 scout raft:rusted_rig 0 0
 cmd execute in raft:raftdim run tp @p {cx} {cy+6} {cz}
+settle 100
+openloot rusted_rig 96 peek
+cmd execute in raft:raftdim run tp @p {ox} {oy+1} {oz}
 settle 200
 cmd gamemode survival @p
 swait 80
 near 48
 hud off
-freecam {cx+14} {cy+14} {cz+14} 135 32
+freecam {ox+7} {oy+6} {oz+7} 135 35
 wait 10 render
 shot 82_rig_guards
 freecam off
@@ -90,60 +96,66 @@ cmd data get entity @p Health
 near 48
 wait 5 render
 shot 83_rig_bossbar
-cmd execute in raft:raftdim run damage @e[tag=raft_guard,distance=..64] 500 minecraft:player_attack by @p
+pcmd damage @e[tag=raft_guard,distance=..64] 500 minecraft:player_attack by @p
 swait 20
 near 48
 cmd gamemode creative @p
 cmd effect give @p minecraft:instant_health 1 10
-cmd execute in raft:raftdim run kill @e[type=minecraft:item,distance=..64]
+pcmd kill @e[type=minecraft:item,distance=..64]
 # ---- stage 3: the galleon (corsairs and the captain, his rally at half health)
 log ENC_GALLEON
 scout raft:wreck_galleon 0 0
 cmd execute in raft:raftdim run tp @p {cx} {cy+4} {cz}
+settle 100
+openloot galleon 96 peek
+cmd execute in raft:raftdim run tp @p {ox} {oy+1} {oz}
 settle 200
 cmd gamemode survival @p
 swait 80
 near 48
 hud off
-freecam {cx+12} {cy+10} {cz+12} 135 30
+freecam {ox+7} {oy+6} {oz+7} 135 35
 wait 10 render
 shot 84_galleon_guards
 freecam off
 hud on
-cmd execute in raft:raftdim run damage @e[type=raft:corsair_captain,limit=1,sort=nearest] 45 minecraft:player_attack by @p
+pcmd damage @e[type=raft:corsair_captain,limit=1,sort=nearest] 45 minecraft:player_attack by @p
 swait 80
 near 48
 wait 5 render
 shot 85_captain_rally
 swait 120
 cmd data get entity @p Health
-cmd execute in raft:raftdim run damage @e[type=raft:corsair_captain,distance=..64] 500 minecraft:player_attack by @p
-cmd execute in raft:raftdim run damage @e[tag=raft_guard,distance=..64] 500 minecraft:player_attack by @p
-cmd execute in raft:raftdim run damage @e[type=raft:drowned_corsair,distance=..64] 500 minecraft:player_attack by @p
+pcmd damage @e[type=raft:corsair_captain,distance=..64] 500 minecraft:player_attack by @p
+pcmd damage @e[tag=raft_guard,distance=..64] 500 minecraft:player_attack by @p
+pcmd damage @e[type=raft:drowned_corsair,distance=..64] 500 minecraft:player_attack by @p
 swait 20
 near 48
 cmd gamemode creative @p
 cmd effect give @p minecraft:instant_health 1 10
-cmd execute in raft:raftdim run kill @e[type=minecraft:item,distance=..64]
+pcmd kill @e[type=minecraft:item,distance=..64]
 # ---- the new enemies up close
 log CLOSEUP
 cmd execute in raft:raftdim run tp @p 0.5 140 0.5 0 0
 cmd execute in raft:raftdim run fill -6 138 -6 6 138 6 minecraft:smooth_stone
 cmd execute in raft:raftdim run fill -6 139 -6 6 145 6 minecraft:air
-cmd execute in raft:raftdim run summon raft:scavenger -2 139 4 {NoAI:1b,Rotation:[180f,0f],HandItems:[{id:"minecraft:iron_sword",count:1}]}
-cmd execute in raft:raftdim run summon raft:scavenger 0 139 4 {NoAI:1b,Rotation:[180f,0f],HandItems:[{id:"minecraft:bow",count:1}]}
-cmd execute in raft:raftdim run summon raft:corsair_captain 2 139 4 {NoAI:1b,Rotation:[180f,0f]}
+cmd execute in raft:raftdim run summon raft:scavenger -1.5 139 0.5 {NoAI:1b,Rotation:[0f,0f],equipment:{mainhand:{id:"minecraft:iron_sword",count:1}}}
+cmd execute in raft:raftdim run summon raft:scavenger 0.5 139 0.5 {NoAI:1b,Rotation:[0f,0f],equipment:{mainhand:{id:"minecraft:bow",count:1}}}
+cmd execute in raft:raftdim run summon raft:corsair_captain 2.5 139 0.5 {NoAI:1b,Rotation:[0f,0f]}
+cmd execute in raft:raftdim run tp @p 0.5 139 -4.5 0 0
 swait 5
-cmd execute in raft:raftdim run tp @p 0.5 139 -1.5 0 8
 hud off
+freecam 0.5 140.7 5.0 180 6
 wait 10 render
 shot 86_scavengers_captain
-cmd execute in raft:raftdim run kill @e[type=!minecraft:player,distance=..20]
+freecam off
+pcmd kill @e[type=!minecraft:player,distance=..20]
 cmd execute in raft:raftdim run fill -6 139 -6 6 145 12 minecraft:water
-cmd execute in raft:raftdim run summon raft:reef_guardian 0 141 5 {NoAI:1b}
+cmd execute in raft:raftdim run summon raft:reef_guardian 0.5 141 0.5 {NoAI:1b,Rotation:[0f,0f]}
 swait 5
-cmd execute in raft:raftdim run tp @p 0.5 141 1 0 10
+freecam 0.5 141.6 4.0 180 6
 wait 10 render
 shot 87_reef_guardian
+freecam off
 hud on
 log DONE
