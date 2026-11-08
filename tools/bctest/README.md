@@ -27,6 +27,9 @@ Script commands (one per line, `#` comments):
 | `sounds <name>` / `sounds off` | log every sound the client starts (event, file, volume, pitch, position) to `<outdir>/<name>/sounds.jsonl`, without recording frames |
 | `music [constant]` | log the music the game would pick now and the audio module's state (`MUSIC` line: situational music, key place, Leviathan fight, open sea, night, playing piece); `constant` removes the pauses between pieces |
 | `log <text>` | marker in the log |
+| `census <half> [x z] [label]` | every structure start in the square of that half size around x z, worked out like the game does (placement, then every site check of the mod) without generating chunks: `CENSUS` lines (per km², closest pair of a kind, closest majors of different kinds), all starts in `<outdir>/census/<label>.txt` |
+| `audit <structure> [x z] [label]` | compares the nearest such structure with its templates block by block (`AUDIT` line, `<outdir>/audit/<label>.txt`); the `FLOAT` part counts the footing columns (bottom of a piece) with water or air under them and sets a camera `{fcx} {fcy} {fcz} {fcyaw} {fcpitch}` beside the worst one |
+| `menu` | logs the open container menu of the player (menu and container class, items): `MENU` line |
 
 Example:
 
@@ -39,6 +42,8 @@ wait 20
 hud off
 shot lighthouse
 ```
+
+`BC_LOOTR=1 tools/bctest/run.sh ...` runs the client with Lootr (optional dependency, `-PwithLootr`).
 
 `settle` logs how long it took (`settle took N s`). Chunk generation on the test machine is slow (3–5 min for a new
 area at render distance 8): use `rd 5` and reuse areas within one script. `BC_JFR=/path/x.jfr` records a profile.
