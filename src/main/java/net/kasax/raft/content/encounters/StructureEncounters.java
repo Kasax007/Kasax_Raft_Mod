@@ -260,9 +260,13 @@ public final class StructureEncounters extends SavedData {
             }
             for (int k = 0; k < count; k++) {
                 BlockPos anchor = anchors.get(next++ % anchors.size());
-                BlockPos pos = spot(level, type, anchor, p.box, p.player, random);
+                BlockPos pos = spot(level, type, anchor, p.box, p.player, random, 7);
                 if (pos == null) {
-                    pos = spot(level, type, center, p.box, p.player, random);
+                    pos = spot(level, type, center, p.box, p.player, random, 12);
+                }
+                if (pos == null) {
+                    // narrow decks and catwalks (the rig): anywhere in the structure where it can stand
+                    pos = anywhere(level, type, p.box, p.player, random);
                 }
                 if (pos != null && this.summon(level, type, guard, pos, random)) {
                     spawned++;
@@ -307,32 +311,47 @@ public final class StructureEncounters extends SavedData {
 
     /** A free spot near the anchor inside the structure where the guard can stand (or swim), not next to the player. */
     private static @Nullable BlockPos spot(ServerLevel level, EntityType<?> type, BlockPos anchor, BoundingBox box,
-                                           ServerPlayer player, RandomSource random) {
-        Medium medium = medium(type);
+                                           ServerPlayer player, RandomSource random, int reach) {
         BoundingBox area = box.inflatedBy(2);
-        for (int tries = 0; tries < 48; tries++) {
-            int r = tries < 24 ? 4 : 7;
-            BlockPos pos = anchor.offset(random.nextInt(2 * r + 1) - r, random.nextInt(6) - 2, random.nextInt(2 * r + 1) - r);
-            if (!area.isInside(pos) || pos.distToCenterSqr(player.position()) < 6 * 6) {
-                continue;
-            }
-            AABB aabb = type.getSpawnAABB(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
-            if (!level.noCollision(aabb)) {
-                continue;
-            }
-            boolean water = level.getFluidState(pos).is(FluidTags.WATER);
-            boolean floor = level.getBlockState(pos.below()).isFaceSturdy(level, pos.below(), Direction.UP);
-            boolean ok = switch (medium) {
-                case WATER -> water && level.getFluidState(pos.above()).is(FluidTags.WATER);
-                case BOTH -> water || floor;
-                case LAND -> floor && !water && level.getFluidState(pos.above()).isEmpty();
-                case AIR -> !water;
-            };
-            if (ok) {
+        for (int tries = 0; tries < 96; tries++) {
+            int r = tries < 32 ? Math.min(4, reach) : reach;
+            BlockPos pos = anchor.offset(random.nextInt(2 * r + 1) - r, random.nextInt(9) - 4, random.nextInt(2 * r + 1) - r);
+            if (area.isInside(pos) && fits(level, type, pos, player)) {
                 return pos;
             }
         }
         return null;
+    }
+
+    private static @Nullable BlockPos anywhere(ServerLevel level, EntityType<?> type, BoundingBox box, ServerPlayer player,
+                                               RandomSource random) {
+        for (int tries = 0; tries < 400; tries++) {
+            BlockPos pos = new BlockPos(box.minX() + random.nextInt(box.getXSpan()), box.minY() + random.nextInt(box.getYSpan()),
+                    box.minZ() + random.nextInt(box.getZSpan()));
+            if (level.getChunkSource().getChunkNow(pos.getX() >> 4, pos.getZ() >> 4) != null && fits(level, type, pos, player)) {
+                return pos;
+            }
+        }
+        return null;
+    }
+
+    /** The guard fits there (free space; water, floor or air as it needs) and is not right next to the player. */
+    private static boolean fits(ServerLevel level, EntityType<?> type, BlockPos pos, ServerPlayer player) {
+        if (pos.distToCenterSqr(player.position()) < 6 * 6) {
+            return false;
+        }
+        AABB aabb = type.getSpawnAABB(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+        if (!level.noCollision(aabb)) {
+            return false;
+        }
+        boolean water = level.getFluidState(pos).is(FluidTags.WATER);
+        boolean floor = level.getBlockState(pos.below()).isFaceSturdy(level, pos.below(), Direction.UP);
+        return switch (medium(type)) {
+            case WATER -> water && level.getFluidState(pos.above()).is(FluidTags.WATER);
+            case BOTH -> water || floor;
+            case LAND -> floor && !water && level.getFluidState(pos.above()).isEmpty();
+            case AIR -> !water;
+        };
     }
 
     private boolean summon(ServerLevel level, EntityType<?> type, Guard guard, BlockPos pos, RandomSource random) {
