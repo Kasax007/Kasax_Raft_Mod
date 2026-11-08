@@ -4,6 +4,8 @@
 
 Behind the scenes some things work the 1.21.1 way (item models that change with the situation, such as the diving helmet with its lamp, the empty harpoon gun or the Energy Staff drawn flat in inventories, use 1.21.1 item properties); in the game they look and play the same.
 
+When you create or open a world, Minecraft 1.21.1 asks you to confirm "experimental settings": it does that for every mod that brings its own dimension. Choose Proceed (or "I know what I'm doing!") and play.
+
 Worlds of the 26.3 version cannot be opened in 1.21.1 (Minecraft never loads worlds of a newer version).
 
 ### New in 3.2.0
