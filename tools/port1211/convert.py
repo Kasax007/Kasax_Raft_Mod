@@ -298,6 +298,8 @@ def main():
         convert_assets(r, stats, extras)
     finish_noise_settings(extras, stats)
     finish_items(extras, stats)
+    from . import layers
+    stats['render_layers'] = layers.build(roots(), os.path.join(SRC, 'resources', 'assets', 'raft', 'port1211', 'render_layers.json'))
     finish_equipment(extras, stats)
     # facts other parts of the mod need
     world = os.path.join(SRC, 'modules', 'world')

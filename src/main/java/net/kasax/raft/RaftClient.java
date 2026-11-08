@@ -21,7 +21,8 @@ public class RaftClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        // Block render layers are picked automatically from the textures in 26.x (no BlockRenderLayerMap).
+        // 1.21.1: the render layers the newer game picks from the textures (tools/port1211/layers.py)
+        net.kasax.raft.compat.client.RenderLayers.init();
 
         MenuScreens.register(ModScreenHandlers.ITEM_COLLECTOR_SCREEN_HANDLER, ItemCollectorScreen::new);
         MenuScreens.register(ModScreenHandlers.MAKESHIFT_BATTERY_SCREEN_HANDLER, MakeshiftBatteryScreen::new);
