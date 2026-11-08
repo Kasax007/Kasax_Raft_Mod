@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "raft:block/shell_candle"
+    },
+    "lit=true": {
+      "model": "raft:block/shell_candle_lit"
+    }
+  }
+}

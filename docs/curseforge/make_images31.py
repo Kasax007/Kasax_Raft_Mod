@@ -124,6 +124,9 @@ def icon(name, size=96):
         'disc': lambda: tex(':item/some_game_music_music_disc'), 'clock': lambda: van('item/clock_00'),
         'journal': lambda: tex('story:item/expedition_journal'), 'helmet': lambda: tex('diving:item/diving_helmet'),
         'orchid': lambda: tex('world:block/tropical_orchid'),
+        'cutlass': lambda: tex('shore:item/cutlass'), 'parrot': lambda: van('item/parrot_spawn_egg'),
+        'parasol': lambda: tex('cozy:item/thatch_parasol'), 'curry': lambda: tex('food:item/island_curry'),
+        'boomerang': lambda: tex('gear:item/boomerang'),
     }
     im = I[name]()
     return im.resize((size, size * im.height // im.width), Image.NEAREST)
@@ -154,13 +157,16 @@ def counts():
 
     lang = lambda m: os.path.join(MODS, m, 'assets', 'raft', 'lang', 'en_us.json')
     bruce = 'entity.raft.shark' in entities(os.path.join(SRC, 'resources', 'assets', 'raft', 'lang', 'en_us.json'))
-    creatures = len(entities(lang('shore'))) + len(entities(lang('marine'))) + int(bruce)
+    opt = lambda m: os.path.isdir(os.path.join(MODS, m))
+    enemies = [e for e in entities(lang('encounters')) if not e.endswith('_spawn_egg')] if opt('encounters') else []
+    creatures = len(entities(lang('shore'))) + len(entities(lang('marine'))) + len(enemies) + int(bruce)
     blocks = lambda m: len(os.listdir(os.path.join(MODS, m, 'assets', 'raft', 'blockstates')))
     lev = open(os.path.join(SRC, 'java', 'net', 'kasax', 'raft', 'content', 'boss', 'entity', 'LeviathanEntity.java')).read()
     health = int(float(re.search(r'MAX_HEALTH,\s*([\d.]+)', lev).group(1)))
     return dict(biomes=len(biomes), story=story, side=side, places=story + side, people=people,
                 new_creatures=creatures - int(bruce), creatures=creatures, building=blocks('building'),
-                decor=blocks('decor'), boss_health=health)
+                decor=blocks('decor'), boss_health=health, enemies=len(enemies),
+                cozy=blocks('cozy') if opt('cozy') else 0, kitchen=blocks('food') if opt('food') else 0)
 
 
 # ----------------------------------------------------------------------------------------------- drawing helpers
@@ -303,7 +309,7 @@ def play_glyph(size, ring=WHITE, tri=SEA):
 
 
 # ----------------------------------------------------------------------------------------------- header
-def header31(name='header_31.png', size=(1600, 500)):
+def header31(name='header_31.png', size=(1600, 500), title='BEACH CRAFT 3.1'):
     """The jungle isle from the air, scaled so the whole island fits; its foggy left edge is extended under the title."""
     w, h = size
     src = shot('b_jungle_air@1.6', enh=(1.02, 1.08, 1.12))
@@ -326,7 +332,7 @@ def header31(name='header_31.png', size=(1600, 500)):
         d.line([(x, 0), (x, h)], fill=NAVY + (int(230 * t ** 1.25),))
     im = ImageOps.posterize(Image.alpha_composite(im, shade).convert('RGB'), 6).convert('RGBA')   # keeps the PNG small
     d = ImageDraw.Draw(im)
-    outlined(d, (72, 70), 'BEACH CRAFT 3.1', font(124), stroke=10)
+    outlined(d, (72, 70), title, font(124), stroke=10)
     outlined(d, (80, 236), 'Tides of the Deep', font(74), fill=SAND, stroke=7)
     tag = 'Minecraft 26.3 · Fabric'
     f = font(36)
@@ -365,9 +371,14 @@ def video_card(name='video.jpg', minutes=21, length='21:27'):
 # ----------------------------------------------------------------------------------------------- at a glance
 NEW_31 = [('helm', 'Build your\nown raft'), ('face', 'Meet the people\nof the sea'), ('disc', 'New sounds\nand music'),
           ('clock', 'Day and night\nat sea'), ('orchid', 'Six new\nisland flowers')]   # changelog-3.1.0+26.3.md
+NEW_33 = [('sail', 'Sail, mast\nand anchor'), ('cutlass', 'Guarded places,\nnew enemies'),
+          ('parrot', 'Islands full\nof animals'), ('parasol', 'Cozy living\nand comfort'),
+          ('curry', 'Crops and an\nisland kitchen'), ('boomerang', 'Gear and\ngadgets')]   # changelogs 3.2.0 and 3.3.0
 
 
-def glance(name='glance.png'):
+def glance(name='glance.png', pill='NEW IN 3.1', new=None, all_blocks=False):
+    """all_blocks: the tile counts the cozy and kitchen blocks of 3.3 too."""
+    new = new or NEW_31
     c = counts()
     print('counts', c)
     tiles = [
@@ -375,7 +386,10 @@ def glance(name='glance.png'):
         ('porthole', c['places'], 'PLACES', '%d story places, %d side places' % (c['story'], c['side'])),
         ('face', c['people'], 'PEOPLE', 'to talk and trade with'),
         ('claw', c['creatures'], 'CREATURES', 'Bruce the shark and %d more' % c['new_creatures']),
-        ('tidestone', c['building'] + c['decor'], 'BLOCKS', '%d building blocks, %d decorations' % (c['building'], c['decor'])),
+        ('tidestone', c['building'] + c['decor'], 'BLOCKS', '%d building blocks, %d decorations' % (c['building'], c['decor']))
+        if not all_blocks else
+        ('tidestone', c['building'] + c['decor'] + c['cozy'] + c['kitchen'], 'BLOCKS',
+         '%d building blocks, %d for decor and kitchen' % (c['building'], c['decor'] + c['cozy'] + c['kitchen'])),
         ('scale', 1, 'BOSS', 'the Leviathan, %d health' % c['boss_health']),
     ]
     cols, tw, th, gx, gy = 3, 368, 216, 16, 16
@@ -408,13 +422,12 @@ def glance(name='glance.png'):
     im.alpha_composite(band, (16, by))
     d = ImageDraw.Draw(im)
     f = font(32)
-    pill = 'NEW IN 3.1'
     pw = d.textlength(pill, font=f) + 44
     d.rounded_rectangle([W // 2 - pw / 2, by - 24, W // 2 + pw / 2, by + 24], 24, fill=SAND, outline=WHITE, width=4)
     d.text((W // 2, by + 2), pill, font=f, fill=NAVY, anchor='mm')
-    n = len(NEW_31)
+    n = len(new)
     cw = (W - 64) / n
-    for k, (ic, label) in enumerate(NEW_31):
+    for k, (ic, label) in enumerate(new):
         cx = 32 + cw * k + cw / 2
         pic = face('nalu', 56) if ic == 'face' else icon(ic, 64)
         im.alpha_composite(pic, (int(cx - pic.width / 2), by + 40 + (64 - pic.height) // 2))
@@ -527,7 +540,7 @@ def flow_start(name='flow_start.png'):
 
 # ----------------------------------------------------------------------------------------------- flow: your own raft
 def flow_raft(name='flow_raft.png'):
-    """Foundations, helm and keys, power, anchor (vessel module: VesselEntity power 1/3/6, changelog 3.1.0)."""
+    """Foundations, helm and keys, power, mooring (vessel module: VesselEntity power 1/3/6, changelogs 3.1.0 and 3.2.0)."""
     M, gapx, ch = 24, 44, 404
     n = 4
     cw = (W - 2 * M - (n - 1) * gapx) // n
@@ -576,11 +589,11 @@ def flow_raft(name='flow_raft.png'):
         c3.alpha_composite(pic, (int(cx - pic.width / 2), 74))
         d3.text((cx, 164), lab, font=small(20), fill=INK, anchor='mm')
         outlined(d3, (cx, 202), val, font(40), fill=WHITE, stroke=5, stroke_fill=SEA, anchor='mm')
-    para(d3, (20, 240), 'Stack sails for a taller mast. The motor runs on furnace fuel. Heavy rafts are slower.',
+    para(d3, (20, 240), 'Set sails next to a mast: they join into one sheet. The motor takes furnace fuel. Heavy rafts are slower.',
          small(21), cw - 36)
     cards.append(c3)
     # 4 anchor
-    c4 = icon_card(cw, ch, 4, 'DROP ANCHOR')
+    c4 = icon_card(cw, ch, 4, 'MOOR')
     d4 = ImageDraw.Draw(c4)
     r = 56
     cx, cy = cw // 2, 128
@@ -588,7 +601,7 @@ def flow_raft(name='flow_raft.png'):
     d4.ellipse([cx - r, cy - r, cx + r, cy + r], fill=SEA)
     an = anchor_glyph(84)
     c4.alpha_composite(an, (cx - 42, cy - 44))
-    para(d4, (20, 214), 'Use the wheel again: the raft turns back into blocks, just as it was.', small(21), cw - 36)
+    para(d4, (20, 214), 'Sneak and use the wheel: the raft turns back into blocks, just as it was.', small(21), cw - 36)
     cards.append(c4)
     x = M
     xs = []
@@ -746,10 +759,14 @@ if __name__ == '__main__':
         print(counts())
     if 'header' in what:
         header31()
+    if 'header33' in what:
+        header31('header_33.png', title='BEACH CRAFT 3.3')
     if 'video' in what:
         video_card()
     if 'glance' in what:
         glance()
+    if 'glance33' in what:
+        glance('glance_33.png', 'NEW IN 3.2 AND 3.3', NEW_33, all_blocks=True)
     if 'flow_start' in what:
         flow_start()
     if 'flow_raft' in what:

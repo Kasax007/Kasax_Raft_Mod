@@ -1,0 +1,22 @@
+{
+  "values": [
+    {
+      "id": "raft:wreck_galleon",
+      "required": false
+    },
+    {
+      "id": "raft:wreck_cargo_ship",
+      "required": false
+    },
+    {
+      "id": "raft:wreck_fishing_boat",
+      "required": false
+    },
+    {
+      "id": "raft:sunken_plane",
+      "required": false
+    },
+    "minecraft:shipwreck",
+    "minecraft:shipwreck_beached"
+  ]
+}

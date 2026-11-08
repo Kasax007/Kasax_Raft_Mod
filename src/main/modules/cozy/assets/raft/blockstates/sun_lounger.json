@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "raft:block/sun_lounger"
+    },
+    "facing=east": {
+      "model": "raft:block/sun_lounger",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "raft:block/sun_lounger",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "raft:block/sun_lounger",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "facing=north,part=single": {
+      "model": "raft:block/palm_bench_single"
+    },
+    "facing=east,part=single": {
+      "model": "raft:block/palm_bench_single",
+      "y": 90
+    },
+    "facing=south,part=single": {
+      "model": "raft:block/palm_bench_single",
+      "y": 180
+    },
+    "facing=west,part=single": {
+      "model": "raft:block/palm_bench_single",
+      "y": 270
+    },
+    "facing=north,part=left": {
+      "model": "raft:block/palm_bench_left"
+    },
+    "facing=east,part=left": {
+      "model": "raft:block/palm_bench_left",
+      "y": 90
+    },
+    "facing=south,part=left": {
+      "model": "raft:block/palm_bench_left",
+      "y": 180
+    },
+    "facing=west,part=left": {
+      "model": "raft:block/palm_bench_left",
+      "y": 270
+    },
+    "facing=north,part=center": {
+      "model": "raft:block/palm_bench_center"
+    },
+    "facing=east,part=center": {
+      "model": "raft:block/palm_bench_center",
+      "y": 90
+    },
+    "facing=south,part=center": {
+      "model": "raft:block/palm_bench_center",
+      "y": 180
+    },
+    "facing=west,part=center": {
+      "model": "raft:block/palm_bench_center",
+      "y": 270
+    },
+    "facing=north,part=right": {
+      "model": "raft:block/palm_bench_right"
+    },
+    "facing=east,part=right": {
+      "model": "raft:block/palm_bench_right",
+      "y": 90
+    },
+    "facing=south,part=right": {
+      "model": "raft:block/palm_bench_right",
+      "y": 180
+    },
+    "facing=west,part=right": {
+      "model": "raft:block/palm_bench_right",
+      "y": 270
+    }
+  }
+}

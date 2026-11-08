@@ -1,0 +1,41 @@
+{
+  "values": [
+    "#raft:cozy_seats",
+    {
+      "id": "raft:deck_chair",
+      "required": false
+    },
+    {
+      "id": "raft:driftwood_chair",
+      "required": false
+    },
+    {
+      "id": "raft:palm_chair",
+      "required": false
+    },
+    {
+      "id": "raft:cushion_white",
+      "required": false
+    },
+    {
+      "id": "raft:cushion_red",
+      "required": false
+    },
+    {
+      "id": "raft:cushion_blue",
+      "required": false
+    },
+    {
+      "id": "raft:cushion_yellow",
+      "required": false
+    },
+    {
+      "id": "raft:cushion_green",
+      "required": false
+    },
+    {
+      "id": "raft:hammock",
+      "required": false
+    }
+  ]
+}

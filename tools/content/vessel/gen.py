@@ -545,7 +545,7 @@ Open chests and furnaces, craft, farm, flip levers, build and break: the raft's 
 * Raft Motor: the most power. Set it on the stern edge and click it to put furnace fuel in (or take it out), even while you sail.
 Heavy rafts need more power: they are slower and turn more slowly.
 # Anchor
-Set a Anchor Winch on the deck edge, anchor over the side. Use it to drop the anchor: the raft stops and holds its position, even in a current. Use it again to raise it and sail on.
+Set an Anchor Winch on the deck edge, anchor over the side. Use it to drop the anchor: the raft stops and holds its position, even in a current. Use it again to raise it and sail on.
 # Good to know
 * Up to 1024 blocks and 32 blocks across to set sail; at sea it can grow a little.
 * A raft needs water under it. Land, ice and piers stop it.

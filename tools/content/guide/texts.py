@@ -55,12 +55,12 @@ The Raft Dimension Teleporter (5 titanium ingots and 2 Ancient Energy) takes you
 T['survival'] = """\
 Out here you need a floor under your feet, clean water and a warm meal. Almost everything comes from the sea.
 # Debris
-The current carries planks, palm leaves, plastic and scrap metal past you, from west to east. Now and then lost loot floats by, and rarely a Message in a Bottle or a Supply Barrel. Use them to open them.
+Now and then the current carries a plank, palm leaves, plastic or scrap metal past you, from west to east. Most materials come from the islands and from the chests of the places and their guards. Rarely a Message in a Bottle or a Supply Barrel floats by. Use them to open them.
 # Plastic Hook
 Hold use to pull floating items towards you, up to 12 blocks away.
 # Item Catcher
-Put it in the water and it catches the debris that drifts into it. It holds one kind of item at a time, so empty it often. Hoppers can take the catch out.
-With an Item Catcher Net inside, it also fishes up Unrefined Ocean Garbage about every 30 seconds. A net lasts 32 catches. Smelt the garbage into a Trash Cube and use the cube for 1 to 3 surprises.
+Build it into a raft of your own: it only catches while the raft sails. It picks up the debris it sails through and now and then nets a piece out of the sea, more the faster you sail. Standing still, with the anchor down or on land it catches nothing. It holds one kind of item at a time, so empty it often. Hoppers can take the catch out.
+With an Item Catcher Net inside, it also fishes up Unrefined Ocean Garbage while you sail, faster at speed. A net lasts 32 catches. Smelt the garbage into a Trash Cube and use the cube for 1 to 3 surprises.
 # Foundations
 Seven planks with rope in the top and bottom middle make 4 Raft Foundations. Rope comes from 2 palm leaves or 3 string. A foundation and 2 scrap metal make a Reinforced Foundation.
 # Sharks!

@@ -1,0 +1,19 @@
+{
+  "values": [
+    "raft:teak_table",
+    "raft:bamboo_table",
+    {
+      "id": "raft:driftwood_table",
+      "required": false
+    },
+    {
+      "id": "raft:palm_table",
+      "required": false
+    },
+    {
+      "id": "raft:chart_table",
+      "required": false
+    },
+    "raft:serving_plate"
+  ]
+}

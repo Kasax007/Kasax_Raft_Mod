@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/spyglass_in_hand",
+  "textures": {
+    "spyglass": "raft:item/captains_spyglass_model",
+    "particle": "raft:item/captains_spyglass_model"
+  }
+}

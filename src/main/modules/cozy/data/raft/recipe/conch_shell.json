@@ -1,0 +1,23 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:registry_contains",
+      "registry": "minecraft:item",
+      "values": [
+        "raft:seashell"
+      ]
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "raft:seashell",
+    "raft:seashell",
+    "raft:seashell",
+    "minecraft:pink_dye"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:conch_shell"
+  }
+}

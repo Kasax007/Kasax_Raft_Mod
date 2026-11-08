@@ -1,0 +1,15 @@
+{
+  "boomerang.throw": {
+    "sounds": [
+      {
+        "name": "minecraft:item/trident/throw1",
+        "pitch": 1.3
+      },
+      {
+        "name": "minecraft:item/trident/throw2",
+        "pitch": 1.3
+      }
+    ],
+    "subtitle": "subtitles.raft.boomerang.throw"
+  }
+}

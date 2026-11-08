@@ -1,0 +1,12 @@
+{
+  "values": [
+    "raft:shell_helmet",
+    "raft:shell_chestplate",
+    "raft:shell_leggings",
+    "raft:shell_boots",
+    "raft:explorer_helmet",
+    "raft:explorer_chestplate",
+    "raft:explorer_leggings",
+    "raft:explorer_boots"
+  ]
+}

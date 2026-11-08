@@ -1,0 +1,22 @@
+{
+  "values": [
+    "raft:palm_shelf",
+    "raft:teak_shelf",
+    "raft:weathered_shelf",
+    "raft:wicker_basket",
+    {
+      "id": "raft:wooden_crate",
+      "required": false
+    },
+    {
+      "id": "raft:treasure_chest",
+      "required": false
+    },
+    {
+      "id": "raft:driftwood_shelf",
+      "required": false
+    },
+    "minecraft:chest",
+    "minecraft:barrel"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_glass_pane_noside",
+  "textures": {
+    "pane": "raft:block/driftwood_lattice",
+    "edge": "raft:block/driftwood_lattice_edge"
+  }
+}

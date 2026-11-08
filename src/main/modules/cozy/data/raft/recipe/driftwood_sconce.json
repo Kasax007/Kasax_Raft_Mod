@@ -1,0 +1,27 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:registry_contains",
+      "registry": "minecraft:item",
+      "values": [
+        "raft:stripped_driftwood_log"
+      ]
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "C": "minecraft:candle",
+    "I": "minecraft:copper_nugget",
+    "L": "raft:stripped_driftwood_log"
+  },
+  "pattern": [
+    "C",
+    "I",
+    "L"
+  ],
+  "result": {
+    "count": 2,
+    "id": "raft:driftwood_sconce"
+  }
+}

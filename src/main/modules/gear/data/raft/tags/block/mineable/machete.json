@@ -1,0 +1,18 @@
+{
+  "values": [
+    "#minecraft:leaves",
+    "#minecraft:replaceable_by_trees",
+    "minecraft:bamboo",
+    "minecraft:vine",
+    "minecraft:cobweb",
+    "minecraft:sugar_cane",
+    "minecraft:melon",
+    "minecraft:pumpkin",
+    "minecraft:kelp",
+    "minecraft:kelp_plant",
+    "minecraft:seagrass",
+    "minecraft:tall_seagrass",
+    "#minecraft:wool_carpets",
+    "#minecraft:crops"
+  ]
+}

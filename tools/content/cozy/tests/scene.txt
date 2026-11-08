@@ -1,0 +1,173 @@
+# Beach Craft 3.3 showcase scene for the CurseForge page and the visual check of the cozy blocks in use:
+# a beach house deck by the sea, by day and at dusk, a player resting, the kitchen and a served plate.
+deadline 25
+world cozyscene
+rd 5
+gui 2
+chat off
+cmd gamerule spawn_monsters false
+cmd gamerule random_tick_speed 0
+cmd tp @p 6.5 156 -14 0 20
+cmd fill -14 140 -18 26 152 18 air
+cmd fill -14 153 -18 26 166 18 air
+settle 60
+cmd fill -14 140 -18 26 146 18 minecraft:sandstone
+cmd fill -15 140 -19 27 149 -3 minecraft:sandstone
+cmd fill -14 147 -18 26 149 -4 minecraft:water
+cmd fill -14 147 -3 26 148 18 minecraft:sandstone
+cmd fill -14 149 -3 26 149 18 minecraft:sand
+cmd fill 0 149 2 12 149 10 raft:palm_planks
+cmd fill 0 150 10 12 153 10 raft:palm_planks
+cmd fill 4 151 10 5 152 10 raft:driftwood_lattice[east=true,west=true]
+cmd setblock 4 151 10 raft:driftwood_lattice[east=true,west=false]
+cmd setblock 4 152 10 raft:driftwood_lattice[east=true,west=false]
+cmd setblock 5 151 10 raft:driftwood_lattice[east=false,west=true]
+cmd setblock 5 152 10 raft:driftwood_lattice[east=false,west=true]
+cmd fill 0 150 6 0 153 6 raft:stripped_palm_log
+cmd fill 12 150 6 12 153 6 raft:stripped_palm_log
+cmd fill 0 154 6 12 154 10 raft:palm_thatch_slab
+cmd setblock 3 153 7 raft:hurricane_lantern[hanging=true]
+cmd setblock 9 153 7 raft:hurricane_lantern[hanging=true]
+cmd setblock 1 151 9 raft:fishing_net[facing=north]
+cmd setblock 2 152 9 raft:shell_garland[facing=north]
+cmd setblock 3 152 9 raft:shell_garland[facing=north]
+cmd setblock 7 150 9 raft:surfboard_red[facing=north,half=lower]
+cmd setblock 7 151 9 raft:surfboard_red[facing=north,half=upper]
+cmd setblock 8 150 9 raft:surfboard_blue[facing=north,half=lower]
+cmd setblock 8 151 9 raft:surfboard_blue[facing=north,half=upper]
+cmd setblock 10 152 9 raft:fish_trophy[facing=north]
+cmd setblock 11 152 9 raft:driftwood_sconce[facing=north]
+cmd setblock 6 152 9 raft:palm_shelf[facing=north]
+cmd item replace block 6 152 9 container.0 with raft:conch_shell
+cmd item replace block 6 152 9 container.1 with raft:coconut
+cmd item replace block 6 152 9 container.2 with raft:banana_bread
+cmd setblock 1 150 8 raft:potted_monstera
+cmd setblock 2 150 7 raft:rattan_armchair[facing=east]
+cmd setblock 3 150 7 raft:teak_table
+cmd setblock 3 151 7 raft:serving_plate
+cmd data merge block 3 151 7 {food:{id:'raft:sushi_roll',count:3}}
+cmd setblock 4 150 7 raft:rattan_armchair[facing=west]
+cmd fill 5 150 4 8 150 6 raft:rope_rug
+cmd setblock 6 150 8 raft:teak_bench[facing=north]
+cmd setblock 7 150 8 raft:teak_bench[facing=north]
+cmd setblock 8 150 8 raft:teak_bench[facing=north]
+cmd setblock 10 150 8 raft:wicker_basket[facing=north]
+cmd setblock 11 150 8 raft:steel_drum
+cmd setblock 11 150 6 raft:coral_vase
+cmd setblock 0 150 3 raft:flower_box[facing=east]
+cmd setblock 0 150 5 raft:flower_box[facing=east]
+cmd setblock 9 150 3 raft:bar_stool
+cmd setblock 10 150 3 raft:bamboo_table
+cmd setblock 10 151 3 raft:conch_shell[facing=north]
+cmd setblock 11 150 3 raft:bar_stool
+cmd setblock 6 151 7 raft:shell_candle
+cmd setblock 12 150 2 raft:coconut_planter
+cmd setblock 4 150 3 raft:sea_glass_lamp
+cmd setblock 2 150 -1 raft:beach_towel_red
+cmd setblock 2 150 -2 raft:beach_towel_red
+cmd setblock 9 150 -1 raft:beach_towel_blue
+cmd setblock 9 150 -2 raft:beach_towel_blue
+cmd setblock 4 150 -1 raft:sun_lounger[facing=north]
+cmd setblock 6 150 -1 raft:sun_lounger[facing=north]
+cmd setblock 5 150 0 raft:thatch_parasol[half=lower]
+cmd setblock 5 151 0 raft:thatch_parasol[half=upper]
+cmd setblock 14 150 4 minecraft:campfire
+cmd setblock 14 151 4 raft:cooking_pot[facing=north,contents=ready]
+cmd setblock 15 150 6 raft:fish_trap[facing=west]
+cmd setblock 13 150 6 raft:wicker_basket[facing=north,open=true]
+cmd fill 4 149 -10 6 149 -4 raft:palm_planks
+cmd fill 4 147 -10 4 148 -10 raft:stripped_palm_log
+cmd fill 6 147 -10 6 148 -10 raft:stripped_palm_log
+cmd setblock 4 150 -9 raft:dock_bollard
+cmd setblock 6 150 -9 raft:dock_bollard
+cmd setblock 6 150 -6 raft:hurricane_lantern
+cmd setblock 8 149 -7 raft:fish_trap[facing=north,waterlogged=true]
+cmd setblock 2 149 -6 raft:sea_grapes_crop[age=3]
+cmd setblock 3 149 -7 raft:sea_grapes_crop[age=2]
+cmd fill 16 149 -2 21 149 1 minecraft:farmland
+cmd setblock 16 150 -2 raft:sweet_potatoes[age=3]
+cmd setblock 16 150 1 raft:sweet_potatoes[age=3]
+cmd setblock 17 150 -2 raft:chili_crop[age=3]
+cmd setblock 17 150 1 raft:chili_crop[age=3]
+cmd setblock 20 150 -2 raft:banana_crop[age=3]
+cmd setblock 20 150 1 raft:banana_crop[age=3]
+cmd setblock 21 150 -2 raft:rice_crop[age=3]
+cmd setblock 21 150 1 raft:rice_crop[age=3]
+cmd setblock 18 150 -1 raft:wild_banana
+cmd setblock 19 150 0 raft:wild_chili
+swait 40
+hud off
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 6.5 156 -13 0 20
+swait 3
+pose 6.5 156 -13 0 20
+wait 8 render
+shot 10_scene_day
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p -8 155 -6 -50 18
+swait 3
+pose -8 155 -6 -50 18
+wait 8 render
+shot 11_scene_side
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 5.5 152.5 -6 0 18
+swait 3
+pose 5.5 152.5 -6 0 18
+wait 8 render
+shot 16_beach
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 6 152 3.5 0 5
+swait 3
+pose 6 152 3.5 0 5
+wait 8 render
+shot 17_wall
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 18.5 153 -6 0 30
+swait 3
+pose 18.5 153 -6 0 30
+wait 8 render
+shot 18_garden
+cmd time set 12900
+swait 10
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 6.5 155 -11 0 18
+swait 3
+pose 6.5 155 -11 0 18
+wait 8 render
+shot 12_scene_dusk
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 6 152 2.5 0 8
+swait 3
+pose 6 152 2.5 0 8
+wait 6 render
+shot 12b_dusk_inside
+cmd time set 6000
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 14.5 153 1.0 0 40
+swait 3
+pose 14.5 153 1.0 0 40
+wait 6 render
+shot 14_kitchen
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 3.5 152.6 5.4 0 45
+swait 3
+pose 3.5 152.6 5.4 0 45
+wait 6 render
+shot 15_plate
+cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this",predicate:{vehicle:{}}} run ride @s dismount
+cmd tp @p 7.5 150 6.3 0 30
+swait 3
+pose 7.5 150 6.3 0 30
+face 7.5 150.5 8.5
+swait 3
+wait 2 render
+use
+swait 80
+hud on
+third on
+face 7.5 151.6 10
+wait 8 render
+shot 13_resting
+third off
+check rested_in_scene | execute as @p if predicate {type:'minecraft:entity_properties',entity:'this',predicate:{effects:{'raft:rested':{duration:{min:12000}}}}}
+checks

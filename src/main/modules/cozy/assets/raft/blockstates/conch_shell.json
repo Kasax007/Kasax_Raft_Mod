@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "raft:block/conch_shell"
+    },
+    "facing=east": {
+      "model": "raft:block/conch_shell",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "raft:block/conch_shell",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "raft:block/conch_shell",
+      "y": 270
+    }
+  }
+}

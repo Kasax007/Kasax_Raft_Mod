@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "B": "minecraft:bamboo",
+    "S": "minecraft:string"
+  },
+  "pattern": [
+    "BBB",
+    "SBS",
+    "BBB"
+  ],
+  "result": {
+    "count": 2,
+    "id": "raft:bamboo_blinds"
+  }
+}

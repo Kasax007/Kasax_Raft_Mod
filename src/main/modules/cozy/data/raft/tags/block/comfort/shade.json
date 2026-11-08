@@ -1,0 +1,17 @@
+{
+  "values": [
+    "raft:thatch_parasol",
+    {
+      "id": "raft:beach_umbrella_red",
+      "required": false
+    },
+    {
+      "id": "raft:beach_umbrella_blue",
+      "required": false
+    },
+    {
+      "id": "raft:beach_umbrella_yellow",
+      "required": false
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "raft:block/sea_glass_lamp"
+    },
+    "lit=true": {
+      "model": "raft:block/sea_glass_lamp_lit"
+    }
+  }
+}

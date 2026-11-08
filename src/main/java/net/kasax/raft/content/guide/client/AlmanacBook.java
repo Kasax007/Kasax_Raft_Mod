@@ -101,6 +101,29 @@ final class AlmanacBook {
         list.add(new Chapter("leviathan", "raft:leviathan_scale", boss));
         list.add(simple("titanium", "raft:titanium_ingot", "raft:titanium_ore", "raft:raw_titanium",
                 "raft:titanium_ingot", "raft:titanium_chestplate", "raft:metal_detector", "raft:receiver", "raft:cutlass"));
+        // Beach Craft 3.3: cozy living, the island kitchen and new gear
+        list.add(new Chapter("cozy", "raft:hurricane_lantern", List.of(
+                Section.text("cozy", "raft:palm_bench", "raft:rattan_armchair", "raft:hurricane_lantern",
+                        "raft:beach_towel_blue", "raft:potted_monstera", "raft:thatch_parasol", "raft:steel_drum"),
+                new Section("furniture", "cozy.furniture", List.of("raft:teak_bench", "raft:bar_stool", "raft:sun_lounger",
+                        "raft:teak_table", "raft:serving_plate", "raft:palm_shelf", "raft:wicker_basket"), null, true, false),
+                new Section("lights", "cozy.lights", List.of("raft:shell_candle", "raft:sea_glass_lamp", "raft:driftwood_sconce",
+                        "raft:conch_shell", "raft:surfboard_red", "raft:fish_trophy", "raft:shell_tiles"), null, true, false))));
+        list.add(new Chapter("kitchen", "raft:island_curry", List.of(
+                Section.text("kitchen", "raft:sweet_potato", "raft:chili_pepper", "raft:banana", "raft:rice",
+                        "raft:sea_grapes", "raft:wild_banana", "raft:crop_plot"),
+                new Section("pot", "kitchen.pot", List.of("raft:cooking_pot", "raft:island_curry", "raft:seafood_chowder",
+                        "raft:sweet_potato_soup", "raft:fish_trap", "raft:fish_bait", "minecraft:cod"), null, true, false),
+                new Section("dishes", "kitchen.dishes", List.of("raft:sushi_roll", "raft:banana_bread", "raft:fruit_salad",
+                        "raft:chili_crab", "raft:tropical_smoothie", "raft:coconut_ice_cream", "raft:baked_sweet_potato"),
+                        null, true, false))));
+        list.add(new Chapter("gear", "raft:boomerang", List.of(
+                Section.text("gear", "raft:shark_tooth_spear", "raft:boomerang", "raft:machete"),
+                new Section("armour", "gear.armour", List.of("raft:shell_helmet", "raft:shell_chestplate", "raft:shell_leggings",
+                        "raft:shell_boots", "raft:explorer_helmet", "raft:explorer_chestplate", "raft:explorer_boots"),
+                        null, true, false),
+                new Section("tools", "gear.tools", List.of("raft:wreck_compass", "raft:captains_spyglass", "raft:fish_bait",
+                        "raft:golden_lure", "minecraft:fishing_rod"), null, true, false))));
         list.add(simple("tips", "raft:coconut", "raft:coconut", "raft:hammock", "raft:scarecrow", "raft:bubble_vent",
                 "raft:seashell", "raft:supply_barrel"));
         return list;

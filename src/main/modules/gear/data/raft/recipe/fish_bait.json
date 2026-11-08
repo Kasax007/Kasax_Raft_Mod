@@ -1,0 +1,26 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:registry_contains",
+      "registry": "minecraft:item",
+      "values": [
+        "raft:crab_claw"
+      ]
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    [
+      "minecraft:rotten_flesh",
+      "minecraft:spider_eye",
+      "raft:crab_claw",
+      "minecraft:cod"
+    ],
+    "minecraft:kelp"
+  ],
+  "result": {
+    "count": 4,
+    "id": "raft:fish_bait"
+  }
+}

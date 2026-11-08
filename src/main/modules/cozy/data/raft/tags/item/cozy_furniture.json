@@ -1,0 +1,11 @@
+{
+  "values": [
+    "raft:palm_bench",
+    "raft:teak_bench",
+    "raft:bar_stool",
+    "raft:sun_lounger",
+    "raft:rattan_armchair",
+    "raft:teak_table",
+    "raft:bamboo_table"
+  ]
+}

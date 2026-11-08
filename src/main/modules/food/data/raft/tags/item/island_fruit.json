@@ -1,0 +1,13 @@
+{
+  "values": [
+    "raft:banana",
+    {
+      "id": "raft:pineapple",
+      "required": false
+    },
+    {
+      "id": "raft:coconut",
+      "required": false
+    }
+  ]
+}

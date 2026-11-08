@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "raft:fish_bait",
+    "minecraft:gold_nugget",
+    "minecraft:gold_nugget",
+    "minecraft:gold_nugget"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raft:golden_lure"
+  }
+}

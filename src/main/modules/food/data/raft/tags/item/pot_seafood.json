@@ -1,0 +1,15 @@
+{
+  "values": [
+    "minecraft:cod",
+    "minecraft:salmon",
+    "minecraft:tropical_fish",
+    {
+      "id": "raft:crab_claw",
+      "required": false
+    },
+    {
+      "id": "raft:eel_fillet",
+      "required": false
+    }
+  ]
+}

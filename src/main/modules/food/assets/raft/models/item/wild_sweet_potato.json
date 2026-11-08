@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "raft:block/sweet_potatoes_stage3"
+  }
+}

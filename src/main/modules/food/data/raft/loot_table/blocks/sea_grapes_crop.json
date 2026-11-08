@@ -1,0 +1,39 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "raft:sea_grapes"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "raft:sea_grapes",
+          "modifier": {
+            "count": {
+              "type": "minecraft:uniform",
+              "min": 1,
+              "max": 2
+            },
+            "type": "minecraft:set_count"
+          }
+        }
+      ],
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "raft:sea_grapes_crop",
+        "state": {
+          "age": "3"
+        }
+      }
+    }
+  ],
+  "random_sequence": "raft:blocks/sea_grapes_crop"
+}

@@ -1,0 +1,49 @@
+{
+  "variants": {
+    "facing=north,contents=empty": {
+      "model": "raft:block/cooking_pot_empty"
+    },
+    "facing=east,contents=empty": {
+      "model": "raft:block/cooking_pot_empty",
+      "y": 90
+    },
+    "facing=south,contents=empty": {
+      "model": "raft:block/cooking_pot_empty",
+      "y": 180
+    },
+    "facing=west,contents=empty": {
+      "model": "raft:block/cooking_pot_empty",
+      "y": 270
+    },
+    "facing=north,contents=cooking": {
+      "model": "raft:block/cooking_pot_cooking"
+    },
+    "facing=east,contents=cooking": {
+      "model": "raft:block/cooking_pot_cooking",
+      "y": 90
+    },
+    "facing=south,contents=cooking": {
+      "model": "raft:block/cooking_pot_cooking",
+      "y": 180
+    },
+    "facing=west,contents=cooking": {
+      "model": "raft:block/cooking_pot_cooking",
+      "y": 270
+    },
+    "facing=north,contents=ready": {
+      "model": "raft:block/cooking_pot_ready"
+    },
+    "facing=east,contents=ready": {
+      "model": "raft:block/cooking_pot_ready",
+      "y": 90
+    },
+    "facing=south,contents=ready": {
+      "model": "raft:block/cooking_pot_ready",
+      "y": 180
+    },
+    "facing=west,contents=ready": {
+      "model": "raft:block/cooking_pot_ready",
+      "y": 270
+    }
+  }
+}

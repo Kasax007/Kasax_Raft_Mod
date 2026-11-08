@@ -1,0 +1,17 @@
+{
+  "values": [
+    "minecraft:fire",
+    "minecraft:soul_fire",
+    "minecraft:magma_block",
+    "minecraft:lava",
+    "#minecraft:campfires",
+    {
+      "id": "raft:brazier",
+      "required": false
+    },
+    {
+      "id": "raft:simple_grill",
+      "required": false
+    }
+  ]
+}

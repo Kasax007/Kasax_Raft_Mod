@@ -1,0 +1,17 @@
+{
+  "values": [
+    "raft:serving_plate",
+    "raft:hurricane_lantern",
+    "raft:sea_glass_lamp",
+    "raft:steel_drum",
+    "raft:dock_bollard",
+    "raft:shell_tiles",
+    "raft:shell_tile_stairs",
+    "raft:shell_tile_slab",
+    "raft:shell_tile_wall",
+    "raft:pumice_bricks",
+    "raft:pumice_brick_stairs",
+    "raft:pumice_brick_slab",
+    "raft:pumice_brick_wall"
+  ]
+}

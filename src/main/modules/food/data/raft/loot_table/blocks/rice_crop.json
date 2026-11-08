@@ -1,0 +1,43 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "raft:rice"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "raft:rice",
+          "modifier": {
+            "enchantment": "minecraft:fortune",
+            "formula": "minecraft:binomial_with_bonus_count",
+            "parameters": {
+              "extra": 2,
+              "probability": 0.5714286
+            },
+            "type": "minecraft:apply_bonus"
+          }
+        }
+      ],
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "raft:rice_crop",
+        "state": {
+          "age": "3"
+        }
+      }
+    }
+  ],
+  "random_sequence": "raft:blocks/rice_crop",
+  "modifier": {
+    "type": "minecraft:explosion_decay"
+  }
+}

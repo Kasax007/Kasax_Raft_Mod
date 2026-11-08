@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "hanging=false,lit=false": {
+      "model": "raft:block/hurricane_lantern"
+    },
+    "hanging=false,lit=true": {
+      "model": "raft:block/hurricane_lantern_lit"
+    },
+    "hanging=true,lit=false": {
+      "model": "raft:block/hurricane_lantern_hanging"
+    },
+    "hanging=true,lit=true": {
+      "model": "raft:block/hurricane_lantern_hanging_lit"
+    }
+  }
+}
