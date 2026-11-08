@@ -129,10 +129,15 @@ freecam off
 hud on
 # seated at the helm (it took the player when it set sail): sneak + use on the wheel moors the raft
 log SNEAK_USE_SEATED_HELM
-cmd data get entity @e[type=raft:vessel,limit=1] Passengers
-face 0.5 100.75 -1.8
-swait 3
+# seated: sneaking gets the helmsman up onto the stool, the wheel right in front; sneak + use on it moors
 sneakuse
+swait 5
+face 0.5 100.7 -2.5
+swait 3
+aim
+sneakuse
+swait 2
+aim
 swaitfor 600 execute in raft:raftdim unless entity @e[type=raft:vessel]
 find raft:helm 64
 log SET_SAIL_2
@@ -239,13 +244,19 @@ cmd execute as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^ ^1.
 swait 5
 face {px} 100.7 {pz}
 swait 3
+aim
 use
 swait 20
-cmd data get entity @e[type=raft:vessel,limit=1] Passengers
+aim
 log SNEAK_USE_SEATED
-face {px} 100.75 {pz+0.15}
-swait 3
 sneakuse
+swait 5
+face {px} 100.7 {pz}
+swait 3
+aim
+sneakuse
+swait 2
+aim
 swait 60
 count raft:raftdim
 swaitfor 600 execute in raft:raftdim unless entity @e[type=raft:vessel]
