@@ -209,7 +209,7 @@ cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this"
 cmd tp @p 22.5 201 -1.0 0 60
 swait 3
 pose 22.5 201 -1.0 0 60
-face 22.5 199.3 1.5
+face 22.5 199.15 1.5
 swait 2
 wait 2 render
 use
@@ -319,7 +319,7 @@ cmd execute as @p if predicate {type:"minecraft:entity_properties",entity:"this"
 cmd tp @p 27.5 201 -1.2 0 60
 swait 3
 pose 27.5 201 -1.2 0 60
-face 27.5 198.99 0.5
+face 27.5 199.0 0.6
 swait 2
 wait 2 render
 use
@@ -591,6 +591,7 @@ cmd item replace entity @p hotbar.0 with minecraft:kelp 2
 cmd item replace entity @p hotbar.1 with minecraft:rotten_flesh 2
 key inventory
 wait 6
+wait 4 render
 click 496 494
 wait 2
 click 676 246

@@ -8,12 +8,14 @@ chat off
 cmd gamerule spawn_monsters false
 cmd gamerule random_tick_speed 0
 cmd tp @p 6.5 156 -14 0 20
-cmd fill -14 140 -18 26 166 18 air
+cmd fill -14 140 -18 26 152 18 air
+cmd fill -14 153 -18 26 166 18 air
 settle 60
-cmd fill -14 140 -18 26 146 18 minecraft:sand
+cmd fill -14 140 -18 26 146 18 minecraft:sandstone
+cmd fill -15 140 -19 27 149 -3 minecraft:sandstone
 cmd fill -14 147 -18 26 149 -4 minecraft:water
-cmd fill -14 147 -3 26 149 18 minecraft:sand
-cmd fill -14 147 -18 -14 149 18 minecraft:sand
+cmd fill -14 147 -3 26 148 18 minecraft:sandstone
+cmd fill -14 149 -3 26 149 18 minecraft:sand
 cmd fill 0 149 2 12 149 10 raft:palm_planks
 cmd fill 0 150 10 12 153 10 raft:palm_planks
 cmd fill 4 151 10 5 152 10 raft:driftwood_lattice[east=true,west=true]
