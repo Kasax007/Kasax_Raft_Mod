@@ -68,4 +68,7 @@ Exploring was a scavenger hunt without a fight until the Leviathan. Now most str
 - **Jolly Roger** item: sharp pixels (it was a blurred, shrunk copy of the flag).
 - **Unrefined Ocean Garbage** and **Ancient Broken Ring**: hard edges instead of half see-through pixels.
 
+### Other
+- **New mod icon**: the beach chunk from the CurseForge logo.
+
 Worlds from 3.1 load as they are.
