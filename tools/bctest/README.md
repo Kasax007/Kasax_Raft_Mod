@@ -4,6 +4,12 @@
 test mod in `src/gametest`, runs the script and writes screenshots (`<outdir>/<name>.png`), `latest.log` and
 `gradle.log`. It takes the build lock, so only one test or compile runs at a time (about 1–3 minutes).
 
+On the 1.21.1 port the harness is an ordinary client mod (Fabric has no client game test API for 1.21.1) with the
+same script language. Scripts written for 26.3 (`tools/content/*/tests/*.txt`) use some command syntax 1.21.1 does
+not know (game rule and attribute names, entity equipment, custom names): turn them into 1.21.1 scripts first with
+`cd tools && python3 -m port1211.tests <script.txt> <out.txt>`. Tests of what only the port has (its own shelf and
+shark tooth spear) are in `tools/port1211/tests/`.
+
 Script commands (one per line, `#` comments):
 
 | Command | Effect |

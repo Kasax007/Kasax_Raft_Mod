@@ -1,0 +1,173 @@
+# 1.21.1 port: Beach Craft's own shelf and Shark Tooth Spear (the newer game uses vanilla shelves and spears there).
+# Shelf: three items put on one shelf with real clicks (block item, flat item, items with a hand model), one taken
+# back with an empty hand, a powered row of three shelves swapping the whole hotbar. Spear: a jab from 4 blocks
+# (out of reach of a sword), a charged thrust, the charge pose. Written for the 1.21.1 harness: run it with
+# tools/bctest/run.sh as it is.
+deadline 10
+world shelftest
+rd 4
+gui 2
+chat off
+cmd gamerule doMobSpawning false
+cmd tp @p 1.5 201 -3.5 0 20
+settle 60
+cmd fill -8 200 -10 10 200 8 minecraft:spruce_planks
+cmd fill -8 201 -10 10 212 8 air
+cmd tp @p 1.5 201 -3.5 0 20
+swait 5
+cmd setblock 0 201 0 raft:palm_shelf[facing=north]
+cmd setblock 1 201 0 raft:teak_shelf[facing=north]
+cmd setblock 2 201 0 raft:weathered_shelf[facing=north]
+cmd fill -1 201 1 3 203 1 minecraft:spruce_planks
+cmd gamemode survival @p
+cmd clear @p
+cmd item replace entity @p hotbar.0 with raft:conch_shell
+cmd item replace entity @p hotbar.1 with raft:banana 3
+cmd item replace entity @p hotbar.2 with raft:shark_tooth_spear
+cmd item replace entity @p hotbar.3 with raft:captains_spyglass
+cmd item replace entity @p hotbar.4 with raft:hurricane_lantern
+cmd item replace entity @p hotbar.5 with raft:wreck_compass
+cmd item replace entity @p hotbar.6 with raft:sushi_roll 2
+swait 3
+pose 1.5 201 -1.6 0 20
+# palm shelf: left, middle, right
+slot 1
+face 0.85 201.5 0.8
+swait 2
+use
+swait 4
+slot 2
+face 0.5 201.5 0.8
+swait 2
+use
+swait 4
+slot 3
+face 0.15 201.5 0.8
+swait 2
+use
+swait 4
+check shelf_three_items | execute if data block 0 201 0 Items[2]
+check shelf_left_conch | execute if data block 0 201 0 {Items:[{Slot:0b,id:"raft:conch_shell"}]}
+check shelf_middle_banana | execute if data block 0 201 0 {Items:[{Slot:1b,id:"raft:banana",count:3}]}
+check shelf_right_spear | execute if data block 0 201 0 {Items:[{Slot:2b,id:"raft:shark_tooth_spear"}]}
+check hand_emptied | execute unless items entity @p hotbar.0 *
+# teak shelf: spyglass, lantern, compass
+slot 4
+face 1.85 201.5 0.8
+swait 2
+use
+swait 4
+slot 5
+face 1.5 201.5 0.8
+swait 2
+use
+swait 4
+slot 6
+face 1.15 201.5 0.8
+swait 2
+use
+swait 4
+check teak_three_items | execute if data block 1 201 0 Items[2]
+# weathered shelf: sushi in the middle
+slot 7
+face 2.5 201.5 0.8
+swait 2
+use
+swait 4
+check weathered_one_item | execute if data block 2 201 0 Items[0]
+hud off
+pose 1.5 201 -1.4 0 25
+swait 3
+wait 4 render
+shot 01_shelves_front
+pose 3.6 201.5 -1.8 40 22
+swait 3
+wait 4 render
+shot 02_shelves_side
+hud on
+# take the banana back with an empty hand
+pose 1.5 201 -1.6 0 20
+slot 8
+face 0.5 201.5 0.8
+swait 2
+use
+swait 4
+check took_banana | execute if items entity @p hotbar.7 raft:banana
+check middle_empty | execute unless data block 0 201 0 {Items:[{Slot:1b}]}
+# swap: put the banana back where the conch is (conch comes to the hand)
+face 0.85 201.5 0.8
+swait 2
+use
+swait 4
+check swap_conch_to_hand | execute if items entity @p hotbar.7 raft:conch_shell
+check swap_banana_on_shelf | execute if data block 0 201 0 {Items:[{Slot:0b,id:"raft:banana"}]}
+# a powered row of three swaps with the hotbar
+cmd clear @p
+cmd item replace entity @p hotbar.0 with minecraft:apple
+cmd item replace entity @p hotbar.8 with minecraft:stick
+cmd fill 0 200 0 2 200 0 minecraft:redstone_block
+swait 4
+# seen from the front, the weathered shelf (east) is the left end of the row and the palm shelf the right end
+check row_left | execute if block 2 201 0 raft:weathered_shelf[powered=true,side_chain=left]
+check row_center | execute if block 1 201 0 raft:teak_shelf[powered=true,side_chain=center]
+check row_right | execute if block 0 201 0 raft:palm_shelf[powered=true,side_chain=right]
+slot 1
+face 1.5 201.5 0.8
+swait 2
+use
+swait 4
+check row_swapped_weathered | execute if items entity @p hotbar.1 raft:sushi_roll
+check row_swapped_teak | execute if items entity @p hotbar.3 raft:captains_spyglass
+check row_swapped_palm | execute if items entity @p hotbar.6 raft:banana
+check row_apple_on_shelf | execute if data block 2 201 0 {Items:[{Slot:0b,id:"minecraft:apple"}]}
+check row_stick_on_shelf | execute if data block 0 201 0 {Items:[{Slot:2b,id:"minecraft:stick"}]}
+cmd fill 0 200 0 2 200 0 minecraft:spruce_planks
+swait 4
+check row_unpowered | execute if block 1 201 0 raft:teak_shelf[powered=false,side_chain=unconnected]
+# breaking a shelf drops it and its items
+cmd setblock 2 201 0 air destroy
+swait 4
+check broken_drops_apple | execute if entity @e[type=item,nbt={Item:{id:"minecraft:apple"}}]
+check broken_drops_shelf | execute if entity @e[type=item,nbt={Item:{id:"raft:weathered_shelf"}}]
+cmd kill @e[type=item]
+# spear: a jab from 4 blocks
+cmd clear @p
+cmd gamemode survival @p
+cmd fill -8 201 -10 10 204 -4 air
+cmd summon minecraft:husk 6.5 201 -4.5 {NoAI:1b,PersistenceRequired:1b,Silent:1b}
+cmd item replace entity @p weapon.mainhand with minecraft:iron_sword
+pose 6.5 201 -8.6 0 0
+face 6.5 202.2 -4.5
+swait 25
+wait 2 render
+attack
+swait 5
+check sword_out_of_reach | execute as @e[type=husk,limit=1] if data entity @s {Health:20.0f}
+cmd item replace entity @p weapon.mainhand with raft:shark_tooth_spear
+swait 25
+wait 2 render
+attack
+swait 5
+check spear_jab_reaches | execute as @e[type=husk,limit=1] unless data entity @s {Health:20.0f}
+cmd kill @e[type=husk]
+# charged thrust
+cmd summon minecraft:husk 6.5 201 -5.5 {NoAI:1b,PersistenceRequired:1b,Silent:1b}
+pose 6.5 201 -8.6 0 0
+face 6.5 202.2 -5.5
+swait 25
+press use
+swait 20
+third on
+wait 3 render
+shot 03_spear_charging
+third off
+wait 3 render
+shot 04_spear_charging_first_person
+release use
+swait 5
+check spear_thrust_hits | execute as @e[type=husk,limit=1] unless data entity @s {Health:20.0f}
+check spear_worn | execute if items entity @p weapon.mainhand raft:shark_tooth_spear[minecraft:damage]
+cmd kill @e[type=husk]
+wait 3 render
+shot 05_spear_in_hand
+checks
