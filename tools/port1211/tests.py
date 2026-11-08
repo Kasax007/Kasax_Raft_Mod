@@ -1,6 +1,6 @@
 """Turns a bctest script written for Minecraft 26.3 (tools/content/*/tests/*.txt) into one for the 1.21.1 harness:
-the command syntax of 1.21.1 (game rule and attribute names, entity equipment, plain-text custom names). The script
-language itself is the same.
+the command syntax of 1.21.1 (game rule and attribute names, entity equipment, plain-text custom names, no inline
+predicates). The script language itself is the same.
 
 Run from tools/:  python3 -m port1211.tests <script.txt> <out.txt>
 """
@@ -93,8 +93,35 @@ def line(s):
     return s
 
 
+# inline predicates (`execute if predicate {...}`) do not exist in 1.21.1: the two kinds the scripts use, riding and
+# having an effect, read the player's data instead
+_Q = '[\'"]'
+PRED_VEHICLE = re.compile(r'(if|unless) predicate \{type:%sminecraft:entity_properties%s,entity:%sthis%s,predicate:\{vehicle:\{\}\}\}'
+                          % ((_Q,) * 4))
+PRED_EFFECT = re.compile(r'(if|unless) predicate \{type:%sminecraft:entity_properties%s,entity:%sthis%s,predicate:\{effects:\{%s([a-z0-9_:]+)%s:'
+                         r'\{(?:duration:\{min:(\d+)\})?\}\}\}\}' % ((_Q,) * 6))
+
+
+def predicates(s):
+    """One script line -> the 1.21.1 lines (a check on an effect's duration needs a score first)."""
+    s = PRED_VEHICLE.sub(lambda m: '%s data entity @s RootVehicle' % m.group(1), s)
+    m = PRED_EFFECT.search(s)
+    if not m:
+        return [s]
+    kind, effect, minimum = m.group(1), m.group(2), m.group(3)
+    if minimum is None:
+        return [s[:m.start()] + '%s data entity @s active_effects[{id:"%s"}]' % (kind, effect) + s[m.end():]]
+    # check <label> | execute as @p if predicate {... duration min N ...}: duration into a score, then compare
+    pre = ['cmd scoreboard objectives add bc_port dummy',
+           'cmd execute as @p store result score @s bc_port run data get entity @s active_effects[{id:"%s"}].duration' % effect]
+    return pre + [s[:m.start()] + '%s score @s bc_port matches %s..' % (kind, minimum) + s[m.end():]]
+
+
 def convert(text):
-    return '\n'.join(line(x) for x in text.split('\n'))
+    out = []
+    for x in text.split('\n'):
+        out.extend(predicates(line(x)) if not x.lstrip().startswith('#') else [x])
+    return '\n'.join(out)
 
 
 if __name__ == '__main__':

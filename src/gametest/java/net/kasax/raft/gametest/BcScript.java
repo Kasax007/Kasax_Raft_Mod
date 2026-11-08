@@ -445,25 +445,30 @@ public class BcScript implements FabricClientGameTest {
                 ctx.getInput().releaseKey(o -> o.keyShift);
             }
             case "esc" -> ctx.setScreen(() -> null);
-            case "tab" -> ctx.runOnClient(mc -> {
+            case "tab" -> {
                 // tab <id> [rows]: open the creative inventory on that tab (scrolled down by rows) and log its items
                 String[] ta = arg.split("\\s+");
                 var tab = BuiltInRegistries.CREATIVE_MODE_TAB.get(ResourceLocation.parse(ta[0]));
-                var screen = new net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen(
-                        mc.player, mc.player.connection.enabledFeatures(), false);
-                mc.setScreen(screen);
-                if (tab == null) {
-                    LOG.warn("[bctest] no creative tab {}", arg);
-                    return;
-                }
-                ((net.kasax.raft.gametest.mixin.CreativeScreenInvoker) screen).bc$selectTab(tab);
-                if (ta.length > 1) screen.mouseScrolled(0, 0, 0, -Double.parseDouble(ta[1]));
-                StringBuilder ids = new StringBuilder();
-                for (var stack : tab.getDisplayItems()) {
-                    ids.append(' ').append(BuiltInRegistries.ITEM.getKey(stack.getItem()));
-                }
-                LOG.info("[bctest] TAB {} {}:{}", arg, tab.getDisplayItems().size(), ids);
-            });
+                ctx.runOnClient(mc -> mc.setScreen(new net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen(
+                        mc.player, mc.player.connection.enabledFeatures(), false)));
+                ctx.waitTicks(2);
+                ctx.runOnClient(mc -> {
+                    if (tab == null || !(mc.screen instanceof net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen screen)) {
+                        LOG.warn("[bctest] no creative tab {}", arg);
+                        return;
+                    }
+                    // Fabric API pages the tabs on 1.21.1: a tab on another page is only selected through its page
+                    if (!((net.fabricmc.fabric.api.client.itemgroup.v1.FabricCreativeInventoryScreen) screen).setSelectedItemGroup(tab)) {
+                        ((net.kasax.raft.gametest.mixin.CreativeScreenInvoker) screen).bc$selectTab(tab);
+                    }
+                    if (ta.length > 1) screen.mouseScrolled(0, 0, 0, -Double.parseDouble(ta[1]));
+                    StringBuilder ids = new StringBuilder();
+                    for (var stack : tab.getDisplayItems()) {
+                        ids.append(' ').append(BuiltInRegistries.ITEM.getKey(stack.getItem()));
+                    }
+                    LOG.info("[bctest] TAB {} {}:{}", arg, tab.getDisplayItems().size(), ids);
+                });
+            }
             case "slot" -> {
                 int i = Integer.parseInt(arg) - 1;
                 ctx.getInput().pressKey(o -> o.keyHotbarSlots[i]);
