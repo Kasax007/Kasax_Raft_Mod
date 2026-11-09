@@ -5,9 +5,12 @@ import net.kasax.raft.content.diving.DivingContent;
 import net.kasax.raft.content.diving.DivingSounds;
 import net.kasax.raft.content.diving.item.OxygenTankItem;
 import net.kasax.raft.content.diving.item.SeaScooterItem;
+import net.kasax.raft.util.StoredEnergy;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -288,6 +291,25 @@ public class AirCompressorBlockEntity extends BaseContainerBlockEntity implement
             return 0;
         }
         return Math.round(15.0F * data.get(2) / max);
+    }
+
+    // 3.5: the compressor keeps its energy when it is broken (see StoredEnergy); the tank in its slot drops on its own
+    @Override
+    protected void applyImplicitComponents(DataComponentGetter components) {
+        super.applyImplicitComponents(components);
+        energy.amount = StoredEnergy.fromItem(components, ENERGY_CAPACITY);
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+        StoredEnergy.toItem(components, energy.amount);
+    }
+
+    @Override
+    public void removeComponentsFromTag(ValueOutput output) {
+        super.removeComponentsFromTag(output);
+        StoredEnergy.removeFromTag(output);
     }
 
     @Override

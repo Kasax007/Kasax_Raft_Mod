@@ -7,9 +7,12 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.kasax.raft.screen.MakeshiftBatteryScreenHandler;
 import net.kasax.raft.util.BlockPosPayload;
 import net.kasax.raft.util.EnergySyncPayload;
+import net.kasax.raft.util.StoredEnergy;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
@@ -33,12 +36,13 @@ import team.reborn.energy.api.base.SimpleEnergyStorage;
 public class MakeshiftBatteryBlockEntity extends BlockEntity implements ExtendedMenuProvider<BlockPosPayload> {
 
     public static final Component TITLE = Component.translatable("container.raft.makeshift_battery");
+    public static final long CAPACITY = 1_000_000;
 
     public MakeshiftBatteryBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.MAKESHIFT_BATTERY_BLOCK_ENTITY, pos, state);
     }
 
-    private final SimpleEnergyStorage energyStorage = new SimpleEnergyStorage(1_000_000, 10_000, 10_000) {
+    private final SimpleEnergyStorage energyStorage = new SimpleEnergyStorage(CAPACITY, 10_000, 10_000) {
         @Override
         protected void onFinalCommit() {
             super.onFinalCommit();
@@ -57,6 +61,25 @@ public class MakeshiftBatteryBlockEntity extends BlockEntity implements Extended
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
         output.putLong("Energy", this.energyStorage.amount);
+    }
+
+    // 3.5: the battery keeps its energy when it is broken (see StoredEnergy)
+    @Override
+    protected void applyImplicitComponents(DataComponentGetter components) {
+        super.applyImplicitComponents(components);
+        this.energyStorage.amount = StoredEnergy.fromItem(components, this.energyStorage.getCapacity());
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+        StoredEnergy.toItem(components, this.energyStorage.amount);
+    }
+
+    @Override
+    public void removeComponentsFromTag(ValueOutput output) {
+        super.removeComponentsFromTag(output);
+        StoredEnergy.removeFromTag(output);
     }
 
     @Override

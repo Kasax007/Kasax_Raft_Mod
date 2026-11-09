@@ -4,9 +4,12 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.kasax.raft.util.StoredEnergy;
 import net.kasax.raft.util.TickableBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Containers;
@@ -26,13 +29,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChunkDestroyerBlockEntity extends BlockEntity implements TickableBlockEntity {
+    public static final long CAPACITY = 500_000;
+
     private int ticks = 0;
     private BlockPos miningPos;
     private int chunkX, chunkZ; // Chunk coordinates
     private boolean miningComplete = false;
     private boolean finished = false;
 
-    private final SimpleEnergyStorage energyStorage = new SimpleEnergyStorage(500_000, 100_000, 0) {
+    private final SimpleEnergyStorage energyStorage = new SimpleEnergyStorage(CAPACITY, 100_000, 0) {
         @Override
         protected void onFinalCommit() {
             super.onFinalCommit();
@@ -130,6 +135,25 @@ public class ChunkDestroyerBlockEntity extends BlockEntity implements TickableBl
         setChanged();
         if(level != null)
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+    }
+
+    // 3.5: the chunk destroyer keeps its energy when it is broken (see StoredEnergy)
+    @Override
+    protected void applyImplicitComponents(DataComponentGetter components) {
+        super.applyImplicitComponents(components);
+        this.energyStorage.amount = StoredEnergy.fromItem(components, this.energyStorage.getCapacity());
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+        StoredEnergy.toItem(components, this.energyStorage.amount);
+    }
+
+    @Override
+    public void removeComponentsFromTag(ValueOutput output) {
+        super.removeComponentsFromTag(output);
+        StoredEnergy.removeFromTag(output);
     }
 
     public SimpleEnergyStorage getEnergyStorage() {

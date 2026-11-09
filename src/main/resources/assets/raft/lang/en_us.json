@@ -95,6 +95,8 @@
   "tooltip.raft.quarry.tooltip2": "Consumes 1,000 FE per block",
   "tooltip.raft.chunk_destroyer.tooltip1": "Mines the whole chunk it stands in",
   "tooltip.raft.chunk_destroyer.tooltip2": "Consumes 100,000 FE per column",
+  "tooltip.raft.stored_energy": "Energy: %s / %s FE",
+  "tooltip.raft.stored_energy.plain": "Energy: %s FE",
   "tooltip.raft.cable.max_input": "Transfer per tick: %s FE",
   "block.raft.raft_portal": "Raft Portal",
   "chat.raft.energy_staff.no_portal": "The frame is not a valid portal: it needs an empty 2x3 (or bigger) rectangle inside.",

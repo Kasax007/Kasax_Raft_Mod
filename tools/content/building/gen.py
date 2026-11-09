@@ -102,6 +102,14 @@ def loot_self(block):
                         'entries': [{'type': 'minecraft:item', 'name': rid(block)}], 'rolls': 1})
 
 
+def loot_machine(block):
+    """A machine drops itself with the energy it held (3.5: the raft:stored_energy component, StoredEnergy.java)."""
+    _write_loot(block, {'condition': {'type': 'minecraft:survives_explosion'},
+                        'entries': [{'type': 'minecraft:item', 'name': rid(block), 'modifier': {
+                            'type': 'minecraft:copy_components', 'include': ['raft:stored_energy'],
+                            'source': 'block_entity'}}], 'rolls': 1})
+
+
 def loot_silk(block):
     _write_loot(block, {'condition': 'minecraft:tool/can_silk_touch',
                         'entries': [{'type': 'minecraft:item', 'name': rid(block)}], 'rolls': 1})
@@ -849,7 +857,7 @@ def tech():
            'firstperson_lefthand': {'rotation': [0, 225, 0], 'translation': [0, 0, 0], 'scale': [0.3, 0.3, 0.3]}}
     model('wind_turbine_inventory', W, turbine + rotor, display=gui)
     A.item_def(M, 'wind_turbine', 'block/wind_turbine_inventory')
-    loot_self('wind_turbine')
+    loot_machine('wind_turbine')
     name('wind_turbine', 'Wind Turbine')
     shaped('wind_turbine', [' S ', 'SCS', ' I '], {'S': SC, 'C': C, 'I': I}, 'wind_turbine', 1, category='redstone')
     METAL.extend(['control_panel', 'server_rack', 'satellite_dish', 'wind_turbine'])

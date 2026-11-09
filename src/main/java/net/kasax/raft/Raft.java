@@ -44,6 +44,9 @@ public class Raft implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		// the item component that carries a machine's energy when it is broken (3.5)
+		StoredEnergy.init();
+
 		// Block state provider used by the palm tree (5% coconut leaves)
 		Registry.register(BuiltInRegistries.BLOCK_STATE_PROVIDER_TYPE, id("randomized_block_state_provider"),
 				RandomizedBlockStateProvider.CODEC);
@@ -109,6 +112,11 @@ public class Raft implements ModInitializer {
 		EnergyStorage.SIDED.registerForBlockEntity(QuarryBlockEntity::getEnergyProvider, ModBlockEntities.QUARRY_BLOCK_ENTITY);
 		EnergyStorage.SIDED.registerForBlockEntity(ChunkDestroyerBlockEntity::getEnergyProvider, ModBlockEntities.CHUNK_DESTROYER_BLOCK_ENTITY);
 		EnergyStorage.SIDED.registerForBlockEntity(CableBlockEntity::getSideEnergyStorage, ModBlockEntities.CABLE_BLOCK_ENTITY);
+		// machines that keep their energy when broken (cables do not: they only pass it on)
+		StoredEnergy.register(ModBlocks.MAKESHIFT_SOLAR_PANEL, MakeshiftSolarPanelBlockEntity.CAPACITY);
+		StoredEnergy.register(ModBlocks.MAKESHIFT_BATTERY, MakeshiftBatteryBlockEntity.CAPACITY);
+		StoredEnergy.register(ModBlocks.QUARRY, QuarryBlockEntity.CAPACITY);
+		StoredEnergy.register(ModBlocks.CHUNK_DESTROYER, ChunkDestroyerBlockEntity.CAPACITY);
 
 		FurnaceBlocks.init();
 		FurnaceEntities.init();

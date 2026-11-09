@@ -200,6 +200,7 @@ public final class BuildingBlocks {
     /** Called from {@link BuildingModule#init()}: forces the registrations above and wires up APIs. */
     public static void init() {
         EnergyStorage.SIDED.registerForBlockEntity(WindTurbineBlockEntity::getEnergyStorage, WIND_TURBINE_BE);
+        net.kasax.raft.util.StoredEnergy.register(WIND_TURBINE, WindTurbineBlockEntity.CAPACITY);
         FlammableBlockRegistry flammable = FlammableBlockRegistry.getDefaultInstance();
         for (Block block : WOODEN) {
             flammable.add(block, 5, 20);

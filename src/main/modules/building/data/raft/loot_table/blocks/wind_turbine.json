@@ -8,7 +8,14 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "raft:wind_turbine"
+          "name": "raft:wind_turbine",
+          "modifier": {
+            "type": "minecraft:copy_components",
+            "include": [
+              "raft:stored_energy"
+            ],
+            "source": "block_entity"
+          }
         }
       ],
       "rolls": 1

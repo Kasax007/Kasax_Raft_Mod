@@ -6,6 +6,7 @@ import net.kasax.raft.block.ModBlocks;
 import net.kasax.raft.block.cable.RaftCable;
 import net.kasax.raft.item.ModItems;
 import net.kasax.raft.util.FurnaceBlocks;
+import net.kasax.raft.util.StoredEnergy;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -13,7 +14,9 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
+import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -61,10 +64,10 @@ public class ModLootTableProvider extends FabricBlockLootSubProvider {
         add(ModBlocks.PALM_DOOR, createDoorTable(ModBlocks.PALM_DOOR));
         dropSelf(ModBlocks.PALM_PRESSURE_PLATE);
         dropSelf(ModBlocks.PALM_TRAPDOOR);
-        dropSelf(ModBlocks.MAKESHIFT_SOLAR_PANEL);
-        dropSelf(ModBlocks.MAKESHIFT_BATTERY);
-        dropSelf(ModBlocks.QUARRY);
-        dropSelf(ModBlocks.CHUNK_DESTROYER);
+        add(ModBlocks.MAKESHIFT_SOLAR_PANEL, machineDrops(ModBlocks.MAKESHIFT_SOLAR_PANEL));
+        add(ModBlocks.MAKESHIFT_BATTERY, machineDrops(ModBlocks.MAKESHIFT_BATTERY));
+        add(ModBlocks.QUARRY, machineDrops(ModBlocks.QUARRY));
+        add(ModBlocks.CHUNK_DESTROYER, machineDrops(ModBlocks.CHUNK_DESTROYER));
 
         add(ModBlocks.TITANIUM_ORE, titaniumOreDrops(ModBlocks.TITANIUM_ORE, ModItems.RAW_TITANIUM));
         add(ModBlocks.DEEPSLATE_TITANIUM_ORE, titaniumOreDrops(ModBlocks.DEEPSLATE_TITANIUM_ORE, ModItems.RAW_TITANIUM));
@@ -101,6 +104,15 @@ public class ModLootTableProvider extends FabricBlockLootSubProvider {
 
         // All custom furnaces
         FurnaceBlocks.getFurnaces().forEach(this::dropSelf);
+    }
+
+    /** A machine drops itself with the energy it held (3.5: the raft:stored_energy component, see StoredEnergy). */
+    private LootTable.Builder machineDrops(Block block) {
+        return LootTable.lootTable().withPool(applyExplosionCondition(block, LootPool.lootPool()
+                .setRolls(ContextIntProviders.exactly(1))
+                .add(LootItem.lootTableItem(block)
+                        .apply(CopyComponentsFunction.copyComponentsFromBlockEntity(LootContextParams.BLOCK_ENTITY)
+                                .include(StoredEnergy.COMPONENT)))));
     }
 
     /** Palm fibres: broken palm leaves (without shears) sometimes give a piece of rope. */
