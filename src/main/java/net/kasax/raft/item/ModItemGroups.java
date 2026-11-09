@@ -40,7 +40,7 @@ public class ModItemGroups {
         add(ModBlocks.STRIPPED_DRIFTWOOD_LOG);
         add(ModBlocks.STRIPPED_DRIFTWOOD_WOOD);
         add(ModBlocks.DRIFTWOOD_LEAVES);
-        add(ModBlocks.DRIFTWOOD_SAPLING);
+        // no DRIFTWOOD_SAPLING (3.5): driftwood is no tree; the sapling stays registered for old worlds
         add(ModBlocks.DRIFTWOOD_LOG);
         add(ModBlocks.DRIFTWOOD_WOOD);
         add(ModBlocks.DRIFTWOOD_PLANKS);

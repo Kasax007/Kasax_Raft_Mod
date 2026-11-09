@@ -44,6 +44,7 @@ public class ModLootTableProvider extends FabricBlockLootSubProvider {
         dropSelf(ModBlocks.STRIPPED_PALM_WOOD);
         dropSelf(ModBlocks.TITANIUM_BLOCK);
         dropSelf(ModBlocks.RAW_TITANIUM_BLOCK);
+        // driftwood is no tree (3.5): the sapling is in no loot any more, but old worlds keep theirs and it still drops itself
         dropSelf(ModBlocks.DRIFTWOOD_SAPLING);
         dropSelf(ModBlocks.PALM_SAPLING);
         dropSelf(ModBlocks.ITEM_CATCHER);
@@ -72,7 +73,8 @@ public class ModLootTableProvider extends FabricBlockLootSubProvider {
         add(ModBlocks.TITANIUM_ORE, titaniumOreDrops(ModBlocks.TITANIUM_ORE, ModItems.RAW_TITANIUM));
         add(ModBlocks.DEEPSLATE_TITANIUM_ORE, titaniumOreDrops(ModBlocks.DEEPSLATE_TITANIUM_ORE, ModItems.RAW_TITANIUM));
 
-        add(ModBlocks.DRIFTWOOD_LEAVES, createLeavesDrops(ModBlocks.DRIFTWOOD_LEAVES, ModBlocks.DRIFTWOOD_SAPLING, 0.0025f));
+        // leaves (shears or silk touch) or now and then a stick, like mangrove leaves: driftwood is no tree (3.5)
+        add(ModBlocks.DRIFTWOOD_LEAVES, createMangroveLeavesDrops(ModBlocks.DRIFTWOOD_LEAVES));
         add(ModBlocks.PALM_LEAVES, withRopeChance(createLeavesDrops(ModBlocks.PALM_LEAVES, ModBlocks.PALM_SAPLING, 0.05f)));
         add(ModBlocks.PALM_COCONUT_LEAVES, fruitLeaveDrops(ModBlocks.PALM_COCONUT_LEAVES, ModItems.COCONUT));
 
