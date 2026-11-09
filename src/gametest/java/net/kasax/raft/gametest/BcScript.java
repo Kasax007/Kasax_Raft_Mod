@@ -535,6 +535,45 @@ public class BcScript implements FabricClientGameTest {
                 if (result > 0) checksPassed++; else checksFailed++;
                 LOG.info("[bctest] CHECK {} {} ({})", result > 0 ? "PASS" : "FAIL", a[0], result);
             }
+            case "checktip" -> {
+                // checktip <label> | <text>: CHECK PASS when the tooltip of the item in the player's main hand contains
+                // the text (as the client shows it)
+                String[] a = arg.split("\\s*\\|\\s*", 2);
+                String want = a.length > 1 ? a[1] : a[0];
+                String tip = ctx.computeOnClient(BcScript::mainHandTooltip);
+                count(tip.contains(want), a[0], tip);
+            }
+            case "checkloot" -> {
+                // checkloot <label> | <loot table> <rolls> <item> <none|some>: rolls the table that often (a block table as
+                // broken by hand, any other like a chest at the player) and passes when the item never comes (none) or
+                // comes at least once (some)
+                String[] a = arg.split("\\s*\\|\\s*", 2);
+                String[] t = (a.length > 1 ? a[1] : a[0]).trim().split("\\s+");
+                int got = need().getServer().computeOnServer(server -> lootCount(server, t[0], Integer.parseInt(t[1]), t[2]));
+                count(t[3].equals("none") ? got == 0 : got > 0, a[0], t[2] + " x" + got + " in " + t[1] + " rolls of " + t[0]);
+            }
+            case "checklootall" -> {
+                // checklootall <label> | <item> <rolls> [table ...]: rolls every loot table except entity tables and the
+                // given ones that often (block tables as broken by hand, the others without a position, so maps do
+                // not search for structures) and passes when none of them ever gives the item
+                String[] a = arg.split("\\s*\\|\\s*", 2);
+                String[] t = (a.length > 1 ? a[1] : a[0]).trim().split("\\s+");
+                java.util.Set<String> skip = java.util.Set.of(java.util.Arrays.copyOfRange(t, 2, t.length));
+                String res = need().getServer().computeOnServer(server -> lootScan(server, t[0], Integer.parseInt(t[1]), skip));
+                count(res.startsWith("none"), a[0], res);
+            }
+            case "checktabs" -> {
+                // checktabs <label> | <item> <present|absent>: whether the item is in any Beach Craft creative tab
+                String[] a = arg.split("\\s*\\|\\s*", 2);
+                String[] t = (a.length > 1 ? a[1] : a[0]).trim().split("\\s+");
+                var item = BuiltInRegistries.ITEM.getValue(Identifier.parse(t[0]));
+                List<String> in = new ArrayList<>();
+                for (var tab : net.kasax.raft.content.BcTabs.Tab.values()) {
+                    if (net.kasax.raft.content.BcTabs.items(tab).contains(item)) in.add(tab.key().toString());
+                }
+                count(t[1].equals("absent") == in.isEmpty(), a[0], t[0] + " in tabs " + in);
+            }
+            case "tooltip" -> LOG.info("[bctest] TOOLTIP {}", ctx.computeOnClient(BcScript::mainHandTooltip));
             case "checks" -> LOG.info("[bctest] CHECKS passed {} failed {}", checksPassed, checksFailed);
             case "log" -> LOG.info("[bctest] LOG {}", arg);
             case "sounds" -> {
@@ -1074,6 +1113,19 @@ public class BcScript implements FabricClientGameTest {
                             var st = c.getItem(i);
                             if (!st.isEmpty()) sb.append(' ').append(st.getCount()).append('x').append(BuiltInRegistries.ITEM.getKey(st.getItem()).getPath());
                         }
+                    } else {
+                        // any other menu: its slots outside the player's inventory (menu slot index:container slot), the
+                        // filled ones with their items
+                        int own = 0;
+                        StringBuilder items = new StringBuilder();
+                        for (var slot : m.slots) {
+                            if (slot.container instanceof net.minecraft.world.entity.player.Inventory) continue;
+                            own++;
+                            var st = slot.getItem();
+                            if (!st.isEmpty()) items.append(' ').append(slot.index).append(':').append(slot.getContainerSlot()).append('=')
+                                    .append(st.getCount()).append('x').append(BuiltInRegistries.ITEM.getKey(st.getItem()).getPath());
+                        }
+                        sb.append(" slots ").append(own).append(" items").append(items);
                     }
                     return sb.toString();
                 });
@@ -1173,6 +1225,88 @@ public class BcScript implements FabricClientGameTest {
             }
             default -> LOG.warn("[bctest] unknown command '{}'", cmd);
         }
+    }
+
+    /** Counts a check (CHECK PASS / CHECK FAIL line with what was found). */
+    private void count(boolean ok, String label, String found) {
+        if (ok) checksPassed++; else checksFailed++;
+        LOG.info("[bctest] CHECK {} {} ({})", ok ? "PASS" : "FAIL", label, found);
+    }
+
+    /** The tooltip of the item in the player's main hand, lines joined by " | ". */
+    private static String mainHandTooltip(Minecraft mc) {
+        var stack = mc.player.getMainHandItem();
+        StringBuilder sb = new StringBuilder();
+        for (var line : stack.getTooltipLines(net.minecraft.world.item.Item.TooltipContext.of(mc.level), mc.player,
+                net.minecraft.world.item.TooltipFlag.Default.NORMAL)) {
+            if (!sb.isEmpty()) sb.append(" | ");
+            sb.append(line.getString());
+        }
+        return sb.toString();
+    }
+
+    /** How many of the item n rolls of a loot table give (block tables: broken by hand, the block's default state). */
+    private static int lootCount(net.minecraft.server.MinecraftServer server, String tableId, int n, String itemId) {
+        var pl = server.getPlayerList().getPlayers().getFirst();
+        ServerLevel level = (ServerLevel) pl.level();
+        Identifier id = Identifier.parse(tableId);
+        var table = server.reloadableRegistries().getLootTable(ResourceKey.create(Registries.LOOT_TABLE, id));
+        var item = BuiltInRegistries.ITEM.getValue(Identifier.parse(itemId));
+        var block = id.getPath().startsWith("blocks/")
+                ? BuiltInRegistries.BLOCK.getValue(Identifier.fromNamespaceAndPath(id.getNamespace(), id.getPath().substring(7))) : null;
+        int got = 0;
+        for (int i = 0; i < n; i++) {
+            var builder = new net.minecraft.world.level.storage.loot.LootParams.Builder(level)
+                    .withParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.ORIGIN, pl.position());
+            var params = block != null
+                    ? builder.withParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.BLOCK_STATE, block.defaultBlockState())
+                            .withParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.TOOL, net.minecraft.world.item.ItemStack.EMPTY)
+                            .create(net.minecraft.world.level.storage.loot.parameters.LootContextParamSets.BLOCK)
+                    : builder.create(net.minecraft.world.level.storage.loot.parameters.LootContextParamSets.CHEST);
+            for (var st : table.getRandomItems(params, level.getRandom())) {
+                if (st.is(item)) got += st.getCount();
+            }
+        }
+        return got;
+    }
+
+    /** Which loot tables give the item in n rolls (see checklootall): "none (...)" or "found in ...". */
+    private static String lootScan(net.minecraft.server.MinecraftServer server, String itemId, int n, java.util.Set<String> skip) {
+        var pl = server.getPlayerList().getPlayers().getFirst();
+        ServerLevel level = (ServerLevel) pl.level();
+        var item = BuiltInRegistries.ITEM.getValue(Identifier.parse(itemId));
+        List<ResourceKey<net.minecraft.world.level.storage.loot.LootTable>> keys = server.reloadableRegistries().lookup()
+                .lookupOrThrow(Registries.LOOT_TABLE).listElementIds().toList();
+        List<String> found = new ArrayList<>();
+        int tables = 0, failed = 0;
+        for (var key : keys) {
+            Identifier id = key.identifier();
+            if (id.getPath().startsWith("entities/") || skip.contains(id.toString())) continue;
+            var table = server.reloadableRegistries().getLootTable(key);
+            var block = id.getPath().startsWith("blocks/")
+                    ? BuiltInRegistries.BLOCK.getOptional(Identifier.fromNamespaceAndPath(id.getNamespace(), id.getPath().substring(7))).orElse(null) : null;
+            tables++;
+            int got = 0;
+            try {
+                for (int i = 0; i < n; i++) {
+                    var builder = new net.minecraft.world.level.storage.loot.LootParams.Builder(level);
+                    var params = block != null
+                            ? builder.withParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.ORIGIN, pl.position())
+                                    .withParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.BLOCK_STATE, block.defaultBlockState())
+                                    .withParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.TOOL, net.minecraft.world.item.ItemStack.EMPTY)
+                                    .create(net.minecraft.world.level.storage.loot.parameters.LootContextParamSets.BLOCK)
+                            : builder.create(net.minecraft.world.level.storage.loot.parameters.LootContextParamSets.EMPTY);
+                    for (var st : table.getRandomItems(params, level.getRandom())) {
+                        if (st.is(item)) got += st.getCount();
+                    }
+                }
+            } catch (RuntimeException e) {
+                failed++;
+            }
+            if (got > 0) found.add(id + " x" + got);
+        }
+        String where = tables + " tables x" + n + " rolls, " + failed + " could not be rolled without a mob";
+        return found.isEmpty() ? "none (" + where + ")" : "found in " + found + " (" + where + ")";
     }
 
     private TestSingleplayerContext need() {

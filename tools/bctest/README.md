@@ -32,7 +32,12 @@ Script commands (one per line, `#` comments):
 | `log <text>` | marker in the log |
 | `census <half> [x z] [label]` | every structure start in the square of that half size around x z, worked out like the game does (placement, then every site check of the mod) without generating chunks: `CENSUS` lines (per km², closest pair of a kind, closest majors of different kinds), all starts in `<outdir>/census/<label>.txt` |
 | `audit <structure> [x z] [label]` | compares the nearest such structure with its templates block by block (`AUDIT` line, `<outdir>/audit/<label>.txt`); the `FLOAT` part counts the footing columns (bottom of a piece) with water or air under them and sets a camera `{fcx} {fcy} {fcz} {fcyaw} {fcpitch}` beside the worst one |
-| `menu` | logs the open container menu of the player (menu and container class, items): `MENU` line |
+| `menu` | logs the open container menu of the player (menu and container class, items): `MENU` line; for other menus than chests the slots outside the player's inventory as `menu slot:container slot=items` |
+| `check <label> \| <command>` | runs a server command as the player: `CHECK PASS` when it succeeds, else `CHECK FAIL`; `checks` logs the totals |
+| `checktip <label> \| <text>` | passes when the tooltip of the item in the player's main hand contains the text; `tooltip` just logs it (`TOOLTIP` line) |
+| `checkloot <label> \| <table> <rolls> <item> <none\|some>` | rolls a loot table (block tables as broken by hand, others like a chest at the player) and passes when the item never comes (`none`) or comes at least once (`some`) |
+| `checklootall <label> \| <item> <rolls> [table ...]` | the same over every loot table but entity tables and the given ones (without a position, so maps do not search): passes when none gives the item |
+| `checktabs <label> \| <item> <present\|absent>` | whether the item is in any Beach Craft creative tab |
 
 Example:
 

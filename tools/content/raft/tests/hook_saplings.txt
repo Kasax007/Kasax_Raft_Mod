@@ -1,0 +1,95 @@
+# Beach Craft 3.5 Plastic Hook and driftwood sapling.
+# The hook only pulls items with nothing solid in the way (a ray from the eyes against the blocks' collision shapes):
+# a diamond 7 blocks away behind a stone wall stays where it is, behind a glass wall too; with the wall gone the same
+# diamond comes to the player's feet.
+# The driftwood sapling is no tree any more: no loot table gives it (the debris barrel and the driftwood leaves rolled
+# 20,000 times each, every other loot table 300 times), it is in no creative tab, and it is still a block that drops
+# itself (old worlds keep their saplings).
+# Run: tools/bctest/run.sh tools/content/raft/tests/hook_saplings.txt <outdir>
+deadline 10
+world hooktest
+rd 4
+gui 2
+chat off
+cmd gamerule spawn_monsters false
+cmd gamerule random_tick_speed 0
+cmd tp @p 2.5 201 1.5 0 15
+settle 60
+cmd fill -6 200 -8 14 200 16 minecraft:spruce_planks
+cmd fill -6 201 -8 14 210 16 air
+swait 5
+cmd kill @e[type=item]
+cmd gamemode survival @p
+cmd effect give @p resistance 9999 255 true
+cmd effect give @p saturation 9999 0 true
+cmd clear @p
+cmd item replace entity @p hotbar.0 with raft:plastic_hook
+slot 1
+# ---- a stone wall 3.5 blocks in front of the player, the diamond 7 blocks away behind it
+log HOOK_WALL
+cmd fill -2 201 5 6 204 5 minecraft:stone
+cmd summon item 2.5 201 8.5 {Item:{id:"minecraft:diamond",count:1},PickupDelay:32767,Age:-32768,Tags:["hooktest"]}
+cmd tp @p 2.5 201 1.5 0 15
+swait 5
+pose 2.5 201 1.5 0 15
+face 2.5 201.1 8.5
+swait 2
+hold use 60
+swait 5
+check behind_stone_stays | execute positioned 2.5 201 8.5 if entity @e[type=item,tag=hooktest,distance=..0.7]
+# ---- the same behind a glass wall
+log HOOK_GLASS
+cmd fill -2 201 5 6 204 5 minecraft:glass
+cmd tp @e[type=item,tag=hooktest] 2.5 201 8.5
+swait 5
+pose 2.5 201 1.5 0 15
+face 2.5 201.1 8.5
+swait 2
+hold use 60
+swait 5
+check behind_glass_stays | execute positioned 2.5 201 8.5 if entity @e[type=item,tag=hooktest,distance=..0.7]
+hud off
+wait 5 render
+shot h01_behind_glass_stays
+hud on
+# ---- the wall is gone: the diamond comes
+log HOOK_OPEN
+cmd fill -2 201 5 6 204 5 air
+cmd tp @e[type=item,tag=hooktest] 2.5 201 8.5
+swait 5
+pose 2.5 201 1.5 0 15
+face 2.5 201.1 8.5
+swait 2
+hold use 60
+swait 5
+check open_item_pulled | execute if entity @e[type=item,tag=hooktest,distance=..2.5]
+check open_item_left_its_place | execute positioned 2.5 201 8.5 unless entity @e[type=item,tag=hooktest,distance=..3]
+hud off
+wait 5 render
+shot h02_open_item_at_feet
+hud on
+# ---- the driftwood sapling
+log SAPLING
+checkloot barrel_no_driftwood_sapling | raft:gameplay/ocean_barrel 20000 raft:driftwood_sapling none
+checkloot barrel_still_palm_saplings | raft:gameplay/ocean_barrel 20000 raft:palm_sapling some
+checkloot leaves_no_sapling | raft:blocks/driftwood_leaves 20000 raft:driftwood_sapling none
+checkloot leaves_still_sticks | raft:blocks/driftwood_leaves 20000 minecraft:stick some
+lootstat raft:gameplay/ocean_barrel 5000
+checklootall no_loot_table_gives_it | raft:driftwood_sapling 300 raft:blocks/driftwood_sapling
+checktabs not_in_creative_tabs | raft:driftwood_sapling absent
+checktabs palm_sapling_still_in_tabs | raft:palm_sapling present
+checktabs driftwood_leaves_still_in_tabs | raft:driftwood_leaves present
+cmd gamemode creative @p
+tab raft:bc_4_nature
+wait 6 render
+shot h03_nature_tab
+esc
+cmd setblock 0 199 12 minecraft:stone
+cmd setblock 0 200 12 minecraft:sand
+cmd setblock 0 201 12 raft:driftwood_sapling
+swait 3
+check old_sapling_still_a_block | execute if block 0 201 12 raft:driftwood_sapling
+cmd setblock 0 201 12 air destroy
+swait 5
+check old_sapling_drops_itself | execute if entity @e[type=item,nbt={Item:{id:"raft:driftwood_sapling"}}]
+checks

@@ -1,0 +1,230 @@
+# Beach Craft 3.5 machines: every machine with an energy storage keeps its energy when it is broken (Makeshift
+# Battery, Makeshift Solar Panel, Quarry, Chunk Destroyer, Wind Turbine, Air Compressor). The drop carries it in the
+# raft:stored_energy component, the tooltip shows it, and placed again the machine has it back. One drop per machine
+# and nothing more (no copy), batteries with different energy do not stack, with the same energy they do, an empty one
+# stacks with a new one. Then the Chunk Destroyer in the void of the End: a column with blocks costs 100,000 FE, empty
+# columns (air, bedrock) cost nothing and do not hold it up, also without energy.
+# Run: tools/bctest/run.sh tools/content/raft/tests/machines.txt <outdir>
+deadline 12
+world machines
+rd 4
+gui 2
+chat off
+cmd gamerule spawn_monsters false
+cmd gamerule random_tick_speed 0
+cmd tp @p 4.5 201 2.5 0 30
+settle 60
+cmd fill -6 200 -8 14 200 12 minecraft:spruce_planks
+cmd fill -6 201 -8 14 210 12 air
+cmd kill @e[type=item]
+cmd scoreboard objectives add bc dummy
+swait 5
+# ---- A: a battery with 120,000 FE, mined by the player in survival with a diamond pickaxe
+log BATTERY
+cmd setblock 4 201 4 raft:makeshift_battery
+cmd data merge block 4 201 4 {Energy:120000L}
+swait 3
+check battery_holds_120000 | execute if data block 4 201 4 {Energy:120000L}
+cmd clear @p
+cmd gamemode survival @p
+cmd effect give @p resistance 9999 255 true
+cmd effect give @p saturation 9999 0 true
+cmd item replace entity @p hotbar.0 with minecraft:diamond_pickaxe
+slot 1
+cmd tp @p 4.5 201 2.5 0 30
+swait 3
+pose 4.5 201 2.5 0 30
+face 4.5 201.5 4.5
+swait 2
+hold attack 40
+swait 12
+check battery_broken | execute if block 4 201 4 minecraft:air
+pcmd tp @e[type=item,distance=..16] @s
+swait 15
+cmd execute store result score #n bc run clear @p raft:makeshift_battery 0
+check one_battery_dropped | execute if score #n bc matches 1
+cmd execute as @p at @p store result score #e bc if entity @e[type=item,distance=..20]
+check nothing_else_dropped | execute if score #e bc matches 0
+check item_holds_120000 | execute if items entity @p hotbar.1 raft:makeshift_battery[raft:stored_energy=120000]
+slot 2
+swait 3
+tooltip
+checktip tooltip_shows_energy | Energy: 120,000 / 1,000,000 FE
+key inventory
+wait 6 render
+cursor 532 494
+wait 6 render
+shot m01_battery_tooltip
+esc
+swait 2
+face 4.5 201.0 6.5
+swait 2
+use
+swait 5
+check battery_placed | execute if block 4 201 6 raft:makeshift_battery
+check placed_battery_has_120000 | execute if data block 4 201 6 {Energy:120000L}
+cmd execute store result score #n bc run clear @p raft:makeshift_battery 0
+check battery_item_used_up | execute if score #n bc matches 0
+# ---- B: the other machines, broken without a player (like an explosion or a quarry would), picked up and placed again.
+# Generators are full (they do not make more), the quarry and the chunk destroyer hold too little to start mining.
+log SOLAR
+cmd setblock 4 201 6 air
+cmd clear @p
+slot 1
+cmd setblock 4 201 4 raft:makeshift_solar_panel
+cmd data merge block 4 201 4 {Energy:100000L}
+swait 2
+cmd setblock 4 201 4 air destroy
+swait 12
+pcmd tp @e[type=item,distance=..16] @s
+swait 15
+check solar_item_holds_100000 | execute if items entity @p weapon.mainhand raft:makeshift_solar_panel[raft:stored_energy=100000]
+checktip solar_tooltip | Energy: 100,000 / 100,000 FE
+face 4.5 201.0 6.5
+swait 2
+use
+swait 5
+check solar_placed_has_100000 | execute if data block 4 201 6 {Energy:100000L}
+log QUARRY
+cmd setblock 4 201 6 air
+cmd clear @p
+cmd setblock 4 201 4 raft:quarry
+cmd data merge block 4 201 4 {Energy:900L}
+swait 2
+cmd setblock 4 201 4 air destroy
+swait 12
+pcmd tp @e[type=item,distance=..16] @s
+swait 15
+check quarry_item_holds_900 | execute if items entity @p weapon.mainhand raft:quarry[raft:stored_energy=900]
+checktip quarry_tooltip | Energy: 900 / 10,000 FE
+face 4.5 201.0 6.5
+swait 2
+use
+swait 5
+check quarry_placed_has_900 | execute if data block 4 201 6 {Energy:900L}
+log CHUNK_DESTROYER
+cmd setblock 4 201 6 air
+cmd clear @p
+cmd setblock 4 201 4 raft:chunk_destroyer
+cmd data merge block 4 201 4 {Energy:90000L}
+swait 2
+cmd setblock 4 201 4 air destroy
+swait 12
+pcmd tp @e[type=item,distance=..16] @s
+swait 15
+check destroyer_item_holds_90000 | execute if items entity @p weapon.mainhand raft:chunk_destroyer[raft:stored_energy=90000]
+checktip destroyer_tooltip | Energy: 90,000 / 500,000 FE
+face 4.5 201.0 6.5
+swait 2
+use
+swait 5
+check destroyer_placed_has_90000 | execute if data block 4 201 6 {Energy:90000L}
+log WIND_TURBINE
+cmd setblock 4 201 6 air
+cmd clear @p
+cmd setblock 4 201 4 raft:wind_turbine[facing=south]
+cmd data merge block 4 201 4 {Energy:64000L}
+swait 2
+cmd setblock 4 201 4 air destroy
+swait 12
+pcmd tp @e[type=item,distance=..16] @s
+swait 15
+check turbine_item_holds_64000 | execute if items entity @p weapon.mainhand raft:wind_turbine[raft:stored_energy=64000]
+checktip turbine_tooltip | Energy: 64,000 / 64,000 FE
+face 4.5 201.0 6.5
+swait 2
+use
+swait 5
+check turbine_placed_has_64000 | execute if data block 4 201 6 {Energy:64000L}
+log AIR_COMPRESSOR
+cmd setblock 4 201 6 air
+cmd clear @p
+cmd setblock 4 201 4 raft:air_compressor
+cmd data merge block 4 201 4 {Energy:12345L}
+swait 2
+cmd setblock 4 201 4 air destroy
+swait 12
+pcmd tp @e[type=item,distance=..16] @s
+swait 15
+check compressor_item_holds_12345 | execute if items entity @p weapon.mainhand raft:air_compressor[raft:stored_energy=12345]
+checktip compressor_tooltip | Energy: 12,345 / 20,000 FE
+face 4.5 201.0 6.5
+swait 2
+use
+swait 5
+check compressor_placed_has_12345 | execute if data block 4 201 6 {Energy:12345L}
+cmd setblock 4 201 6 air
+# ---- C: stacking. Different energy: separate stacks; the same energy: one stack; empty: a plain item like a new one
+log STACKING
+cmd clear @p
+cmd kill @e[type=item]
+cmd setblock 1 201 8 raft:makeshift_battery
+cmd setblock 3 201 8 raft:makeshift_battery
+cmd setblock 5 201 8 raft:makeshift_battery
+cmd setblock 7 201 8 raft:makeshift_battery
+cmd setblock 9 201 8 raft:makeshift_battery
+cmd data merge block 1 201 8 {Energy:5000L}
+cmd data merge block 3 201 8 {Energy:9000L}
+cmd data merge block 5 201 8 {Energy:4000L}
+cmd data merge block 7 201 8 {Energy:4000L}
+swait 2
+cmd fill 1 201 8 9 201 8 air destroy
+swait 12
+cmd give @p raft:makeshift_battery
+pcmd tp @e[type=item,distance=..16] @s
+swait 20
+check apart_5000 | execute if items entity @p container.* raft:makeshift_battery[raft:stored_energy=5000,count=1]
+check apart_9000 | execute if items entity @p container.* raft:makeshift_battery[raft:stored_energy=9000,count=1]
+check same_4000_stack | execute if items entity @p container.* raft:makeshift_battery[raft:stored_energy=4000,count=2]
+check empty_stacks_with_new | execute if items entity @p container.* raft:makeshift_battery[!raft:stored_energy,count=2]
+cmd execute store result score #n bc run clear @p raft:makeshift_battery 0
+check six_batteries | execute if score #n bc matches 6
+# ---- D: the chunk destroyer in the void of the End. A at 408 100 408 (chunk x 400..415, z 400..415): stone in
+# column 400/400 and 404/400, bedrock in 401/400, everything else air; 300,000 FE. B at 440 100 440 in an empty chunk
+# with 50,000 FE (less than one column costs).
+log DESTROYER
+cmd gamemode creative @p
+cmd effect give @p slow_falling 9999 0 true
+cmd execute in minecraft:the_end run forceload add 384 384 447 447
+cmd execute in minecraft:the_end run tp @p 424.5 103 410.5 90 30
+fly on
+settle 90
+fly on
+cmd execute in minecraft:the_end run fill 420 100 406 428 100 414 minecraft:glass
+cmd execute in minecraft:the_end run tp @p 424.5 101 410.5 90 30
+swait 5
+pose 424.5 101 410.5 90 30
+check end_platform | execute in minecraft:the_end if block 424 100 410 minecraft:glass
+cmd execute in minecraft:the_end run setblock 400 50 400 minecraft:stone
+cmd execute in minecraft:the_end run setblock 401 60 400 minecraft:bedrock
+cmd execute in minecraft:the_end run setblock 404 10 400 minecraft:stone
+cmd execute in minecraft:the_end run setblock 408 101 408 minecraft:chest
+cmd execute in minecraft:the_end run setblock 408 100 408 raft:chunk_destroyer
+cmd execute in minecraft:the_end run setblock 440 100 440 raft:chunk_destroyer
+cmd execute in minecraft:the_end run data merge block 440 100 440 {Energy:50000L}
+cmd execute in minecraft:the_end run data merge block 408 100 408 {Energy:300000L}
+swaitfor 60 execute in minecraft:the_end if data block 408 100 408 {Energy:200000L}
+check A_first_column_mined | execute in minecraft:the_end if block 400 50 400 minecraft:air
+check A_first_column_cost_100000 | execute in minecraft:the_end if data block 408 100 408 {Energy:200000L}
+swaitfor 60 execute in minecraft:the_end if data block 440 100 440 {finished:1b}
+check B_empty_chunk_done | execute in minecraft:the_end if data block 440 100 440 {finished:1b}
+check B_empty_chunk_free | execute in minecraft:the_end if data block 440 100 440 {Energy:50000L}
+swait 80
+check A_empty_columns_free | execute in minecraft:the_end if data block 408 100 408 {Energy:200000L}
+check A_bedrock_stays | execute in minecraft:the_end if block 401 60 400 minecraft:bedrock
+check A_next_column_waits_its_turn | execute in minecraft:the_end if block 404 10 400 minecraft:stone
+swaitfor 300 execute in minecraft:the_end if block 404 10 400 minecraft:air
+swait 3
+check A_second_column_mined | execute in minecraft:the_end if block 404 10 400 minecraft:air
+check A_second_column_cost_100000 | execute in minecraft:the_end if data block 408 100 408 {Energy:100000L}
+swaitfor 120 execute in minecraft:the_end if data block 408 100 408 {finished:1b}
+check A_done | execute in minecraft:the_end if data block 408 100 408 {finished:1b}
+check A_rest_free | execute in minecraft:the_end if data block 408 100 408 {Energy:100000L}
+check A_drops_in_chest | execute in minecraft:the_end if items block 408 101 408 container.* minecraft:cobblestone[count=2]
+hud off
+face 404 60 404
+wait 10 render
+shot m02_end_chunk
+hud on
+cmd execute in minecraft:the_end run forceload remove all
+checks
