@@ -8,6 +8,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
+import net.kasax.raft.block.entity.ItemCollectorBlockEntity;
 import net.kasax.raft.item.ModItems;
 import net.minecraft.world.item.ItemStack;
 
@@ -16,28 +17,30 @@ public class ItemCollectorScreenHandler extends AbstractContainerMenu {
     private final ContainerData propertyDelegate;
 
     public ItemCollectorScreenHandler(int syncId, Inventory inventory) {
-        this(syncId, inventory, new SimpleContainer(2), new SimpleContainerData(2));
+        this(syncId, inventory, new SimpleContainer(ItemCollectorBlockEntity.SIZE), new SimpleContainerData(2));
     }
 
     public ItemCollectorScreenHandler(int syncId, Inventory playerInventory, Container inventory, ContainerData arrayPropertyDelegate) {
         super(ModScreenHandlers.ITEM_COLLECTOR_SCREEN_HANDLER, syncId);
-        checkContainerSize(inventory, 2);
+        checkContainerSize(inventory, ItemCollectorBlockEntity.SIZE);
         this.inventory = inventory;
         this.propertyDelegate = arrayPropertyDelegate;
 
-        // top: only a net goes in; bottom: the catch, take-only
-        this.addSlot(new Slot(inventory, 0, 80, 11) {
+        // top: only a net goes in; below: the catch in a row of nine slots, take-only (the old single slot is the first)
+        this.addSlot(new Slot(inventory, ItemCollectorBlockEntity.INPUT_SLOT, 80, 11) {
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return stack.is(ModItems.NET);
             }
         });
-        this.addSlot(new Slot(inventory, 1, 80, 59) {
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return false;
-            }
-        });
+        for (int i = 0; i < ItemCollectorBlockEntity.OUTPUT_SLOTS; i++) {
+            this.addSlot(new Slot(inventory, ItemCollectorBlockEntity.FIRST_OUTPUT_SLOT + i, 8 + i * 18, 59) {
+                @Override
+                public boolean mayPlace(ItemStack stack) {
+                    return false;
+                }
+            });
+        }
 
         addStandardInventorySlots(playerInventory, 8, 84);
 
