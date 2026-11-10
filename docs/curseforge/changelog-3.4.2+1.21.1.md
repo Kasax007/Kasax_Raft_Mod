@@ -9,4 +9,8 @@
 - **Driftwood is no tree**: the Driftwood Sapling no longer comes from drifting barrels or driftwood leaves (the leaves drop sticks now) and is gone from the creative tabs. Saplings already in your world stay as they are.
 - The Seafarer's Almanac and the tooltips tell all of this.
 
+### Fixes for Minecraft 1.21.1
+- **Machines are visible again**: the Item Catcher, Makeshift Battery, Makeshift Solar Panel, Quarry, Chunk Destroyer, Simple Grill, Water Purifier, Air Compressor, both cables, the Research Terminal and the Leviathan Altar were invisible on Minecraft 1.21.1. They worked, but you could not see them. Now they show their models again.
+- **Rafts left at sea**: leaving a raft behind while it sails (through a portal, by teleporting far away or by logging out) crashed the server, and when you closed a world while a raft sailed, the game did not save it (you lost what happened since the last autosave). Both are fixed.
+
 Worlds from 3.4 for 1.21.1 load as they are.
