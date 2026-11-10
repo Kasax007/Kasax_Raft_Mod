@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 /**
- * 3.5: machines keep their energy when they are broken. The drop carries the energy in the {@code raft:stored_energy}
+ * 3.4.2: machines keep their energy when they are broken. The drop carries the energy in the {@code raft:stored_energy}
  * item component (copied by the block's loot table, {@code copy_components} from the block entity), the tooltip shows
  * it, and the machine gets it back when it is placed again. An empty machine drops a plain item, so it still stacks with
  * new ones; items with different amounts never stack (their components differ), and two with the same amount stack

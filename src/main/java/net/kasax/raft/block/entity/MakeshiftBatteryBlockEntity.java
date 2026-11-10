@@ -63,7 +63,7 @@ public class MakeshiftBatteryBlockEntity extends BlockEntity implements Extended
         output.putLong("Energy", this.energyStorage.amount);
     }
 
-    // 3.5: the battery keeps its energy when it is broken (see StoredEnergy)
+    // 3.4.2: the battery keeps its energy when it is broken (see StoredEnergy)
     @Override
     protected void applyImplicitComponents(DataComponentGetter components) {
         super.applyImplicitComponents(components);

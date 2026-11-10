@@ -44,7 +44,7 @@ public class ModLootTableProvider extends FabricBlockLootSubProvider {
         dropSelf(ModBlocks.STRIPPED_PALM_WOOD);
         dropSelf(ModBlocks.TITANIUM_BLOCK);
         dropSelf(ModBlocks.RAW_TITANIUM_BLOCK);
-        // driftwood is no tree (3.5): the sapling is in no loot any more, but old worlds keep theirs and it still drops itself
+        // driftwood is no tree (3.4.2): the sapling is in no loot any more, but old worlds keep theirs and it still drops itself
         dropSelf(ModBlocks.DRIFTWOOD_SAPLING);
         dropSelf(ModBlocks.PALM_SAPLING);
         dropSelf(ModBlocks.ITEM_CATCHER);
@@ -73,7 +73,7 @@ public class ModLootTableProvider extends FabricBlockLootSubProvider {
         add(ModBlocks.TITANIUM_ORE, titaniumOreDrops(ModBlocks.TITANIUM_ORE, ModItems.RAW_TITANIUM));
         add(ModBlocks.DEEPSLATE_TITANIUM_ORE, titaniumOreDrops(ModBlocks.DEEPSLATE_TITANIUM_ORE, ModItems.RAW_TITANIUM));
 
-        // leaves (shears or silk touch) or now and then a stick, like mangrove leaves: driftwood is no tree (3.5)
+        // leaves (shears or silk touch) or now and then a stick, like mangrove leaves: driftwood is no tree (3.4.2)
         add(ModBlocks.DRIFTWOOD_LEAVES, createMangroveLeavesDrops(ModBlocks.DRIFTWOOD_LEAVES));
         add(ModBlocks.PALM_LEAVES, withRopeChance(createLeavesDrops(ModBlocks.PALM_LEAVES, ModBlocks.PALM_SAPLING, 0.05f)));
         add(ModBlocks.PALM_COCONUT_LEAVES, fruitLeaveDrops(ModBlocks.PALM_COCONUT_LEAVES, ModItems.COCONUT));
@@ -108,7 +108,7 @@ public class ModLootTableProvider extends FabricBlockLootSubProvider {
         FurnaceBlocks.getFurnaces().forEach(this::dropSelf);
     }
 
-    /** A machine drops itself with the energy it held (3.5: the raft:stored_energy component, see StoredEnergy). */
+    /** A machine drops itself with the energy it held (3.4.2: the raft:stored_energy component, see StoredEnergy). */
     private LootTable.Builder machineDrops(Block block) {
         return LootTable.lootTable().withPool(applyExplosionCondition(block, LootPool.lootPool()
                 .setRolls(ContextIntProviders.exactly(1))

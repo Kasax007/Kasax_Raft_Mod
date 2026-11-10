@@ -106,7 +106,7 @@ public class MakeshiftSolarPanelBlockEntity extends BlockEntity {
         output.putLong("Energy", this.energyStorage.amount);
     }
 
-    // 3.5: the solar panel keeps its energy when it is broken (see StoredEnergy)
+    // 3.4.2: the solar panel keeps its energy when it is broken (see StoredEnergy)
     @Override
     protected void applyImplicitComponents(DataComponentGetter components) {
         super.applyImplicitComponents(components);

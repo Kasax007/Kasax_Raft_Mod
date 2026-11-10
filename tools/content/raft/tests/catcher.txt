@@ -1,7 +1,8 @@
-# Beach Craft 3.5 Item Catcher: nine slots for the catch (the net slot stays).
+# Beach Craft 3.4.2 Item Catcher: nine slots for the catch (the net slot stays).
 # On land: a catcher saved by 3.4 (the net in slot 0, its one catch slot 1 with 37 plastic) loads with the plastic in
-# the first of the nine slots; the menu shows the net slot and the row of nine; a hopper below takes the catch out of
-# every slot but never the net; a hopper above puts a net into the net slot and nothing else into the catcher.
+# the first of the nine slots; the menu shows the net slot and the row of nine; shift-clicking from the inventory puts
+# a net into the net slot and nothing else into the catcher; a hopper below takes the catch out of every slot but never
+# the net; a hopper above puts a net into the net slot and nothing else into the catcher.
 # At sea: a raft with a sail and a catcher sails on autopilot through floating debris: each new kind of catch takes
 # the next slot, and a full stack runs over into a new slot. (Positions on the raft: the vessel's pivot is the middle of
 # its deck, the catcher sits ^2 ^1.5 ^1 from it; its blocks are in shipyard plot 0, world x y z -> 28000011+x 117+y
@@ -56,6 +57,30 @@ fly off
 cmd tp @p 4.5 201 1.5 0 30
 swait 3
 hud on
+# ---- shift-click from the player's inventory (menu slots: 0 net, 1-9 catch, 10-36 inventory, 37-45 hotbar): a net
+# goes into the net slot, other items stay with the player even when a catch slot holds the same item
+log QUICKMOVE
+cmd data merge block 4 201 4 {Items:[{Slot:1b,id:"raft:plastic",count:10}]}
+cmd clear @p
+cmd item replace entity @p hotbar.0 with raft:plastic 5
+cmd item replace entity @p hotbar.1 with raft:net
+swait 3
+openbe 4 201 4
+wait 6 render
+quickmove 37
+quickmove 38
+swait 3
+menu
+check shift_plastic_stays_with_player | execute if items entity @p hotbar.0 raft:plastic[count=5]
+check shift_catch_unchanged | execute if data block 4 201 4 Items[{Slot:1b,id:"raft:plastic",count:10}]
+check shift_net_into_net_slot | execute if data block 4 201 4 Items[{Slot:0b,id:"raft:net"}]
+check shift_net_left_the_player | execute unless items entity @p hotbar.1 raft:net
+quickmove 1
+swait 3
+check shift_catch_to_player | execute if items entity @p hotbar.0 raft:plastic[count=15]
+check shift_catch_slot_empty | execute unless data block 4 201 4 Items[{Slot:1b}]
+esc
+cmd clear @p
 # ---- a hopper below takes the catch from every slot, never the net
 log HOPPER_OUT
 cmd data merge block 4 201 4 {Items:[{Slot:0b,id:"raft:net",count:1},{Slot:1b,id:"raft:plastic",count:2},{Slot:5b,id:"raft:scrap_metal",count:1},{Slot:9b,id:"raft:driftwood_planks",count:1}]}

@@ -1,4 +1,4 @@
-# Beach Craft 3.5 machines: every machine with an energy storage keeps its energy when it is broken (Makeshift
+# Beach Craft 3.4.2 machines: every machine with an energy storage keeps its energy when it is broken (Makeshift
 # Battery, Makeshift Solar Panel, Quarry, Chunk Destroyer, Wind Turbine, Air Compressor). The drop carries it in the
 # raft:stored_energy component, the tooltip shows it, and placed again the machine has it back. One drop per machine
 # and nothing more (no copy), batteries with different energy do not stack, with the same energy they do, an empty one

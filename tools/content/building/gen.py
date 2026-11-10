@@ -103,7 +103,7 @@ def loot_self(block):
 
 
 def loot_machine(block):
-    """A machine drops itself with the energy it held (3.5: the raft:stored_energy component, StoredEnergy.java)."""
+    """A machine drops itself with the energy it held (3.4.2: the raft:stored_energy component, StoredEnergy.java)."""
     _write_loot(block, {'condition': {'type': 'minecraft:survives_explosion'},
                         'entries': [{'type': 'minecraft:item', 'name': rid(block), 'modifier': {
                             'type': 'minecraft:copy_components', 'include': ['raft:stored_energy'],

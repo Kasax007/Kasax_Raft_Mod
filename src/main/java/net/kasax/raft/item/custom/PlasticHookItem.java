@@ -19,7 +19,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.List;
 
 /**
- * Hold right click to pull floating items that are in front of you to your feet. Since 3.5 only items you can see: the
+ * Hold right click to pull floating items that are in front of you to your feet. Since 3.4.2 only items you can see: the
  * hook does not pull through walls, floors or glass (a ray from the eyes to the item against the blocks' collision
  * shapes; water does not stop it).
  */

@@ -293,7 +293,7 @@ public class AirCompressorBlockEntity extends BaseContainerBlockEntity implement
         return Math.round(15.0F * data.get(2) / max);
     }
 
-    // 3.5: the compressor keeps its energy when it is broken (see StoredEnergy); the tank in its slot drops on its own
+    // 3.4.2: the compressor keeps its energy when it is broken (see StoredEnergy); the tank in its slot drops on its own
     @Override
     protected void applyImplicitComponents(DataComponentGetter components) {
         super.applyImplicitComponents(components);

@@ -31,7 +31,7 @@ import java.util.List;
 
 public class ChunkDestroyerBlockEntity extends BlockEntity implements TickableBlockEntity {
     public static final long CAPACITY = 500_000;
-    /** FE for a column in which at least one block is mined. Columns with nothing to mine are free (3.5). */
+    /** FE for a column in which at least one block is mined. Columns with nothing to mine are free (3.4.2). */
     public static final long ENERGY_PER_COLUMN = 100_000;
     /** Ticks between two mined columns. */
     public static final int TICKS_PER_COLUMN = 200;
@@ -186,7 +186,7 @@ public class ChunkDestroyerBlockEntity extends BlockEntity implements TickableBl
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
     }
 
-    // 3.5: the chunk destroyer keeps its energy when it is broken (see StoredEnergy)
+    // 3.4.2: the chunk destroyer keeps its energy when it is broken (see StoredEnergy)
     @Override
     protected void applyImplicitComponents(DataComponentGetter components) {
         super.applyImplicitComponents(components);

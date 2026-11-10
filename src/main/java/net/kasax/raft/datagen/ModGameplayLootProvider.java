@@ -20,7 +20,7 @@ import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntPr
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
-/** Loot of the barrels that drift in the raft dimension (no driftwood sapling since 3.5: driftwood is no tree). */
+/** Loot of the barrels that drift in the raft dimension (no driftwood sapling since 3.4.2: driftwood is no tree). */
 public class ModGameplayLootProvider extends SimpleFabricLootTableSubProvider {
     public ModGameplayLootProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries, LootContextParamSets.EMPTY);

@@ -49,7 +49,7 @@ public class ItemCollectorBlockEntity extends BlockEntity implements MenuProvide
 
     public static final int INPUT_SLOT = 0;
     /**
-     * 3.5: nine slots for the catch (slots 1 to 9; before, slot 1 was the only one). A catcher saved by an older version
+     * 3.4.2: nine slots for the catch (slots 1 to 9; before, slot 1 was the only one). A catcher saved by an older version
      * keeps its catch: its old output slot 1 is the first of the nine.
      */
     public static final int FIRST_OUTPUT_SLOT = 1;

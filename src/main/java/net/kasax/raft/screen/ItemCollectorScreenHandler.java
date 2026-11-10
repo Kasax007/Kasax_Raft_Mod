@@ -70,7 +70,9 @@ public class ItemCollectorScreenHandler extends AbstractContainerMenu {
                 if (!this.moveItemStackTo(originalStack, this.inventory.getContainerSize(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.moveItemStackTo(originalStack, 0, this.inventory.getContainerSize(), false)) {
+            } else if (!this.moveItemStackTo(originalStack, ItemCollectorBlockEntity.INPUT_SLOT, ItemCollectorBlockEntity.INPUT_SLOT + 1, false)) {
+                // from the player's inventory only into the net slot: moveItemStackTo would also top up a catch slot
+                // holding the same item (it does not ask the slot), and the catch slots are take-only
                 return ItemStack.EMPTY;
             }
 

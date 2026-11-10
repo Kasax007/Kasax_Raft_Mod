@@ -59,7 +59,7 @@ public class QuarryBlockEntity extends BlockEntity implements TickableBlockEntit
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
     }
 
-    // 3.5: the quarry keeps its energy when it is broken (see StoredEnergy)
+    // 3.4.2: the quarry keeps its energy when it is broken (see StoredEnergy)
     @Override
     protected void applyImplicitComponents(DataComponentGetter components) {
         super.applyImplicitComponents(components);

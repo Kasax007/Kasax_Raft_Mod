@@ -1,4 +1,4 @@
-# Beach Craft 3.5 Plastic Hook and driftwood sapling.
+# Beach Craft 3.4.2 Plastic Hook and driftwood sapling.
 # The hook only pulls items with nothing solid in the way (a ray from the eyes against the blocks' collision shapes):
 # a diamond 7 blocks away behind a stone wall stays where it is, behind a glass wall too; with the wall gone the same
 # diamond comes to the player's feet.

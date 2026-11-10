@@ -44,7 +44,7 @@ public class Raft implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		// the item component that carries a machine's energy when it is broken (3.5)
+		// the item component that carries a machine's energy when it is broken (3.4.2)
 		StoredEnergy.init();
 
 		// Block state provider used by the palm tree (5% coconut leaves)

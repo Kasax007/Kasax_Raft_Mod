@@ -1131,6 +1131,23 @@ public class BcScript implements FabricClientGameTest {
                 });
                 LOG.info("[bctest] MENU {}", res);
             }
+            case "quickmove" -> {
+                // quickmove <menu slot>: shift-click that slot of the player's open menu, on the server as the game does
+                // it (the slot numbers are the ones the menu command logs; the player's own slots follow the menu's)
+                int idx = Integer.parseInt(arg.trim());
+                String res = need().getServer().computeOnServer(server -> {
+                    var pl = server.getPlayerList().getPlayers().getFirst();
+                    var m = pl.containerMenu;
+                    if (idx < 0 || idx >= m.slots.size()) return "no slot " + idx + " in " + m.getClass().getSimpleName();
+                    String before = m.getSlot(idx).getItem().getCount() + "x" + BuiltInRegistries.ITEM.getKey(m.getSlot(idx).getItem().getItem()).getPath();
+                    m.clicked(idx, 0, net.minecraft.world.inventory.ContainerInput.QUICK_MOVE, pl);
+                    m.broadcastChanges();
+                    var after = m.getSlot(idx).getItem();
+                    return m.getClass().getSimpleName() + " slot " + idx + ": " + before + " -> " + after.getCount() + "x"
+                            + BuiltInRegistries.ITEM.getKey(after.getItem()).getPath();
+                });
+                LOG.info("[bctest] QUICKMOVE {}", res);
+            }
             case "census" -> {
                 // census <half size> [x z] [label]: every structure start in that square (Census)
                 String[] a = arg.split("\\s+");
