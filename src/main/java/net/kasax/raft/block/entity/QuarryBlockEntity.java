@@ -4,9 +4,11 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.kasax.raft.util.StoredEnergy;
 import net.kasax.raft.util.TickableBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Containers;
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QuarryBlockEntity extends BlockEntity implements TickableBlockEntity {
+    public static final long CAPACITY = 10_000;
     private int ticks = 0;
     private BlockPos miningPos = this.worldPosition.below(); // Starting at the block directly below
     private int startX, startZ; // Variables to track X and Z offsets for the 10x10 area
@@ -34,7 +37,7 @@ public class QuarryBlockEntity extends BlockEntity implements TickableBlockEntit
 
 
     private final int MINING_AREA_SIZE = 11; // 11X11 area
-    private final SimpleEnergyStorage energyStorage = new SimpleEnergyStorage(10_000, 1000, 0) {
+    private final SimpleEnergyStorage energyStorage = new SimpleEnergyStorage(CAPACITY, 1000, 0) {
         @Override
         protected void onFinalCommit() {
             super.onFinalCommit();
@@ -53,6 +56,25 @@ public class QuarryBlockEntity extends BlockEntity implements TickableBlockEntit
         setChanged();
         if(level != null)
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+    }
+
+    // 3.4.2: the quarry keeps its energy when it is broken (see StoredEnergy)
+    @Override
+    protected void applyImplicitComponents(BlockEntity.DataComponentInput components) {
+        super.applyImplicitComponents(components);
+        this.energyStorage.amount = StoredEnergy.fromItem(components.get(StoredEnergy.COMPONENT), this.energyStorage.getCapacity());
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+        StoredEnergy.toItem(components, this.energyStorage.amount);
+    }
+
+    @Override
+    public void removeComponentsFromTag(net.minecraft.nbt.CompoundTag tag) {
+        super.removeComponentsFromTag(tag);
+        StoredEnergy.removeFromTag(tag);
     }
 
     public SimpleEnergyStorage getEnergyStorage() {

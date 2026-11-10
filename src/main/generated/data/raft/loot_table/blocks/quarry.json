@@ -10,6 +10,15 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:copy_components",
+              "include": [
+                "raft:stored_energy"
+              ],
+              "source": "block_entity"
+            }
+          ],
           "name": "raft:quarry"
         }
       ],

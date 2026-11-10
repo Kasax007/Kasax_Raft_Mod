@@ -102,7 +102,10 @@ def air_compressor_block():
             variants[f'facing={facing},running={running}'] = v
     assets.blockstate(M, 'air_compressor', variants)
     assets.block_item(M, 'air_compressor')
-    assets.loot_self(M, 'air_compressor')
+    # drops itself with the energy it held (3.4.2: the raft:stored_energy component, StoredEnergy.java)
+    assets.loot_block(M, 'air_compressor', [{'type': 'minecraft:item', 'name': 'raft:air_compressor', 'functions': [
+        {'function': 'minecraft:copy_components', 'source': 'block_entity', 'include': ['raft:stored_energy']}]}],
+                      conditions=[{'condition': 'minecraft:survives_explosion'}])
     assets.tag(M, 'block', 'minecraft:mineable/pickaxe', ['air_compressor'])
 
 

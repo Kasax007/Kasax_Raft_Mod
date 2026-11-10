@@ -4,9 +4,11 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.kasax.raft.util.StoredEnergy;
 import net.kasax.raft.util.TickableBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Containers;
@@ -14,6 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.kasax.raft.compat.ValueInput;
@@ -26,13 +29,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChunkDestroyerBlockEntity extends BlockEntity implements TickableBlockEntity {
+    public static final long CAPACITY = 500_000;
+    /** FE for a column in which at least one block is mined. Columns with nothing to mine are free (3.4.2). */
+    public static final long ENERGY_PER_COLUMN = 100_000;
+    /** Ticks between two mined columns. */
+    public static final int TICKS_PER_COLUMN = 200;
+    /** Empty columns passed over per tick: they take no mining time, but a whole empty chunk is not checked at once. */
+    private static final int EMPTY_COLUMNS_PER_TICK = 16;
+
     private int ticks = 0;
     private BlockPos miningPos;
     private int chunkX, chunkZ; // Chunk coordinates
     private boolean miningComplete = false;
     private boolean finished = false;
+    /** The current column was found to hold something to mine (not saved: it is checked again after loading). */
+    private boolean columnHasBlocks = false;
 
-    private final SimpleEnergyStorage energyStorage = new SimpleEnergyStorage(500_000, 100_000, 0) {
+    private final SimpleEnergyStorage energyStorage = new SimpleEnergyStorage(CAPACITY, 100_000, 0) {
         @Override
         protected void onFinalCommit() {
             super.onFinalCommit();
@@ -47,40 +60,74 @@ public class ChunkDestroyerBlockEntity extends BlockEntity implements TickableBl
         this.miningPos = new BlockPos(chunkX << 4, pos.getY() - 1, chunkZ << 4); // Start at the top of the first column
     }
 
+    /**
+     * Mines one column every {@link #TICKS_PER_COLUMN} ticks for {@link #ENERGY_PER_COLUMN} FE. Columns with nothing to
+     * mine (only air, water, lava or unbreakable blocks) are passed over at once and cost nothing, also when the
+     * machine is out of energy, so empty parts of the chunk never hold it up.
+     */
     @Override
     public void tick() {
-        if (!finished) {
-            if (this.level == null || this.level.isClientSide()) {
-                return;
-            }
+        if (finished || this.level == null || this.level.isClientSide()) {
+            return;
+        }
+        if (miningComplete) {
+            finished = true; // Stop further actions once complete
+            replaceWaterInMinedArea();
+            replaceWaterOnWalls();
+            setChanged();
+            return;
+        }
 
-            // Check if enough energy to mine a column
-            if (this.energyStorage.amount < 100_000) {
-                return; // Not enough energy
-            }
-
-            if (miningComplete) {
-                finished = true; // Stop further actions once complete
-                replaceWaterInMinedArea();
-                replaceWaterOnWalls();
-                return;
-            }
-
-            if (this.ticks++ % 200 == 0) { // Mining every second
-                mineColumn();
+        int skipped = 0;
+        while (!columnHasBlocks) {
+            if (columnHasSomethingToMine()) {
+                columnHasBlocks = true;
+            } else {
+                moveToNextColumn();
+                setChanged();
+                if (miningComplete || ++skipped >= EMPTY_COLUMNS_PER_TICK) {
+                    return;
+                }
             }
         }
+
+        // Check if enough energy to mine a column
+        if (this.energyStorage.amount < ENERGY_PER_COLUMN) {
+            return; // Not enough energy
+        }
+
+        if (this.ticks++ % TICKS_PER_COLUMN == 0) {
+            mineColumn();
+        }
+    }
+
+    /** Air, water, lava (bubble columns too) and unbreakable blocks such as bedrock are left as they are. */
+    private boolean canMine(BlockState state, BlockPos pos) {
+        return !state.isAir() && !(state.getBlock() instanceof LiquidBlock) && !state.is(Blocks.BUBBLE_COLUMN)
+                && state.getDestroySpeed(this.level, pos) >= 0;
+    }
+
+    private boolean columnHasSomethingToMine() {
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        for (int y = this.miningPos.getY(); y >= this.level.getMinBuildHeight(); y--) {
+            pos.set(this.miningPos.getX(), y, this.miningPos.getZ());
+            if (canMine(this.level.getBlockState(pos), pos)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void mineColumn() {
         List<ItemStack> drops = new ArrayList<>();
         BlockPos.MutableBlockPos currentPos = new BlockPos.MutableBlockPos();
+        int mined = 0;
 
         for (int y = this.miningPos.getY(); y >= this.level.getMinBuildHeight(); y--) {
             currentPos.set(this.miningPos.getX(), y, this.miningPos.getZ());
 
             BlockState state = this.level.getBlockState(currentPos);
-            if (state.isAir() || state.is(Blocks.WATER) || state.is(Blocks.LAVA) || state.getDestroySpeed(this.level, currentPos) < 0) {
+            if (!canMine(state, currentPos)) {
                 continue;
             }
 
@@ -90,12 +137,17 @@ public class ChunkDestroyerBlockEntity extends BlockEntity implements TickableBl
                             .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(currentPos))
                             .withOptionalParameter(LootContextParams.BLOCK_ENTITY, this.level.getBlockEntity(currentPos))));
 
-            this.level.destroyBlock(currentPos, false);
-            drops.addAll(blockDrops);
+            if (this.level.destroyBlock(currentPos, false)) {
+                mined++;
+                drops.addAll(blockDrops);
+            }
         }
 
-        // Consume energy for the entire column mined
-        this.energyStorage.amount -= 100_000;
+        // Only a column in which something was mined costs energy (it may have been dug out since it was checked)
+        if (mined > 0) {
+            this.energyStorage.amount -= ENERGY_PER_COLUMN;
+            setChanged();
+        }
 
         // Handle drops
         Storage<ItemVariant> aboveStorage = findItemStorage((ServerLevel) this.level, this.worldPosition.above());
@@ -110,6 +162,7 @@ public class ChunkDestroyerBlockEntity extends BlockEntity implements TickableBl
     }
 
     private void moveToNextColumn() {
+        columnHasBlocks = false;
         miningPos = miningPos.offset(1, 0, 0);
 
         // Move to the next column when reaching the chunk border
@@ -130,6 +183,25 @@ public class ChunkDestroyerBlockEntity extends BlockEntity implements TickableBl
         setChanged();
         if(level != null)
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+    }
+
+    // 3.4.2: the chunk destroyer keeps its energy when it is broken (see StoredEnergy)
+    @Override
+    protected void applyImplicitComponents(BlockEntity.DataComponentInput components) {
+        super.applyImplicitComponents(components);
+        this.energyStorage.amount = StoredEnergy.fromItem(components.get(StoredEnergy.COMPONENT), this.energyStorage.getCapacity());
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+        StoredEnergy.toItem(components, this.energyStorage.amount);
+    }
+
+    @Override
+    public void removeComponentsFromTag(net.minecraft.nbt.CompoundTag tag) {
+        super.removeComponentsFromTag(tag);
+        StoredEnergy.removeFromTag(tag);
     }
 
     public SimpleEnergyStorage getEnergyStorage() {
@@ -220,6 +292,9 @@ public class ChunkDestroyerBlockEntity extends BlockEntity implements TickableBl
         this.chunkX = input.getIntOr("ChunkX", this.chunkX);
         this.chunkZ = input.getIntOr("ChunkZ", this.chunkZ);
         this.finished = input.getBooleanOr("finished", false);
+        // past the last column: the mining is done (the water clean-up was still to come when it was saved)
+        this.miningComplete = this.miningPos.getZ() >= (this.chunkZ << 4) + 16;
+        this.columnHasBlocks = false;
     }
 
     @Override

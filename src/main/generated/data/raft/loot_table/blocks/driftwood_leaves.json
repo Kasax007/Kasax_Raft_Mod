@@ -42,90 +42,33 @@
               "type": "minecraft:item",
               "conditions": [
                 {
-                  "condition": "minecraft:all_of",
-                  "terms": [
-                    {
-                      "condition": "minecraft:survives_explosion"
-                    },
-                    {
-                      "condition": "minecraft:table_bonus",
-                      "chances": [
-                        0.0025
-                      ],
-                      "enchantment": "minecraft:fortune"
-                    }
-                  ]
+                  "condition": "minecraft:table_bonus",
+                  "chances": [
+                    0.02,
+                    0.022222223,
+                    0.025,
+                    0.033333335,
+                    0.1
+                  ],
+                  "enchantment": "minecraft:fortune"
                 }
               ],
-              "name": "raft:driftwood_sapling"
+              "functions": [
+                {
+                  "function": "minecraft:set_count",
+                  "count": {
+                    "type": "minecraft:uniform",
+                    "max": 2,
+                    "min": 1
+                  }
+                },
+                {
+                  "function": "minecraft:explosion_decay"
+                }
+              ],
+              "name": "minecraft:stick"
             }
           ]
-        }
-      ],
-      "rolls": 1
-    },
-    {
-      "conditions": [
-        {
-          "condition": "minecraft:inverted",
-          "term": {
-            "condition": "minecraft:any_of",
-            "terms": [
-              {
-                "condition": "minecraft:match_tool",
-                "predicate": {
-                  "items": "minecraft:shears"
-                }
-              },
-              {
-                "condition": "minecraft:match_tool",
-                "predicate": {
-                  "predicates": {
-                    "minecraft:enchantments": [
-                      {
-                        "enchantments": "minecraft:silk_touch",
-                        "levels": {
-                          "min": 1
-                        }
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          }
-        }
-      ],
-      "entries": [
-        {
-          "type": "minecraft:item",
-          "conditions": [
-            {
-              "condition": "minecraft:table_bonus",
-              "chances": [
-                0.02,
-                0.022222223,
-                0.025,
-                0.033333335,
-                0.1
-              ],
-              "enchantment": "minecraft:fortune"
-            }
-          ],
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "max": 2,
-                "min": 1
-              }
-            },
-            {
-              "function": "minecraft:explosion_decay"
-            }
-          ],
-          "name": "minecraft:stick"
         }
       ],
       "rolls": 1

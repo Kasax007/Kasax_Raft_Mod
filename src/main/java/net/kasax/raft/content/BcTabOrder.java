@@ -115,8 +115,8 @@ public final class BcTabOrder {
         tab(BcTabs.Tab.NATURE,
                 // ground
                 "shell_sand black_sand volcanic_ash pumice bubble_vent",
-                // trees
-                "palm_sapling palm_leaves palm_coconut_leaves driftwood_sapling driftwood_leaves",
+                // trees (the driftwood sapling is in no tab since 3.4.2: driftwood is no tree, old saplings stay valid)
+                "palm_sapling palm_leaves palm_coconut_leaves driftwood_leaves",
                 // beach plants and flowers
                 "beach_grass sea_oats tropical_fern aloe_vera pineapple_bush pineapple pineapple_crown",
                 "hibiscus bird_of_paradise plumeria beach_morning_glory tropical_orchid spider_lily heliconia",

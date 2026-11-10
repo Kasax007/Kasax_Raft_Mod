@@ -127,6 +127,7 @@ public final class DivingContent {
         ItemGroupEvents.modifyEntriesEvent(ResourceKey.create(Registries.CREATIVE_MODE_TAB, BcTabs.Tab.VOYAGE.key()))
                 .register(entries -> entries.addAfter(DIVING_HELMET, lampHelmet()));
         EnergyStorage.SIDED.registerForBlockEntity(AirCompressorBlockEntity::getEnergyStorage, AIR_COMPRESSOR_BE);
+        net.kasax.raft.util.StoredEnergy.register(AIR_COMPRESSOR, AirCompressorBlockEntity.ENERGY_CAPACITY);
         DispenserBlock.registerBehavior(HARPOON_ITEM, new ProjectileDispenseBehavior(HARPOON_ITEM));
     }
 }

@@ -26,7 +26,6 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.kasax.raft.world.OceanDebris;
@@ -47,10 +46,17 @@ import java.util.Optional;
 
 public class ItemCollectorBlockEntity extends BlockEntity implements net.kasax.raft.compat.RemovalSideEffects, MenuProvider, ImplementedInventory {
     public static final BooleanProperty HAS_NET = BooleanProperty.create("has_net");
-    private final NonNullList<ItemStack> inventory = NonNullList.withSize(2, ItemStack.EMPTY);
 
-    private static final int INPUT_SLOT = 0;
-    private static final int OUTPUT_SLOT = 1;
+    public static final int INPUT_SLOT = 0;
+    /**
+     * 3.4.2: nine slots for the catch (slots 1 to 9; before, slot 1 was the only one). A catcher saved by an older version
+     * keeps its catch: its old output slot 1 is the first of the nine.
+     */
+    public static final int FIRST_OUTPUT_SLOT = 1;
+    public static final int OUTPUT_SLOTS = 9;
+    public static final int SIZE = FIRST_OUTPUT_SLOT + OUTPUT_SLOTS;
+
+    private final NonNullList<ItemStack> inventory = NonNullList.withSize(SIZE, ItemStack.EMPTY);
 
     protected final ContainerData propertyDelegate;
     private int progress = 0;
@@ -86,8 +92,18 @@ public class ItemCollectorBlockEntity extends BlockEntity implements net.kasax.r
         };
     }
 
+    /** The newest kind of catch, drawn above the catcher: the last filled of the nine slots. */
     public ItemStack getRenderStack() {
-        return this.getItem(OUTPUT_SLOT);
+        for (int slot = SIZE - 1; slot >= FIRST_OUTPUT_SLOT; slot--) {
+            if (!this.getItem(slot).isEmpty()) {
+                return this.getItem(slot);
+            }
+        }
+        return ItemStack.EMPTY;
+    }
+
+    public static boolean isOutputSlot(int slot) {
+        return slot >= FIRST_OUTPUT_SLOT && slot < SIZE;
     }
 
     public void updateBlockState() {
@@ -101,7 +117,7 @@ public class ItemCollectorBlockEntity extends BlockEntity implements net.kasax.r
         }
     }
 
-    /** Hoppers may only insert nets into the top slot and only take the catch from the bottom slot. */
+    /** Hoppers may only insert nets into the top slot and only take the catch from the nine slots below. */
     @Override
     public boolean canPlaceItemThroughFace(int slot, ItemStack stack, net.minecraft.core.@org.jetbrains.annotations.Nullable Direction side) {
         return slot == INPUT_SLOT && stack.is(ModItems.NET);
@@ -109,7 +125,7 @@ public class ItemCollectorBlockEntity extends BlockEntity implements net.kasax.r
 
     @Override
     public boolean canTakeItemThroughFace(int slot, ItemStack stack, net.minecraft.core.Direction side) {
-        return slot == OUTPUT_SLOT;
+        return isOutputSlot(slot);
     }
 
     @Override
@@ -227,7 +243,7 @@ public class ItemCollectorBlockEntity extends BlockEntity implements net.kasax.r
                 setChanged(level, pos, state);
             }
         }
-        if (isOutputSlotEmptyOrReceivable() && this.hasRecipe(serverLevel)) {
+        if (this.hasRecipe(serverLevel)) {
             // the net works faster the faster the raft sails (1x at 1 block/s, up to 4x)
             this.progress += 1 + Math.min(3, (int) (speed * 4));
             setChanged(level, pos, state);
@@ -238,24 +254,62 @@ public class ItemCollectorBlockEntity extends BlockEntity implements net.kasax.r
         }
     }
 
-    /** Puts a caught stack into the output slot if it fits there. */
-    private boolean insertCatch(ItemStack stack) {
-        ItemStack out = this.getItem(OUTPUT_SLOT);
-        if (out.isEmpty()) {
-            this.setItem(OUTPUT_SLOT, stack);
-            return true;
+    /** How many of the stack fit into the nine output slots (onto the same item, then into empty slots). */
+    private int roomFor(ItemStack stack) {
+        int room = 0;
+        for (int slot = FIRST_OUTPUT_SLOT; slot < SIZE && room < stack.getCount(); slot++) {
+            ItemStack out = this.getItem(slot);
+            if (out.isEmpty()) {
+                room += stack.getMaxStackSize();
+            } else if (ItemStack.isSameItemSameComponents(out, stack)) {
+                room += Math.max(0, out.getMaxStackSize() - out.getCount());
+            }
         }
-        if (ItemStack.isSameItemSameComponents(out, stack) && out.getCount() + stack.getCount() <= out.getMaxStackSize()) {
-            out.grow(stack.getCount());
-            return true;
-        }
-        return false;
+        return Math.min(room, stack.getCount());
     }
 
     /**
-     * Collects floating ocean debris that the catcher sails through. The items go to the output slot,
-     * as long as the slot holds the same item (or nothing) and has room. On a sailing raft the catcher's block is in
-     * the raft's shipyard plot: the search is around where that block is in the world.
+     * Puts as much of the stack as fits into the output slots: first onto stacks of the same item, then into the first
+     * empty slot. Shrinks the given stack by what went in and returns that number; tells the clients when it changed.
+     */
+    private int addToOutputs(ItemStack stack) {
+        int before = stack.getCount();
+        for (int slot = FIRST_OUTPUT_SLOT; slot < SIZE && !stack.isEmpty(); slot++) {
+            ItemStack out = this.getItem(slot);
+            if (!out.isEmpty() && ItemStack.isSameItemSameComponents(out, stack)) {
+                int moved = Math.min(stack.getCount(), out.getMaxStackSize() - out.getCount());
+                if (moved > 0) {
+                    out.grow(moved);
+                    stack.shrink(moved);
+                }
+            }
+        }
+        for (int slot = FIRST_OUTPUT_SLOT; slot < SIZE && !stack.isEmpty(); slot++) {
+            if (this.getItem(slot).isEmpty()) {
+                int moved = Math.min(stack.getCount(), stack.getMaxStackSize());
+                this.getItems().set(slot, stack.split(moved));
+            }
+        }
+        int added = before - stack.getCount();
+        if (added > 0) {
+            setChanged();
+        }
+        return added;
+    }
+
+    /** Puts a caught stack into the output slots if all of it fits there. */
+    private boolean insertCatch(ItemStack stack) {
+        if (roomFor(stack) < stack.getCount()) {
+            return false;
+        }
+        addToOutputs(stack.copy());
+        return true;
+    }
+
+    /**
+     * Collects floating ocean debris that the catcher sails through. The items go to the nine output slots: onto the
+     * same item while it has room, else into an empty slot. On a sailing raft the catcher's block is in the raft's
+     * shipyard plot: the search is around where that block is in the world.
      */
     private void catchDebris(ServerLevel level, BlockPos pos) {
         Vec3 world = net.kasax.raft.content.vessel.VesselShipyard.toWorld(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
@@ -264,25 +318,14 @@ public class ItemCollectorBlockEntity extends BlockEntity implements net.kasax.r
         }
         AABB area = new AABB(world, world).inflate(2.0, 2.0, 2.0);
         for (ItemEntity item : level.getEntitiesOfClass(ItemEntity.class, area, OceanDebris::isDebris)) {
-            ItemStack stack = item.getItem();
-            ItemStack out = this.getItem(OUTPUT_SLOT);
-            if (out.isEmpty()) {
-                this.setItem(OUTPUT_SLOT, stack.copy());
-                item.discard();
-            } else if (ItemStack.isSameItemSameComponents(out, stack)) {
-                int moved = Math.min(out.getMaxStackSize() - out.getCount(), stack.getCount());
-                if (moved <= 0) {
-                    continue;
-                }
-                out.grow(moved);
-                stack.shrink(moved);
-                if (stack.isEmpty()) {
-                    item.discard();
-                } else {
-                    item.setItem(stack);
-                }
-            } else {
+            ItemStack stack = item.getItem().copy();
+            if (addToOutputs(stack) <= 0) {
                 continue;
+            }
+            if (stack.isEmpty()) {
+                item.discard();
+            } else {
+                item.setItem(stack);
             }
             level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.3F, 1.2F);
             setChanged(level, pos, getBlockState());
@@ -308,8 +351,8 @@ public class ItemCollectorBlockEntity extends BlockEntity implements net.kasax.r
             }
         }
 
-        // Add the result to the output slot
-        this.setItem(OUTPUT_SLOT, result.copyWithCount(this.getItem(OUTPUT_SLOT).getCount() + result.getCount()));
+        // Add the result to the output slots
+        addToOutputs(result.copy());
         updateBlockState();
         level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
     }
@@ -326,23 +369,11 @@ public class ItemCollectorBlockEntity extends BlockEntity implements net.kasax.r
         Optional<RecipeHolder<ItemCatchingRecipe>> recipe = getCurrentRecipe(level);
         if (recipe.isEmpty()) return false;
         ItemStack result = recipe.get().value().assemble(new SingleRecipeInput(this.inventory.getFirst()), level.registryAccess());
-        return canInsertAmountIntoOutputSlot(result) && canInsertItemIntoOutputSlot(result.getItem());
+        return !result.isEmpty() && roomFor(result) >= result.getCount();
     }
 
     private Optional<RecipeHolder<ItemCatchingRecipe>> getCurrentRecipe(ServerLevel level) {
         return this.matchGetter.getRecipeFor(new SingleRecipeInput(this.inventory.getFirst()), level);
-    }
-
-    private boolean canInsertItemIntoOutputSlot(Item item) {
-        return this.getItem(OUTPUT_SLOT).getItem() == item || this.getItem(OUTPUT_SLOT).isEmpty();
-    }
-
-    private boolean canInsertAmountIntoOutputSlot(ItemStack result) {
-        return this.getItem(OUTPUT_SLOT).getCount() + result.getCount() <= getItem(OUTPUT_SLOT).getMaxStackSize();
-    }
-
-    private boolean isOutputSlotEmptyOrReceivable() {
-        return this.getItem(OUTPUT_SLOT).isEmpty() || this.getItem(OUTPUT_SLOT).getCount() < this.getItem(OUTPUT_SLOT).getMaxStackSize();
     }
 
     //Sync for client renderer of item

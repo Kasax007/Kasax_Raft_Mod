@@ -16,6 +16,7 @@ GAMERULES = {
     'do_daylight_cycle': 'doDaylightCycle', 'do_weather_cycle': 'doWeatherCycle', 'do_mob_spawning': 'doMobSpawning',
     'send_command_feedback': 'sendCommandFeedback', 'command_block_output': 'commandBlockOutput',
     'spawn_phantoms': 'doInsomnia', 'max_entity_cramming': 'maxEntityCramming',
+    'max_block_modifications': 'commandModificationBlockLimit',
 }
 # attributes: 1.21.1 names most of them with a generic. / player. prefix
 ATTRIBUTES = {

@@ -1,0 +1,169 @@
+# Beach Craft 3.4.2 Item Catcher: nine slots for the catch (the net slot stays).
+# On land: a catcher saved by 3.4 (the net in slot 0, its one catch slot 1 with 37 plastic) loads with the plastic in
+# the first of the nine slots; the menu shows the net slot and the row of nine; shift-clicking from the inventory puts
+# a net into the net slot and nothing else into the catcher; a hopper below takes the catch out of every slot but never
+# the net; a hopper above puts a net into the net slot and nothing else into the catcher.
+# At sea: a raft with a sail and a catcher sails on autopilot through floating debris: each new kind of catch takes
+# the next slot, and a full stack runs over into a new slot. (Positions on the raft: the vessel's pivot is the middle of
+# its deck, the catcher sits ^2 ^1.5 ^1 from it; its blocks are in shipyard plot 0, world x y z -> 28000011+x 117+y
+# 28000012+z.)
+# Run: tools/bctest/run.sh tools/content/raft/tests/catcher.txt <outdir>
+deadline 15
+world catchertest
+rd 5
+gui 2
+chat off
+cmd gamerule spawn_monsters false
+cmd gamerule random_tick_speed 0
+cmd gamerule raft:shark_bites false
+cmd tp @p 4.5 201 1.5 0 30
+settle 60
+cmd fill -6 200 -8 14 200 12 minecraft:spruce_planks
+cmd fill -6 201 -8 14 210 12 air
+cmd kill @e[type=item]
+cmd tp @p 4.5 201 1.5 0 30
+swait 5
+# ---- a catcher as 3.4 saved it
+log OLD_SAVE
+cmd setblock 4 201 4 raft:item_catcher[has_net=true]{Items:[{Slot:0b,id:"raft:net",count:1},{Slot:1b,id:"raft:plastic",count:37}]}
+swait 3
+check old_net_kept | execute if data block 4 201 4 Items[{Slot:0b,id:"raft:net",count:1}]
+check old_catch_in_first_slot | execute if data block 4 201 4 Items[{Slot:1b,id:"raft:plastic",count:37}]
+check nothing_else_in_it | execute unless data block 4 201 4 Items[2]
+openbe 4 201 4
+wait 8 render
+menu
+shot c01_old_save_menu
+esc
+# ---- all nine slots full: the menu shows them, the catcher shows the newest kind (the last filled slot)
+log NINE_SLOTS
+cmd data merge block 4 201 4 {Items:[{Slot:0b,id:"raft:net",count:1},{Slot:1b,id:"raft:plastic",count:37},{Slot:2b,id:"raft:scrap_metal",count:12},{Slot:3b,id:"raft:driftwood_planks",count:64},{Slot:4b,id:"raft:palm_leaves",count:20},{Slot:5b,id:"raft:titanium_nugget",count:1},{Slot:6b,id:"minecraft:string",count:5},{Slot:7b,id:"raft:rope",count:2},{Slot:8b,id:"minecraft:iron_nugget",count:9},{Slot:9b,id:"raft:coconut",count:3}]}
+swait 3
+check nine_slots_hold | execute if data block 4 201 4 Items[{Slot:9b,id:"raft:coconut"}]
+openbe 4 201 4
+wait 8 render
+menu
+shot c02_nine_slots
+esc
+# seen from above: the coconut of the last slot floats in the catcher (not the plastic of the first)
+hud off
+fly on
+cmd tp @p 4.5 203.2 4.5 0 90
+swait 3
+pose 4.5 203.2 4.5 0 90
+wait 10 render
+shot c03_catcher_shows_newest
+fly off
+cmd tp @p 4.5 201 1.5 0 30
+swait 3
+hud on
+# ---- shift-click from the player's inventory (menu slots: 0 net, 1-9 catch, 10-36 inventory, 37-45 hotbar): a net
+# goes into the net slot, other items stay with the player even when a catch slot holds the same item
+log QUICKMOVE
+cmd data merge block 4 201 4 {Items:[{Slot:1b,id:"raft:plastic",count:10}]}
+cmd clear @p
+cmd item replace entity @p hotbar.0 with raft:plastic 5
+cmd item replace entity @p hotbar.1 with raft:net
+swait 3
+openbe 4 201 4
+wait 6 render
+quickmove 37
+quickmove 38
+swait 3
+menu
+check shift_plastic_stays_with_player | execute if items entity @p hotbar.0 raft:plastic[count=5]
+check shift_catch_unchanged | execute if data block 4 201 4 Items[{Slot:1b,id:"raft:plastic",count:10}]
+check shift_net_into_net_slot | execute if data block 4 201 4 Items[{Slot:0b,id:"raft:net"}]
+check shift_net_left_the_player | execute unless items entity @p hotbar.1 raft:net
+quickmove 1
+swait 3
+check shift_catch_to_player | execute if items entity @p hotbar.0 raft:plastic[count=15]
+check shift_catch_slot_empty | execute unless data block 4 201 4 Items[{Slot:1b}]
+esc
+cmd clear @p
+# ---- a hopper below takes the catch from every slot, never the net
+log HOPPER_OUT
+cmd data merge block 4 201 4 {Items:[{Slot:0b,id:"raft:net",count:1},{Slot:1b,id:"raft:plastic",count:2},{Slot:5b,id:"raft:scrap_metal",count:1},{Slot:9b,id:"raft:driftwood_planks",count:1}]}
+cmd setblock 4 199 4 minecraft:chest
+cmd setblock 4 200 4 minecraft:hopper[facing=down]
+swaitfor 300 execute if items block 4 199 4 container.* raft:driftwood_planks
+swait 40
+check hopper_took_slot_1 | execute if items block 4 199 4 container.* raft:plastic[count=2]
+check hopper_took_slot_5 | execute if items block 4 199 4 container.* raft:scrap_metal[count=1]
+check hopper_took_slot_9 | execute if items block 4 199 4 container.* raft:driftwood_planks[count=1]
+check hopper_left_the_net | execute if data block 4 201 4 Items[{Slot:0b,id:"raft:net"}]
+check catch_slots_empty | execute unless data block 4 201 4 Items[1]
+# ---- a hopper above puts a net into the net slot, its plastic stays in the hopper
+log HOPPER_IN
+cmd setblock 4 200 4 minecraft:spruce_planks
+cmd data merge block 4 201 4 {Items:[]}
+swait 3
+check net_taken_out | execute if block 4 201 4 raft:item_catcher[has_net=false]
+cmd setblock 4 202 4 minecraft:hopper[facing=down]{Items:[{Slot:0b,id:"raft:plastic",count:5},{Slot:1b,id:"raft:net",count:1}]}
+swaitfor 200 execute if data block 4 201 4 Items[{Slot:0b,id:"raft:net"}]
+swait 40
+check hopper_put_the_net_in | execute if data block 4 201 4 Items[{Slot:0b,id:"raft:net"}]
+check hopper_put_nothing_else_in | execute unless data block 4 201 4 Items[1]
+check plastic_stays_in_hopper | execute if items block 4 202 4 container.* raft:plastic[count=5]
+check net_shows | execute if block 4 201 4 raft:item_catcher[has_net=true]
+# ---- at sea: the raft sails through debris
+log SEA
+cmd gamerule max_block_modifications 100000
+cmd gamemode creative @p
+cmd execute in raft:raftdim run tp @p 0.5 112 0.5 0 40
+wait 20
+settle 200
+swait 40
+cmd execute in raft:raftdim run fill -24 100 -24 24 107 48 air
+cmd execute in raft:raftdim run fill -24 108 -24 24 115 48 air
+cmd execute in raft:raftdim run fill -24 92 -24 24 99 48 water
+cmd execute in raft:raftdim run kill @e[type=!minecraft:player,distance=..90]
+swait 20
+cmd execute in raft:raftdim run kill @e[type=minecraft:item,distance=..90]
+cmd execute in raft:raftdim run fill -3 99 -4 3 99 4 raft:raft_foundation
+cmd execute in raft:raftdim run setblock 0 100 -3 raft:helm[facing=south]
+cmd execute in raft:raftdim run setblock 0 100 2 raft:sail[facing=south]
+cmd execute in raft:raftdim run setblock 0 101 2 raft:sail[facing=south]
+cmd execute in raft:raftdim run setblock 2 100 1 raft:item_catcher
+swait 20
+settle 60
+log SET_SAIL
+nearblock raft:helm 48 1.3 0.5 0
+swait 10
+use
+swaitfor 1500 execute in raft:raftdim if entity @e[type=raft:vessel]
+swait 20
+hold sneak 8
+swait 10
+check catcher_sails_in_plot | execute in raft:raftdim if block 28000013 217 28000013 raft:item_catcher
+cmd data merge entity @e[type=raft:vessel,limit=1] {Autopilot:{Forward:1b,Turn:0b,Ticks:240}}
+swait 20
+cmd data get entity @e[type=raft:vessel,limit=1] Pos
+cmd execute in raft:raftdim as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^2 ^1.5 ^1 run summon item ~ ~ ~ {Item:{id:"raft:plastic",count:1},Tags:["raft_debris","bctest"],PickupDelay:32767}
+swait 12
+cmd execute in raft:raftdim as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^2 ^1.5 ^1 run summon item ~ ~ ~ {Item:{id:"raft:scrap_metal",count:1},Tags:["raft_debris","bctest"],PickupDelay:32767}
+swait 12
+cmd execute in raft:raftdim as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^2 ^1.5 ^1 run summon item ~ ~ ~ {Item:{id:"raft:driftwood_planks",count:1},Tags:["raft_debris","bctest"],PickupDelay:32767}
+swait 12
+cmd execute in raft:raftdim as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^2 ^1.5 ^1 run summon item ~ ~ ~ {Item:{id:"raft:driftwood_planks",count:64},Tags:["raft_debris","bctest"],PickupDelay:32767}
+swait 12
+cmd data get entity @e[type=raft:vessel,limit=1] Pos
+cmd execute in raft:raftdim run data get block 28000013 217 28000013 Items
+check sea_plastic_in_slot_1 | execute in raft:raftdim if data block 28000013 217 28000013 Items[{Slot:1b,id:"raft:plastic",count:1}]
+check sea_scrap_in_slot_2 | execute in raft:raftdim if data block 28000013 217 28000013 Items[{Slot:2b,id:"raft:scrap_metal",count:1}]
+check sea_planks_slot_3_full | execute in raft:raftdim if data block 28000013 217 28000013 Items[{Slot:3b,id:"raft:driftwood_planks",count:64}]
+check sea_planks_run_over_to_slot_4 | execute in raft:raftdim if data block 28000013 217 28000013 Items[{Slot:4b,id:"raft:driftwood_planks",count:1}]
+check sea_all_debris_caught | execute in raft:raftdim unless entity @e[type=item,tag=bctest]
+# the raft from above (the catcher sits right of the sail)
+hud off
+cmd data merge entity @e[type=raft:vessel,limit=1] {Autopilot:{Forward:0b,Turn:0b,Ticks:1}}
+swait 60
+fly on
+cmd execute in raft:raftdim as @e[type=raft:vessel,limit=1] at @s run tp @p ~ ~12 ~ 0 90
+swait 5
+where
+pose {px} {py} {pz} 0 90
+wait 10 render
+shot c04_raft_at_sea
+hud on
+checks

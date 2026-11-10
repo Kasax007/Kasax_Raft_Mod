@@ -10,13 +10,19 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
-/** Hold right click to pull floating items that are in front of you to your feet. */
+/**
+ * Hold right click to pull floating items that are in front of you to your feet. Since 3.4.2 only items you can see: the
+ * hook does not pull through walls, floors or glass (a ray from the eyes to the item against the blocks' collision
+ * shapes; water does not stop it).
+ */
 public class PlasticHookItem extends TooltipItem {
     public static final double RANGE = 12.0;
     /** Cosine of the half angle of the pulling cone (about 30 degrees). */
@@ -56,7 +62,7 @@ public class PlasticHookItem extends TooltipItem {
         Vec3 look = user.getLookAngle();
         AABB area = new AABB(eye, eye.add(look.scale(RANGE))).inflate(RANGE * 0.5);
         List<ItemEntity> items = serverLevel.getEntitiesOfClass(ItemEntity.class, area,
-                item -> item.isAlive() && inCone(eye, look, item.position().add(0.0, 0.2, 0.0)));
+                item -> item.isAlive() && inCone(eye, look, item.position().add(0.0, 0.2, 0.0)) && inSight(level, user, eye, item));
         Vec3 target = user.position().add(0.0, 0.4, 0.0);
         for (ItemEntity item : items) {
             Vec3 toPlayer = target.subtract(item.position());
@@ -78,6 +84,21 @@ public class PlasticHookItem extends TooltipItem {
                 user.stopUsingItem();
             }
         }
+    }
+
+    /**
+     * Whether nothing solid is between the eyes and the item: the middle or the top of the item must be in clear view
+     * (the top too, so an item lying close behind a low edge such as the side of a raft is still pulled).
+     */
+    private static boolean inSight(Level level, LivingEntity user, Vec3 eye, ItemEntity item) {
+        Vec3 middle = item.position().add(0.0, item.getBbHeight() * 0.5, 0.0);
+        Vec3 top = item.position().add(0.0, item.getBbHeight(), 0.0);
+        return clear(level, user, eye, middle) || clear(level, user, eye, top);
+    }
+
+    private static boolean clear(Level level, LivingEntity user, Vec3 eye, Vec3 target) {
+        return level.clip(new ClipContext(eye, target, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, user)).getType()
+                == HitResult.Type.MISS;
     }
 
     private static boolean inCone(Vec3 eye, Vec3 look, Vec3 point) {

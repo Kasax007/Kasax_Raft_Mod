@@ -57,9 +57,9 @@ Out here you need a floor under your feet, clean water and a warm meal. Almost e
 # Debris
 Now and then the current carries a plank, palm leaves, plastic or scrap metal past you, from west to east. Most materials come from the islands and from the chests of the places and their guards. Rarely a Message in a Bottle or a Supply Barrel floats by. Use them to open them.
 # Plastic Hook
-Hold use to pull floating items towards you, up to 12 blocks away.
+Hold use to pull floating items towards you, up to 12 blocks away. Nothing solid may be in the way: it does not pull through walls, floors or glass.
 # Item Catcher
-Build it into a raft of your own: it only catches while the raft sails. It picks up the debris it sails through and now and then nets a piece out of the sea, more the faster you sail. Standing still, with the anchor down or on land it catches nothing. It holds one kind of item at a time, so empty it often. Hoppers can take the catch out.
+Build it into a raft of your own: it only catches while the raft sails. It picks up the debris it sails through and now and then nets a piece out of the sea, more the faster you sail. Standing still, with the anchor down or on land it catches nothing. It holds up to nine stacks of its catch. Hoppers can take the catch out.
 With an Item Catcher Net inside, it also fishes up Unrefined Ocean Garbage while you sail, faster at speed. A net lasts 32 catches. Smelt the garbage into a Trash Cube and use the cube for 1 to 3 surprises.
 # Foundations
 Seven planks with rope in the top and bottom middle make 4 Raft Foundations. Rope comes from 2 palm leaves or 3 string. A foundation and 2 scrap metal make a Reinforced Foundation.
@@ -103,9 +103,10 @@ The sea has its own small tech line. It runs on FE (Team Reborn Energy), so mach
 * Copper Cable carries 128 FE per tick, Titanium Cable 512.
 # Machines
 * Quarry: digs an 11 by 11 hole down to the bottom of the world for 1,000 FE per block. A chest on top collects the drops.
-* Chunk Destroyer: mines its whole chunk, 100,000 FE per column.
+* Chunk Destroyer: mines its whole chunk, 100,000 FE per column with blocks in it. Empty columns are free.
 * Brick Furnace: 1.5 times faster. Titanium Furnace: 32 times faster, and every result is doubled.
 * Air Compressor: fills Oxygen Tanks and charges the Sea Scooter (see Diving).
+Batteries, generators and machines keep their energy when you break them. The item shows how much, and the machine has it back when you place it.
 # Expedition tech
 Control Panels, Server Racks and Satellite Dishes blink and hum on your walls. A Circuit Board (copper, a slime ball and plastic) is in most machine recipes.
 Research Terminals and Expedition Radios from the old expedition still work. Listen to them!"""

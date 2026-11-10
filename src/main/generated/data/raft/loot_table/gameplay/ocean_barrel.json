@@ -115,11 +115,6 @@
         },
         {
           "type": "minecraft:item",
-          "name": "raft:driftwood_sapling",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
           "functions": [
             {
               "function": "minecraft:set_count",

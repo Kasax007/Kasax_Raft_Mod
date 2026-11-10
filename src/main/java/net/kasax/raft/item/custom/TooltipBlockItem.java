@@ -1,5 +1,6 @@
 package net.kasax.raft.item.custom;
 
+import net.kasax.raft.util.StoredEnergy;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
@@ -10,7 +11,10 @@ import net.minecraft.world.level.block.Block;
 
 import java.util.function.Consumer;
 
-/** A block item that shows a few aqua tooltip lines (the old Block#appendTooltip is gone in 26.x). */
+/**
+ * A block item that shows a few aqua tooltip lines (the old Block#appendTooltip is gone in 26.x), and the energy of a
+ * machine that was broken with energy in it ({@link StoredEnergy}).
+ */
 public class TooltipBlockItem extends BlockItem {
     private final Component[] lines;
 
@@ -33,6 +37,7 @@ public class TooltipBlockItem extends BlockItem {
         for (Component line : lines) {
             builder.accept(line);
         }
+        StoredEnergy.appendTooltip(stack, getBlock(), builder);
         super.appendHoverText(stack, context, builderList121, flag);
     }
 }
