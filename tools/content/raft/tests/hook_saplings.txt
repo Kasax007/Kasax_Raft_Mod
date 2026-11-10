@@ -6,6 +6,8 @@
 # 20,000 times each, every other loot table 300 times), it is in no creative tab, and it is still a block that drops
 # itself (old worlds keep their saplings).
 # On a sailing raft (its blocks are in the shipyard plot then) a wall of the raft stops the hook too.
+# The hook is held for server ticks (press, swait/swaitfor, release), not client ticks: while the server lags (new
+# chunks in the raft dimension), a short hold of client ticks can reach the server as a single tick.
 # Run: tools/bctest/run.sh tools/content/raft/tests/hook_saplings.txt <outdir>
 deadline 18
 world hooktest
@@ -35,7 +37,9 @@ swait 5
 pose 2.5 201 1.5 0 15
 face 2.5 201.1 8.5
 swait 2
-hold use 60
+press use
+swait 80
+release use
 swait 5
 check behind_stone_stays | execute positioned 2.5 201 8.5 if entity @e[type=item,tag=hooktest,distance=..0.7]
 # ---- the same behind a glass wall
@@ -46,7 +50,9 @@ swait 5
 pose 2.5 201 1.5 0 15
 face 2.5 201.1 8.5
 swait 2
-hold use 60
+press use
+swait 80
+release use
 swait 5
 check behind_glass_stays | execute positioned 2.5 201 8.5 if entity @e[type=item,tag=hooktest,distance=..0.7]
 hud off
@@ -61,7 +67,9 @@ swait 5
 pose 2.5 201 1.5 0 15
 face 2.5 201.1 8.5
 swait 2
-hold use 60
+press use
+swaitfor 200 execute as @p at @s if entity @e[type=item,tag=hooktest,distance=..2.5]
+release use
 swait 5
 check open_item_pulled | execute if entity @e[type=item,tag=hooktest,distance=..2.5]
 check open_item_left_its_place | execute positioned 2.5 201 8.5 unless entity @e[type=item,tag=hooktest,distance=..3]
@@ -136,7 +144,9 @@ cmd execute in raft:raftdim as @e[type=raft:vessel,limit=1] at @s rotated as @s 
 swait 10
 lookat minecraft:item
 swait 3
-hold use 60
+press use
+swait 80
+release use
 swait 5
 check raft_wall_stops_hook | execute in raft:raftdim as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^-2 ^1.2 ^8 if entity @e[type=item,tag=hookraft,distance=..0.7]
 hud off
@@ -148,7 +158,9 @@ swait 10
 check raft_wall_gone | execute in raft:raftdim if block 28000009 218 28000016 air
 lookat minecraft:item
 swait 3
-hold use 60
+press use
+swaitfor 200 execute as @p at @s if entity @e[type=item,tag=hookraft,distance=..2.5]
+release use
 swait 5
 check raft_open_item_pulled | execute as @p at @s if entity @e[type=item,tag=hookraft,distance=..2.5]
 hud off
