@@ -13,6 +13,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -100,5 +101,11 @@ public class ItemCatcher extends BaseEntityBlock implements SimpleWaterloggedBlo
     @Override
     protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
         return net.minecraft.world.inventory.AbstractContainerMenu.getRedstoneSignalFromBlockEntity(level.getBlockEntity(pos));
+    }
+
+    /** 1.21.1: a BaseEntityBlock draws no model unless it says so (the newer game draws it by default). */
+    @Override
+    protected RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 }

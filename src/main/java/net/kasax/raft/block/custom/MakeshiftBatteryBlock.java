@@ -7,6 +7,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -47,5 +48,11 @@ public class MakeshiftBatteryBlock extends BaseEntityBlock {
         }
         return createTickerHelper(type, ModBlockEntities.MAKESHIFT_BATTERY_BLOCK_ENTITY,
                 (lvl, pos, st, be) -> be.tick(lvl, pos, st));
+    }
+
+    /** 1.21.1: a BaseEntityBlock draws no model unless it says so (the newer game draws it by default). */
+    @Override
+    protected RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 }

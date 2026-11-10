@@ -18,6 +18,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -170,5 +171,11 @@ public class SimpleGrillBlock extends BaseEntityBlock {
     private static boolean isCampfireFood(Level level, ItemStack stack) {
         return !stack.isEmpty() && level.getRecipeManager().getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CAMPFIRE_COOKING,
                 new net.minecraft.world.item.crafting.SingleRecipeInput(stack), level).isPresent();
+    }
+
+    /** 1.21.1: a BaseEntityBlock draws no model unless it says so (the newer game draws it by default). */
+    @Override
+    protected RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 }

@@ -1,0 +1,49 @@
+# 1.21.1 port: the blocks with a block entity that extend BaseEntityBlock draw their model. On 1.21.1 a
+# BaseEntityBlock draws nothing unless the block asks for its model (the newer game draws it by default): up to 3.4.1
+# the Item Catcher, Makeshift Battery and Solar Panel, Quarry, Chunk Destroyer, Simple Grill, Water Purifier, Air
+# Compressor, both cables, Research Terminal and Leviathan Altar were invisible on 1.21.1. All twelve stand in a row
+# (x 0 to 11) for the screenshot; the cables run between two batteries so that they show their arms.
+# Run: tools/bctest/run.sh tools/port1211/tests/machine_looks.txt <outdir>
+deadline 8
+world machinelooks
+rd 4
+gui 2
+chat off
+cmd gamerule doMobSpawning false
+cmd gamerule randomTickSpeed 0
+cmd gamerule doDaylightCycle false
+cmd time set 6000
+cmd gamemode creative @p
+cmd tp @p 5.5 203 -5.5 0 25
+settle 60
+cmd fill -4 200 -4 16 200 8 minecraft:spruce_planks
+cmd fill -4 201 -4 16 206 8 air
+cmd kill @e[type=item]
+log PLACE
+cmd setblock 0 201 2 raft:item_catcher[has_net=true]
+cmd setblock 1 201 2 raft:makeshift_battery
+cmd setblock 2 201 2 raft:makeshift_solar_panel
+cmd setblock 3 201 2 raft:quarry
+cmd setblock 4 201 2 raft:chunk_destroyer
+cmd setblock 5 201 2 raft:simple_grill
+cmd setblock 6 201 2 raft:water_purifier
+cmd setblock 7 201 2 raft:air_compressor
+cmd setblock 8 201 2 raft:copper_cable
+cmd setblock 9 201 2 raft:titanium_cable
+cmd setblock 10 201 2 raft:research_terminal
+cmd setblock 11 201 2 raft:leviathan_altar
+cmd setblock 8 201 3 raft:makeshift_battery
+cmd setblock 9 201 3 raft:makeshift_battery
+swait 10
+check catcher_placed | execute if block 0 201 2 raft:item_catcher
+check altar_placed | execute if block 11 201 2 raft:leviathan_altar
+fly on
+pose 5.5 203 -5.5 0 25
+hud off
+wait 20 render
+shot l01_machines_row
+pose 5.5 204.5 0.5 0 60
+wait 10 render
+shot l02_machines_close
+hud on
+checks
