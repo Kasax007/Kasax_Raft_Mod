@@ -924,8 +924,12 @@ public class VesselEntity extends Entity {
         }
     }
 
-    /** Called when the raft leaves the level (removed or unloaded; 1.21.1: from the entity unload events). */
-    public void onRemoval(RemovalReason reason) {
+    /**
+     * Called when the raft leaves the level (removed or unloaded; 1.21.1: from the entity unload events). On 1.21.1 the
+     * reason is null when only the raft's chunk stops being tracked (the player went far away, or the server is
+     * stopping): the raft lets go of its plot and colliders like on unloading, and takes them again when it ticks.
+     */
+    public void onRemoval(@Nullable RemovalReason reason) {
         VesselColliders.remove(this);
         if (this.level() instanceof ServerLevel level && this.plot >= 0) {
             if (this.plotHeld) {
@@ -934,7 +938,7 @@ public class VesselEntity extends Entity {
             }
             VesselShipyard yard = VesselShipyard.get(level);
             yard.detach(this.plot, this);
-            if (reason.shouldDestroy() && this.isDocked()) {
+            if (reason != null && reason.shouldDestroy() && this.isDocked()) {
                 yard.free(this.plot);
             }
         }

@@ -63,7 +63,8 @@ public final class VesselEvents {
             InteractionResult result = placeFoundationOnWater(player, level, hand);
             return new net.minecraft.world.InteractionResultHolder<>(result, player.getItemInHand(hand));
         });
-        // 1.21.1: a raft leaving the level (removed or unloaded) frees its plot hold and its colliders
+        // 1.21.1: a raft leaving the level (removed or unloaded) frees its plot hold and its colliders. The event also
+        // comes when only the raft's chunk stops being tracked (no removal reason then, see VesselEntity.onRemoval)
         net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents.ENTITY_UNLOAD.register((entity, level) -> {
             if (entity instanceof VesselEntity vessel) vessel.onRemoval(entity.getRemovalReason());
         });
