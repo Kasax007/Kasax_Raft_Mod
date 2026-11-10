@@ -393,6 +393,21 @@ public final class VesselStructure {
         }, self -> null);
     }
 
+    /**
+     * Like {@link #clip}, against the blocks' collision shapes (local coordinates): what stops a player, an item or the
+     * Plastic Hook's line of sight.
+     */
+    public @Nullable BlockHitResult clipCollision(Vec3 from, Vec3 to) {
+        return BlockGetter.traverseBlocks(from, to, this, (self, pos) -> {
+            BlockState state = self.blocks.get(pos.asLong());
+            if (state == null) {
+                return null;
+            }
+            VoxelShape shape = state.getCollisionShape(EmptyBlockGetter.INSTANCE, pos);
+            return shape.isEmpty() ? null : shape.clip(from, to, pos);
+        }, self -> null);
+    }
+
     // ------------------------------------------------------------------------------------------- save / load
     private static int pack(int x, int y, int z) {
         return x | y << 8 | z << 16;

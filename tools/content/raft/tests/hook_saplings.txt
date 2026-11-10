@@ -5,8 +5,9 @@
 # The driftwood sapling is no tree any more: no loot table gives it (the debris barrel and the driftwood leaves rolled
 # 20,000 times each, every other loot table 300 times), it is in no creative tab, and it is still a block that drops
 # itself (old worlds keep their saplings).
+# On a sailing raft (its blocks are in the shipyard plot then) a wall of the raft stops the hook too.
 # Run: tools/bctest/run.sh tools/content/raft/tests/hook_saplings.txt <outdir>
-deadline 10
+deadline 18
 world hooktest
 rd 4
 gui 2
@@ -92,4 +93,66 @@ check old_sapling_still_a_block | execute if block 0 201 12 raft:driftwood_sapli
 cmd setblock 0 201 12 air destroy
 swait 5
 check old_sapling_drops_itself | execute if entity @e[type=item,nbt={Item:{id:"raft:driftwood_sapling"}}]
+# ---- on a sailing raft: its blocks wait in the shipyard plot while it sails, and a wall of the raft stops the hook like
+# a wall in the world. The raft: foundations -3..3 x -4..4 at y 99, helm at the stern, a sail, a plank wall on the bow
+# edge (z 4, y 100-102). The player stands on the deck 2 blocks right of the middle and looks ahead (south) at a diamond
+# 3.5 blocks off the bow (no gravity, so it stays put): the wall stops the hook. Then the wall is taken off the raft (in
+# the plot: world x y z -> 28000011+x 117+y 28000012+z) and the same diamond comes. Nobody at the helm: the raft holds still.
+log HOOK_RAFT
+cmd gamemode creative @p
+cmd clear @p
+cmd gamerule max_block_modifications 100000
+cmd gamerule raft:shark_bites false
+cmd execute in raft:raftdim run tp @p 0.5 112 0.5 0 40
+wait 20
+settle 200
+swait 40
+cmd execute in raft:raftdim run fill -24 100 -24 24 107 48 air
+cmd execute in raft:raftdim run fill -24 108 -24 24 115 48 air
+cmd execute in raft:raftdim run fill -24 92 -24 24 99 48 water
+cmd execute in raft:raftdim run kill @e[type=!minecraft:player,distance=..90]
+swait 20
+cmd execute in raft:raftdim run kill @e[type=minecraft:item,distance=..90]
+cmd execute in raft:raftdim run fill -3 99 -4 3 99 4 raft:raft_foundation
+cmd execute in raft:raftdim run setblock 0 100 -3 raft:helm[facing=south]
+cmd execute in raft:raftdim run setblock 0 100 2 raft:sail[facing=south]
+cmd execute in raft:raftdim run setblock 0 101 2 raft:sail[facing=south]
+cmd execute in raft:raftdim run fill -3 100 4 3 102 4 minecraft:oak_planks
+swait 20
+settle 60
+nearblock raft:helm 48 1.3 0.5 0
+swait 10
+use
+swaitfor 1500 execute in raft:raftdim if entity @e[type=raft:vessel]
+swait 20
+hold sneak 8
+swait 20
+check raft_sails | execute in raft:raftdim if entity @e[type=raft:vessel]
+check raft_wall_in_plot | execute in raft:raftdim if block 28000009 218 28000016 minecraft:oak_planks
+cmd item replace entity @p hotbar.0 with raft:plastic_hook
+slot 1
+cmd execute in raft:raftdim as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^-2 ^1 ^-2 run tp @p ~ ~ ~ ~ 8
+cmd execute in raft:raftdim as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^-2 ^1.2 ^8 run summon item ~ ~ ~ {Item:{id:"minecraft:diamond",count:1},PickupDelay:32767,Age:-32768,NoGravity:1b,Tags:["hookraft"]}
+swait 10
+lookat minecraft:item
+swait 3
+hold use 60
+swait 5
+check raft_wall_stops_hook | execute in raft:raftdim as @e[type=raft:vessel,limit=1] at @s rotated as @s positioned ^-2 ^1.2 ^8 if entity @e[type=item,tag=hookraft,distance=..0.7]
+hud off
+wait 5 render
+shot h04_raft_wall_stays
+hud on
+cmd execute in raft:raftdim run fill 28000008 217 28000016 28000014 219 28000016 air
+swait 10
+check raft_wall_gone | execute in raft:raftdim if block 28000009 218 28000016 air
+lookat minecraft:item
+swait 3
+hold use 60
+swait 5
+check raft_open_item_pulled | execute as @p at @s if entity @e[type=item,tag=hookraft,distance=..2.5]
+hud off
+wait 5 render
+shot h05_raft_open_item_at_feet
+hud on
 checks
