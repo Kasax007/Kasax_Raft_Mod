@@ -1,6 +1,6 @@
 package net.kasax.raft.screen;
 
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
+import net.kasax.raft.platform.ExtendedScreenHandlerType;
 import net.kasax.raft.Raft;
 import net.kasax.raft.util.BlockPosPayload;
 import net.minecraft.core.Registry;

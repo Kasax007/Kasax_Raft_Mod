@@ -23,11 +23,11 @@ package net.kasax.raft.block.cable;
  */
 
 
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.kasax.raft.platform.ServerTickEvents;
+import net.kasax.raft.platform.transfer.Transaction;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import team.reborn.energy.api.EnergyStorage;
+import net.kasax.raft.platform.energy.EnergyStorage;
 
 import java.util.*;
 

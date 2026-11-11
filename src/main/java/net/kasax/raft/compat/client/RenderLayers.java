@@ -2,7 +2,7 @@ package net.kasax.raft.compat.client;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.kasax.raft.platform.client.BlockRenderLayerMap;
 import net.kasax.raft.Raft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.registries.BuiltInRegistries;

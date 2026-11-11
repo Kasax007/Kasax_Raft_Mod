@@ -1,6 +1,6 @@
 package net.kasax.raft.content.cozy;
 
-import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
+import net.kasax.raft.platform.FlammableBlockRegistry;
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.BcReg;
 import net.kasax.raft.content.BcTabs;

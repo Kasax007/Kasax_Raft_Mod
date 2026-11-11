@@ -1,9 +1,12 @@
 package net.kasax.raft;
 
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
-import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.Mod;
+import net.kasax.raft.platform.PayloadTypeRegistry;
+import net.kasax.raft.platform.FlammableBlockRegistry;
+import net.kasax.raft.platform.StrippableBlockRegistry;
 import net.kasax.raft.block.ModBlocks;
 import net.kasax.raft.block.cable.CableBlockEntity;
 import net.kasax.raft.block.entity.*;
@@ -23,9 +26,10 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import team.reborn.energy.api.EnergyStorage;
+import net.kasax.raft.platform.energy.EnergyStorage;
 
-public class Raft implements ModInitializer {
+@Mod(Raft.MOD_ID)
+public class Raft {
 	// This logger is used to write text to the console and the log file.
 	// It is considered best practice to use your mod id as the logger's name.
 	// That way, it's clear which mod wrote info, warnings, and errors.
@@ -41,7 +45,11 @@ public class Raft implements ModInitializer {
 		StrippableBlockRegistry.register(block, stripped);
 	}
 
-	@Override
+	/** NeoForge: the mod's init runs in the first registry event (net.kasax.raft.platform.NeoPlatform). */
+	public Raft(IEventBus modBus, ModContainer container, Dist dist) {
+		net.kasax.raft.platform.NeoPlatform.init(modBus, container, dist, this::onInitialize);
+	}
+
 	public void onInitialize() {
 		// the item component that carries a machine's energy when it is broken (3.4.2)
 		StoredEnergy.init();

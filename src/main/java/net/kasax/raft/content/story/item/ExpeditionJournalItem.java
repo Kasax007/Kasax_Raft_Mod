@@ -1,6 +1,6 @@
 package net.kasax.raft.content.story.item;
 
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.kasax.raft.platform.ServerPlayNetworking;
 import net.kasax.raft.content.story.StoryContent;
 import net.kasax.raft.content.story.StoryProgress;
 import net.kasax.raft.content.story.StoryUtil;

@@ -1,6 +1,6 @@
 package net.kasax.raft.content.shore;
 
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.kasax.raft.platform.ServerTickEvents;
 import net.kasax.raft.content.shore.entity.SeagullEntity;
 import net.kasax.raft.world.dimension.ModDimensions;
 import net.minecraft.core.BlockPos;

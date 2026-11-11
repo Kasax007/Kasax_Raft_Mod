@@ -1,7 +1,7 @@
 package net.kasax.raft.content.story.client;
 
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.kasax.raft.platform.client.ClientTickEvents;
+import net.kasax.raft.platform.client.ClientPlayNetworking;
 import net.kasax.raft.content.story.item.ExpeditionJournalItem;
 import net.kasax.raft.content.story.net.OpenJournalPayload;
 import net.kasax.raft.content.story.net.OpenLogPayload;

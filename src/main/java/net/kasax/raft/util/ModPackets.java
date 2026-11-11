@@ -1,6 +1,6 @@
 package net.kasax.raft.util;
 
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.kasax.raft.platform.client.ClientPlayNetworking;
 import net.kasax.raft.screen.MakeshiftBatteryScreenHandler;
 import net.minecraft.client.Minecraft;
 

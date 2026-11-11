@@ -3,8 +3,6 @@ package net.kasax.raft.content.vessel.client;
 import net.kasax.raft.content.vessel.block.HelmBlock;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.kasax.raft.content.vessel.VesselPose;
 import net.kasax.raft.content.vessel.VesselStructure;
 import net.minecraft.client.Minecraft;
@@ -23,7 +21,6 @@ import java.util.List;
  * every visible block (blocks enclosed by full opaque blocks on all sides are skipped) and, once per tick, the world
  * light at each block.
  */
-@Environment(EnvType.CLIENT)
 final class VesselClientModel {
     final VesselStructure structure;
     final Object modelSet;

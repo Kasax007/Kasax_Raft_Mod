@@ -1,7 +1,7 @@
 package net.kasax.raft.content.npc;
 
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.kasax.raft.platform.PayloadTypeRegistry;
+import net.kasax.raft.platform.ServerPlayNetworking;
 import net.kasax.raft.content.ContentModule;
 import net.kasax.raft.content.npc.entity.NpcEntity;
 import net.kasax.raft.content.npc.net.NpcActionPayload;

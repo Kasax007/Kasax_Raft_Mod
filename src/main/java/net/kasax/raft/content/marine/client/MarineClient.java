@@ -1,7 +1,7 @@
 package net.kasax.raft.content.marine.client;
 
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
+import net.kasax.raft.platform.client.EntityRendererRegistry;
+import net.kasax.raft.platform.client.EntityModelLayerRegistry;
 import net.kasax.raft.Raft;
 import net.kasax.raft.client.render.SharkModel;
 import net.kasax.raft.client.render.SharkRenderer;

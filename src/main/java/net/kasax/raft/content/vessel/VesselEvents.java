@@ -1,11 +1,11 @@
 package net.kasax.raft.content.vessel;
 
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.event.player.UseItemCallback;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.kasax.raft.platform.ServerLifecycleEvents;
+import net.kasax.raft.platform.UseItemCallback;
+import net.kasax.raft.platform.PayloadTypeRegistry;
+import net.kasax.raft.platform.ServerPlayNetworking;
+import net.kasax.raft.platform.ServerTickEvents;
+import net.kasax.raft.platform.ServerPlayConnectionEvents;
 import net.kasax.raft.content.vessel.net.VesselArrivalPayload;
 import net.kasax.raft.content.vessel.net.VesselBlocksPayload;
 import net.kasax.raft.content.vessel.net.VesselBreakPayload;
@@ -65,7 +65,7 @@ public final class VesselEvents {
         });
         // 1.21.1: a raft leaving the level (removed or unloaded) frees its plot hold and its colliders. The event also
         // comes when only the raft's chunk stops being tracked (no removal reason then, see VesselEntity.onRemoval)
-        net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents.ENTITY_UNLOAD.register((entity, level) -> {
+        net.kasax.raft.platform.ServerEntityEvents.ENTITY_UNLOAD.register((entity, level) -> {
             if (entity instanceof VesselEntity vessel) vessel.onRemoval(entity.getRemovalReason());
         });
         ServerTickEvents.END_SERVER_TICK.register(server -> {

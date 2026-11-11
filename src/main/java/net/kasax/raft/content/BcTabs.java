@@ -1,6 +1,6 @@
 package net.kasax.raft.content;
 
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.kasax.raft.platform.FabricItemGroup;
 import net.kasax.raft.Raft;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;

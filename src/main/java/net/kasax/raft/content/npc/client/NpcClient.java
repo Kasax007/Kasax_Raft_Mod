@@ -1,7 +1,7 @@
 package net.kasax.raft.content.npc.client;
 
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.kasax.raft.platform.client.ClientPlayNetworking;
+import net.kasax.raft.platform.client.EntityRendererRegistry;
 import net.kasax.raft.content.npc.NpcCharacter;
 import net.kasax.raft.content.npc.NpcContent;
 import net.kasax.raft.content.npc.net.NpcDialogPayload;

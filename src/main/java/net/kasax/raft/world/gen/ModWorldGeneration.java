@@ -1,7 +1,7 @@
 package net.kasax.raft.world.gen;
 
-import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
+import net.kasax.raft.platform.BiomeModifications;
+import net.kasax.raft.platform.BiomeSelectors;
 import net.kasax.raft.world.biome.ModBiomes;
 import net.minecraft.world.level.levelgen.GenerationStep;
 

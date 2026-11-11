@@ -1,8 +1,6 @@
 package net.kasax.raft.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.model.geom.ModelPart;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -19,7 +17,6 @@ import java.util.Map;
  * is lifted by {@link #LIFT} pixels along its normal, so it is always drawn on top. Found with the bctest command
  * {@code dumpmodels} and tools/bctest/zfight_entities.py.
  */
-@Environment(EnvType.CLIENT)
 public final class ModelZFix {
     /** How far the smaller face is lifted, in model pixels (1/16 block before the model's own scale). */
     public static final float LIFT = 0.04F;

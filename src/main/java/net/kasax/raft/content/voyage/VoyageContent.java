@@ -1,7 +1,7 @@
 package net.kasax.raft.content.voyage;
 
 import com.mojang.serialization.Codec;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
+import net.kasax.raft.platform.ExtendedScreenHandlerType;
 import net.kasax.raft.content.BcReg;
 import net.kasax.raft.content.BcTabs;
 import net.minecraft.core.Registry;

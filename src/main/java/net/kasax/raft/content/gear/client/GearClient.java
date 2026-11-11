@@ -1,7 +1,7 @@
 package net.kasax.raft.content.gear.client;
 
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.kasax.raft.platform.client.ClientTickEvents;
+import net.kasax.raft.platform.client.EntityRendererRegistry;
 import net.kasax.raft.content.gear.GearContent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;

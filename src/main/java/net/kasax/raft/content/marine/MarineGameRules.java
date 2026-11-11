@@ -1,7 +1,7 @@
 package net.kasax.raft.content.marine;
 
-import net.fabricmc.fabric.api.gamerule.v1.GameRuleFactory;
-import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
+import net.kasax.raft.platform.GameRuleFactory;
+import net.kasax.raft.platform.GameRuleRegistry;
 import net.minecraft.world.level.GameRules;
 import net.kasax.raft.Raft;
 import net.minecraft.server.level.ServerLevel;

@@ -142,7 +142,7 @@ public final class GearContent {
             new Item.Properties().durability(128), TAB);
     public static final net.minecraft.world.inventory.MenuType<TackleMenu> TACKLE_MENU = net.minecraft.core.Registry.register(
             net.minecraft.core.registries.BuiltInRegistries.MENU, Raft.id("tackle_box"),
-            new net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType<>(TackleMenu::new,
+            new net.kasax.raft.platform.ExtendedScreenHandlerType<>(TackleMenu::new,
                     net.minecraft.network.codec.ByteBufCodecs.VAR_INT));
 
     private static Item armour(String name, Holder<ArmorMaterial> material, Type type, String tooltip) {

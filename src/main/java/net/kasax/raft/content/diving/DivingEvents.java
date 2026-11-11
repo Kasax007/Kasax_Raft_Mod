@@ -1,6 +1,6 @@
 package net.kasax.raft.content.diving;
 
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.kasax.raft.platform.ServerTickEvents;
 import net.kasax.raft.content.diving.item.OxygenTankItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;

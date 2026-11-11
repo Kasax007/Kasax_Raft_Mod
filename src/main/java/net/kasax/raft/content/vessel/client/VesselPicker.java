@@ -1,7 +1,5 @@
 package net.kasax.raft.content.vessel.client;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.kasax.raft.content.vessel.VesselColliders;
 import net.kasax.raft.content.vessel.VesselEntity;
 import net.kasax.raft.content.vessel.VesselPose;
@@ -24,7 +22,6 @@ import java.util.List;
  * block shapes. If a raft block is closer than what vanilla found, the raft becomes the crosshair target (as an
  * entity: the use key then sends the exact block to the server, see {@link VesselClient}); the block gets an outline.
  */
-@Environment(EnvType.CLIENT)
 public final class VesselPicker {
     private static @Nullable VesselEntity targetVessel;
     private static @Nullable BlockPos targetLocal;

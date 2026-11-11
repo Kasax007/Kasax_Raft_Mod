@@ -1,7 +1,7 @@
 package net.kasax.raft.compat;
 
-import net.fabricmc.fabric.api.registry.CompostingChanceRegistry;
-import net.fabricmc.fabric.api.registry.FuelRegistry;
+import net.kasax.raft.platform.CompostingChanceRegistry;
+import net.kasax.raft.platform.FuelRegistry;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.item.ItemStack;

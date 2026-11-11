@@ -1,7 +1,5 @@
 package net.kasax.raft.content.voyage.client;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.kasax.raft.content.voyage.ExpeditionRaftMenu;
 import net.kasax.raft.compat.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
@@ -14,7 +12,6 @@ import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.Nullable;
 
 /** Raft storage: 3 or 6 rows of cargo, plus the engine panel (fuel slot, flame) and the anchor lever on the right. */
-@Environment(EnvType.CLIENT)
 public class ExpeditionRaftScreen extends net.kasax.raft.compat.gui.ContainerScreen<ExpeditionRaftMenu> {
     private static final ResourceLocation TEXTURE = net.kasax.raft.Raft.id("textures/gui/expedition_raft.png");
     private static final int WIDTH = 210;

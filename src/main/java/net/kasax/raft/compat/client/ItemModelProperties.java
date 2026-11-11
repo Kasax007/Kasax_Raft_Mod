@@ -2,8 +2,6 @@ package net.kasax.raft.compat.client;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.diving.DivingContent;
 import net.kasax.raft.item.ModItems;
@@ -25,7 +23,6 @@ import java.util.Map;
  * and on shelves, another model in the hand; set by ItemRendererGuiModelMixin) and raft:angle (wreck compass needle). Also the water
  * fog distance per biome that the newer game keeps in biome attributes (assets/raft/port1211/water_fog.json).
  */
-@Environment(EnvType.CLIENT)
 public final class ItemModelProperties {
     /** True while the item renderer asks for the GUI look of an item. */
     public static final ThreadLocal<Boolean> GUI = ThreadLocal.withInitial(() -> false);

@@ -1,6 +1,6 @@
 package net.kasax.raft.content.npc;
 
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.kasax.raft.platform.ServerPlayNetworking;
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.npc.entity.NpcEntity;
 import net.kasax.raft.content.npc.net.NpcDialogPayload;
@@ -37,7 +37,7 @@ public final class NpcDialogue {
     public static void open(ServerPlayer player, NpcEntity npc) {
         NpcCharacter c = npc.character();
         int stage = NpcStory.stage(player);
-        Map<String, Long> met = player.getAttachedOrElse(NpcContent.MET, Map.of());
+        Map<String, Long> met = NpcContent.MET.getOrElse(player, Map.of());
         boolean first = !met.containsKey(c.id);
         long now = player.level().getGameTime();
         ItemStack gift = gift(c, player, first, met.getOrDefault(c.id, 0L), now, stage);
@@ -54,7 +54,7 @@ public final class NpcDialogue {
 
         Map<String, Long> updated = new HashMap<>(met);
         updated.put(c.id, gift.isEmpty() ? met.getOrDefault(c.id, 0L) : now);
-        player.setAttached(NpcContent.MET, updated);
+        NpcContent.MET.set(player, updated);
         if (!gift.isEmpty()) {
             give(player, gift.copy());
         }

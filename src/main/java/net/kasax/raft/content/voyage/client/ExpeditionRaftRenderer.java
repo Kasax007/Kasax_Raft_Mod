@@ -2,8 +2,6 @@ package net.kasax.raft.content.voyage.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.kasax.raft.content.voyage.ExpeditionRaft;
 import net.kasax.raft.content.voyage.RaftUpgrade;
 import net.kasax.raft.compat.render.Model;
@@ -19,7 +17,6 @@ import net.minecraft.util.Unit;
 import net.minecraft.world.phys.AABB;
 
 /** Renders the Expedition Raft: the model, the glowing lantern flames and the water mask over the deck. */
-@Environment(EnvType.CLIENT)
 public class ExpeditionRaftRenderer extends EntityRenderer<ExpeditionRaft, ExpeditionRaftRenderState> {
     private static final ResourceLocation TEXTURE = net.kasax.raft.Raft.id("textures/entity/expedition_raft.png");
     private static final ResourceLocation GLOW = net.kasax.raft.Raft.id("textures/entity/expedition_raft_glow.png");

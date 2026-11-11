@@ -1,7 +1,7 @@
 package net.kasax.raft.content.guide;
 
-import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
-import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
+import net.kasax.raft.platform.ServerEntityWorldChangeEvents;
+import net.kasax.raft.platform.ServerPlayerEvents;
 import net.kasax.raft.world.dimension.ModDimensions;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -21,10 +21,10 @@ public final class GuideEvents {
 
     private static void check(ServerPlayer player) {
         if (player.isSpectator() || player.level().dimension() != ModDimensions.RAFTDIM_LEVEL_KEY
-                || Boolean.TRUE.equals(player.getAttached(GuideContent.ALMANAC_GIVEN))) {
+                || Boolean.TRUE.equals(GuideContent.ALMANAC_GIVEN.get(player))) {
             return;
         }
-        player.setAttached(GuideContent.ALMANAC_GIVEN, true);
+        GuideContent.ALMANAC_GIVEN.set(player, true);
         give(player, new ItemStack(GuideContent.SEAFARERS_ALMANAC));
         player.sendSystemMessage(Component.translatable("message.raft.almanac.given").withStyle(ChatFormatting.AQUA));
     }

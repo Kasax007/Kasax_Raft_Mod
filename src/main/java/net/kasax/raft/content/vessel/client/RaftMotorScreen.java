@@ -1,7 +1,5 @@
 package net.kasax.raft.content.vessel.client;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.kasax.raft.content.vessel.RaftMotorMenu;
 import net.kasax.raft.compat.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -16,7 +14,6 @@ import java.util.Locale;
  * The raft motor's fuel bay: drawn on the game's own furnace window with only the fuel slot and the flame (the input
  * slot, arrow and result slot are painted over), plus the running time of the fuel in the motor.
  */
-@Environment(EnvType.CLIENT)
 public class RaftMotorScreen extends net.kasax.raft.compat.gui.ContainerScreen<RaftMotorMenu> {
     private static final ResourceLocation TEXTURE = ResourceLocation.withDefaultNamespace("textures/gui/container/furnace.png");
     private static final ResourceLocation LIT = ResourceLocation.withDefaultNamespace("container/furnace/lit_progress");

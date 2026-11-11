@@ -1,7 +1,5 @@
 package net.kasax.raft.content.gear.client;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.gear.menu.TackleMenu;
 import net.kasax.raft.compat.gui.GuiGraphicsExtractor;
@@ -14,7 +12,6 @@ import net.minecraft.world.entity.player.Inventory;
  * The tackle box of the Driftwood Fishing Rod: the bait slot and the lure slot (with faint pictures of what goes in),
  * each with its name and what it does beside it.
  */
-@Environment(EnvType.CLIENT)
 public class TackleScreen extends net.kasax.raft.compat.gui.ContainerScreen<TackleMenu> {
     private static final ResourceLocation TEXTURE = Raft.id("textures/gui/container/tackle_box.png");
 

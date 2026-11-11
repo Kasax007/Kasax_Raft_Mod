@@ -1,7 +1,8 @@
 package net.kasax.raft.gametest;
 
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.common.Mod;
+import net.kasax.raft.platform.client.ClientTickEvents;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -11,10 +12,14 @@ import net.minecraft.client.gui.screens.TitleScreen;
  * starts {@link BcScript} on its own thread once the title screen is up, feeds it client ticks and closes the game
  * when the script is done.
  */
-public class Harness implements ClientModInitializer {
+@Mod(value = "raft_gametest", dist = Dist.CLIENT)
+public class Harness {
     private static boolean started;
 
-    @Override
+    public Harness() {
+        onInitializeClient();
+    }
+
     public void onInitializeClient() {
         ClientTickEvents.END_CLIENT_TICK.register(mc -> {
             ClientGameTestContext.onClientTick();

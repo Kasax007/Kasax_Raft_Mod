@@ -1,6 +1,6 @@
 package net.kasax.raft.content.building.client;
 
-import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
+import net.kasax.raft.platform.client.EntityModelLayerRegistry;
 import net.kasax.raft.content.building.BuildingBlocks;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 

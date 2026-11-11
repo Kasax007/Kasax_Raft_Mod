@@ -1,8 +1,7 @@
 package net.kasax.raft;
 
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
+import net.kasax.raft.platform.client.EntityRendererRegistry;
+import net.kasax.raft.platform.client.EntityModelLayerRegistry;
 import net.kasax.raft.client.render.SharkModel;
 import net.kasax.raft.client.render.SharkRenderer;
 import net.kasax.raft.entity.ModEntities;
@@ -17,9 +16,8 @@ import net.kasax.raft.util.ModPackets;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 
-public class RaftClient implements ClientModInitializer {
+public class RaftClient {
 
-    @Override
     public void onInitializeClient() {
         // 1.21.1: the render layers the newer game picks from the textures (tools/port1211/layers.py)
         net.kasax.raft.compat.client.RenderLayers.init();

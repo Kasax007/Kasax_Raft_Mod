@@ -10,4 +10,8 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface CreativeScreenInvoker {
     @Invoker("selectTab")
     void bc$selectTab(CreativeModeTab tab);
+
+    /** NeoForge pages the creative tabs: the pages, to show the one with the tab. */
+    @org.spongepowered.asm.mixin.gen.Accessor("pages")
+    java.util.List<net.neoforged.neoforge.client.gui.CreativeTabsScreenPage> bc$pages();
 }

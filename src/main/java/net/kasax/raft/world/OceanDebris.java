@@ -1,6 +1,6 @@
 package net.kasax.raft.world;
 
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.kasax.raft.platform.ServerTickEvents;
 import net.kasax.raft.Raft;
 import net.kasax.raft.block.ModBlocks;
 import net.kasax.raft.content.story.StoryContent;

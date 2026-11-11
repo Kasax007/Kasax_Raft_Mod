@@ -24,13 +24,13 @@ public class ModPoiTypes {
     public static PoiType SCARECROW;
 
     public static void register() {
-        RAFT_PORTAL = net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper.register(RAFT_PORTAL_KEY.location(), 0, 1,
+        RAFT_PORTAL = net.kasax.raft.platform.PointOfInterestHelper.register(RAFT_PORTAL_KEY.location(), 0, 1,
                 Set.copyOf(ModBlocks.RAFT_PORTAL.getStateDefinition().getPossibleStates()));
 
         // Only the lower half of a scarecrow counts.
         Set<BlockState> scarecrowStates = ModBlocks.SCARECROW.getStateDefinition().getPossibleStates().stream()
                 .filter(state -> state.getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.LOWER)
                 .collect(Collectors.toSet());
-        SCARECROW = net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper.register(SCARECROW_KEY.location(), 0, 1, scarecrowStates);
+        SCARECROW = net.kasax.raft.platform.PointOfInterestHelper.register(SCARECROW_KEY.location(), 0, 1, scarecrowStates);
     }
 }

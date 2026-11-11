@@ -1,6 +1,6 @@
 package net.kasax.raft.content.vessel;
 
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.kasax.raft.platform.ServerPlayNetworking;
 import net.kasax.raft.content.vessel.net.VesselUseResultPayload;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

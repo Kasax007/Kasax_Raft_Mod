@@ -1,7 +1,7 @@
 package net.kasax.raft.content.building;
 
-import net.fabricmc.fabric.api.object.builder.v1.block.type.BlockSetTypeBuilder;
-import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
+import net.kasax.raft.platform.BlockSetTypeBuilder;
+import net.kasax.raft.platform.FlammableBlockRegistry;
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.BcReg;
 import net.kasax.raft.content.BcTabs;
@@ -40,7 +40,7 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import team.reborn.energy.api.EnergyStorage;
+import net.kasax.raft.platform.energy.EnergyStorage;
 
 import java.util.ArrayList;
 import java.util.List;

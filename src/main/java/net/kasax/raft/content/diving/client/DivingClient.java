@@ -1,13 +1,13 @@
 package net.kasax.raft.content.diving.client;
 
-import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
+import net.kasax.raft.platform.client.LivingEntityFeatureRendererRegistrationCallback;
+import net.kasax.raft.platform.client.EntityModelLayerRegistry;
 import net.kasax.raft.content.diving.DivingContent;
 import net.kasax.raft.content.diving.DivingGear;
 import net.minecraft.client.Camera;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.HumanoidModel;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.kasax.raft.platform.client.EntityRendererRegistry;
 import net.kasax.raft.compat.render.LivingEntityRenderer;
 import net.kasax.raft.compat.render.RenderLayerParent;
 import net.minecraft.world.entity.Entity;
@@ -30,7 +30,7 @@ public final class DivingClient {
         EntityModelLayerRegistry.registerModelLayer(DivingGearModels.FLIPPER, DivingGearModels::createFlipper);
         EntityRendererRegistry.register(DivingContent.HARPOON, HarpoonRenderer::new);
         MenuScreens.register(DivingContent.AIR_COMPRESSOR_MENU, AirCompressorScreen::new);
-        net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback.EVENT.register((graphics, delta) -> OxygenHud.extract(new net.kasax.raft.compat.gui.GuiGraphicsExtractor(graphics), delta));
+        net.kasax.raft.platform.client.HudRenderCallback.EVENT.register((graphics, delta) -> OxygenHud.extract(new net.kasax.raft.compat.gui.GuiGraphicsExtractor(graphics), delta));
         LivingEntityFeatureRendererRegistrationCallback.EVENT.register((type, renderer, helper, context) -> {
             if (renderer.getModel() instanceof HumanoidModel<?>) {
                 helper.register(gearLayer(renderer, context));

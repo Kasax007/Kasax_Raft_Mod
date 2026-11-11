@@ -1,6 +1,6 @@
 package net.kasax.raft.content.decor.client;
 
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.kasax.raft.platform.client.EntityRendererRegistry;
 import net.kasax.raft.content.decor.DecorEntities;
 import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;

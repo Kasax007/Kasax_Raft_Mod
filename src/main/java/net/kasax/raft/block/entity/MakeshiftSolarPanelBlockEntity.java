@@ -1,6 +1,6 @@
 package net.kasax.raft.block.entity;
 
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.kasax.raft.platform.transfer.Transaction;
 import net.kasax.raft.util.StoredEnergy;
 import net.kasax.raft.world.dimension.ModDimensions;
 import net.minecraft.core.BlockPos;
@@ -20,8 +20,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.kasax.raft.compat.ValueInput;
 import net.kasax.raft.compat.ValueOutput;
 import org.jetbrains.annotations.Nullable;
-import team.reborn.energy.api.EnergyStorage;
-import team.reborn.energy.api.base.SimpleEnergyStorage;
+import net.kasax.raft.platform.energy.EnergyStorage;
+import net.kasax.raft.platform.energy.SimpleEnergyStorage;
 
 public class MakeshiftSolarPanelBlockEntity extends BlockEntity {
     public static final long CAPACITY = 100_000;

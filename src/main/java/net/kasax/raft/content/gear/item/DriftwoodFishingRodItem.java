@@ -1,6 +1,6 @@
 package net.kasax.raft.content.gear.item;
 
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.kasax.raft.platform.ExtendedScreenHandlerFactory;
 import net.kasax.raft.content.gear.GearContent;
 import net.kasax.raft.content.gear.menu.TackleMenu;
 import net.minecraft.ChatFormatting;

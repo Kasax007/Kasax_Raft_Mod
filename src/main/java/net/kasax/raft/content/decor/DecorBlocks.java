@@ -1,6 +1,6 @@
 package net.kasax.raft.content.decor;
 
-import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
+import net.kasax.raft.platform.FlammableBlockRegistry;
 import net.kasax.raft.content.BcReg;
 import net.kasax.raft.content.BcTabs;
 import net.kasax.raft.content.decor.block.BrazierBlock;

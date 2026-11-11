@@ -1,6 +1,6 @@
 package net.kasax.raft.content.voyage;
 
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.kasax.raft.platform.ExtendedScreenHandlerFactory;
 import net.kasax.raft.content.voyage.mixin.AbstractBoatAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
