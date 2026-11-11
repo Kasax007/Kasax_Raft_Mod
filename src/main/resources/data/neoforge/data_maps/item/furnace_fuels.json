@@ -1,0 +1,142 @@
+{
+  "values": {
+    "raft:driftwood_button": {
+      "burn_time": 100
+    },
+    "raft:driftwood_chest_raft": {
+      "burn_time": 1200
+    },
+    "raft:driftwood_door": {
+      "burn_time": 200
+    },
+    "raft:driftwood_fence": {
+      "burn_time": 300
+    },
+    "raft:driftwood_fence_gate": {
+      "burn_time": 300
+    },
+    "raft:driftwood_log": {
+      "burn_time": 300
+    },
+    "raft:driftwood_planks": {
+      "burn_time": 300
+    },
+    "raft:driftwood_pressure_plate": {
+      "burn_time": 300
+    },
+    "raft:driftwood_raft": {
+      "burn_time": 1200
+    },
+    "raft:driftwood_sapling": {
+      "burn_time": 100
+    },
+    "raft:driftwood_slab": {
+      "burn_time": 150
+    },
+    "raft:driftwood_stairs": {
+      "burn_time": 300
+    },
+    "raft:driftwood_trapdoor": {
+      "burn_time": 300
+    },
+    "raft:driftwood_wood": {
+      "burn_time": 300
+    },
+    "raft:palm_boat": {
+      "burn_time": 1200
+    },
+    "raft:palm_button": {
+      "burn_time": 100
+    },
+    "raft:palm_chest_boat": {
+      "burn_time": 1200
+    },
+    "raft:palm_door": {
+      "burn_time": 200
+    },
+    "raft:palm_fence": {
+      "burn_time": 300
+    },
+    "raft:palm_fence_gate": {
+      "burn_time": 300
+    },
+    "raft:palm_log": {
+      "burn_time": 300
+    },
+    "raft:palm_planks": {
+      "burn_time": 300
+    },
+    "raft:palm_pressure_plate": {
+      "burn_time": 300
+    },
+    "raft:palm_sapling": {
+      "burn_time": 100
+    },
+    "raft:palm_slab": {
+      "burn_time": 150
+    },
+    "raft:palm_stairs": {
+      "burn_time": 300
+    },
+    "raft:palm_trapdoor": {
+      "burn_time": 300
+    },
+    "raft:palm_wood": {
+      "burn_time": 300
+    },
+    "raft:stripped_driftwood_log": {
+      "burn_time": 300
+    },
+    "raft:stripped_driftwood_wood": {
+      "burn_time": 300
+    },
+    "raft:stripped_palm_log": {
+      "burn_time": 300
+    },
+    "raft:stripped_palm_wood": {
+      "burn_time": 300
+    },
+    "raft:teak_door": {
+      "burn_time": 200
+    },
+    "raft:teak_fence": {
+      "burn_time": 300
+    },
+    "raft:teak_fence_gate": {
+      "burn_time": 300
+    },
+    "raft:teak_planks": {
+      "burn_time": 300
+    },
+    "raft:teak_slab": {
+      "burn_time": 150
+    },
+    "raft:teak_stairs": {
+      "burn_time": 300
+    },
+    "raft:teak_trapdoor": {
+      "burn_time": 300
+    },
+    "raft:weathered_door": {
+      "burn_time": 200
+    },
+    "raft:weathered_fence": {
+      "burn_time": 300
+    },
+    "raft:weathered_fence_gate": {
+      "burn_time": 300
+    },
+    "raft:weathered_planks": {
+      "burn_time": 300
+    },
+    "raft:weathered_slab": {
+      "burn_time": 150
+    },
+    "raft:weathered_stairs": {
+      "burn_time": 300
+    },
+    "raft:weathered_trapdoor": {
+      "burn_time": 300
+    }
+  }
+}

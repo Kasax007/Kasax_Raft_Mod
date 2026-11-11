@@ -52,6 +52,8 @@ public interface Transaction extends AutoCloseable, TransactionContext {
         private final Manager manager;
         private final int depth;
         private boolean open = true;
+        /** While the close callbacks run: outer close callbacks may still be added (snapshot participants do). */
+        private boolean closing;
         private final List<CloseCallback> closeCallbacks = new ArrayList<>();
         private final List<OuterCloseCallback> outerCloseCallbacks;
 
@@ -62,7 +64,7 @@ public interface Transaction extends AutoCloseable, TransactionContext {
         }
 
         private void validateCurrent() {
-            if (!open) {
+            if (!open || closing) {
                 throw new IllegalStateException("Transaction operation cannot be applied to a closed transaction.");
             }
             if (manager.stack.get(manager.stack.size() - 1) != this) {
@@ -91,7 +93,7 @@ public interface Transaction extends AutoCloseable, TransactionContext {
 
         @Override
         public void addCloseCallback(CloseCallback closeCallback) {
-            if (!open) {
+            if (!open || closing) {
                 throw new IllegalStateException("Transaction is closed.");
             }
             closeCallbacks.add(closeCallback);
@@ -107,7 +109,7 @@ public interface Transaction extends AutoCloseable, TransactionContext {
 
         private void close(Result result) {
             validateCurrent();
-            open = false;
+            closing = true;
             RuntimeException error = null;
             for (int i = closeCallbacks.size() - 1; i >= 0; i--) {
                 try {
@@ -117,6 +119,8 @@ public interface Transaction extends AutoCloseable, TransactionContext {
                 }
             }
             closeCallbacks.clear();
+            open = false;
+            closing = false;
             manager.stack.remove(manager.stack.size() - 1);
             if (depth == 0) {
                 for (int i = 0; i < outerCloseCallbacks.size(); i++) {

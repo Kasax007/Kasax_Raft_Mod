@@ -146,7 +146,7 @@ public interface EnergyStorage {
         private final IEnergyStorage target;
         private long pending;
 
-        ForeignEnergy(IEnergyStorage target) {
+        public ForeignEnergy(IEnergyStorage target) {
             this.target = target;
         }
 

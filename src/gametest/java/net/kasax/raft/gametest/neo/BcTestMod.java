@@ -26,6 +26,15 @@ public class BcTestMod {
                 org.spongepowered.asm.mixin.MixinEnvironment.getCurrentEnvironment().audit();
                 LOG.info("[bctest] mixin audit done");
             }
+            String maps = System.getProperty("bc.datamaps");
+            if (maps != null) {
+                try {
+                    DataMapExport.write(Path.of(maps));
+                    LOG.info("[bctest] data maps written to {}", maps);
+                } catch (Exception ex) {
+                    LOG.error("[bctest] data map export failed", ex);
+                }
+            }
             String dump = System.getProperty("bc.dump");
             if (dump != null) {
                 try {

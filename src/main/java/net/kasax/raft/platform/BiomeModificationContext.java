@@ -45,6 +45,13 @@ public final class BiomeModificationContext {
 
     public final class GenerationSettingsContext {
         public void addFeature(GenerationStep.Decoration step, ResourceKey<PlacedFeature> placedFeatureKey) {
+            // as on Fabric: a feature the biome already has in that step is not added again (it would be a cycle)
+            var features = builder.getGenerationSettings().getFeatures(step);
+            for (Holder<PlacedFeature> present : features) {
+                if (present.is(placedFeatureKey)) {
+                    return;
+                }
+            }
             Holder<PlacedFeature> feature = registries.registryOrThrow(Registries.PLACED_FEATURE).getHolderOrThrow(placedFeatureKey);
             builder.getGenerationSettings().addFeature(step, feature);
         }

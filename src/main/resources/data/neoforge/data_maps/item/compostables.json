@@ -1,0 +1,55 @@
+{
+  "values": {
+    "raft:baked_sweet_potato": {
+      "chance": 0.85
+    },
+    "raft:banana": {
+      "chance": 0.65
+    },
+    "raft:banana_bread": {
+      "chance": 0.85
+    },
+    "raft:banana_shoot": {
+      "chance": 0.5
+    },
+    "raft:chili_pepper": {
+      "chance": 0.5
+    },
+    "raft:chili_seeds": {
+      "chance": 0.3
+    },
+    "raft:driftwood_leaves": {
+      "chance": 0.3
+    },
+    "raft:driftwood_sapling": {
+      "chance": 0.3
+    },
+    "raft:glow_kelp": {
+      "chance": 0.3
+    },
+    "raft:palm_coconut_leaves": {
+      "chance": 0.3
+    },
+    "raft:palm_leaves": {
+      "chance": 0.3
+    },
+    "raft:palm_sapling": {
+      "chance": 0.3
+    },
+    "raft:pineapple": {
+      "chance": 0.65
+    },
+    "raft:pineapple_crown": {
+      "chance": 0.3
+    },
+    "raft:rice": {
+      "chance": 0.3
+    },
+    "raft:sea_grapes": {
+      "chance": 0.5
+    },
+    "raft:sweet_potato": {
+      "chance": 0.65
+    }
+  }
+}

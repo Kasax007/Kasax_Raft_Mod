@@ -67,7 +67,7 @@ public final class ItemProps {
 
     public static int burnTime(ItemStack stack) {
         if (stack.isEmpty()) return 0;
-        Integer t = AbstractFurnaceBlockEntity.getFuel().get(stack.getItem());
-        return t == null ? 0 : t;
+        // NeoForge: burn times come from the data map neoforge:furnace_fuels (vanilla's table only has vanilla items)
+        return stack.getBurnTime(null);
     }
 }
