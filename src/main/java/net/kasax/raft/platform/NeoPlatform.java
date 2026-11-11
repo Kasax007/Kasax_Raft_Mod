@@ -19,6 +19,7 @@ public final class NeoPlatform {
     private static IEventBus modBus;
     private static Dist dist;
     private static boolean initialized;
+    private static net.minecraft.resources.ResourceLocation lastRegistry;
 
     private NeoPlatform() {
     }
@@ -29,7 +30,7 @@ public final class NeoPlatform {
         modBus = bus;
         commonInit = modInit;
         dist = side;
-        bus.addListener(EventPriority.HIGHEST, RegisterEvent.class, NeoPlatform::onRegister);
+        bus.addListener(EventPriority.LOWEST, RegisterEvent.class, NeoPlatform::onRegister);
         bus.addListener(EntityAttributeCreationEvent.class, FabricDefaultAttributeRegistry::onAttributes);
         bus.addListener(RegisterPayloadHandlersEvent.class, PayloadTypeRegistry::onRegisterPayloads);
         bus.addListener(RegisterCapabilitiesEvent.class, NeoPlatform::onCapabilities);
@@ -48,9 +49,21 @@ public final class NeoPlatform {
         return dist != null && dist.isClient();
     }
 
-    /** Fabric order: every mod registration (common init), then the client init; all registries are open now. */
+    /**
+     * Fabric order: every mod registration (common init), then the client init. NeoForge opens every registry for the
+     * whole series of registry events; the mod's init runs in the last one, when NeoForge's own entries (attributes,
+     * fluid types, ...) and those of other mods are in place, as they are when a Fabric mod initializes.
+     */
     private static void onRegister(RegisterEvent event) {
         if (initialized) {
+            return;
+        }
+        if (lastRegistry == null) {
+            for (net.minecraft.resources.ResourceLocation id : net.neoforged.neoforge.registries.GameData.getRegistrationOrder()) {
+                lastRegistry = id;
+            }
+        }
+        if (!event.getRegistryKey().location().equals(lastRegistry)) {
             return;
         }
         initialized = true;

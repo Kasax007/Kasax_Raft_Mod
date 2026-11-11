@@ -16,7 +16,6 @@ import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
@@ -49,11 +48,8 @@ public abstract class FishingHookMixin {
         if (!player.hasInfiniteMaterials()) bait.shrink(1);
     }
 
-    @Redirect(method = "shouldStopFishing", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/world/item/Item;)Z"))
-    private boolean raft$anyRod(ItemStack stack, Item item) {
-        return stack.is(item) || (item == Items.FISHING_ROD && stack.getItem() instanceof DriftwoodFishingRodItem);
-    }
+    // NeoForge: shouldStopFishing asks canPerformAction(FISHING_ROD_CAST), which every FishingRodItem (the Driftwood
+    // Fishing Rod too) answers, so the hook already stays out with any rod; Fabric's redirect is not needed.
 
     /** The rod that casts is the one in the main hand if that is a rod, else the one in the off hand. */
     private static boolean castsDriftwoodRod(Player player) {

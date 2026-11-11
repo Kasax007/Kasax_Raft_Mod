@@ -61,6 +61,7 @@ neoForge {
 		server {
 			server()
 			loadedMods = [mods.raft]
+			gameDirectory = file("build/run/server")
 			programArgument "--nogui"
 		}
 		// NeoForge game tests of src/gametest (namespace raft): sh ./gradlew runGameTestServer
@@ -69,7 +70,7 @@ neoForge {
 			sourceSet = sourceSets.gametest
 			loadedMods = [mods.raft, mods.raft_gametest]
 			gameDirectory = file("build/run/gametest")
-			systemProperty "neoforge.enabledGameTestNamespaces", "raft"
+			systemProperty "neoforge.enabledGameTestNamespaces", "raft_gametest"
 			jvmArgument "-Xmx${project.findProperty('xmx') ?: '3G'}"
 		}
 		// scripted client test (tools/bctest/run.sh)
@@ -177,6 +178,12 @@ tasks.register('mergeResources') {
 }
 
 sourceSets.main.resources.srcDirs = [files(mergedResources) { builtBy 'mergeResources' }]
+
+// the test mod as a jar, to drop next to the release jar into a NeoForge server (registry dump, mixin audit)
+tasks.register('gametestJar', Jar) {
+	archiveFileName = 'raft_gametest.jar'
+	from sourceSets.gametest.output
+}
 
 processResources {
 	dependsOn 'mergeResources'

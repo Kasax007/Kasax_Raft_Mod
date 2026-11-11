@@ -4,8 +4,7 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "StructureTemplateAccess",
-    "SinglePoolElementAccess",
-    "HoldWorldMixin"
+    "SinglePoolElementAccess"
   ],
   "client": [
     "SoundLogMixin",
@@ -16,7 +15,8 @@
     "MouseHandlerInvoker",
     "KeyboardHandlerInvoker",
     "CreateWorldScreenInvoker",
-    "CreativeScreenInvoker"
+    "CreativeScreenInvoker",
+    "HoldWorldMixin"
   ],
   "injectors": {
     "defaultRequire": 1

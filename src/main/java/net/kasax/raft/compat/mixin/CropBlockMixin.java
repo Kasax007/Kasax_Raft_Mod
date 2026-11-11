@@ -12,7 +12,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
@@ -29,11 +28,6 @@ public abstract class CropBlockMixin {
         }
     }
 
-    @Redirect(method = "getGrowthSpeed", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z"))
-    private static boolean raft$growsCrops(BlockState state, Block block) {
-        return state.is(block) || block == Blocks.FARMLAND
-                && state.is(TagKey.create(Registries.BLOCK, ResourceLocation.withDefaultNamespace("grows_crops")))
-                && state.hasProperty(net.minecraft.world.level.block.FarmBlock.MOISTURE);
-    }
+    // NeoForge: getGrowthSpeed counts every FarmBlock (the crop plot is one) and asks isFertile (moisture of any
+    // FarmBlock), so the crop plot already speeds crops up like farmland; Fabric's redirect of is(FARMLAND) is not needed.
 }
