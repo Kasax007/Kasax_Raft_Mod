@@ -1107,6 +1107,11 @@ public class BcScript implements FabricClientGameTest {
                 });
                 LOG.info("[bctest] LOOTSTAT {}", res);
             }
+            case "screen" -> {
+                String screen = ctx.<String>computeOnClient(mc -> mc.gui.screen() == null ? "none"
+                        : mc.gui.screen().getClass().getSimpleName() + " / " + (mc.player == null ? "-" : mc.player.containerMenu.getClass().getSimpleName()));
+                LOG.info("[bctest] SCREEN {}", screen);
+            }
             case "menu" -> {
                 // menu: log the player's open container menu (server side): menu and container class, the items
                 String res = need().getServer().computeOnServer(server -> {
