@@ -42,14 +42,13 @@ with NeoForge. A merge from `26.3` mostly needs the imports pointed here:
 - Biome changes: one NeoForge biome modifier (`data/raft/neoforge/biome_modifier/biome_modifications.json`) runs the
   recorded Fabric-style modifications in Fabric's order and, like Fabric, does not add a feature a biome already has.
 - Attachments: NeoForge data attachments with the same ids and codecs (saved under `neoforge:attachments`); entities
-  saved by the Fabric build (`fabric:attachments`) keep theirs.
+  and chunks saved by the Fabric build (`fabric:attachments`) keep theirs (game test `attachments`).
 
 ## Differences to the Fabric build
 
 - The fishing hook mixin leaves out its redirect: NeoForge already accepts any `FishingRodItem` (`canPerformAction`).
 - Fabric's `ServerEntityEvents.ALLOW_LOAD` (the scarecrow keeping monsters away) runs on NeoForge's `FinalizeSpawnEvent`,
   which has the spawn reason for every newly spawned mob.
-- Chunks saved by the Fabric build lose the NPC retrofit marks (`raft:npc_spots_done`, under `fabric:attachments`).
 - Fabric's loot table source (`isBuiltin`) is not known on NeoForge: Beach Craft's chest pools are also added to its
   tables when a data pack replaces them.
 - Recipes with `fabric:load_conditions` load unconditionally (all conditions name Beach Craft's own items).
@@ -60,6 +59,7 @@ with NeoForge. A merge from `26.3` mostly needs the imports pointed here:
   (`src/gametest/.../neo/BcGameTests.java`).
 - Scripted client tests: `tools/bctest/run.sh <script> <out>` as before (`BC_DISPLAY` picks the Xvfb display); the
   harness in `src/gametest` is a NeoForge client mod with its own copy of the client game test API Beach Craft's
-  scripts use (SDL input, screenshots read back asynchronously).
+  scripts use (SDL input, screenshots read back asynchronously). `BC_JAR=<jar>` runs the harness against a built jar
+  instead of the main classes; `BC_LOOTR=1` / `BC_JEI=1` add Lootr / JEI (`tools/bctest/lootr.txt`).
 - Registry dump: start a server with `raft_gametest.jar` (task `gametestJar`) next to the release jar and
   `-Dbc.dump=<file>`; `-Dbc.audit=true` loads every mixin target.

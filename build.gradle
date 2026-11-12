@@ -41,7 +41,9 @@ sourceSets {
 	}
 	gametest {
 		compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
-		runtimeClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output
+		// tools/bctest/run.sh with BC_JAR=<jar> (-PbcJar): the harness runs against that built jar, not the main classes
+		runtimeClasspath += project.hasProperty('bcJar') ? (configurations.runtimeClasspath + files(project.property('bcJar')))
+				: (sourceSets.main.runtimeClasspath + sourceSets.main.output)
 	}
 }
 
@@ -84,7 +86,7 @@ neoForge {
 		bctest {
 			client()
 			sourceSet = sourceSets.gametest
-			loadedMods = [mods.raft, mods.raft_gametest]
+			loadedMods = project.hasProperty('bcJar') ? [mods.raft_gametest] : [mods.raft, mods.raft_gametest]
 			gameDirectory = file("build/run/bctest")
 			jvmArgument "-Xmx${project.findProperty('xmx') ?: '3G'}"
 			if (project.hasProperty('bcScript')) systemProperty "bc.script", project.property('bcScript').toString()

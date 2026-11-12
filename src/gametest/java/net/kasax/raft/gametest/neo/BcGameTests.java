@@ -249,6 +249,20 @@ public final class BcGameTests {
         NpcContent.SPOTS_DONE.set(chunk, List.of("test"));
         helper.assertTrue(List.of("test").equals(NpcContent.SPOTS_DONE.getOrElse(chunk, List.of())), "chunk attachment lost");
         NpcContent.SPOTS_DONE.set(chunk, null);
+        // a chunk saved by the Fabric build keeps its NPC spot marks (fabric:attachments in the chunk data)
+        var chunkTag = net.minecraft.world.level.chunk.storage.SerializableChunkData.copyOf(helper.getLevel(), chunk).write();
+        chunkTag.remove("neoforge:attachments");
+        var marks = new net.minecraft.nbt.ListTag();
+        marks.add(net.minecraft.nbt.StringTag.valueOf("fabric_spot"));
+        var fabricChunk = new net.minecraft.nbt.CompoundTag();
+        fabricChunk.put("raft:npc_spots_done", marks);
+        chunkTag.put("fabric:attachments", fabricChunk);
+        var parsed = net.minecraft.world.level.chunk.storage.SerializableChunkData.parse(helper.getLevel(),
+                net.minecraft.world.level.chunk.PalettedContainerFactory.create(helper.getLevel().registryAccess()), chunkTag);
+        helper.assertTrue(parsed != null && parsed.attachmentData() != null, "the Fabric chunk attachments were not taken over");
+        chunk.readAttachmentsFromNBT(helper.getLevel().registryAccess(), parsed.attachmentData());
+        helper.assertTrue(List.of("fabric_spot").equals(NpcContent.SPOTS_DONE.get(chunk)), "chunk marks read back as " + NpcContent.SPOTS_DONE.get(chunk));
+        NpcContent.SPOTS_DONE.set(chunk, null);
         Player player = helper.makeMockPlayer(GameType.SURVIVAL);
         GuideContent.ALMANAC_GIVEN.set(player, true);
         TagValueOutput output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, helper.getLevel().registryAccess());

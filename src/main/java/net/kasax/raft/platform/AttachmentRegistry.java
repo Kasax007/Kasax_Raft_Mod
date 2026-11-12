@@ -16,7 +16,8 @@ public final class AttachmentRegistry {
 
     /**
      * Entities saved by the Fabric build keep these attachments under {@code fabric:attachments}; they are taken over
-     * when NeoForge has none of its own yet, so a player moved from a Fabric world keeps them.
+     * when NeoForge has none of its own yet, so a player moved from a Fabric world keeps them (chunks: see
+     * {@link #migrateFabricChunkData}).
      */
     public static void migrateFabricData(net.neoforged.neoforge.attachment.IAttachmentHolder holder, net.minecraft.world.level.storage.ValueInput input) {
         input.child("fabric:attachments").ifPresent(fabric -> {
@@ -24,6 +25,33 @@ public final class AttachmentRegistry {
                 migrate(type, holder, fabric);
             }
         });
+    }
+
+    /**
+     * Chunks saved by the Fabric build keep these attachments under {@code fabric:attachments} in the chunk data. Before
+     * NeoForge reads the chunk, each one it does not have yet is copied into {@code neoforge:attachments} in NeoForge's
+     * form ({@code {"value": <the same codec output>}}, see {@link Builder#buildAndRegister}).
+     */
+    public static void migrateFabricChunkData(net.minecraft.nbt.CompoundTag chunkData) {
+        var fabric = chunkData.getCompound("fabric:attachments");
+        if (fabric.isEmpty()) {
+            return;
+        }
+        net.minecraft.nbt.CompoundTag neo = chunkData.getCompound(net.neoforged.neoforge.attachment.AttachmentHolder.ATTACHMENTS_NBT_KEY).orElse(null);
+        for (AttachmentType<?> type : PERSISTENT) {
+            String key = type.identifier().toString();
+            net.minecraft.nbt.Tag value = fabric.get().get(key);
+            if (value == null || neo != null && neo.contains(key)) {
+                continue;
+            }
+            if (neo == null) {
+                neo = new net.minecraft.nbt.CompoundTag();
+                chunkData.put(net.neoforged.neoforge.attachment.AttachmentHolder.ATTACHMENTS_NBT_KEY, neo);
+            }
+            net.minecraft.nbt.CompoundTag wrapped = new net.minecraft.nbt.CompoundTag();
+            wrapped.put("value", value.copy());
+            neo.put(key, wrapped);
+        }
     }
 
     private static <A> void migrate(AttachmentType<A> type, net.neoforged.neoforge.attachment.IAttachmentHolder holder,
