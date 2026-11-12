@@ -9,7 +9,7 @@ version = "${version}"
 displayName = "Beach Craft"
 authors = "Kasax"
 displayURL = "https://www.curseforge.com/minecraft/mc-mods/raft"
-logoFile = "assets/raft/icon.png"
+iconFile = "assets/raft/icon.png"
 description = '''Beach Craft (Raft): a whole ocean dimension to survive in. Build your own raft and sail it, dive to drowned cities and reefs, meet the people who stayed, sharks, whales, crabs and stranger things, follow the story of the Tidewardens across islands and wrecks, and face the Leviathan at the bottom of the abyss.'''
 
 [[mixins]]

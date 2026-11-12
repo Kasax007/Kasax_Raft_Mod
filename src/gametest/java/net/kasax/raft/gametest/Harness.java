@@ -15,6 +15,8 @@ import net.minecraft.client.gui.screens.TitleScreen;
 @Mod(value = "raft_gametest", dist = Dist.CLIENT)
 public class Harness {
     private static boolean started;
+    private static int ticks;
+    private static int menuTicks;
 
     public Harness() {
         onInitializeClient();
@@ -23,9 +25,11 @@ public class Harness {
     public void onInitializeClient() {
         ClientTickEvents.END_CLIENT_TICK.register(mc -> {
             ClientGameTestContext.onClientTick();
-            // the title screen, or the accessibility screen 1.21.1 shows on a first start
-            if (!started && mc.gui.overlay() == null && (mc.gui.screen() instanceof TitleScreen
-                    || mc.gui.screen() instanceof net.minecraft.client.gui.screens.AccessibilityOnboardingScreen)) {
+            // the title screen, or the first-start screens before it (accessibility, ...): any menu without a world
+            if (!started && ++ticks % 200 == 0) {
+                BcScript.LOG.info("[bctest] harness waits: overlay {}, screen {}", mc.gui.overlay(), mc.gui.screen());
+            }
+            if (!started && mc.gui.overlay() == null && mc.level == null && mc.gui.screen() != null && ++menuTicks > 40) {
                 started = true;
                 start(mc);
             }
