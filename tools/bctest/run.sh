@@ -9,10 +9,10 @@ LOCK=${BC_LOCK:-/tmp/claude-0/-home-user/4ca9508b-4f8c-5a8e-91dc-6059d6cc887c/sc
 # Minecraft 1.21.1 runs on Java 21
 export JAVA_HOME=${BC_JAVA_HOME:-/usr/lib/jvm/java-21-openjdk-amd64}
 flock "$LOCK" sh -c "
-  Xvfb :97 -screen 0 1920x1080x24 >/dev/null 2>&1 &
+  Xvfb ${BC_DISPLAY:-:97} -screen 0 1920x1080x24 >/dev/null 2>&1 &
   XPID=\$!
   sleep 1
-  DISPLAY=:97 SDL_VIDEO_FORCE_EGL=1 timeout ${BC_TIMEOUT:-900} sh ./gradlew -q runBctest -PbcScript='$SCRIPT' -PbcOut='$OUT' -Pxmx=${BC_XMX:-3G} ${BC_JFR:+-PbcJfr=$BC_JFR} ${BC_JEI:+-Pjei=1} ${BC_LOOTR:+-PwithLootr} > '$OUT/gradle.log' 2>&1
+  DISPLAY=${BC_DISPLAY:-:97} SDL_VIDEO_FORCE_EGL=1 timeout ${BC_TIMEOUT:-900} sh ./gradlew -q runBctest -PbcScript='$SCRIPT' -PbcOut='$OUT' -Pxmx=${BC_XMX:-3G} ${BC_JFR:+-PbcJfr=$BC_JFR} ${BC_JEI:+-Pjei=1} ${BC_LOOTR:+-PwithLootr} > '$OUT/gradle.log' 2>&1
   echo \"exit \$?\" >> '$OUT/gradle.log'
   kill \$XPID 2>/dev/null
 "
