@@ -1,0 +1,91 @@
+# Client smoke test of the NeoForge port: machines and building blocks, creatures, boats and the expedition raft, a few
+# screens (battery, item catcher, creative tab), the raft dimension. Screenshots c01..c06.
+# Run: tools/bctest/run.sh tools/bctest/client_smoke.txt <outdir>
+deadline 10
+world clientsmoke
+rd 6
+gui 2
+chat off
+cmd gamerule doMobSpawning false
+cmd gamerule randomTickSpeed 0
+cmd tp @p 6.5 202 -5.5 0 25
+settle 60
+cmd fill -6 200 -4 18 200 16 minecraft:sand
+cmd fill -6 201 -4 18 212 16 air
+cmd fill 0 200 11 18 200 16 minecraft:water
+cmd setblock 0 201 4 raft:makeshift_battery
+cmd setblock 1 201 4 raft:makeshift_solar_panel
+cmd setblock 2 201 4 raft:quarry
+cmd setblock 3 201 4 raft:item_catcher[has_net=true]
+cmd setblock 4 201 4 raft:simple_grill
+cmd setblock 5 201 4 raft:water_purifier
+cmd setblock 6 201 4 raft:air_compressor
+cmd setblock 7 201 4 raft:research_terminal
+cmd setblock 8 201 4 raft:raft_foundation
+cmd setblock 9 201 4 raft:reinforced_foundation
+cmd setblock 10 201 4 raft:driftwood_log
+cmd setblock 11 201 4 raft:palm_log
+cmd setblock 12 201 4 raft:copper_cable
+cmd setblock 13 201 4 raft:wind_turbine
+cmd summon raft:crab 1 201 8
+cmd summon raft:penguin 3 201 8
+cmd summon raft:sea_otter 5 201 8
+cmd summon raft:seagull 7 201 8
+cmd summon raft:scavenger 9 201 8
+cmd summon raft:kai 11 201 8
+cmd summon raft:shark 3 200 13
+cmd summon raft:manta_ray 7 200 13
+cmd summon raft:expedition_raft 11 201 13
+cmd summon raft:palm_boat 15 201 13
+swait 30
+check battery_placed | execute if block 0 201 4 raft:makeshift_battery
+check crab_alive | execute if entity @e[type=raft:crab]
+check raft_alive | execute if entity @e[type=raft:expedition_raft]
+fly on
+pose 6.5 205 -4.5 0 35
+hud off
+wait 20 render
+shot c01_blocks_creatures
+hud on
+fly off
+cmd tp @p 0.5 201 2.5 0 30
+swait 3
+pose 0.5 201 2.5 0 30
+face 0.5 201.5 4.5
+swait 2
+use
+swait 10
+menu
+shot c02_battery_screen
+esc
+swait 2
+cmd tp @p 3.5 201 2.5 0 30
+swait 3
+pose 3.5 201 2.5 0 30
+face 3.5 201.5 4.5
+swait 2
+use
+swait 10
+menu
+shot c03_catcher_screen
+esc
+swait 2
+tab raft:bc_0_raft
+swait 5
+shot c04_creative_tab
+esc
+swait 2
+cmd execute in raft:raftdim run tp @p 0 140 0 45 25
+settle 90
+fly on
+pose 0.5 140 0.5 45 25
+hud off
+wait 20 render
+shot c05_raft_dimension
+cmd execute in raft:raftdim run tp @p 0 64 0 45 -10
+settle 60
+pose 0.5 64 0.5 45 -10
+wait 20 render
+shot c06_raft_dimension_sea
+hud on
+checks
