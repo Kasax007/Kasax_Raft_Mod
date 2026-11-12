@@ -15,7 +15,7 @@ repositories {
 	// JEI (optional): its API to compile the plugin in net.kasax.raft.compat.jei, the mod itself only in dev runs
 	maven {
 		url = "https://maven.blamejared.com/"
-		content { includeGroup "mezz.jei" }
+		content { includeGroup "mezz.jei"; includeGroup "net.mezzdev.config" }
 	}
 	// Lootr (optional, compile only): Beach Craft's crates and treasure chests become per-player loot when it is installed
 	exclusiveContent {
