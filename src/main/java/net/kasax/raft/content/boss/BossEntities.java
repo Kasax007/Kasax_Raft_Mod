@@ -1,6 +1,6 @@
 package net.kasax.raft.content.boss;
 
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.kasax.raft.platform.FabricDefaultAttributeRegistry;
 import net.kasax.raft.content.BcReg;
 import net.kasax.raft.content.boss.entity.BrineBoltEntity;
 import net.kasax.raft.content.boss.entity.LeviathanEntity;

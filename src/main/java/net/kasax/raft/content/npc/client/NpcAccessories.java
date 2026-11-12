@@ -1,6 +1,6 @@
 package net.kasax.raft.content.npc.client;
 
-import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
+import net.kasax.raft.platform.client.ModelLayerRegistry;
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.npc.NpcCharacter;
 import net.minecraft.client.model.geom.ModelLayerLocation;

@@ -1,7 +1,7 @@
 package net.kasax.raft.content.encounters.client;
 
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
+import net.kasax.raft.platform.client.EntityRendererRegistry;
+import net.kasax.raft.platform.client.ModelLayerRegistry;
 import net.kasax.raft.content.encounters.EncounterEntities;
 
 /** Client-only init of the "encounters" module: model layer and renderers. */

@@ -1,6 +1,6 @@
 package net.kasax.raft.content.gear;
 
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.kasax.raft.platform.ServerTickEvents;
 import net.kasax.raft.Raft;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;

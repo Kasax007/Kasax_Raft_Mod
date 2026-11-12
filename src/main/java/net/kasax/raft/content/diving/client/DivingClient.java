@@ -1,15 +1,15 @@
 package net.kasax.raft.content.diving.client;
 
-import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityRenderLayerRegistrationCallback;
-import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
+import net.kasax.raft.platform.client.LivingEntityRenderLayerRegistrationCallback;
+import net.kasax.raft.platform.client.ModelLayerRegistry;
+import net.kasax.raft.platform.client.HudElementRegistry;
+import net.kasax.raft.platform.client.VanillaHudElements;
 import net.kasax.raft.content.diving.DivingContent;
 import net.kasax.raft.content.diving.DivingGear;
 import net.minecraft.client.Camera;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.HumanoidModel;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.kasax.raft.platform.client.EntityRendererRegistry;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.state.HumanoidRenderState;

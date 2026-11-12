@@ -1,0 +1,19 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+license = "MIT"
+
+[[mods]]
+modId = "raft_gametest"
+version = "1.0.0"
+displayName = "Beach Craft test harness"
+description = '''Dev-only: scripted client test (tools/bctest) and NeoForge game tests for Beach Craft.'''
+
+[[mixins]]
+config = "raft-gametest.mixins.json"
+
+[[dependencies.raft_gametest]]
+modId = "raft"
+type = "required"
+versionRange = "*"
+ordering = "AFTER"
+side = "BOTH"

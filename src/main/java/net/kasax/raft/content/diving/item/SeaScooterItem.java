@@ -19,7 +19,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import team.reborn.energy.api.base.SimpleEnergyItem;
+import net.kasax.raft.platform.energy.SimpleEnergyItem;
 
 import java.util.function.Consumer;
 

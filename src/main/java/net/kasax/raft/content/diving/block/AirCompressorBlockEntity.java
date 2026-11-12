@@ -1,6 +1,6 @@
 package net.kasax.raft.content.diving.block;
 
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.kasax.raft.platform.transfer.Transaction;
 import net.kasax.raft.content.diving.DivingContent;
 import net.kasax.raft.content.diving.DivingSounds;
 import net.kasax.raft.content.diving.item.OxygenTankItem;
@@ -26,9 +26,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.Nullable;
-import team.reborn.energy.api.EnergyStorage;
-import team.reborn.energy.api.base.SimpleEnergyItem;
-import team.reborn.energy.api.base.SimpleEnergyStorage;
+import net.kasax.raft.platform.energy.EnergyStorage;
+import net.kasax.raft.platform.energy.SimpleEnergyItem;
+import net.kasax.raft.platform.energy.SimpleEnergyStorage;
 
 /**
  * Fills the oxygen tank (or charges the sea scooter) in its single slot. Runs on FE from any adjacent energy source

@@ -1,6 +1,6 @@
 package net.kasax.raft.content.story;
 
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.kasax.raft.platform.PayloadTypeRegistry;
 import net.kasax.raft.content.ContentModule;
 import net.kasax.raft.content.story.net.OpenJournalPayload;
 import net.kasax.raft.content.story.net.OpenLogPayload;

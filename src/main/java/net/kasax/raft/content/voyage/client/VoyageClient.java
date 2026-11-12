@@ -1,7 +1,7 @@
 package net.kasax.raft.content.voyage.client;
 
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
+import net.kasax.raft.platform.client.EntityRendererRegistry;
+import net.kasax.raft.platform.client.ModelLayerRegistry;
 import net.kasax.raft.content.voyage.VoyageContent;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.geom.ModelLayerLocation;

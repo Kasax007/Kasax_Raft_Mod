@@ -1,7 +1,5 @@
 package net.kasax.raft.content.voyage.client;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.kasax.raft.content.voyage.RaftUpgrade;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -13,7 +11,6 @@ import net.minecraft.util.Mth;
  * on the waves, the sail fills with speed and is furled at anchor, the propeller spins, the rudder follows the helm,
  * the anchor drops on its rope, lanterns swing and the oars row when the raft is paddled.
  */
-@Environment(EnvType.CLIENT)
 public class ExpeditionRaftModel extends EntityModel<ExpeditionRaftRenderState> {
     public static final ModelLayerLocation LAYER = new ModelLayerLocation(net.kasax.raft.Raft.id("expedition_raft"), "main");
     public static final ModelLayerLocation WATER_MASK = new ModelLayerLocation(net.kasax.raft.Raft.id("expedition_raft"), "water_mask");

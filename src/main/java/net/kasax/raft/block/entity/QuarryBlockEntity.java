@@ -1,9 +1,9 @@
 package net.kasax.raft.block.entity;
 
-import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.kasax.raft.platform.transfer.ItemStorage;
+import net.kasax.raft.platform.transfer.ItemVariant;
+import net.kasax.raft.platform.transfer.Storage;
+import net.kasax.raft.platform.transfer.Transaction;
 import net.kasax.raft.util.StoredEnergy;
 import net.kasax.raft.util.TickableBlockEntity;
 import net.minecraft.core.BlockPos;
@@ -23,7 +23,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import team.reborn.energy.api.base.SimpleEnergyStorage;
+import net.kasax.raft.platform.energy.SimpleEnergyStorage;
 
 import java.util.ArrayList;
 import java.util.List;

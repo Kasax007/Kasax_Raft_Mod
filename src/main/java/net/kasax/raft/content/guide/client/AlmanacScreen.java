@@ -2,8 +2,6 @@ package net.kasax.raft.content.guide.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.guide.client.AlmanacBook.Chapter;
 import net.kasax.raft.content.guide.client.AlmanacBook.Section;
@@ -53,7 +51,6 @@ import java.util.Optional;
  * ({@code custom_data={almanac:"chapter"}}, {@code "chapter/section"} or {@code "chapter+2"} for the third double page
  * of a chapter) opens that page instead.
  */
-@Environment(EnvType.CLIENT)
 public class AlmanacScreen extends Screen {
     private static final Identifier TEXTURE = Raft.id("textures/gui/almanac.png");
     private static final int TEX_W = 512, TEX_H = 256;

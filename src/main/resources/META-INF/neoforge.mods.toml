@@ -1,0 +1,81 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+license = "MIT"
+issueTrackerURL = "https://github.com/Kasax007/Kasax_Raft_Mod/issues"
+
+[[mods]]
+modId = "raft"
+version = "${version}"
+displayName = "Beach Craft"
+authors = "Kasax"
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/raft"
+logoFile = "assets/raft/icon.png"
+description = '''Beach Craft (Raft): a whole ocean dimension to survive in. Build your own raft and sail it, dive to drowned cities and reefs, meet the people who stayed, sharks, whales, crabs and stranger things, follow the story of the Tidewardens across islands and wrecks, and face the Leviathan at the bottom of the abyss.'''
+
+[[mixins]]
+config = "raft-platform.mixins.json"
+
+[[mixins]]
+config = "raft.mixins.json"
+
+[[mixins]]
+config = "raft-world.mixins.json"
+
+[[mixins]]
+config = "raft-building.mixins.json"
+
+[[mixins]]
+config = "raft-decor.mixins.json"
+
+[[mixins]]
+config = "raft-shore.mixins.json"
+
+[[mixins]]
+config = "raft-marine.mixins.json"
+
+[[mixins]]
+config = "raft-voyage.mixins.json"
+
+[[mixins]]
+config = "raft-vessel.mixins.json"
+
+[[mixins]]
+config = "raft-diving.mixins.json"
+
+[[mixins]]
+config = "raft-story.mixins.json"
+
+[[mixins]]
+config = "raft-boss.mixins.json"
+
+[[mixins]]
+config = "raft-guide.mixins.json"
+
+[[mixins]]
+config = "raft-audio.mixins.json"
+
+[[mixins]]
+config = "raft-cozy.mixins.json"
+
+[[mixins]]
+config = "raft-food.mixins.json"
+
+[[mixins]]
+config = "raft-gear.mixins.json"
+
+[[accessTransformers]]
+file = "META-INF/accesstransformer.cfg"
+
+[[dependencies.raft]]
+modId = "neoforge"
+type = "required"
+versionRange = "[26.3.0.102,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.raft]]
+modId = "minecraft"
+type = "required"
+versionRange = "[26.3,26.4)"
+ordering = "NONE"
+side = "BOTH"

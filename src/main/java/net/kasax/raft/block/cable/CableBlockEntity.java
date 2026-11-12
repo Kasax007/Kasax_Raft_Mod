@@ -22,7 +22,7 @@ package net.kasax.raft.block.cable;
  * SOFTWARE.
  */
 
-import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache;
+import net.kasax.raft.platform.transfer.BlockApiCache;
 import net.kasax.raft.block.entity.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,8 +38,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.Nullable;
-import team.reborn.energy.api.EnergyStorage;
-import team.reborn.energy.api.base.SimpleSidedEnergyContainer;
+import net.kasax.raft.platform.energy.EnergyStorage;
+import net.kasax.raft.platform.energy.SimpleSidedEnergyContainer;
 
 import java.util.ArrayList;
 import java.util.List;

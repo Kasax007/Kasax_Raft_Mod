@@ -1,6 +1,6 @@
 package net.kasax.raft.content.building.block;
 
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.kasax.raft.platform.transfer.Transaction;
 import net.kasax.raft.content.building.BuildingBlocks;
 import net.kasax.raft.util.StoredEnergy;
 import net.minecraft.core.BlockPos;
@@ -19,8 +19,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.Nullable;
-import team.reborn.energy.api.EnergyStorage;
-import team.reborn.energy.api.base.SimpleEnergyStorage;
+import net.kasax.raft.platform.energy.EnergyStorage;
+import net.kasax.raft.platform.energy.SimpleEnergyStorage;
 
 /**
  * Energy and rotor state of a {@link WindTurbineBlock}. The server checks the wind once a second (free 3x3 area of air

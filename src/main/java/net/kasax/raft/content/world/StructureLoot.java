@@ -1,6 +1,6 @@
 package net.kasax.raft.content.world;
 
-import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
+import net.kasax.raft.platform.LootTableEvents;
 import net.kasax.raft.Raft;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;

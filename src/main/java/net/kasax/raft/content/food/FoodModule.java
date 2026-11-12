@@ -1,8 +1,8 @@
 package net.kasax.raft.content.food;
 
-import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
-import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
+import net.kasax.raft.platform.BiomeModifications;
+import net.kasax.raft.platform.BiomeSelectors;
+import net.kasax.raft.platform.LootTableEvents;
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.ContentModule;
 import net.minecraft.core.registries.Registries;
@@ -46,7 +46,7 @@ public class FoodModule implements ContentModule {
      * before that check.
      */
     private static void emptyPotEvenWithOffhandItem() {
-        net.fabricmc.fabric.api.event.player.UseBlockCallback.EVENT.register((player, level, hand, hit) -> {
+        net.kasax.raft.platform.UseBlockCallback.EVENT.register((player, level, hand, hit) -> {
             if (hand != net.minecraft.world.InteractionHand.MAIN_HAND || !player.isSecondaryUseActive()
                     || !player.getMainHandItem().isEmpty() || player.isSpectator()) {
                 return net.minecraft.world.InteractionResult.PASS;

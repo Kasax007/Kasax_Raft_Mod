@@ -1,6 +1,6 @@
 package net.kasax.raft.util;
 
-import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
+import net.kasax.raft.platform.LootTableEvents;
 import net.kasax.raft.item.ModItems;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;

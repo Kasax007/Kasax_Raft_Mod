@@ -24,7 +24,7 @@ package net.kasax.raft.block.cable;
 
 
 import net.minecraft.core.Direction;
-import team.reborn.energy.api.EnergyStorage;
+import net.kasax.raft.platform.energy.EnergyStorage;
 
 /**
  * {@link EnergyStorage} adjacent to an energy cable, with some additional info.

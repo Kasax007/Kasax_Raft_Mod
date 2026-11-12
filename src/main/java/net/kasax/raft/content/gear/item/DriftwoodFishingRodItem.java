@@ -1,6 +1,6 @@
 package net.kasax.raft.content.gear.item;
 
-import net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider;
+import net.kasax.raft.platform.ExtendedMenuProvider;
 import net.kasax.raft.content.gear.GearContent;
 import net.kasax.raft.content.gear.menu.TackleMenu;
 import net.minecraft.ChatFormatting;

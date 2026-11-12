@@ -4,16 +4,17 @@
   "compatibilityLevel": "JAVA_25",
   "mixins": [
     "StructureTemplateAccess",
-    "SinglePoolElementAccess",
-    "HoldWorldMixin"
+    "SinglePoolElementAccess"
   ],
   "client": [
-    "ScreenshotLeakMixin",
     "SoundLogMixin",
     "NoRenderMixin",
     "UserMixin",
     "FreeCamMixin",
-    "HoldPlayerMixin"
+    "HoldPlayerMixin",
+    "HoldWorldMixin",
+    "CreateWorldScreenInvoker",
+    "CreativeScreenInvoker"
   ],
   "injectors": {
     "defaultRequire": 1

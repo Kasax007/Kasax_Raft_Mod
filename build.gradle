@@ -1,6 +1,7 @@
 plugins {
-	id 'net.fabricmc.fabric-loom' version "${loom_version}"
+	id 'java-library'
 	id 'maven-publish'
+	id 'net.neoforged.moddev' version "${moddev_version}"
 }
 
 version = project.mod_version
@@ -18,63 +19,95 @@ repositories {
 	}
 	// Lootr (optional, compile only): Beach Craft's crates and treasure chests become per-player loot when it is installed
 	exclusiveContent {
-		forRepository { maven { url "https://api.modrinth.com/maven" } }
+		forRepository { maven { url = "https://api.modrinth.com/maven" } }
 		filter { includeGroup "maven.modrinth" }
 	}
 }
 
-fabricApi {
-	configureDataGeneration {
-		client = true
+java {
+	toolchain.languageVersion = JavaLanguageVersion.of(25)
+	withSourcesJar()
+}
+
+// In-game test harness (src/gametest): a scripted client test driven by client ticks (tools/bctest/README.md), plus
+// the NeoForge game tests (net.kasax.raft.gametest.neo). Both only exist in dev runs, never in the release jar.
+sourceSets {
+	// the Fabric data generators (src/main/java/net/kasax/raft/datagen) need Fabric's datagen API; their output is
+	// committed in src/main/generated and goes into the jar, so they are left out of the NeoForge build
+	main {
+		java {
+			exclude 'net/kasax/raft/datagen/**', 'net/kasax/raft/RaftDataGenerator.java'
+		}
 	}
-	// In-game test harness (src/gametest): a scripted client game test, see tools/bctest/README.md.
-	configureTests {
-		createSourceSet = true
-		modId = "raft-gametest"
-		enableGameTests = false
-		enableClientGameTests = false
-		eula = true
+	gametest {
+		compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
+		runtimeClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output
 	}
 }
 
-loom {
+neoForge {
+	version = project.neo_version
+	validateAccessTransformers = true
+	// the resource folders are merged at build time (mergeResources), so the AT is named here
+	accessTransformers.from(file('src/main/resources/META-INF/accesstransformer.cfg'))
+
+	mods {
+		raft {
+			sourceSet sourceSets.main
+		}
+		raft_gametest {
+			sourceSet sourceSets.gametest
+		}
+	}
+
 	runs {
+		client {
+			client()
+			loadedMods = [mods.raft]
+		}
+		server {
+			server()
+			loadedMods = [mods.raft]
+			gameDirectory = file("build/run/server")
+			programArgument "--nogui"
+		}
+		// NeoForge game tests of src/gametest (namespace raft): sh ./gradlew runGameTestServer
+		gameTestServer {
+			type = "gameTestServer"
+			sourceSet = sourceSets.gametest
+			loadedMods = [mods.raft, mods.raft_gametest]
+			gameDirectory = file("build/run/gametest")
+			systemProperty "neoforge.enabledGameTestNamespaces", "raft_gametest"
+			jvmArgument "-Xmx${project.findProperty('xmx') ?: '3G'}"
+		}
+		// scripted client test (tools/bctest/run.sh)
 		bctest {
 			client()
-			name "BcTest"
-			source sourceSets.gametest
-			runDir "build/run/bctest"
-			property "fabric.client.gametest"
-			vmArg "-Xmx${project.findProperty('xmx') ?: '3G'}"
-			if (project.hasProperty('bcScript')) vmArg "-Dbc.script=${project.property('bcScript')}"
-			if (project.hasProperty('bcOut')) vmArg "-Dbc.out=${project.property('bcOut')}"
-			if (project.hasProperty('bcJfr')) vmArg "-XX:StartFlightRecording=filename=${project.property('bcJfr')},settings=profile"
+			sourceSet = sourceSets.gametest
+			loadedMods = [mods.raft, mods.raft_gametest]
+			gameDirectory = file("build/run/bctest")
+			jvmArgument "-Xmx${project.findProperty('xmx') ?: '3G'}"
+			if (project.hasProperty('bcScript')) systemProperty "bc.script", project.property('bcScript').toString()
+			if (project.hasProperty('bcOut')) systemProperty "bc.out", project.property('bcOut').toString()
+			if (project.hasProperty('bcJfr')) jvmArgument "-XX:StartFlightRecording=filename=${project.property('bcJfr')},settings=profile"
+			programArguments.addAll("--username", "BcTester")
 		}
 	}
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	// No mappings line: Minecraft 26.x ships unobfuscated.
-	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
-	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
-	// JEI is optional: the plugin (entrypoint jei_mod_plugin) is only loaded when JEI is installed. -Pjei puts JEI
-	// into dev runs (tools/bctest/run.sh: BC_JEI=1).
-	compileOnly "mezz.jei:jei-26.3-fabric-api:${project.jei_version}"
+	// JEI is optional: the plugin (@JeiPlugin) is only loaded when JEI is installed. -Pjei puts JEI into dev runs
+	// (tools/bctest/run.sh: BC_JEI=1).
+	compileOnly "mezz.jei:jei-26.3-neoforge-api:${project.jei_version}"
 	if (project.hasProperty('jei')) {
-		// the mod jar carries its own config library (jar in jar)
-		localRuntime("mezz.jei:jei-26.3-fabric:${project.jei_version}") { transitive = false }
+		runtimeOnly "mezz.jei:jei-26.3-neoforge:${project.jei_version}"
 	}
 
 	// Lootr (optional): compiled against, not bundled; -PwithLootr puts it into the dev runtime (bctest: BC_LOOTR=1)
-	compileOnly "maven.modrinth:lootr:${project.lootr_version}"
+	compileOnly("maven.modrinth:lootr:${project.lootr_version}") { transitive = false }
 	if (project.hasProperty('withLootr')) {
-		runtimeOnly "maven.modrinth:lootr:${project.lootr_version}"
+		runtimeOnly("maven.modrinth:lootr:${project.lootr_version}") { transitive = false }
 	}
-
-	// Team Reborn Energy (bundled): cables, batteries and solar panels talk to Tech Reborn machines.
-	include implementation("teamreborn:energy:${project.energy_version}")
 }
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -107,6 +140,9 @@ tasks.register('mergeResources') {
 			root.eachFileRecurse(groovy.io.FileType.FILES) { f ->
 				def rel = root.toPath().relativize(f.toPath()).toString().replace('\\', '/')
 				if (rel.startsWith('.cache/') || rel == '.cache') return
+				// NeoForge: the access transformer goes into the jar through processResources (see below), so that
+				// ModDevGradle does not read it from this task's output
+				if (rel == 'META-INF/accesstransformer.cfg') return
 				byPath.computeIfAbsent(rel) { [] } << f
 			}
 		}
@@ -150,10 +186,19 @@ tasks.register('mergeResources') {
 
 sourceSets.main.resources.srcDirs = [files(mergedResources) { builtBy 'mergeResources' }]
 
+// the test mod as a jar, to drop next to the release jar into a NeoForge server (registry dump, mixin audit)
+tasks.register('gametestJar', Jar) {
+	archiveFileName = 'raft_gametest.jar'
+	from sourceSets.gametest.output
+}
+
 processResources {
 	dependsOn 'mergeResources'
+	from(file('src/main/resources/META-INF/accesstransformer.cfg')) {
+		into 'META-INF'
+	}
 	inputs.property "version", project.version
-	filesMatching("fabric.mod.json") {
+	filesMatching("META-INF/neoforge.mods.toml") {
 		expand "version": inputs.properties.version
 	}
 }
@@ -162,12 +207,6 @@ tasks.withType(JavaCompile).configureEach {
 	it.options.release = 25
 	it.options.encoding = "UTF-8"
 	it.options.compilerArgs += ["-Xmaxerrs", "2000"]
-}
-
-java {
-	withSourcesJar()
-	sourceCompatibility = JavaVersion.VERSION_25
-	targetCompatibility = JavaVersion.VERSION_25
 }
 
 jar {

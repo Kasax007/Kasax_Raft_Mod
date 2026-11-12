@@ -1,7 +1,7 @@
 package net.kasax.raft.content.shore.client;
 
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
+import net.kasax.raft.platform.client.EntityRendererRegistry;
+import net.kasax.raft.platform.client.ModelLayerRegistry;
 import net.kasax.raft.content.shore.ShoreEntities;
 import net.kasax.raft.content.shore.client.model.CorsairModel;
 import net.kasax.raft.content.shore.client.model.CrabModel;

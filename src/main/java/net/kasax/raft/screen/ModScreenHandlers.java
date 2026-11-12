@@ -1,6 +1,6 @@
 package net.kasax.raft.screen;
 
-import net.fabricmc.fabric.api.menu.v1.ExtendedMenuType;
+import net.kasax.raft.platform.ExtendedMenuType;
 import net.kasax.raft.Raft;
 import net.kasax.raft.util.BlockPosPayload;
 import net.minecraft.core.Registry;

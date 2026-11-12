@@ -1,6 +1,6 @@
 package net.kasax.raft.content.story.block;
 
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.kasax.raft.platform.ServerPlayNetworking;
 import net.kasax.raft.content.audio.AudioSounds;
 import net.kasax.raft.content.story.net.OpenLogPayload;
 import net.minecraft.core.BlockPos;

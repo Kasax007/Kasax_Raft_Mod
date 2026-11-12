@@ -2,8 +2,8 @@ package net.kasax.raft.content.vessel;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.kasax.raft.platform.PlayerLookup;
+import net.kasax.raft.platform.ServerPlayNetworking;
 import net.kasax.raft.content.vessel.block.RaftMotorBlockEntity;
 import net.kasax.raft.content.vessel.net.VesselArrivalPayload;
 import net.kasax.raft.content.vessel.net.VesselBlocksPayload;

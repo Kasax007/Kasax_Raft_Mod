@@ -2,7 +2,7 @@ package net.kasax.raft.content.encounters;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.kasax.raft.platform.ServerTickEvents;
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.encounters.entity.ReefGuardianEntity;
 import net.kasax.raft.content.encounters.entity.ScavengerEntity;

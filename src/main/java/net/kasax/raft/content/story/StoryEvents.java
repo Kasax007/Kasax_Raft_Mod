@@ -1,6 +1,6 @@
 package net.kasax.raft.content.story;
 
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
+import net.kasax.raft.platform.ServerEntityEvents;
 import net.minecraft.world.entity.item.ItemEntity;
 
 /** World events of the story module. */

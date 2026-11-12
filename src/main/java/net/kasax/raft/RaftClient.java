@@ -1,8 +1,7 @@
 package net.kasax.raft;
 
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
+import net.kasax.raft.platform.client.EntityRendererRegistry;
+import net.kasax.raft.platform.client.ModelLayerRegistry;
 import net.kasax.raft.client.render.SharkModel;
 import net.kasax.raft.client.render.SharkRenderer;
 import net.kasax.raft.entity.ModEntities;
@@ -17,9 +16,8 @@ import net.kasax.raft.util.ModPackets;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 
-public class RaftClient implements ClientModInitializer {
+public class RaftClient {
 
-    @Override
     public void onInitializeClient() {
         // Block render layers are picked automatically from the textures in 26.x (no BlockRenderLayerMap).
 

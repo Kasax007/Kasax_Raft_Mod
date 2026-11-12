@@ -1,7 +1,7 @@
 package net.kasax.raft.content.boss.client;
 
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
+import net.kasax.raft.platform.client.EntityRendererRegistry;
+import net.kasax.raft.platform.client.ModelLayerRegistry;
 import net.kasax.raft.content.boss.BossEntities;
 import net.kasax.raft.content.boss.client.model.BrineBoltModel;
 import net.kasax.raft.content.boss.client.model.LeviathanModel;

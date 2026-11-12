@@ -1,6 +1,6 @@
 package net.kasax.raft.content.cozy;
 
-import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
+import net.kasax.raft.platform.FlammableBlockRegistry;
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.BcReg;
 import net.kasax.raft.content.BcTabs;
@@ -216,7 +216,7 @@ public final class CozyContent {
     private static Block shelf(String name, MapColor color) {
         Block block = flammable(add(name, ShelfBlock::new, Properties.ofFullCopy(Blocks.OAK_SHELF).mapColor(color),
                 "tooltip.raft.shelf"));
-        net.minecraft.world.level.block.entity.BlockEntityTypes.SHELF.addValidBlock(block);
+        net.kasax.raft.platform.BlockEntityTypeBlocks.addValidBlock(net.minecraft.world.level.block.entity.BlockEntityTypes.SHELF, block);
         return block;
     }
 

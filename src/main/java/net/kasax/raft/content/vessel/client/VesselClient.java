@@ -1,11 +1,9 @@
 package net.kasax.raft.content.vessel.client;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.kasax.raft.platform.client.ClientTickEvents;
+import net.kasax.raft.platform.client.ClientPlayConnectionEvents;
+import net.kasax.raft.platform.client.ClientPlayNetworking;
+import net.kasax.raft.platform.client.EntityRendererRegistry;
 import net.kasax.raft.content.vessel.VesselColliders;
 import net.kasax.raft.content.vessel.VesselContent;
 import net.kasax.raft.content.vessel.VesselEntity;
@@ -39,7 +37,6 @@ import org.jspecify.annotations.Nullable;
  * nothing, the item is used in the air as in vanilla. Holding left click breaks raft blocks: the client counts the
  * progress like vanilla mining (tool, enchantments, effects) and tells the server when the block is broken.
  */
-@Environment(EnvType.CLIENT)
 public final class VesselClient {
     /** The helm answers once per click (no flickering in and out of the helm while the key is held). */
     private static boolean helmUseHeld;

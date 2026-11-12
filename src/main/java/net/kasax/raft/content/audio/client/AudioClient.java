@@ -1,8 +1,8 @@
 package net.kasax.raft.content.audio.client;
 
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.kasax.raft.platform.client.ClientTickEvents;
+import net.kasax.raft.platform.client.ClientPlayConnectionEvents;
+import net.kasax.raft.platform.client.ClientPlayNetworking;
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.audio.AudioSounds;
 import net.kasax.raft.content.audio.net.PlacePayload;

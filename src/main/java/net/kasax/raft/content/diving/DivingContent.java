@@ -1,6 +1,6 @@
 package net.kasax.raft.content.diving;
 
-import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
+import net.kasax.raft.platform.CreativeModeTabEvents;
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.BcReg;
 import net.kasax.raft.content.BcTabs;
@@ -38,7 +38,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MapColor;
-import team.reborn.energy.api.EnergyStorage;
+import net.kasax.raft.platform.energy.EnergyStorage;
 
 /** Registrations of the diving module (spec 8.2). Items go into the VOYAGE tab after the boats. */
 public final class DivingContent {

@@ -1,6 +1,6 @@
 package net.kasax.raft.content;
 
-import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
+import net.kasax.raft.platform.FabricCreativeModeTab;
 import net.kasax.raft.Raft;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;

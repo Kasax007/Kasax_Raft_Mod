@@ -1,8 +1,8 @@
 package net.kasax.raft.content.guide;
 
 import com.mojang.serialization.Codec;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
+import net.kasax.raft.platform.AttachmentRegistry;
+import net.kasax.raft.platform.AttachmentType;
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.BcReg;
 import net.kasax.raft.content.BcTabs;

@@ -1,6 +1,6 @@
 package net.kasax.raft.entity;
 
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.kasax.raft.platform.FabricDefaultAttributeRegistry;
 import net.kasax.raft.Raft;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;

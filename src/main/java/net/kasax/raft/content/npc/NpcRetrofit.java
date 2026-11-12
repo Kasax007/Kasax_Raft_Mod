@@ -1,8 +1,8 @@
 package net.kasax.raft.content.npc;
 
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.kasax.raft.platform.ServerChunkEvents;
+import net.kasax.raft.platform.ServerLifecycleEvents;
+import net.kasax.raft.platform.ServerTickEvents;
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.npc.entity.NpcEntity;
 import net.minecraft.core.BlockPos;
@@ -134,7 +134,7 @@ public final class NpcRetrofit {
                 continue;
             }
             it.remove();
-            List<String> done = chunk.getAttachedOrElse(NpcContent.SPOTS_DONE, List.of());
+            List<String> done = NpcContent.SPOTS_DONE.getOrElse(chunk, List.of());
             if (done.contains(p.key())) {
                 continue;
             }
@@ -144,7 +144,7 @@ public final class NpcRetrofit {
             }
             List<String> marked = new ArrayList<>(done);
             marked.add(p.key());
-            chunk.setAttached(NpcContent.SPOTS_DONE, marked);
+            NpcContent.SPOTS_DONE.set(chunk, marked);
             chunk.markUnsaved();
         }
     }

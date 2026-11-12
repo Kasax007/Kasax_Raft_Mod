@@ -7,8 +7,6 @@ import org.joml.Quaternionf;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.kasax.raft.content.vessel.VesselEntity;
 import net.kasax.raft.content.vessel.VesselStructure;
 import net.minecraft.client.Minecraft;
@@ -30,7 +28,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * Draws a sailing raft: every block with its normal block model (chests and other special blocks included), lit by
  * the world light at the block, rotated and moved with the raft; plus the outline of the block under the crosshair.
  */
-@Environment(EnvType.CLIENT)
 public class VesselRenderer extends EntityRenderer<VesselEntity, VesselRenderState> {
     private final BlockModelResolver resolver;
 

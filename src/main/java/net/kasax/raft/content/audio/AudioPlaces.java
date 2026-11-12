@@ -1,8 +1,8 @@
 package net.kasax.raft.content.audio;
 
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.kasax.raft.platform.ServerTickEvents;
+import net.kasax.raft.platform.ServerPlayConnectionEvents;
+import net.kasax.raft.platform.ServerPlayNetworking;
 import net.kasax.raft.Raft;
 import net.kasax.raft.content.audio.net.PlacePayload;
 import net.minecraft.core.BlockPos;

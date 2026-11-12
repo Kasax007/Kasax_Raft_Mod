@@ -301,7 +301,14 @@ public class BcScript implements FabricClientGameTest {
                 LOG.warn("[bctest] no creative tab {}", arg);
                 return;
             }
-            ((net.fabricmc.fabric.api.client.creativetab.v1.FabricCreativeModeInventoryScreen) (Object) screen).setSelectedTab(tab);
+            // NeoForge pages the tabs: show the page with the tab, then select it
+            for (var page : ((net.kasax.raft.gametest.mixin.CreativeScreenInvoker) screen).bc$pages()) {
+                if (page.getVisibleTabs().contains(tab)) {
+                    screen.setCurrentPage(page);
+                    break;
+                }
+            }
+            ((net.kasax.raft.gametest.mixin.CreativeScreenInvoker) screen).bc$selectTab(tab);
             if (ta.length > 1) screen.mouseScrolled(0, 0, 0, -Double.parseDouble(ta[1]));
             StringBuilder ids = new StringBuilder();
             for (var stack : tab.getDisplayItems()) {
@@ -1016,7 +1023,7 @@ public class BcScript implements FabricClientGameTest {
                     net.minecraft.server.level.ServerPlayer user = pl;
                     if (fake != null) {
                         java.util.UUID id = java.util.UUID.nameUUIDFromBytes(("bctest:" + fake).getBytes(java.nio.charset.StandardCharsets.UTF_8));
-                        user = net.fabricmc.fabric.api.entity.FakePlayer.get(level, new com.mojang.authlib.GameProfile(id, fake));
+                        user = net.neoforged.neoforge.common.util.FakePlayerFactory.get(level, new com.mojang.authlib.GameProfile(id, fake));
                         user.setPos(bp.getX() + 0.5, bp.getY() + 1, bp.getZ() + 0.5);
                     }
                     var hit = new net.minecraft.world.phys.BlockHitResult(Vec3.atCenterOf(bp), net.minecraft.core.Direction.UP, bp, false);

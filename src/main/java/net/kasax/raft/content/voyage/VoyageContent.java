@@ -1,7 +1,7 @@
 package net.kasax.raft.content.voyage;
 
 import com.mojang.serialization.Codec;
-import net.fabricmc.fabric.api.menu.v1.ExtendedMenuType;
+import net.kasax.raft.platform.ExtendedMenuType;
 import net.kasax.raft.content.BcReg;
 import net.kasax.raft.content.BcTabs;
 import net.minecraft.core.Registry;

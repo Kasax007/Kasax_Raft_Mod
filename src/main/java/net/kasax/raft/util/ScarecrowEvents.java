@@ -1,6 +1,6 @@
 package net.kasax.raft.util;
 
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
+import net.kasax.raft.platform.ServerEntityEvents;
 import net.kasax.raft.block.custom.ScarecrowBlock;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.MobCategory;

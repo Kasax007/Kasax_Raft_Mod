@@ -1,7 +1,7 @@
 package net.kasax.raft.content.world;
 
-import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
-import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
+import net.kasax.raft.platform.BiomeModifications;
+import net.kasax.raft.platform.ModificationPhase;
 import net.kasax.raft.Raft;
 import net.kasax.raft.world.biome.ModBiomes;
 import net.minecraft.core.registries.BuiltInRegistries;

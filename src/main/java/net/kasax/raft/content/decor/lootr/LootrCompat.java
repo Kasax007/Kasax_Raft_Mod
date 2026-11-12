@@ -1,6 +1,6 @@
 package net.kasax.raft.content.decor.lootr;
 
-import net.fabricmc.loader.api.FabricLoader;
+import net.kasax.raft.platform.FabricLoader;
 import net.kasax.raft.content.decor.block.DecorChestBlockEntity;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
