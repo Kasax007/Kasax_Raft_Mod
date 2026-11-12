@@ -1,0 +1,420 @@
+{
+  "values": {
+    "raft:bamboo_blinds": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:bamboo_table": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:bar_stool": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:beach_towel_blue": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:beach_towel_red": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:beach_towel_yellow": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:beach_umbrella_blue": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:beach_umbrella_red": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:beach_umbrella_yellow": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:bunting_rainbow": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:bunting_red_white": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:cargo_net": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:chart_table": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:cushion_blue": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:cushion_green": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:cushion_red": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:cushion_white": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:cushion_yellow": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:deck_chair": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:driftwood_chair": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:driftwood_fence": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:driftwood_fence_gate": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:driftwood_lamp": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:driftwood_lattice": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:driftwood_leaves": {
+      "ignite_odds": 30,
+      "burn_odds": 60
+    },
+    "raft:driftwood_log": {
+      "ignite_odds": 5,
+      "burn_odds": 5
+    },
+    "raft:driftwood_planks": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:driftwood_sconce": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:driftwood_shelf": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:driftwood_slab": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:driftwood_stairs": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:driftwood_table": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:driftwood_wood": {
+      "ignite_odds": 5,
+      "burn_odds": 5
+    },
+    "raft:figurehead": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:fish_trophy": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:fishing_net": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:flower_box": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:hammock": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:hanging_planter": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:jolly_roger": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:palm_bench": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:palm_chair": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:palm_coconut_leaves": {
+      "ignite_odds": 30,
+      "burn_odds": 60
+    },
+    "raft:palm_fence": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:palm_fence_gate": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:palm_leaves": {
+      "ignite_odds": 30,
+      "burn_odds": 60
+    },
+    "raft:palm_log": {
+      "ignite_odds": 5,
+      "burn_odds": 5
+    },
+    "raft:palm_planks": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:palm_shelf": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:palm_slab": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:palm_stairs": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:palm_table": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:palm_thatch": {
+      "ignite_odds": 60,
+      "burn_odds": 80
+    },
+    "raft:palm_thatch_slab": {
+      "ignite_odds": 60,
+      "burn_odds": 80
+    },
+    "raft:palm_thatch_stairs": {
+      "ignite_odds": 60,
+      "burn_odds": 80
+    },
+    "raft:palm_wood": {
+      "ignite_odds": 5,
+      "burn_odds": 5
+    },
+    "raft:paper_lantern_blue": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:paper_lantern_cyan": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:paper_lantern_lime": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:paper_lantern_orange": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:paper_lantern_pink": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:paper_lantern_purple": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:paper_lantern_red": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:paper_lantern_white": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:paper_lantern_yellow": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:powder_keg": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:raft_flag": {
+      "ignite_odds": 30,
+      "burn_odds": 60
+    },
+    "raft:raft_foundation": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:rattan_armchair": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:rope_coil": {
+      "ignite_odds": 30,
+      "burn_odds": 60
+    },
+    "raft:rope_ladder": {
+      "ignite_odds": 15,
+      "burn_odds": 30
+    },
+    "raft:rope_railing": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:rope_rug": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:sail_canvas": {
+      "ignite_odds": 30,
+      "burn_odds": 60
+    },
+    "raft:sail_canvas_red_striped": {
+      "ignite_odds": 30,
+      "burn_odds": 60
+    },
+    "raft:scarecrow": {
+      "ignite_odds": 30,
+      "burn_odds": 60
+    },
+    "raft:stripped_driftwood_log": {
+      "ignite_odds": 5,
+      "burn_odds": 5
+    },
+    "raft:stripped_driftwood_wood": {
+      "ignite_odds": 5,
+      "burn_odds": 5
+    },
+    "raft:stripped_palm_log": {
+      "ignite_odds": 5,
+      "burn_odds": 5
+    },
+    "raft:stripped_palm_wood": {
+      "ignite_odds": 5,
+      "burn_odds": 5
+    },
+    "raft:sun_lounger": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:teak_bench": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:teak_door": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:teak_fence": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:teak_fence_gate": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:teak_planks": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:teak_shelf": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:teak_slab": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:teak_stairs": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:teak_table": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:teak_trapdoor": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:thatch_parasol": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:wanted_poster": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:weathered_door": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:weathered_fence": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:weathered_fence_gate": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:weathered_planks": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:weathered_shelf": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:weathered_slab": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:weathered_stairs": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:weathered_trapdoor": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:wicker_basket": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:wooden_crate": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    },
+    "raft:woven_rug": {
+      "ignite_odds": 5,
+      "burn_odds": 20
+    }
+  }
+}

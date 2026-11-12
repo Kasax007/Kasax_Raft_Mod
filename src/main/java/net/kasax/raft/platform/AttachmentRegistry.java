@@ -8,7 +8,29 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 /** Fabric's AttachmentRegistry on NeoForge data attachments (same ids, same codecs). */
 public final class AttachmentRegistry {
+    /** The persistent attachments, for {@link #migrateFabricData}. */
+    private static final java.util.List<AttachmentType<?>> PERSISTENT = new java.util.concurrent.CopyOnWriteArrayList<>();
+
     private AttachmentRegistry() {
+    }
+
+    /**
+     * Entities saved by the Fabric build keep these attachments under {@code fabric:attachments}; they are taken over
+     * when NeoForge has none of its own yet, so a player moved from a Fabric world keeps them.
+     */
+    public static void migrateFabricData(net.neoforged.neoforge.attachment.IAttachmentHolder holder, net.minecraft.world.level.storage.ValueInput input) {
+        input.child("fabric:attachments").ifPresent(fabric -> {
+            for (AttachmentType<?> type : PERSISTENT) {
+                migrate(type, holder, fabric);
+            }
+        });
+    }
+
+    private static <A> void migrate(AttachmentType<A> type, net.neoforged.neoforge.attachment.IAttachmentHolder holder,
+                                    net.minecraft.world.level.storage.ValueInput fabric) {
+        if (!type.has(holder)) {
+            fabric.read(type.identifier().toString(), type.persistenceCodec()).ifPresent(value -> type.set(holder, value));
+        }
     }
 
     public static <A> Builder<A> builder() {
@@ -46,7 +68,11 @@ public final class AttachmentRegistry {
             }
             var type = builder.build();
             Registry.register(NeoForgeRegistries.ATTACHMENT_TYPES, id, type);
-            return new AttachmentType<>(id, type, codec, initializer);
+            AttachmentType<A> result = new AttachmentType<>(id, type, codec, initializer);
+            if (codec != null) {
+                PERSISTENT.add(result);
+            }
+            return result;
         }
     }
 }

@@ -1,5 +1,8 @@
 # bctest – scripted in-game test for Beach Craft
 
+On NeoForge (this branch) the harness is the NeoForge client mod `raft_gametest` (`src/gametest`, run `bctest` of
+ModDevGradle) with its own copy of the client game test API; `BC_DISPLAY` picks the Xvfb display (default `:97`).
+
 `tools/bctest/run.sh <script.txt> <outdir>` builds the mod, starts a Minecraft client (Xvfb, no sound) with the
 test mod in `src/gametest`, runs the script and writes screenshots (`<outdir>/<name>.png`), `latest.log` and
 `gradle.log`. It takes the build lock, so only one test or compile runs at a time (about 1–3 minutes).

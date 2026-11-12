@@ -253,7 +253,16 @@ public final class BcGameTests {
         GuideContent.ALMANAC_GIVEN.set(player, true);
         TagValueOutput output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, helper.getLevel().registryAccess());
         player.saveWithoutId(output);
-        helper.assertTrue(output.buildResult().getCompoundOrEmpty("neoforge:attachments").contains("raft:almanac_given"), "player attachment is not saved");
+        var tag = output.buildResult();
+        helper.assertTrue(tag.getCompoundOrEmpty("neoforge:attachments").contains("raft:almanac_given"), "player attachment is not saved");
+        // a player saved by the Fabric build keeps the flag
+        tag.remove("neoforge:attachments");
+        var fabric = new net.minecraft.nbt.CompoundTag();
+        fabric.putBoolean("raft:almanac_given", true);
+        tag.put("fabric:attachments", fabric);
+        Player moved = helper.makeMockPlayer(GameType.SURVIVAL);
+        moved.load(net.minecraft.world.level.storage.TagValueInput.create(ProblemReporter.DISCARDING, helper.getLevel().registryAccess(), tag));
+        helper.assertTrue(Boolean.TRUE.equals(GuideContent.ALMANAC_GIVEN.get(moved)), "Fabric attachment not taken over");
         helper.succeed();
     }
 

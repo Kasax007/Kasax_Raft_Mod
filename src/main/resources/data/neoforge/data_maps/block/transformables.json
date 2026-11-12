@@ -1,0 +1,112 @@
+{
+  "values": {
+    "raft:driftwood_log": {
+      "transform_data": {
+        "block_state_provider": {
+          "rules": [
+            {
+              "if_true": {
+                "blocks": "raft:driftwood_log",
+                "type": "minecraft:matching_blocks"
+              },
+              "then": {
+                "source": {
+                  "properties": {
+                    "axis": "y"
+                  },
+                  "id": "raft:stripped_driftwood_log"
+                },
+                "type": "minecraft:copy_properties"
+              }
+            }
+          ],
+          "type": "minecraft:rule_based"
+        },
+        "sound": "minecraft:item.axe.strip",
+        "item_damage_per_use": 1
+      },
+      "transformer": "minecraft:axe"
+    },
+    "raft:driftwood_wood": {
+      "transform_data": {
+        "block_state_provider": {
+          "rules": [
+            {
+              "if_true": {
+                "blocks": "raft:driftwood_wood",
+                "type": "minecraft:matching_blocks"
+              },
+              "then": {
+                "source": {
+                  "properties": {
+                    "axis": "y"
+                  },
+                  "id": "raft:stripped_driftwood_wood"
+                },
+                "type": "minecraft:copy_properties"
+              }
+            }
+          ],
+          "type": "minecraft:rule_based"
+        },
+        "sound": "minecraft:item.axe.strip",
+        "item_damage_per_use": 1
+      },
+      "transformer": "minecraft:axe"
+    },
+    "raft:palm_log": {
+      "transform_data": {
+        "block_state_provider": {
+          "rules": [
+            {
+              "if_true": {
+                "blocks": "raft:palm_log",
+                "type": "minecraft:matching_blocks"
+              },
+              "then": {
+                "source": {
+                  "properties": {
+                    "axis": "y"
+                  },
+                  "id": "raft:stripped_palm_log"
+                },
+                "type": "minecraft:copy_properties"
+              }
+            }
+          ],
+          "type": "minecraft:rule_based"
+        },
+        "sound": "minecraft:item.axe.strip",
+        "item_damage_per_use": 1
+      },
+      "transformer": "minecraft:axe"
+    },
+    "raft:palm_wood": {
+      "transform_data": {
+        "block_state_provider": {
+          "rules": [
+            {
+              "if_true": {
+                "blocks": "raft:palm_wood",
+                "type": "minecraft:matching_blocks"
+              },
+              "then": {
+                "source": {
+                  "properties": {
+                    "axis": "y"
+                  },
+                  "id": "raft:stripped_palm_wood"
+                },
+                "type": "minecraft:copy_properties"
+              }
+            }
+          ],
+          "type": "minecraft:rule_based"
+        },
+        "sound": "minecraft:item.axe.strip",
+        "item_damage_per_use": 1
+      },
+      "transformer": "minecraft:axe"
+    }
+  }
+}
