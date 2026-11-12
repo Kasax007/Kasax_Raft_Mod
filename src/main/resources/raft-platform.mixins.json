@@ -3,7 +3,9 @@
   "package": "net.kasax.raft.platform.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "ServerPlayerOpenMenuMixin"
+    "ServerPlayerOpenMenuMixin",
+    "FabricAttachmentsMixin",
+    "FabricChunkAttachmentsMixin"
   ],
   "injectors": {
     "defaultRequire": 1

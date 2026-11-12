@@ -234,6 +234,14 @@ public class BcGameTests {
         GuideContent.ALMANAC_GIVEN.set(player, true);
         CompoundTag tag = player.saveWithoutId(new CompoundTag());
         helper.assertTrue(tag.getCompound("neoforge:attachments").contains("raft:almanac_given"), "player attachment is not saved");
+        // a player saved by the Fabric build keeps the flag
+        tag.remove("neoforge:attachments");
+        CompoundTag fabric = new CompoundTag();
+        fabric.putBoolean("raft:almanac_given", true);
+        tag.put("fabric:attachments", fabric);
+        Player moved = helper.makeMockPlayer(GameType.SURVIVAL);
+        moved.load(tag);
+        helper.assertTrue(Boolean.TRUE.equals(GuideContent.ALMANAC_GIVEN.get(moved)), "Fabric attachment not taken over");
         helper.succeed();
     }
 
