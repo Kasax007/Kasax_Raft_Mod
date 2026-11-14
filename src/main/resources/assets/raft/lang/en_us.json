@@ -215,5 +215,7 @@
   "tag.item.raft.repairs_wetsuit": "Wetsuit Repair Materials",
   "tag.item.raft.sea_otter_treats": "Sea Otter Treats",
   "tag.item.raft.tide_sigils": "Tide Sigils",
-  "tag.item.raft.tidebreaker_repair_materials": "Tidebreaker Repair Materials"
+  "tag.item.raft.tidebreaker_repair_materials": "Tidebreaker Repair Materials",
+  "block.raft.giant_clam.closed": "The clam is closed.",
+  "block.raft.giant_clam.empty": "This clam holds no pearl right now."
 }

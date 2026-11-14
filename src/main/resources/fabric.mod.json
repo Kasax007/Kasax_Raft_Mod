@@ -8,8 +8,9 @@
 		"Kasax"
 	],
 	"contact": {
-		"homepage": "https://www.curseforge.com/minecraft/mc-mods/raft",
-		"sources": "https://github.com/Kasax007/Kasax_Raft_Mod"
+		"homepage": "https://www.curseforge.com/minecraft/mc-mods/beach-craft",
+		"sources": "https://github.com/Kasax007/Kasax_Raft_Mod",
+		"issues": "https://github.com/Kasax007/Kasax_Raft_Mod/issues"
 	},
 	"license": "MIT",
 	"icon": "assets/raft/icon.png",

@@ -1,0 +1,20 @@
+# 3.4.3: a closed Giant Clam and one without a pearl answer with a readable message (not a raw text key)
+world clam343
+rd 4
+cmd gamemode creative @p
+cmd fill -3 199 -3 3 199 3 minecraft:stone
+cmd tp @p 0.5 200 0.5 0 30
+cmd setblock 0 200 2 raft:giant_clam[open=false]
+wait 30
+check closed clam placed | execute if block 0 200 2 raft:giant_clam[open=false]
+use
+wait 6
+shot clam_closed
+wait 60
+cmd setblock 0 200 2 raft:giant_clam[open=true,pearl=false]
+wait 20
+check open clam without pearl placed | execute if block 0 200 2 raft:giant_clam[open=true,pearl=false]
+use
+wait 6
+shot clam_empty
+checks
